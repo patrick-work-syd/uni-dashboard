@@ -14,7 +14,17 @@
 body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background:var(--bg); color:var(--text); display:flex; min-height:100vh; }
 
 /* Sidebar */
-.sidebar { width:240px; background:var(--sidebar); color:#e2e8f0; padding:0; display:flex; flex-direction:column; position:fixed; top:0; left:0; bottom:0; z-index:10; }
+.sidebar { width:240px; background:var(--sidebar); color:#e2e8f0; padding:0; display:flex; flex-direction:column; position:fixed; top:0; left:0; bottom:0; z-index:10; transition:transform 0.25s ease; }
+.sidebar.collapsed { transform:translateX(-240px); }
+.nav-toggle { display:none; position:fixed; top:12px; left:12px; z-index:20; background:var(--sidebar); color:#e2e8f0; border:1px solid rgba(255,255,255,0.15); border-radius:8px; width:40px; height:40px; font-size:22px; cursor:pointer; align-items:center; justify-content:center; line-height:1; }
+@media (max-width:800px) {
+  .nav-toggle { display:flex; }
+  .sidebar { transform:translateX(-240px); }
+  .sidebar.open { transform:translateX(0); }
+  .main { margin-left:0 !important; padding:16px !important; padding-top:60px !important; }
+  .sidebar-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:9; }
+  .sidebar-overlay.show { display:block; }
+}
 .sidebar-header { padding:24px 20px 16px; border-bottom:1px solid rgba(255,255,255,0.1); }
 .sidebar-header h1 { font-size:18px; color:#fff; font-weight:700; }
 .sidebar-header p { font-size:12px; color:#94a3b8; margin-top:4px; }
@@ -643,7 +653,9 @@ if (sessionStorage.getItem('uni-dash-auth') === '1') {
 document.getElementById('pin-input').focus();
 </script>
 
-<aside class="sidebar">
+<button class="nav-toggle" id="nav-toggle" onclick="toggleNav()">☰</button>
+<div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleNav()"></div>
+<aside class="sidebar" id="sidebar">
   <div class="sidebar-header">
     <h1>📚 Uni 2026</h1>
     <p>Semester 1 &middot; University of Sydney</p>
@@ -3125,6 +3137,15 @@ function courseBadge(code) { return `<span class="badge ${COURSES[code]?.badge}"
 
 // ======================== VIEWS ========================
 
+function toggleNav() {
+  var sb = document.getElementById('sidebar');
+  var ov = document.getElementById('sidebar-overlay');
+  var btn = document.getElementById('nav-toggle');
+  var isOpen = sb.classList.contains('open');
+  sb.classList.toggle('open', !isOpen);
+  ov.classList.toggle('show', !isOpen);
+  btn.textContent = isOpen ? '☰' : '✕';
+}
 function showView(id) {
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -3132,6 +3153,8 @@ function showView(id) {
   event?.target?.closest('.nav-item')?.classList.add('active');
   if (id === 'calendar') renderCalendar();
   if (typeof saUpdateContextBadge === 'function') saUpdateContextBadge();
+  // Auto-close nav on mobile after selection
+  if (window.innerWidth <= 800) toggleNav();
 }
 
 function switchTab(el, tabId) {
