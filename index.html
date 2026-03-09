@@ -569,6 +569,42 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 </head>
 <body>
 
+<!-- Password gate -->
+<div id="pin-gate" style="position:fixed;inset:0;z-index:99999;background:#0f172a;display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+  <div style="text-align:center;color:#e2e8f0">
+    <div style="font-size:48px;margin-bottom:16px">📚</div>
+    <h1 style="font-size:22px;font-weight:700;margin-bottom:4px;color:#f8fafc">Uni 2026 Dashboard</h1>
+    <p style="font-size:13px;color:#94a3b8;margin-bottom:24px">Enter PIN to continue</p>
+    <input id="pin-input" type="password" inputmode="numeric" maxlength="6" placeholder="••••••"
+      style="width:180px;padding:12px 16px;font-size:24px;text-align:center;letter-spacing:8px;border:2px solid #334155;border-radius:10px;background:#1e293b;color:#f8fafc;outline:none"
+      onkeyup="if(event.key==='Enter')checkPin()">
+    <br>
+    <button onclick="checkPin()" style="margin-top:16px;padding:10px 32px;background:#3b82f6;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer">Enter</button>
+    <p id="pin-error" style="color:#f87171;font-size:13px;margin-top:12px;min-height:20px"></p>
+  </div>
+</div>
+<script>
+function checkPin() {
+  var pin = document.getElementById('pin-input').value;
+  // Simple hash check — not cryptographic, just a deterrent
+  var hash = 0;
+  for (var i = 0; i < pin.length; i++) { hash = ((hash << 5) - hash) + pin.charCodeAt(i); hash |= 0; }
+  if (hash === 1420220383) {
+    document.getElementById('pin-gate').style.display = 'none';
+    sessionStorage.setItem('uni-dash-auth', '1');
+  } else {
+    document.getElementById('pin-error').textContent = 'Incorrect PIN';
+    document.getElementById('pin-input').value = '';
+    document.getElementById('pin-input').focus();
+  }
+}
+// Skip gate if already authenticated this session
+if (sessionStorage.getItem('uni-dash-auth') === '1') {
+  document.getElementById('pin-gate').style.display = 'none';
+}
+document.getElementById('pin-input').focus();
+</script>
+
 <aside class="sidebar">
   <div class="sidebar-header">
     <h1>📚 Uni 2026</h1>
