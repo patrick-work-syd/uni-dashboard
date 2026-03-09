@@ -563,6 +563,44 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 .astro-match-item.selected { border-color:var(--oles); background:#f5f3ff; box-shadow:0 0 0 2px rgba(139,92,246,0.2); }
 .astro-match-item.matched { border-color:#16a34a; background:#dcfce7; cursor:default; }
 .astro-match-item.wrong { border-color:var(--danger); background:#fef2f2; }
+
+/* Study Assistant Chat */
+.sa-fab { position:fixed; bottom:24px; right:24px; z-index:50; width:56px; height:56px; border-radius:50%; background:linear-gradient(135deg,#2563eb,#7c3aed); color:#fff; border:none; cursor:pointer; box-shadow:0 4px 20px rgba(37,99,235,0.4); display:flex; align-items:center; justify-content:center; transition:transform 0.2s,box-shadow 0.2s; }
+.sa-fab:hover { transform:scale(1.08); box-shadow:0 6px 28px rgba(37,99,235,0.5); }
+.sa-fab svg { width:28px; height:28px; }
+.sa-panel { position:fixed; bottom:92px; right:24px; z-index:50; width:420px; max-height:70vh; background:#fff; border-radius:16px; box-shadow:0 12px 48px rgba(0,0,0,0.18); display:none; flex-direction:column; border:1px solid var(--border); }
+.sa-panel.open { display:flex; }
+.sa-header { padding:16px 18px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; border-radius:16px 16px 0 0; background:#f8fafc; }
+.sa-header h3 { font-size:15px; font-weight:700; margin:0; display:flex; align-items:center; gap:8px; }
+.sa-header-btns { display:flex; gap:6px; }
+.sa-header-btn { background:none; border:1px solid var(--border); border-radius:6px; padding:4px 8px; font-size:11px; cursor:pointer; color:var(--muted); }
+.sa-header-btn:hover { background:#f1f5f9; color:var(--text); }
+.sa-messages { flex:1; overflow-y:auto; padding:16px 18px; min-height:200px; max-height:calc(70vh - 140px); }
+.sa-msg { margin-bottom:14px; font-size:13.5px; line-height:1.65; }
+.sa-msg-user { text-align:right; }
+.sa-msg-user .sa-bubble { display:inline-block; background:#2563eb; color:#fff; padding:10px 14px; border-radius:14px 14px 4px 14px; max-width:85%; text-align:left; }
+.sa-msg-ai .sa-bubble { display:inline-block; background:#f1f5f9; color:var(--text); padding:10px 14px; border-radius:14px 14px 14px 4px; max-width:85%; text-align:left; }
+.sa-msg-ai .sa-bubble code { background:#e2e8f0; padding:1px 4px; border-radius:3px; font-size:12.5px; }
+.sa-msg-ai .sa-bubble strong { font-weight:600; }
+.sa-typing { color:var(--muted); font-style:italic; font-size:12px; padding:4px 0; display:none; }
+.sa-typing.show { display:block; }
+.sa-input-area { padding:12px 14px; border-top:1px solid var(--border); display:flex; gap:8px; }
+.sa-input-area textarea { flex:1; border:1px solid var(--border); border-radius:10px; padding:10px 12px; font-size:13.5px; font-family:inherit; resize:none; height:42px; max-height:100px; outline:none; transition:border-color 0.15s; }
+.sa-input-area textarea:focus { border-color:#3b82f6; }
+.sa-input-area button { background:#2563eb; color:#fff; border:none; border-radius:10px; padding:0 16px; cursor:pointer; font-size:14px; font-weight:600; transition:background 0.15s; flex-shrink:0; }
+.sa-input-area button:hover { background:#1d4ed8; }
+.sa-input-area button:disabled { background:#94a3b8; cursor:not-allowed; }
+.sa-setup { padding:20px 18px; text-align:center; }
+.sa-setup p { font-size:13px; color:var(--muted); margin-bottom:14px; line-height:1.5; }
+.sa-setup input { width:100%; padding:10px 12px; border:1px solid var(--border); border-radius:8px; font-size:13px; font-family:monospace; margin-bottom:10px; }
+.sa-setup button { background:#2563eb; color:#fff; border:none; padding:8px 20px; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer; }
+.sa-setup button:hover { background:#1d4ed8; }
+.sa-context-badge { font-size:11px; padding:2px 8px; border-radius:10px; font-weight:600; }
+.sa-cost { font-size:10px; color:var(--muted); text-align:right; padding:2px 18px 0; }
+@media (max-width:520px) {
+  .sa-panel { width:calc(100vw - 16px); right:8px; bottom:84px; max-height:75vh; }
+  .sa-fab { bottom:16px; right:16px; width:50px; height:50px; }
+}
 </style>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -657,6 +695,38 @@ document.getElementById('pin-input').focus();
   </div>
 </div>
 <div class="toast" id="toast"></div>
+
+<!-- Study Assistant Chat -->
+<button class="sa-fab" id="sa-fab" onclick="saToggle()" title="Study Assistant">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+</button>
+<div class="sa-panel" id="sa-panel">
+  <div class="sa-header">
+    <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Study Assistant <span class="sa-context-badge" id="sa-context-badge"></span></h3>
+    <div class="sa-header-btns">
+      <button class="sa-header-btn" onclick="saClear()" title="New conversation">Clear</button>
+      <button class="sa-header-btn" onclick="saSettings()" title="API key settings">Key</button>
+      <button class="sa-header-btn" onclick="saToggle()">✕</button>
+    </div>
+  </div>
+  <div id="sa-body">
+    <div class="sa-messages" id="sa-messages">
+      <div class="sa-msg sa-msg-ai"><div class="sa-bubble">Hi! I'm your study assistant. Ask me anything about your courses — assessments, concepts, study tips, or exam prep. I'll answer based on your course materials.</div></div>
+    </div>
+    <div class="sa-typing" id="sa-typing">Thinking...</div>
+    <div class="sa-cost" id="sa-cost"></div>
+    <div class="sa-input-area">
+      <textarea id="sa-input" placeholder="Ask about your courses..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();saSend()}"></textarea>
+      <button id="sa-send-btn" onclick="saSend()">Send</button>
+    </div>
+  </div>
+  <div class="sa-setup" id="sa-setup" style="display:none">
+    <p>Enter your Anthropic API key to get started.<br>Get one at <a href="https://console.anthropic.com/settings/keys" target="_blank" style="color:#2563eb">console.anthropic.com</a>.<br>Your key is stored locally in this browser only.</p>
+    <input id="sa-key-input" type="password" placeholder="sk-ant-..." />
+    <button onclick="saSaveKey()">Save Key</button>
+    <p style="margin-top:12px;font-size:11px">Cost: ~$0.01 per 10 questions using Haiku</p>
+  </div>
+</div>
 
 <div class="main">
 
@@ -1353,6 +1423,7 @@ const DASHBOARD_CHANGELOG = [
   { date: '2026-03-08', action: 'add', target: 'ASSESSMENTS', detail: 'Added prep guides to 3 assessments: INFO1113 Coding Challenge (rubric 5 items, rules 8, files 2, tips 5), ANHS2609 Map Quiz (rubric 3, rules 8, tips 5), OLES1603 Idea Exploration (rubric 5, rules 6, files 2, tips 5). All include Practice Lab shortcut buttons.' },
   { date: '2026-03-08', action: 'update', target: 'WORKFLOW_TRACKER', detail: 'Major expansion: added assessmentPrep array (4 complete + 3 pending prep guides with full detail strings), studyGuides coverage object (per-course complete/draft/pending breakdown, 113 quiz questions), updated practiceTools with detail strings (component-level inventory), added 3 new dashboardChecks (assess-prep-wk3, assess-prep-wk4, practice-lab-links). Assessment Prep panel added to UI with renderer.' },
   { date: '2026-03-08', action: 'update', target: 'HTML', detail: 'Added Assessment Prep panel to Workflow Tracker page. New wftRenderAssessPrep() function shows complete/pending prep guides with course badges, urgency indicators, and study guide coverage summary. Updated panel indexing (guides:0, tools:1, assessprep:2, roadmap:3). Added Practice Lab links for all 4 courses in assessment detail modal.' },
+  { date: '2026-03-09', action: 'add', target: 'HTML', detail: 'Added Study Assistant chat widget — floating chat button (bottom-right) with Claude AI integration via Anthropic API. Course-aware context (detects active course page). BYOK pattern (API key in localStorage). Sends study guides, assessments, key terms, timetable as grounded context. Prompt caching for cost efficiency. Basic markdown rendering in replies. Session cost tracking.' },
 ];
 
 const WEEKLY_CONTENT = {
@@ -2930,6 +3001,7 @@ function showView(id) {
   document.getElementById('view-' + id)?.classList.add('active');
   event?.target?.closest('.nav-item')?.classList.add('active');
   if (id === 'calendar') renderCalendar();
+  if (typeof saUpdateContextBadge === 'function') saUpdateContextBadge();
 }
 
 function switchTab(el, tabId) {
@@ -7089,6 +7161,274 @@ function validateDashboardData() {
     console.log(`[DASHBOARD] ✓ Data validation passed — ${ASSESSMENTS.length} assessments, ${syncCount} sync items`);
   }
 }
+
+// ======================== STUDY ASSISTANT ========================
+
+const SA_STORAGE_KEY = 'uni-claude-key';
+const SA_MODEL = 'claude-haiku-4-5-20251001';
+let saMessages = [];
+let saTotalCost = 0;
+
+function saToggle() {
+  const panel = document.getElementById('sa-panel');
+  panel.classList.toggle('open');
+  if (panel.classList.contains('open')) {
+    saUpdateContextBadge();
+    const key = localStorage.getItem(SA_STORAGE_KEY);
+    document.getElementById('sa-body').style.display = key ? '' : 'none';
+    document.getElementById('sa-setup').style.display = key ? 'none' : '';
+    if (key) setTimeout(() => document.getElementById('sa-input').focus(), 100);
+  }
+}
+
+function saSaveKey() {
+  const key = document.getElementById('sa-key-input').value.trim();
+  if (!key) return;
+  localStorage.setItem(SA_STORAGE_KEY, key);
+  document.getElementById('sa-body').style.display = '';
+  document.getElementById('sa-setup').style.display = 'none';
+  document.getElementById('sa-input').focus();
+}
+
+function saSettings() {
+  const current = localStorage.getItem(SA_STORAGE_KEY) || '';
+  document.getElementById('sa-key-input').value = current;
+  document.getElementById('sa-body').style.display = 'none';
+  document.getElementById('sa-setup').style.display = '';
+}
+
+function saClear() {
+  saMessages = [];
+  saTotalCost = 0;
+  document.getElementById('sa-cost').textContent = '';
+  const el = document.getElementById('sa-messages');
+  el.innerHTML = '<div class="sa-msg sa-msg-ai"><div class="sa-bubble">Hi! I\'m your study assistant. Ask me anything about your courses — assessments, concepts, study tips, or exam prep. I\'ll answer based on your course materials.</div></div>';
+  el.scrollTop = 0;
+}
+
+function saDetectCourse() {
+  const active = document.querySelector('.view.active');
+  if (!active) return null;
+  const id = active.id;
+  if (id.includes('info1113')) return 'INFO1113';
+  if (id.includes('lngs1001')) return 'LNGS1001';
+  if (id.includes('anhs2609')) return 'ANHS2609';
+  if (id.includes('oles1603')) return 'OLES1603';
+  return null;
+}
+
+function saUpdateContextBadge() {
+  const badge = document.getElementById('sa-context-badge');
+  const course = saDetectCourse();
+  if (course) {
+    badge.textContent = COURSES[course].name;
+    badge.style.background = COURSES[course].color;
+    badge.style.color = course === 'ANHS2609' ? '#1e293b' : '#fff';
+  } else {
+    badge.textContent = 'All courses';
+    badge.style.background = '#e2e8f0';
+    badge.style.color = '#475569';
+  }
+}
+
+function saBuildContext(courseCode) {
+  let ctx = '';
+
+  // Assessment calendar
+  ctx += '## ASSESSMENTS\n';
+  const relevantAssess = courseCode ? ASSESSMENTS.filter(a => a.course === courseCode) : ASSESSMENTS;
+  relevantAssess.forEach(a => {
+    ctx += `- ${a.date} | ${a.course} | ${a.name} | ${a.weight} | ${a.desc}`;
+    if (a.mark) ctx += ` | Mark: ${a.mark}`;
+    ctx += '\n';
+    if (a.prep) {
+      if (a.prep.rubric) ctx += '  Rubric: ' + a.prep.rubric.map(r => r.q + ' (' + r.pts + 'pts): ' + r.topic).join('; ') + '\n';
+      if (a.prep.rules) ctx += '  Rules: ' + a.prep.rules.join('; ') + '\n';
+      if (a.prep.tips) ctx += '  Tips: ' + a.prep.tips.join('; ') + '\n';
+    }
+  });
+
+  // Study guides
+  ctx += '\n## STUDY GUIDES\n';
+  const guideCourses = courseCode ? [courseCode] : Object.keys(STUDY_GUIDES);
+  guideCourses.forEach(code => {
+    const guides = STUDY_GUIDES[code];
+    if (!guides) return;
+    Object.keys(guides).forEach(week => {
+      const g = guides[week];
+      ctx += `\n### ${code} Week ${week}: ${g.title}\n`;
+      ctx += `Study hours: ${g.studyHours}\n`;
+      if (g.learningObjectives) ctx += 'Learning objectives:\n' + g.learningObjectives.map(o => '- ' + o.replace(/<[^>]+>/g, '')).join('\n') + '\n';
+      if (g.keyConcepts) ctx += 'Key concepts:\n' + g.keyConcepts.map(c => '- ' + c.replace(/<[^>]+>/g, '').substring(0, 300)).join('\n') + '\n';
+      if (g.keyTerms) {
+        ctx += 'Key terms:\n';
+        Object.entries(g.keyTerms).forEach(([term, def]) => {
+          ctx += '- ' + term + ': ' + def.replace(/<[^>]+>/g, '').substring(0, 150) + '\n';
+        });
+      }
+      if (g.selfTest) ctx += 'Self-test questions:\n' + g.selfTest.map(q => '- Q: ' + (q.q||'').replace(/<[^>]+>/g, '') + ' A: ' + (q.a||'').replace(/<[^>]+>/g, '').substring(0, 200)).join('\n') + '\n';
+      if (g.examRelevance) ctx += 'Exam relevance: ' + g.examRelevance.replace(/<[^>]+>/g, '') + '\n';
+      if (g.distinctionTip) ctx += 'Distinction tip: ' + g.distinctionTip.replace(/<[^>]+>/g, '') + '\n';
+    });
+  });
+
+  // Weekly content summaries
+  if (courseCode && WEEKLY_CONTENT[courseCode]) {
+    ctx += '\n## WEEKLY CONTENT\n';
+    Object.entries(WEEKLY_CONTENT[courseCode]).forEach(([week, items]) => {
+      ctx += `Week ${week}: ` + items.map(i => i.title).join(', ') + '\n';
+    });
+  }
+
+  // Course info
+  ctx += '\n## COURSE INFO\n';
+  const coursesToInclude = courseCode ? [courseCode] : Object.keys(COURSES);
+  coursesToInclude.forEach(code => {
+    const c = COURSES[code];
+    ctx += `${code}: ${c.name}\n`;
+  });
+
+  // Timetable
+  ctx += '\n## TIMETABLE\n';
+  TIMETABLE.forEach(t => {
+    if (!courseCode || t.course === courseCode) {
+      ctx += `${t.day} ${t.start}-${t.end}: ${t.course} ${t.type} at ${t.location}\n`;
+    }
+  });
+
+  ctx += '\nCurrent date: ' + TODAY.toISOString().slice(0, 10) + ', Week ' + (WEEKS.findIndex(w => TODAY >= w.start && TODAY <= w.end) + 1) + ' of semester\n';
+
+  return ctx;
+}
+
+function saSystemPrompt(courseCode) {
+  const courseName = courseCode ? COURSES[courseCode].code + ' ' + COURSES[courseCode].name : 'all courses';
+  return `You are a university study assistant for a first-year student at the University of Sydney (Semester 1, 2026). You are currently helping with ${courseName}.
+
+RULES:
+1. Answer ONLY based on the course materials provided below. Do not use outside knowledge.
+2. If the answer is not in the provided materials, say "That's not covered in my current materials" and suggest checking NotebookLM or the lecture recordings.
+3. Cite specific weeks, lectures, or assessments when answering (e.g. "According to the Week 2 study guide...").
+4. Keep answers concise but thorough. Use bullet points for lists.
+5. For code questions (INFO1113), include code examples using Java syntax.
+6. When asked about assessments, always mention the due date, weight, and any key rules.
+7. If asked to quiz the student, create questions based on the self-test questions and key terms in the materials.
+8. Use plain language suitable for a first-year undergraduate.
+
+<course_materials>
+${saBuildContext(courseCode)}
+</course_materials>`;
+}
+
+async function saSend() {
+  const input = document.getElementById('sa-input');
+  const text = input.value.trim();
+  if (!text) return;
+
+  const key = localStorage.getItem(SA_STORAGE_KEY);
+  if (!key) { saSettings(); return; }
+
+  // Add user message to UI
+  const msgsEl = document.getElementById('sa-messages');
+  msgsEl.innerHTML += `<div class="sa-msg sa-msg-user"><div class="sa-bubble">${saEscape(text)}</div></div>`;
+  input.value = '';
+  input.style.height = '42px';
+
+  // Add to conversation history
+  saMessages.push({ role: 'user', content: text });
+
+  // Show typing indicator
+  document.getElementById('sa-typing').classList.add('show');
+  document.getElementById('sa-send-btn').disabled = true;
+  msgsEl.scrollTop = msgsEl.scrollHeight;
+
+  try {
+    const courseCode = saDetectCourse();
+    const systemMsg = saSystemPrompt(courseCode);
+
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'x-api-key': key,
+        'anthropic-version': '2023-06-01',
+        'content-type': 'application/json',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: SA_MODEL,
+        max_tokens: 1024,
+        system: [{ type: 'text', text: systemMsg, cache_control: { type: 'ephemeral' } }],
+        messages: saMessages
+      })
+    });
+
+    if (!resp.ok) {
+      const err = await resp.json().catch(() => ({}));
+      throw new Error(err.error?.message || `API error ${resp.status}`);
+    }
+
+    const data = await resp.json();
+    const reply = data.content?.[0]?.text || 'No response received.';
+
+    // Track cost
+    const inp = data.usage?.input_tokens || 0;
+    const outp = data.usage?.output_tokens || 0;
+    const cacheRead = data.usage?.cache_read_input_tokens || 0;
+    const cacheCreate = data.usage?.cache_creation_input_tokens || 0;
+    const freshInput = inp - cacheRead;
+    // Haiku pricing: $1/M input, $0.10/M cache read, $1.25/M cache write, $5/M output
+    const cost = (freshInput * 1.0 + cacheRead * 0.1 + cacheCreate * 1.25 + outp * 5.0) / 1000000;
+    saTotalCost += cost;
+
+    // Add to conversation history
+    saMessages.push({ role: 'assistant', content: reply });
+
+    // Render reply
+    msgsEl.innerHTML += `<div class="sa-msg sa-msg-ai"><div class="sa-bubble">${saFormatReply(reply)}</div></div>`;
+
+    // Show cost
+    const cached = cacheRead > 0 ? ` (${Math.round(cacheRead/inp*100)}% cached)` : '';
+    document.getElementById('sa-cost').textContent = `${inp + outp} tokens${cached} · $${saTotalCost.toFixed(4)} session total`;
+
+  } catch (e) {
+    const errMsg = e.message || 'Unknown error';
+    msgsEl.innerHTML += `<div class="sa-msg sa-msg-ai"><div class="sa-bubble" style="background:#fef2f2;border:1px solid #fecaca;color:#dc2626">Error: ${saEscape(errMsg)}${errMsg.includes('401') ? '<br><br>Your API key may be invalid. Click "Key" above to update it.' : ''}</div></div>`;
+    // Remove the failed user message from history so conversation stays valid
+    saMessages.pop();
+  } finally {
+    document.getElementById('sa-typing').classList.remove('show');
+    document.getElementById('sa-send-btn').disabled = false;
+    msgsEl.scrollTop = msgsEl.scrollHeight;
+    input.focus();
+  }
+}
+
+function saEscape(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+function saFormatReply(text) {
+  // Basic markdown-like formatting
+  return text
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/`([^`]+)`/g, '<code>$1</code>')
+    .replace(/\n\n/g, '<br><br>')
+    .replace(/\n- /g, '<br>• ')
+    .replace(/\n(\d+)\. /g, '<br>$1. ')
+    .replace(/\n/g, '<br>');
+}
+
+// Auto-resize textarea
+document.addEventListener('DOMContentLoaded', () => {
+  const ta = document.getElementById('sa-input');
+  if (ta) ta.addEventListener('input', function() {
+    this.style.height = '42px';
+    this.style.height = Math.min(this.scrollHeight, 100) + 'px';
+  });
+});
 
 // ======================== INIT ========================
 
