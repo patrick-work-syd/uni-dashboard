@@ -17,7 +17,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 .sidebar { width:240px; background:var(--sidebar); color:#e2e8f0; padding:0; display:flex; flex-direction:column; position:fixed; top:0; left:0; bottom:0; z-index:10; transition:transform 0.25s ease; }
 .sidebar.collapsed { transform:translateX(-240px); }
 .nav-toggle { display:none; position:fixed; top:12px; left:12px; z-index:20; background:var(--sidebar); color:#e2e8f0; border:1px solid rgba(255,255,255,0.15); border-radius:8px; width:40px; height:40px; font-size:22px; cursor:pointer; align-items:center; justify-content:center; line-height:1; }
-@media (max-width:800px) {
+@media (max-width:1024px) {
   .nav-toggle { display:flex; }
   .sidebar { transform:translateX(-240px); }
   .sidebar.open { transform:translateX(0); }
@@ -3154,7 +3154,7 @@ function showView(id) {
   if (id === 'calendar') renderCalendar();
   if (typeof saUpdateContextBadge === 'function') saUpdateContextBadge();
   // Auto-close nav on mobile after selection
-  if (window.innerWidth <= 800) toggleNav();
+  if (window.innerWidth <= 1024) toggleNav();
 }
 
 function switchTab(el, tabId) {
