@@ -1445,6 +1445,7 @@ const DASHBOARD_CHANGELOG = [
   { date: '2026-03-09', action: 'add', target: 'HTML', detail: 'Added Study Assistant chat widget — floating chat button (bottom-right) with Claude AI integration via Anthropic API. Course-aware context (detects active course page). BYOK pattern (API key in localStorage). Sends study guides, assessments, key terms, timetable as grounded context. Prompt caching for cost efficiency. Basic markdown rendering in replies. Session cost tracking.' },
   { date: '2026-03-09', action: 'update', target: 'STUDY_GUIDES', detail: 'Week 3 study guides added/upgraded for all 4 courses from NotebookLM sources. INFO1113: NEW Week 3 (Classes, UML, File I/O — 13 keyConcepts, 18 keyTerms, 10 selfTest). LNGS1001: UPGRADED Week 3 (added allophonic rules, minimal pairs, tenseness, narrow transcription — 12 keyConcepts, 19 keyTerms, 12 selfTest). ANHS2609: UPGRADED Week 3 (added Court/Vulgate traditions, Great Man narrative, Bosworth critical view, Sekunda 2010 — 11 keyConcepts, 18 keyTerms, 12 selfTest). OLES1603: UPGRADED Week 3 (added EM spectrum, multi-wavelength astronomy, 4 telescopes, epistemological shift — 12 keyConcepts, 20 keyTerms, 12 selfTest). Total quiz questions: 113→131. GUIDE_SOURCES updated (INFO1113 Wk3: outline). WORKFLOW_TRACKER coverage updated.' },
   { date: '2026-03-10', action: 'update', target: 'STUDY_GUIDES', detail: 'Week 3 study guides upgraded from DRAFT to COMPLETE using lecture transcripts. INFO1113: REWRITTEN from 82KB transcript — retitled "Inheritance, Exceptions, Polymorphism, and File I/O" (was Classes/UML/File I/O). Now covers toString/@Override, exceptions/try-catch, defensive programming, inheritance hierarchy (Workout superclass), polymorphism, Liskov Substitution Principle. 12 keyConcepts, 20 keyTerms, 11 selfTest. LNGS1001: ENRICHED from 33KB transcript — added cardinal vowels concept, cross-linguistic inventory examples (French/Mandarin/Lao/Pola), dialectal variation (Texas pin/pen merger), coarticulation, Assignment 1 ChatGPT warning. 14 keyConcepts, 19 keyTerms, 12 selfTest. OLES1603: FULLY REWRITTEN from 43KB transcript — retitled "Parallax, Spectroscopy, and Stellar Remnants" (was Light/Telescopes/Multi-Wavelength). Now covers parallax/Bessel, Cepheids/Leavitt, Hubble/extragalactic, spectroscopy/Payne, Doppler shift, interstellar medium, 21-cm emission, white dwarfs/Chandrasekhar, neutron stars/Bell, black holes/EHT. 12 keyConcepts, 20 keyTerms, 11 selfTest. WORKFLOW_TRACKER coverage updated: INFO1113/LNGS1001/OLES1603 Wk3 draft→complete.' },
+  { date: '2026-03-10', action: 'update', target: 'SYNC_TRACKER', detail: 'Weekly sync (browser-verified). INFO1113: 14 Ed lessons (was 10) — 4 new: 2 EFT tutorial lessons (password-protected), Week 3 Challenge (5 challenges extracted), Tutorial 3 (already had). Extracted Week 3 Challenge to file. Saved EFT announcement (closed book, 40min, Wk1-2 only). LNGS1001: new announcement "Assignment 1 Due Date" — deadline March 13 11:59pm (NOT before tutorial), no simple extensions. Downloaded 03b Suprasegmentals slides (116MB PPTX). Week 4 module started (What\'s on page). ANHS2609: no new content. OLES1603: no new content, Week 4 still 403.' },
 ];
 
 const WEEKLY_CONTENT = {
@@ -3020,13 +3021,16 @@ const SYNC_TRACKER = {
     label: 'Week 3 (9\u201315 Mar)',
     items: [
       { id:'info-w3-transcript', course:'INFO1113', type:'transcript', desc:'Lecture transcript', status:'done', file:'Week 03 - OOP-transcript.txt', note:'82KB, downloaded 10 Mar via Echo360, uploaded to NotebookLM' },
-      { id:'info-w3-lesson', course:'INFO1113', type:'lesson', desc:'Ed lesson (Week 3)', status:'pending', note:'Week 3 Challenge "Array, Class and Puzzles" seen on Ed 10 Mar — lesson content not yet extracted' },
+      { id:'info-w3-lesson', course:'INFO1113', type:'lesson', desc:'Ed lesson (Week 3)', status:'done', file:'Week 03 - Array Class and Puzzles.md', note:'5 challenges extracted 10 Mar: Array Reverse, Find The Point, Binary, Modmad*, Sudoku*. EFT lessons password-protected (given in tutorial).' },
+      { id:'info-w3-eft-announce', course:'INFO1113', type:'page', desc:'EFT announcement', status:'done', file:'EFT Announcement - Week 3.md', note:'Closed book, 40min, Weeks 1-2 only, lab computer, saved 10 Mar' },
       { id:'info-w3-tutorial', course:'INFO1113', type:'tutorial', desc:'Tutorial 3', status:'done', file:'Tutorial 3 - Class UML File IO.md', note:'Extracted 9 Mar from Ed lesson 97414' },
       { id:'lngs-w3-mon-transcript', course:'LNGS1001', type:'transcript', desc:'Monday transcript', status:'done', file:'Week 03 - Mon - Vowels Part I-transcript.txt', note:'33KB, downloaded 10 Mar via Echo360, uploaded to NotebookLM' },
       { id:'lngs-w3-tue-transcript', course:'LNGS1001', type:'transcript', desc:'Tuesday transcript', status:'pending', note:'Tue 10 Mar lecture — needs collection this evening' },
       { id:'lngs-w3-mon-slides-pptx', course:'LNGS1001', type:'slides', desc:'Monday slides (PPTX)', status:'done', file:'LNGS1001_2026_03a_Phonetics3Vowels.pptx', note:'9.37MB, downloaded 10 Mar' },
       { id:'lngs-w3-mon-slides-pdf', course:'LNGS1001', type:'slides', desc:'Monday slides (PDF)', status:'done', file:'Week 03a - Phonetics3 Vowels.pdf', note:'1.6MB, converted from PPTX 10 Mar, uploaded to NotebookLM' },
       { id:'lngs-w3-outline', course:'LNGS1001', type:'slides', desc:'Week 3 outline (.md)', status:'done', file:'Week 03 - Phonetics Vowels and Suprasegmentals.md' },
+      { id:'lngs-w3-tue-slides-pptx', course:'LNGS1001', type:'slides', desc:'Tuesday slides (PPTX)', status:'done', file:'LNGS1001_2026_03b_Phonetics4_Suprasegmentals.pptx', note:'116MB, downloaded 10 Mar from Canvas' },
+      { id:'lngs-w3-announce', course:'LNGS1001', type:'page', desc:'Assignment 1 Due Date announcement', status:'done', file:'Announcement - Assignment 1 Due Date.md', note:'Deadline March 13 11:59pm, NOT before tutorial. No simple extensions.' },
       { id:'lngs-w3-page', course:'LNGS1001', type:'page', desc:'Canvas What\'s on + Extras', status:'done', file:'Week 03 - Whats on.md, Week 03 - Extras.md' },
       { id:'anhs-w3-transcript', course:'ANHS2609', type:'transcript', desc:'Lecture transcript', status:'pending', note:'Tue 10 Mar lecture — needs collection this evening' },
       { id:'anhs-w3-page', course:'ANHS2609', type:'page', desc:'Lecture + Tutorial page', status:'done', file:'Week 03 - Philip and Alexander.md' },
@@ -3037,8 +3041,8 @@ const SYNC_TRACKER = {
 };
 
 const SYNC_NOTEBOOKLM = {
-  INFO1113: { id:'f01b2550', count:14 },
-  LNGS1001: { id:'dd81c06a', count:45 },
+  INFO1113: { id:'f01b2550', count:16 },
+  LNGS1001: { id:'dd81c06a', count:46 },
   ANHS2609: { id:'c91afde3', count:12 },
   OLES1603: { id:'51de57d4', count:18 }
 };
@@ -3123,7 +3127,7 @@ const WORKFLOW_TRACKER = {
     { id:'links', desc:'Material links verified', status:'done', date:'2026-03-04' },
     { id:'calendar-wk3', desc:'Week 3 assessments in calendar', status:'done', date:'2026-03-03' },
     { id:'prep-wk3', desc:'Week 3 prep checklist items', status:'done', date:'2026-03-03' },
-    { id:'nbml-sync', desc:'NotebookLM sources uploaded', status:'done', date:'2026-03-10', note:'INFO:14, LNGS:45, ANHS:12, OLES:18 (MCP-verified 10 Mar — +3 Wk3 transcripts, +1 LNGS slides)' },
+    { id:'nbml-sync', desc:'NotebookLM sources uploaded', status:'done', date:'2026-03-10', note:'INFO:16, LNGS:46, ANHS:12, OLES:18 (MCP-verified 10 Mar — +Wk3 Challenge, EFT announcement, LNGS1001 assignment announcement)' },
     { id:'validation', desc:'Data validation checks passing', status:'done', date:'2026-03-03' },
     { id:'assess-prep-wk3', desc:'Assessment prep guides for Week 3 due dates', status:'done', date:'2026-03-08', note:'Coding Challenge, Map Quiz, Assignment 1 — all have rubric/rules/tips/files' },
     { id:'assess-prep-wk4', desc:'Assessment prep guide for Idea Exploration (Wk4)', status:'done', date:'2026-03-08', note:'OLES1603 10% — rubric/rules/tips/files added' },
