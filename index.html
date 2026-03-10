@@ -1451,7 +1451,7 @@ const WEEKLY_CONTENT = {
   INFO1113: {
     1: { lecture:'Basics of Java Programming', tutorial:'IO & Conditionals', reading:'Savitch Ch.1-2' },
     2: { lecture:'Loops & Static Methods', tutorial:'Tutorial 2: Loops & Arrays', reading:'Savitch Ch.3-4' },
-    3: { lecture:'Control Flow', tutorial:'TBD' }, 4: { lecture:'Arrays & Methods', tutorial:'TBD' },
+    3: { lecture:'Inheritance, Exceptions, Polymorphism & File I/O', tutorial:'Class, UML & File I/O' }, 4: { lecture:'Arrays & Methods', tutorial:'TBD' },
     5: { lecture:'OOP Fundamentals', tutorial:'TBD' }, 6: { lecture:'Inheritance', tutorial:'TBD' },
     7: { lecture:'Polymorphism', tutorial:'TBD' }, 8: { lecture:'Abstract Classes & Interfaces', tutorial:'TBD' },
     9: { lecture:'Exception Handling', tutorial:'TBD' }, 10: { lecture:'File I/O', tutorial:'TBD' },
@@ -2980,7 +2980,7 @@ const ASTRO_SORTS = [
 
 // ======================== SYNC TRACKER DATA ========================
 
-const LAST_SYNC_DATE = '2026-03-09';
+const LAST_SYNC_DATE = '2026-03-10';
 
 const SYNC_TRACKER = {
   1: {
@@ -3019,26 +3019,28 @@ const SYNC_TRACKER = {
   3: {
     label: 'Week 3 (9\u201315 Mar)',
     items: [
-      { id:'info-w3-transcript', course:'INFO1113', type:'transcript', desc:'Lecture transcript', status:'pending', note:'Mon 9 Mar lecture' },
-      { id:'info-w3-lesson', course:'INFO1113', type:'lesson', desc:'Ed lesson (Week 3)', status:'pending', note:'Not yet posted on Ed' },
-      { id:'info-w3-tutorial', course:'INFO1113', type:'tutorial', desc:'Tutorial 3', status:'pending', note:'Not yet posted on Ed' },
-      { id:'lngs-w3-mon-transcript', course:'LNGS1001', type:'transcript', desc:'Monday transcript', status:'pending', note:'Mon 9 Mar lecture' },
-      { id:'lngs-w3-tue-transcript', course:'LNGS1001', type:'transcript', desc:'Tuesday transcript', status:'pending', note:'Tue 10 Mar lecture' },
-      { id:'lngs-w3-slides', course:'LNGS1001', type:'slides', desc:'Week 3 slides (.md)', status:'done', file:'Week 03 - Phonetics Vowels and Suprasegmentals.md' },
+      { id:'info-w3-transcript', course:'INFO1113', type:'transcript', desc:'Lecture transcript', status:'done', file:'Week 03 - OOP-transcript.txt', note:'82KB, downloaded 10 Mar via Echo360, uploaded to NotebookLM' },
+      { id:'info-w3-lesson', course:'INFO1113', type:'lesson', desc:'Ed lesson (Week 3)', status:'pending', note:'Week 3 Challenge "Array, Class and Puzzles" seen on Ed 10 Mar — lesson content not yet extracted' },
+      { id:'info-w3-tutorial', course:'INFO1113', type:'tutorial', desc:'Tutorial 3', status:'done', file:'Tutorial 3 - Class UML File IO.md', note:'Extracted 9 Mar from Ed lesson 97414' },
+      { id:'lngs-w3-mon-transcript', course:'LNGS1001', type:'transcript', desc:'Monday transcript', status:'done', file:'Week 03 - Mon - Vowels Part I-transcript.txt', note:'33KB, downloaded 10 Mar via Echo360, uploaded to NotebookLM' },
+      { id:'lngs-w3-tue-transcript', course:'LNGS1001', type:'transcript', desc:'Tuesday transcript', status:'pending', note:'Tue 10 Mar lecture — needs collection this evening' },
+      { id:'lngs-w3-mon-slides-pptx', course:'LNGS1001', type:'slides', desc:'Monday slides (PPTX)', status:'done', file:'LNGS1001_2026_03a_Phonetics3Vowels.pptx', note:'9.37MB, downloaded 10 Mar' },
+      { id:'lngs-w3-mon-slides-pdf', course:'LNGS1001', type:'slides', desc:'Monday slides (PDF)', status:'done', file:'Week 03a - Phonetics3 Vowels.pdf', note:'1.6MB, converted from PPTX 10 Mar, uploaded to NotebookLM' },
+      { id:'lngs-w3-outline', course:'LNGS1001', type:'slides', desc:'Week 3 outline (.md)', status:'done', file:'Week 03 - Phonetics Vowels and Suprasegmentals.md' },
       { id:'lngs-w3-page', course:'LNGS1001', type:'page', desc:'Canvas What\'s on + Extras', status:'done', file:'Week 03 - Whats on.md, Week 03 - Extras.md' },
-      { id:'anhs-w3-transcript', course:'ANHS2609', type:'transcript', desc:'Lecture transcript', status:'pending', note:'Tue 10 Mar lecture' },
+      { id:'anhs-w3-transcript', course:'ANHS2609', type:'transcript', desc:'Lecture transcript', status:'pending', note:'Tue 10 Mar lecture — needs collection this evening' },
       { id:'anhs-w3-page', course:'ANHS2609', type:'page', desc:'Lecture + Tutorial page', status:'done', file:'Week 03 - Philip and Alexander.md' },
-      { id:'oles-w3-transcript', course:'OLES1603', type:'transcript', desc:'Lecture transcript', status:'pending', note:'Mon 9 Mar lecture' },
+      { id:'oles-w3-transcript', course:'OLES1603', type:'transcript', desc:'Lecture transcript', status:'done', file:'Week 03 - Astronomy-transcript.txt', note:'43KB, downloaded 10 Mar via Echo360, uploaded to NotebookLM' },
       { id:'oles-w3-page', course:'OLES1603', type:'page', desc:'Canvas page', status:'done', file:'Week 03 - Stars and Constellations.md' },
     ]
   }
 };
 
 const SYNC_NOTEBOOKLM = {
-  INFO1113: { id:'f01b2550', count:13 },
-  LNGS1001: { id:'dd81c06a', count:43 },
+  INFO1113: { id:'f01b2550', count:14 },
+  LNGS1001: { id:'dd81c06a', count:45 },
   ANHS2609: { id:'c91afde3', count:12 },
-  OLES1603: { id:'51de57d4', count:17 }
+  OLES1603: { id:'51de57d4', count:18 }
 };
 
 const SYNC_EMAIL_SCHEDULE = [
@@ -3064,10 +3066,10 @@ const SYNC_EXPECTED_ITEMS = [
 
 // Tracks what source each study guide was built from: 'transcript' (full quality) or 'outline' (draft from Canvas page only)
 const GUIDE_SOURCES = {
-  INFO1113: { 1: 'transcript', 2: 'transcript', 3: 'outline' },
-  LNGS1001: { 1: 'transcript', 2: 'transcript', 3: 'outline' },
+  INFO1113: { 1: 'transcript', 2: 'transcript', 3: 'transcript' },
+  LNGS1001: { 1: 'transcript', 2: 'transcript', 3: 'transcript' },
   ANHS2609: { 1: 'transcript', 2: 'transcript', 3: 'outline' },
-  OLES1603: { 1: 'transcript', 2: 'transcript', 3: 'outline' }
+  OLES1603: { 1: 'transcript', 2: 'transcript', 3: 'transcript' }
 };
 
 const WORKFLOW_TRACKER = {
