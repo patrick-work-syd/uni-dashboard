@@ -520,6 +520,56 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 .map-filter-btn.active { background:#d97706; color:#fff; border-color:#d97706; }
 .map-controls { display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:12px; }
 
+/* ANHS Timeline */
+.tl-container { position:relative; padding:20px 0; }
+.tl-line { position:absolute; left:24px; top:0; bottom:0; width:3px; background:linear-gradient(180deg,#d97706,#f59e0b,#d97706); border-radius:2px; }
+.tl-era { font-size:14px; font-weight:800; color:#92400e; padding:8px 0 4px 48px; letter-spacing:0.5px; text-transform:uppercase; position:relative; }
+.tl-era::before { content:''; position:absolute; left:18px; top:12px; width:15px; height:15px; background:#d97706; border-radius:50%; border:3px solid #fff; box-shadow:0 0 0 2px #d97706; z-index:1; }
+.tl-event { position:relative; margin-left:48px; margin-bottom:10px; padding:12px 16px; background:var(--card); border:1px solid var(--border); border-radius:10px; cursor:pointer; transition:all 0.2s; border-left:4px solid #e5e7eb; }
+.tl-event:hover { border-left-color:#d97706; box-shadow:0 2px 8px rgba(0,0,0,0.08); transform:translateX(2px); }
+.tl-event.expanded { border-left-color:#d97706; background:#fffbeb; }
+.tl-event::before { content:''; position:absolute; left:-33px; top:16px; width:11px; height:11px; border-radius:50%; border:2px solid #d4d4d8; background:#fff; z-index:1; transition:all 0.2s; }
+.tl-event:hover::before,.tl-event.expanded::before { border-color:#d97706; background:#d97706; }
+.tl-event.type-military::before { border-color:#dc2626; }
+.tl-event.type-military.expanded::before,.tl-event.type-military:hover::before { background:#dc2626; }
+.tl-event.type-political::before { border-color:#2563eb; }
+.tl-event.type-political.expanded::before,.tl-event.type-political:hover::before { background:#2563eb; }
+.tl-event.type-cultural::before { border-color:#7c3aed; }
+.tl-event.type-cultural.expanded::before,.tl-event.type-cultural:hover::before { background:#7c3aed; }
+.tl-event.type-personal::before { border-color:#059669; }
+.tl-event.type-personal.expanded::before,.tl-event.type-personal:hover::before { background:#059669; }
+.tl-event.type-military { border-left-color:#fecaca; }
+.tl-event.type-military.expanded { border-left-color:#dc2626; background:#fef2f2; }
+.tl-event.type-political { border-left-color:#bfdbfe; }
+.tl-event.type-political.expanded { border-left-color:#2563eb; background:#eff6ff; }
+.tl-event.type-cultural { border-left-color:#e9d5ff; }
+.tl-event.type-cultural.expanded { border-left-color:#7c3aed; background:#faf5ff; }
+.tl-event.type-personal { border-left-color:#a7f3d0; }
+.tl-event.type-personal.expanded { border-left-color:#059669; background:#ecfdf5; }
+.tl-head { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+.tl-date { font-size:11px; font-weight:700; color:#92400e; white-space:nowrap; min-width:90px; }
+.tl-title { font-size:13px; font-weight:700; color:var(--text); flex:1; }
+.tl-badges { display:flex; gap:4px; flex-wrap:wrap; }
+.tl-badge { display:inline-block; padding:1px 6px; border-radius:4px; font-size:10px; font-weight:700; }
+.tl-badge.military { background:#fecaca; color:#b91c1c; }
+.tl-badge.political { background:#bfdbfe; color:#1d4ed8; }
+.tl-badge.cultural { background:#e9d5ff; color:#7c3aed; }
+.tl-badge.personal { background:#a7f3d0; color:#047857; }
+.tl-badge.week { background:#fde68a; color:#92400e; }
+.tl-desc { font-size:12px; color:#4b5563; line-height:1.6; margin-top:8px; display:none; }
+.tl-event.expanded .tl-desc { display:block; }
+.tl-loc { font-size:11px; color:#6b7280; margin-top:4px; display:none; }
+.tl-event.expanded .tl-loc { display:block; }
+.tl-filters { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:16px; }
+.tl-filter { padding:4px 10px; border-radius:12px; font-size:11px; font-weight:700; cursor:pointer; border:2px solid #9ca3af; background:var(--card); transition:all 0.15s; }
+.tl-filter:hover { border-color:#d97706; }
+.tl-filter.active { background:#d97706; color:#fff; border-color:#d97706; }
+.tl-stats { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-bottom:16px; }
+.tl-stat { text-align:center; padding:8px; background:var(--card); border-radius:8px; border:1px solid var(--border); }
+.tl-stat-num { font-size:18px; font-weight:800; color:#d97706; }
+.tl-stat-label { font-size:10px; color:var(--muted); font-weight:600; text-transform:uppercase; }
+@media(max-width:600px) { .tl-stats { grid-template-columns:repeat(2,1fr); } }
+
 /* Astronomy Concept Lab */
 .astro-tools { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:20px; }
 .astro-tool-card { background:var(--card); border:2px solid var(--border); border-radius:10px; padding:16px; cursor:pointer; transition:all 0.2s; }
@@ -781,6 +831,7 @@ document.getElementById('pin-input').focus();
       <button onclick="calNav(-1)">&larr; Prev</button>
       <button onclick="calToday()">Today</button>
       <button onclick="calNav(1)">Next &rarr;</button>
+      <button onclick="calToggleTimetable()" id="cal-tt-btn" style="margin-left:8px;font-size:11px;padding:4px 10px">Classes: ON</button>
     </div>
     <div class="cal-month" id="cal-month-label"></div>
     <div>
@@ -967,12 +1018,14 @@ document.getElementById('pin-input').focus();
     <div class="tab" onclick="switchTab(this,'anhs-assess')">Assessments</div>
     <div class="tab" onclick="switchTab(this,'anhs-guide')">Study Guide</div>
     <div class="tab" onclick="switchTab(this,'anhs-practice')">Practice Tools</div>
+    <div class="tab" onclick="switchTab(this,'anhs-timeline')">Timeline</div>
     <div class="tab" onclick="switchTab(this,'anhs-files')">Materials</div>
   </div>
   <div class="tab-content active" id="anhs-weeks"></div>
   <div class="tab-content" id="anhs-assess"></div>
   <div class="tab-content" id="anhs-guide"></div>
   <div class="tab-content" id="anhs-practice"></div>
+  <div class="tab-content" id="anhs-timeline"></div>
   <div class="tab-content" id="anhs-files">
     <div class="card">
       <div class="card-title">📁 Course Materials</div>
@@ -1449,6 +1502,10 @@ const DASHBOARD_CHANGELOG = [
   { date: '2026-03-10', action: 'update', target: 'STUDY_GUIDES', detail: 'ANHS2609 Week 3 FULLY UPGRADED from 91KB lecture transcript (was outline+NotebookLM draft). Added 6 new keyConcepts: Philip\u2019s Theban education (Pelopidas/Epaminondas mentors, Sacred Band), Vergina royal tombs (gold larnax, ivory heads, material culture), 7 military innovations (sarissa specs, cavalry wedge, professionalization pay scales, Pezhetairoi elite infantry, engineering corps with torsion catapult, baggage train reform), Chaeronea tactical detail (troop composition, Alexander vs Sacred Band, Philip\u2019s contrasting treatment of Athens vs Thebes), Demosthenes\u2019 Philippics and political arc. Added 11 new keyTerms (Vergina, Larnax, Pelopidas, Epaminondas, Sacred Band, Sarissa, Pezhetairoi, Cowsia, Torsion catapult, Peace of Philocrates). Added 3 new keyExamples (Vergina gold larnax, Chaeronea lion, Philip vs Alexander treatment of Athens). Added 6 new selfTest questions (+3 learningObjectives). GUIDE_SOURCES ANHS2609 Wk3: outline\u2192transcript. WORKFLOW_TRACKER: draft\u2192complete. Total: 18 keyConcepts, 29 keyTerms, 7 keyExamples, 18 selfTest.' },
   { date: '2026-03-11', action: 'update', target: 'STUDY_GUIDES', detail: 'LNGS1001 Week 3 MAJOR EXPANSION from 42KB Tue suprasegmentals transcript (was only Mon vowels transcript). Added 7 new keyConcepts: syllable structure (onset/nucleus/coda/rhyme), sonority hierarchy and sonorant sandwich, voice quality (modal/creaky/breathy with Gujarati/Jalapa Mazatec cross-linguistic contrasts), stress-timed vs syllable-timed rhythm (English vs French), tone systems taxonomy (register/contour/pitch accent with examples), intonation functions (focus, emotion, compound stress, unit boundaries). Added 21 new keyTerms (syllable-timed, syllable, onset, nucleus, coda, rhyme, sonority, sonorant, obstruent, modal voice, creaky voice, breathy voice, register tone, contour tone, pitch accent, tone sandhi, intonation unit, HRT, compound stress, Hoo numerals). Added 7 new keyExamples (\u201cstrengths\u201d syllable complexity, voice quality contrast, stress-timing vs syllable-timing, \u201cHis first wife\u201d focus, compound stress, road ahead). Added 7 new selfTest questions, 5 new learningObjectives. Total: 18 keyConcepts, 41 keyTerms, 14 keyExamples, 19 selfTest.' },
   { date: '2026-03-11', action: 'update', target: 'SYNC_NOTEBOOKLM', detail: 'LNGS1001 03b Suprasegmentals slides PDF (3.8MB, converted from 116MB PPTX) uploaded to NotebookLM. LNGS1001: 47\u219248 sources.' },
+  { date: '2026-03-11', action: 'add', target: 'ANHS_TIMELINE', detail: 'New interactive timeline: 35 events across 5 eras (Philip II to Alexander\'s death). Type/era filters, expandable detail cards, map location cross-references. New Timeline tab on ANHS2609 page.' },
+  { date: '2026-03-11', action: 'update', target: 'WORKFLOW_TRACKER', detail: 'anhs-timeline enhancement status: idea\u2192done.' },
+  { date: '2026-03-11', action: 'add', target: 'IPA_PHONOLOGY', detail: 'New Phonology Analysis panel in IPA Practice Lab: 15 minimal pair exercises (yes/no + explanation), 10 natural class identifications, 8 phonological rules (allophonic + morphophonemic). 5th tool card spanning full width.' },
+  { date: '2026-03-11', action: 'update', target: 'WORKFLOW_TRACKER', detail: 'ipa-phonology enhancement status: planned\u2192done. 33 exercises total.' },
 ];
 
 const WEEKLY_CONTENT = {
@@ -2880,6 +2937,60 @@ const IPA_NOTATION_REFERENCE = [
   { category:'Rules', symbol:'elsewhere', name:'Elsewhere rule', description:'Specifies the default realisation in all other environments', example:'--> [l] / elsewhere' },
 ];
 
+// ======================== PHONOLOGY ANALYSIS DATA ========================
+
+const IPA_PHONOLOGY = {
+  minimalPairs: [
+    { id:1, word1:'pat', ipa1:'pæt', word2:'bat', ipa2:'bæt', isMinimal:true, contrast:'/p/ vs /b/', explanation:'Differ only in voicing of the initial stop (voiceless vs voiced bilabial). Same vowel, same final consonant.' },
+    { id:2, word1:'sip', ipa1:'sɪp', word2:'zip', ipa2:'zɪp', isMinimal:true, contrast:'/s/ vs /z/', explanation:'Differ only in voicing of the initial fricative. /s/ = voiceless alveolar, /z/ = voiced alveolar.' },
+    { id:3, word1:'thin', ipa1:'θɪn', word2:'tin', ipa2:'tɪn', isMinimal:true, contrast:'/θ/ vs /t/', explanation:'Differ in manner and place: /θ/ = dental fricative, /t/ = alveolar stop. Both voiceless. One phoneme change = minimal pair.' },
+    { id:4, word1:'cat', ipa1:'kæt', word2:'cut', ipa2:'kɐt', isMinimal:true, contrast:'/æ/ vs /ɐ/', explanation:'Differ only in the vowel. Same initial and final consonants. Proves /æ/ and /ɐ/ are separate phonemes in AusEng.' },
+    { id:5, word1:'beat', ipa1:'biːt', word2:'bit', ipa2:'bɪt', isMinimal:true, contrast:'/iː/ vs /ɪ/', explanation:'Differ in vowel length and quality. /iː/ = long close front, /ɪ/ = short near-close near-front. Proves length is phonemic.' },
+    { id:6, word1:'pill', ipa1:'pɪl', word2:'bill', ipa2:'bɪl', isMinimal:true, contrast:'/p/ vs /b/', explanation:'Differ only in voicing of the initial stop. Another minimal pair proving /p/ and /b/ are separate phonemes.' },
+    { id:7, word1:'light', ipa1:'lɑet', word2:'night', ipa2:'nɑet', isMinimal:true, contrast:'/l/ vs /n/', explanation:'Differ in the initial consonant: /l/ = lateral approximant, /n/ = nasal. Same manner class (sonorant) but different articulation.' },
+    { id:8, word1:'pin', ipa1:'pɪn', word2:'spin', ipa2:'spɪn', isMinimal:false, contrast:'Not a minimal pair', explanation:'These differ by MORE than one phoneme — "spin" has an extra /s/ before /p/. Also, [p] in "spin" is unaspirated vs [pʰ] in "pin", but aspiration is not phonemic in English (allophonic).' },
+    { id:9, word1:'pit', ipa1:'pɪt', word2:'spit', ipa2:'spɪt', isMinimal:false, contrast:'Not a minimal pair', explanation:'Differ by more than one sound. The [pʰ] in "pit" vs [p] in "spit" are allophones of /p/ — the aspiration difference is predictable from environment, not contrastive.' },
+    { id:10, word1:'writer', ipa1:'ɹɑeɾə', word2:'rider', ipa2:'ɹɑeɾə', isMinimal:false, contrast:'Not a minimal pair', explanation:'In many dialects (including AusEng), these sound identical because /t/ and /d/ both become [ɾ] (flap) between vowels. The surface forms are the same.' },
+    { id:11, word1:'ship', ipa1:'ʃɪp', word2:'chip', ipa2:'tʃɪp', isMinimal:true, contrast:'/ʃ/ vs /tʃ/', explanation:'Differ only in manner: /ʃ/ = postalveolar fricative, /tʃ/ = postalveolar affricate. Same place, but one is a fricative and the other an affricate.' },
+    { id:12, word1:'sue', ipa1:'sʉː', word2:'shoe', ipa2:'ʃʉː', isMinimal:true, contrast:'/s/ vs /ʃ/', explanation:'Differ only in place: /s/ = alveolar, /ʃ/ = postalveolar. Both voiceless fricatives. Proves these are separate phonemes.' },
+    { id:13, word1:'leaf', ipa1:'liːf', word2:'reef', ipa2:'ɹiːf', isMinimal:true, contrast:'/l/ vs /ɹ/', explanation:'Differ only in the initial consonant: /l/ = lateral approximant, /ɹ/ = approximant. Common distinction in English (but many languages don\'t contrast these!).' },
+    { id:14, word1:'fan', ipa1:'fæn', word2:'van', ipa2:'væn', isMinimal:true, contrast:'/f/ vs /v/', explanation:'Differ only in voicing: /f/ = voiceless labiodental fricative, /v/ = voiced labiodental fricative. Classic voicing minimal pair.' },
+    { id:15, word1:'cat', ipa1:'kæt', word2:'cats', ipa2:'kæts', isMinimal:false, contrast:'Not a minimal pair', explanation:'These differ by an added phoneme /s/ at the end, not a substitution of one phoneme for another. Minimal pairs require substitution in one position, not addition.' },
+  ],
+
+  naturalClasses: [
+    { id:1, prompt:'What class do [p], [t], [k] belong to?', sounds:['p','t','k'], answer:'Voiceless stops (voiceless oral plosives)', features:['−voice', '−continuant', '−nasal'], explanation:'All three share voicelessness, oral (non-nasal) airflow, and complete obstruction (stop). They differ only in place of articulation (bilabial, alveolar, velar).' },
+    { id:2, prompt:'What class do [m], [n], [ŋ] belong to?', sounds:['m','n','ŋ'], answer:'Nasal stops', features:['+nasal', '−continuant'], explanation:'All are produced with complete oral closure but with the velum lowered so air flows through the nose. They differ in place: bilabial, alveolar, velar.' },
+    { id:3, prompt:'What class do [f], [v], [θ], [ð], [s], [z], [ʃ], [ʒ] belong to?', sounds:['f','v','θ','ð','s','z','ʃ','ʒ'], answer:'Fricatives', features:['+continuant', '−sonorant'], explanation:'All are produced with a narrow constriction causing turbulent airflow (frication). They vary in voicing and place but share the same manner of articulation.' },
+    { id:4, prompt:'What class do [b], [d], [g], [v], [z], [ʒ] belong to?', sounds:['b','d','g','v','z','ʒ'], answer:'Voiced obstruents', features:['+voice', '−sonorant'], explanation:'All are voiced AND obstruent (produced with significant obstruction). This class combines voicing with the stop/fricative manner types.' },
+    { id:5, prompt:'What class do [p], [b] belong to?', sounds:['p','b'], answer:'Bilabial stops', features:['bilabial', '−continuant'], explanation:'Both are stops produced with both lips. They differ only in voicing: /p/ is voiceless, /b/ is voiced.' },
+    { id:6, prompt:'What class do [l], [ɹ], [w], [j] belong to?', sounds:['l','ɹ','w','j'], answer:'Approximants', features:['+sonorant', '+continuant', '−nasal'], explanation:'All are produced with very little constriction — air flows relatively freely. They are sonorant (periodic vocal fold vibration), continuant, and non-nasal.' },
+    { id:7, prompt:'What class do [iː], [ɪ], [e], [eː] belong to?', sounds:['iː','ɪ','e','eː'], answer:'Front vowels', features:['+syllabic', 'front'], explanation:'All are produced with the tongue body positioned in the front of the mouth. They vary in height (close, near-close, close-mid) and length.' },
+    { id:8, prompt:'What class do [s], [z] belong to?', sounds:['s','z'], answer:'Alveolar fricatives (sibilants)', features:['alveolar', '+continuant', '+strident'], explanation:'Both are alveolar fricatives with high-frequency turbulence (sibilant). They differ only in voicing.' },
+    { id:9, prompt:'What class do [tʃ], [dʒ] belong to?', sounds:['tʃ','dʒ'], answer:'Postalveolar affricates', features:['postalveolar', '+delayed release'], explanation:'Both begin with a stop closure and release into a fricative at the same place. Affricates combine stop and fricative characteristics.' },
+    { id:10, prompt:'What class do [m], [n], [ŋ], [l], [ɹ] belong to?', sounds:['m','n','ŋ','l','ɹ'], answer:'Sonorant consonants', features:['+sonorant', '+consonantal'], explanation:'All are consonants produced with relatively open airflow, allowing spontaneous voicing. Contrasts with obstruents (stops, fricatives, affricates).' },
+  ],
+
+  rules: [
+    { id:1, name:'Aspiration', formal:'/p, t, k/ → [pʰ, tʰ, kʰ] / #__V (stressed)', example:'"pin" [pʰɪn] vs "spin" [spɪn]', explanation:'Voiceless stops are aspirated when they occur word-initially (or syllable-initially) before a stressed vowel. After /s/, they are unaspirated. This is an allophonic rule — English speakers don\'t hear the difference.', type:'allophonic' },
+    { id:2, name:'Flapping', formal:'/t, d/ → [ɾ] / V__V (unstressed)', example:'"butter" [bɐɾə], "ladder" [læɾə]', explanation:'In AusEng (and American English), /t/ and /d/ become a voiced alveolar flap [ɾ] between vowels when the second vowel is unstressed. This is why "writer" and "rider" can sound the same.', type:'allophonic' },
+    { id:3, name:'Vowel nasalization', formal:'V → Ṽ / __[+nasal]', example:'"can" [kæ̃n], "man" [mæ̃n]', explanation:'Vowels are nasalized before nasal consonants. The velum lowers early in anticipation of the nasal. This is allophonic in English (not contrastive) but phonemic in French and Portuguese.', type:'allophonic' },
+    { id:4, name:'Dark l', formal:'/l/ → [ɫ] / __# or __C', example:'"fill" [fɪɫ] vs "lip" [lɪp]', explanation:'In AusEng, /l/ is velarized (dark) in syllable-final position (coda), but clear [l] in syllable-initial position. Two allophones of one phoneme, in complementary distribution.', type:'allophonic' },
+    { id:5, name:'Voicing assimilation (plural)', formal:'/z/ → [s] / [−voice]__#', example:'"cats" [kæts] vs "dogs" [dɒɡz]', explanation:'The English plural morpheme /-z/ surfaces as [s] after voiceless consonants (assimilating in voicing), [z] after voiced sounds, and [ɪz] after sibilants. This is a morphophonemic rule.', type:'morphophonemic' },
+    { id:6, name:'Unreleased stops', formal:'/p, t, k/ → [p̚, t̚, k̚] / __C or __#', example:'"apt" [æp̚t], "act" [æk̚t]', explanation:'Voiceless stops are often unreleased in syllable-final position, especially before another consonant. The closure is made but the burst of air is withheld.', type:'allophonic' },
+    { id:7, name:'Devoicing of liquids', formal:'/l, ɹ/ → [l̥, ɹ̥] / [−voice]__', example:'"play" [pl̥eː], "pray" [pɹ̥eː]', explanation:'The liquids /l/ and /ɹ/ are partially or fully devoiced when they follow a voiceless stop. The voicelessness of the stop spreads forward.', type:'allophonic' },
+    { id:8, name:'Epenthesis', formal:'∅ → [t] / [+nasal]__[−voice, +continuant]', example:'"prince" [pɹɪnts], "dance" [dæːnts]', explanation:'A voiceless stop [t] is inserted between a nasal and a voiceless fricative. This is especially common in casual speech and in many dialects.', type:'allophonic' },
+  ],
+};
+
+let phonActiveEx = null;
+let phonMPIdx = 0;
+let phonMPAnswered = false;
+let phonNCIdx = 0;
+let phonNCRevealed = false;
+let phonRuleIdx = 0;
+let phonRuleRevealed = false;
+
 // ======================== MAP QUIZ DATA ========================
 
 const MAP_LOCATIONS = [
@@ -2940,6 +3051,68 @@ const MAP_REGIONS = [
   { name:'BACTRIA', color:'#f97316', cx:37.0, cy:65.0 },
   { name:'INDIA', color:'#6366f1', cx:32.0, cy:73.0 },
 ];
+
+// ======================== ANHS TIMELINE DATA ========================
+
+const ANHS_TIMELINE = [
+  // Pre-Campaign: Philip & Young Alexander
+  { id:1, year:-382, date:'382 BCE', title:'Birth of Philip II', desc:'Philip born in Pella, third son of King Amyntas III. Later sent as hostage to Thebes (368-365) where he observed Epaminondas\' military innovations — oblique order, deep phalanx formations, and combined arms tactics.', type:'political', era:'philip', week:2 },
+  { id:2, year:-359, date:'359 BCE', title:'Philip II seizes the throne', desc:'Philip becomes king after his brother Perdiccas III dies fighting Illyrians. Immediately begins transforming Macedonia: creates the sarissa-armed phalanx, professionalises the army, and forges the Companion cavalry into the ancient world\'s premier strike force.', type:'political', era:'philip', week:2 },
+  { id:3, year:-356, date:'356 BCE', title:'Birth of Alexander', desc:'Alexander born in Pella to Philip II and Olympias of Epirus. Legend: the Temple of Artemis at Ephesus burns the same night. Plutarch reports soothsayers predicted he who was born that night would bring destruction to Asia.', type:'personal', era:'philip', week:2 },
+  { id:4, year:-356.1, date:'356 BCE', title:'Foundation of Philippi', desc:'Philip founds the city near Mt Pangaion\'s gold mines, renaming Krenides. The mines yield ~1,000 talents annually, funding his military expansion and diplomacy across Greece.', type:'political', era:'philip', week:2, location:'philippoi' },
+  { id:5, year:-343, date:'343 BCE', title:'Aristotle becomes Alexander\'s tutor', desc:'Philip invites Aristotle to tutor 13-year-old Alexander at the Gardens of Mieza. Alexander develops a lifelong love of Homer (sleeps with the Iliad under his pillow) and interests in medicine, science, and philosophy.', type:'cultural', era:'philip', week:2 },
+  { id:6, year:-340, date:'340 BCE', title:'Alexander as regent (age 16)', desc:'Alexander serves as regent of Macedon while Philip campaigns against Byzantium. Independently defeats the Maedi tribe in Thrace and founds Alexandropolis — his first city.', type:'military', era:'philip', week:2 },
+  { id:7, year:-338, date:'Aug 338 BCE', title:'Battle of Chaeronea', desc:'Philip and Alexander defeat the combined Athenian-Theban army. Alexander (age 18) commands the Companion cavalry on the left wing, routing the elite Sacred Band of Thebes — all 300 killed or wounded. Establishes Macedonian hegemony over Greece.', type:'military', era:'philip', week:3, location:'chaeronea' },
+  { id:8, year:-337, date:'337 BCE', title:'League of Corinth', desc:'Philip establishes the League of Corinth, uniting Greek states (except Sparta, which refused) under Macedonian leadership. Elected hegemon and commander of a planned invasion of Persia — framed as revenge for Xerxes\' invasion of Greece 150 years earlier.', type:'political', era:'philip', week:3, location:'corinth' },
+  { id:9, year:-336, date:'Oct 336 BCE', title:'Assassination of Philip II', desc:'Philip murdered by bodyguard Pausanias at his daughter Cleopatra\'s wedding in Aigai (Vergina). Motives hotly debated: personal grudge, Persian involvement, or Olympias\' orchestration. The magnificent royal tomb discovered at Vergina in 1977 likely belongs to Philip.', type:'political', era:'philip', week:3, location:'vergina' },
+  { id:10, year:-336.1, date:'336 BCE', title:'Alexander becomes king (age 20)', desc:'Alexander swiftly secures the throne, executing potential rivals. Moves south to be confirmed as hegemon of the League of Corinth. Demonstrates ruthless political instinct that will characterise his reign.', type:'political', era:'campaign', week:3 },
+
+  // The Campaign Begins
+  { id:11, year:-335, date:'335 BCE', title:'Destruction of Thebes', desc:'When Thebes revolts on a false rumour of Alexander\'s death in Illyria, Alexander marches south in 13 days and destroys the city. 6,000 killed, 30,000 enslaved. Only Pindar\'s house is spared. The rest of Greece is terrified into submission.', type:'military', era:'campaign', week:3, location:'thebes' },
+  { id:12, year:-334, date:'Spring 334 BCE', title:'Crossing the Hellespont', desc:'Alexander crosses into Asia with ~37,000 infantry and 5,100 cavalry. At Troy he sacrifices at Achilles\' tomb, takes the hero\'s sacred armour, and declares himself a new Achilles. The Persian campaign begins.', type:'military', era:'campaign', week:3, location:'troy' },
+  { id:13, year:-334.1, date:'May 334 BCE', title:'Battle of the Granicus', desc:'First major battle against Persian forces. Alexander leads from the front and is nearly killed — Rhoesaces\' sword splits his helmet. Cleitus the Black saves his life by cutting off Spithridates\' arm mid-swing. Decisive Macedonian victory.', type:'military', era:'campaign', week:3, location:'granicus' },
+  { id:14, year:-334.2, date:'334 BCE', title:'Sardis, Miletus, Halicarnassus', desc:'After Granicus, Alexander sweeps along the Anatolian coast. Sardis surrenders its treasury. At Miletus he disbands his own fleet — a bold gamble to deny Persian ships their ports. Halicarnassus falls after a tough siege; Memnon of Rhodes defends fiercely.', type:'military', era:'campaign', week:3, location:'sardis' },
+  { id:15, year:-333, date:'333 BCE', title:'The Gordian Knot', desc:'At Gordion in Phrygia, Alexander encounters the legendary knot tied by King Midas\' father. An oracle proclaims whoever unties it will rule all Asia. Alexander either slashes it with his sword or finds a hidden pin — the sources disagree. He claims the prophecy.', type:'cultural', era:'campaign', week:3, location:'gordion' },
+  { id:16, year:-333.5, date:'Nov 333 BCE', title:'Battle of Issus', desc:'Alexander defeats Darius III\'s army in a narrow coastal plain. Despite being outnumbered, Alexander drives the Companions directly at Darius, who flees on horseback. Darius\' mother, wife, and children are captured — Alexander treats them with honour.', type:'military', era:'campaign', week:4, location:'issus' },
+
+  // Conquest of the Levant & Egypt
+  { id:17, year:-332, date:'Jan-Aug 332 BCE', title:'Siege of Tyre (7 months)', desc:'The island fortress of Tyre refuses to surrender. Alexander builds a 1km causeway across the sea to reach it — one of antiquity\'s greatest engineering feats. After seven brutal months, the city falls. 2,000 defenders crucified; 30,000 enslaved.', type:'military', era:'campaign', week:4, location:'tyre' },
+  { id:18, year:-332.5, date:'Oct-Dec 332 BCE', title:'Siege of Gaza', desc:'Gaza\'s commander Batis refuses to surrender. Alexander is wounded twice during the two-month siege. After the city falls, Batis is killed — some sources claim dragged behind a chariot like Achilles dragging Hector.', type:'military', era:'campaign', week:4, location:'gaza' },
+  { id:19, year:-332.6, date:'Late 332 BCE', title:'Conquest of Egypt', desc:'Alexander enters Egypt and is welcomed as a liberator from hated Persian rule. Crowned pharaoh at Memphis. Makes sacrifices to the sacred Apis bull and Egyptian gods — demonstrating his policy of respecting local religions.', type:'political', era:'campaign', week:4, location:'memphis' },
+  { id:20, year:-331, date:'Jan 331 BCE', title:'Foundation of Alexandria', desc:'Alexander founds the greatest of his cities at the Nile Delta. He personally lays out the main streets and agora. Alexandria becomes the capital of Ptolemaic Egypt, home of the Great Library, and a beacon of Hellenistic civilisation for centuries.', type:'cultural', era:'campaign', week:4, location:'alexandria' },
+  { id:21, year:-331.1, date:'Feb 331 BCE', title:'Oracle at Siwa', desc:'Alexander makes a dangerous 300-mile trek through the Libyan Desert to consult the Oracle of Zeus-Ammon at Siwa. He is hailed as "son of the god." This is a turning point — Alexander increasingly sees himself as divine, straining relations with his Macedonian officers.', type:'cultural', era:'campaign', week:4, location:'siwa' },
+
+  // Fall of Persia
+  { id:22, year:-331.5, date:'1 Oct 331 BCE', title:'Battle of Gaugamela', desc:'The decisive battle. On a vast plain chosen by Darius (who has levelled the ground for his scythed chariots), Alexander\'s tactical genius prevails. He creates a gap in the Persian line with a feint, then charges through with the Companions directly at Darius. Again, Darius flees. The Persian Empire effectively ends.', type:'military', era:'persia', week:4, location:'gaugamela' },
+  { id:23, year:-331.6, date:'Late 331 BCE', title:'Entry into Babylon & Susa', desc:'Alexander enters Babylon in triumph, greeted by priests and people. He orders restoration of the temple of Marduk, destroyed by Xerxes. At Susa he captures the royal treasury — 50,000 talents of silver and gold.', type:'political', era:'persia', week:4, location:'babylon' },
+  { id:24, year:-330, date:'Jan 330 BCE', title:'Burning of Persepolis', desc:'Alexander burns the magnificent ceremonial capital of the Achaemenid Empire. Debated ever since: was it calculated revenge for Xerxes\' burning of Athens in 480 BCE, or a drunken act at a banquet urged by the courtesan Thaïs? Probably deliberate — a symbolic end to the war of revenge.', type:'military', era:'persia', week:4, location:'persepolis' },
+  { id:25, year:-330.5, date:'Jul 330 BCE', title:'Death of Darius III', desc:'Darius is murdered by his own satrap Bessus and courtiers in Bactria as Alexander closes in. Alexander finds the body, reportedly covers it with his own cloak, and sends it to Persepolis for royal burial. He now pursues Bessus as a regicide.', type:'political', era:'persia', week:5 },
+  { id:26, year:-330.6, date:'330 BCE', title:'Murder of Parmenion', desc:'At Ecbatana, Alexander orders the assassination of Parmenion — Philip\'s most trusted general and Alexander\'s second-in-command — after his son Philotas is executed for alleged conspiracy. Marks Alexander\'s increasing willingness to eliminate perceived threats.', type:'political', era:'persia', week:5, location:'ecbatana' },
+
+  // Central Asia & India
+  { id:27, year:-328, date:'328 BCE', title:'Murder of Cleitus the Black', desc:'At a banquet in Marakanda (Samarkand), Cleitus — the man who saved Alexander\'s life at Granicus — drunkenly criticises Alexander\'s Persian dress and divine pretensions. In a rage, Alexander seizes a spear and kills him. Overcome with remorse, he weeps for three days and refuses food.', type:'personal', era:'east', week:5, location:'marakanda' },
+  { id:28, year:-327, date:'327 BCE', title:'Proskynesis controversy', desc:'Alexander attempts to introduce proskynesis (prostration before the king) — a Persian court custom. Greek and Macedonian officers see it as fit only for gods, not men. The historian Callisthenes publicly refuses and is later arrested and dies in captivity. A growing rift between Alexander and his Macedonians.', type:'cultural', era:'east', week:5 },
+  { id:29, year:-326, date:'May 326 BCE', title:'Battle of the Hydaspes', desc:'Alexander\'s last and perhaps most brilliant battle, against King Porus and his 200 war elephants. Alexander crosses the monsoon-swollen Jhelum River at night to outflank Porus. Wins decisively but is so impressed by Porus\' courage that he reinstates him as a vassal king. Bucephalus dies here — Alexander founds a city in his honour.', type:'military', era:'east', week:5, location:'hydaspes' },
+  { id:30, year:-326.5, date:'Jul 326 BCE', title:'Mutiny at the Hyphasis', desc:'At the River Hyphasis (Beas), after 8 years of campaigning and having marched over 17,000 miles, the army refuses to go further into India. Alexander sulks in his tent for three days (echoing Achilles) but finally relents. The furthest point of the campaign.', type:'military', era:'east', week:5 },
+
+  // Return & Death
+  { id:31, year:-325, date:'325 BCE', title:'Gedrosian Desert march', desc:'The catastrophic 60-day march through the Makran Desert (modern Balochistan). Thousands die of heat, thirst, and starvation — including soldiers, camp followers, women, and children. Perhaps Alexander\'s greatest failure as a commander. Some suggest it was deliberate, to emulate (and surpass) the legendary marches of Semiramis and Cyrus.', type:'military', era:'return', week:6 },
+  { id:32, year:-324, date:'Feb 324 BCE', title:'Mass Marriage at Susa', desc:'Alexander and ~80 of his Companions marry Persian noblewomen in an elaborate five-day ceremony blending Macedonian and Persian customs. Part of his grand "fusion" policy to unite the Macedonian and Persian elites into a single ruling class. Most marriages are abandoned after his death.', type:'cultural', era:'return', week:7 },
+  { id:33, year:-324.3, date:'Summer 324 BCE', title:'Mutiny at Opis', desc:'Macedonian veterans mutiny when Alexander announces plans to discharge older soldiers and integrate 30,000 Persian-trained troops. In a dramatic confrontation, Alexander dismisses them all and calls his Persians "kinsmen." After three days, tearful reconciliation — Alexander hosts a banquet for 9,000, praying for "harmony and partnership" between Macedonians and Persians.', type:'political', era:'return', week:7, location:'opis' },
+  { id:34, year:-324.5, date:'Oct 324 BCE', title:'Death of Hephaestion', desc:'Alexander\'s closest friend and probable lover Hephaestion dies of fever at Ecbatana. Alexander\'s grief is extreme: he cuts his hair, crucifies Hephaestion\'s doctor, orders the sacred fire in temples extinguished (normally done only when a king dies), and commissions a 200-foot funeral pyre costing 10,000 talents.', type:'personal', era:'return', week:7 },
+  { id:35, year:-323, date:'10-11 Jun 323 BCE', title:'Death of Alexander', desc:'Alexander dies in Babylon aged 32 after a fever lasting ~10 days. Cause debated for centuries: typhoid, malaria, poisoning (Antipater\'s sons accused), or alcohol-related liver failure. When asked who should succeed him, he reportedly says "the strongest" (kratisto) — or perhaps "Krateros" (his general). His empire immediately begins to fragment as the Diadochi (Successors) wage decades of war.', type:'personal', era:'return', week:7, location:'babylon' },
+];
+
+const ANHS_TIMELINE_ERAS = {
+  philip: { label:'Philip II & Young Alexander (382-336 BCE)', color:'#2563eb' },
+  campaign: { label:'The Campaign Begins (336-333 BCE)', color:'#d97706' },
+  persia: { label:'Fall of the Persian Empire (331-330 BCE)', color:'#dc2626' },
+  east: { label:'Central Asia & India (328-326 BCE)', color:'#7c3aed' },
+  return: { label:'Return & Death (325-323 BCE)', color:'#059669' },
+};
+
+let tlExpandedId = null;
+let tlFilter = 'all';
 
 // ======================== ASTRONOMY CONCEPT LAB DATA ========================
 
@@ -3152,10 +3325,10 @@ const WORKFLOW_TRACKER = {
   practiceTools: [
     { id:'jpl', course:'INFO1113', name:'Java Practice Lab', panels:6, items:99, dataWeeks:'1-2', status:'active', next:'Add Week 3 OOP content when taught',
       detail:'Code Tracing (25), Python\u2192Java Mistakes (20), Challenge Simulator (15 incl. 5 Scanner-based), Syntax Reference (28), Parsons Problems (10), Debug Detective (1). IDs 11-15 added 8 Mar for Coding Challenge prep; IDs 21-25 code traces targeting array/string pitfalls.' },
-    { id:'ipa', course:'LNGS1001', name:'IPA Practice Lab', panels:4, items:114, dataWeeks:'1-3', status:'active', next:'Add Week 4 phonology problems',
-      detail:'Consonant Chart (interactive), Vowel Chart (interactive), Transcription Practice (32 words incl. Assignment 1 prep set), Diacritics Drill (aspiration/devoicing/nasalisation). Covers HCE conventions for Australian English.' },
-    { id:'map', course:'ANHS2609', name:'Map Quiz Trainer', panels:2, items:15, dataWeeks:'1-13', status:'active', next:'Assessment 13 Mar \u2014 review after',
-      detail:'Study Mode (Leaflet.js map with CartoDB tiles, click-to-reveal labels, significance tooltips) and Quiz Mode (timed drag-and-drop placement). 15 locations: 10 Tier 1, 5 Tier 2. Covers cities, battles, capitals, oracle sites.' },
+    { id:'ipa', course:'LNGS1001', name:'IPA Practice Lab', panels:5, items:147, dataWeeks:'1-3', status:'active', next:'Expand phonology with Wk 4 content',
+      detail:'Consonant Chart (interactive), Vowel Chart (interactive), Transcription Practice (32 words incl. Assignment 1 prep set), Diacritics Drill (aspiration/devoicing/nasalisation), Phonology Analysis (15 minimal pairs + 10 natural classes + 8 phonological rules). Covers HCE conventions for Australian English.' },
+    { id:'map', course:'ANHS2609', name:'Map Quiz + Timeline', panels:2, items:15, dataWeeks:'1-13', status:'active', next:'Assessment 13 Mar \u2014 review after',
+      detail:'Map Quiz: Study Mode (Leaflet.js, labels, tooltips) + Quiz Mode (timed placement). 38 locations across 3 tiers. Timeline: 35 events across 5 eras (Philip II to Alexander\'s death), type filters, expandable cards with cross-references to map locations.' },
     { id:'astro', course:'OLES1603', name:'Astronomy Concept Lab', panels:3, items:75, dataWeeks:'1-3', status:'active', next:'Add Week 4 Big Bang content',
       detail:'Key Terms Flashcards (43 terms), Concept Quiz MCQ (25 questions), Sort & Match (5 exercises). Filterable by week (1-3) and category (observational, historical, stellar, phenomena).' }
   ],
@@ -3190,10 +3363,10 @@ const WORKFLOW_TRACKER = {
     { id:'jpl-set2', course:'INFO1113', desc:'Practice Lab Set 2 exercises', status:'planned', priority:'medium', note:'After Week 3-5 content taught' },
     { id:'jpl-bugs', course:'INFO1113', desc:'"Find the Bug" debugging mode', status:'idea', priority:'low', note:'Interactive bug-finding exercises' },
     { id:'jpl-shuffle', course:'INFO1113', desc:'Shuffle mode & streak counter', status:'idea', priority:'low', note:'Gamification features' },
-    { id:'ipa-phonology', course:'LNGS1001', desc:'Phonology analysis questions', status:'planned', priority:'high', note:'Needed from Week 4' },
+    { id:'ipa-phonology', course:'LNGS1001', desc:'Phonology analysis questions', status:'done', priority:'high', note:'33 exercises: 15 minimal pairs, 10 natural classes, 8 phonological rules — deployed 11 Mar' },
     { id:'astro-project', course:'OLES1603', desc:'Astronomy project planner tool', status:'planned', priority:'medium', note:'Due 22 May \u2014 start planning Week 5' },
-    { id:'anhs-timeline', course:'ANHS2609', desc:'Interactive historical timeline', status:'idea', priority:'low', note:'Chronology of Alexander\'s campaign' },
-    { id:'cal-toggle', course:'ALL', desc:'Calendar timetable show/hide toggle', status:'idea', priority:'low', note:'User convenience' }
+    { id:'anhs-timeline', course:'ANHS2609', desc:'Interactive historical timeline', status:'done', priority:'low', note:'35 events, 5 eras, type filters, expandable details — deployed 11 Mar' },
+    { id:'cal-toggle', course:'ALL', desc:'Calendar timetable show/hide toggle', status:'done', priority:'low', note:'Classes: ON/OFF button in calendar nav — deployed 11 Mar' }
   ],
   dashboardChecks: [
     { id:'links', desc:'Material links verified', status:'done', date:'2026-03-04' },
@@ -3648,6 +3821,14 @@ function renderDashboard() {
 // ======================== CALENDAR ========================
 
 let calYear = 2026, calMonth = 1; // 0-indexed, Feb = 1
+let calShowTimetable = true;
+
+function calToggleTimetable() {
+  calShowTimetable = !calShowTimetable;
+  const btn = document.getElementById('cal-tt-btn');
+  if (btn) btn.textContent = 'Classes: ' + (calShowTimetable ? 'ON' : 'OFF');
+  renderCalendar();
+}
 
 function calNav(dir) { calMonth += dir; if(calMonth>11){calMonth=0;calYear++;}if(calMonth<0){calMonth=11;calYear--;} renderCalendar(); }
 function calToday() {
@@ -3738,11 +3919,11 @@ function renderCalendar() {
 
     const dayAssess = ASSESSMENTS.filter(a => a.date === ds);
     const dow = date.getDay();
-    const dayClasses = TIMETABLE.filter(t => {
+    const dayClasses = calShowTimetable ? TIMETABLE.filter(t => {
       if (t.day !== dow) return false;
       const ranges = t.type === 'tutorial' ? TUTORIAL_RANGES : LECTURE_RANGES;
       return ranges.some(([s, e]) => date >= s && date <= e);
-    });
+    }) : [];
 
     html += `<div class="${classes}">
       <div class="cal-day-num">${d}</div>
@@ -6171,18 +6352,26 @@ function renderIpaPracticeLab() {
         <div class="ipa-tool-desc">Test your symbol recognition and feature knowledge.</div>
         <div class="ipa-tool-stat">${quizTotal > 0 ? Math.round((state.quizCorrect||0)/quizTotal*100)+'% accuracy ('+quizTotal+' Qs)' : 'Not started'}</div>
       </div>
+      <div class="ipa-tool-card ${ipaActivePanel==='phonology'?'active':''}" onclick="ipaShowPanel('phonology')" style="grid-column:span 2">
+        <div class="ipa-tool-icon">\uD83E\uDDE0</div>
+        <div class="ipa-tool-title">Phonology Analysis</div>
+        <div class="ipa-tool-desc">Minimal pairs, natural classes, and phonological rules. Builds from Wk 3 phonetics into Wk 4 phonology.</div>
+        <div class="ipa-tool-stat">${IPA_PHONOLOGY.minimalPairs.length + IPA_PHONOLOGY.naturalClasses.length + IPA_PHONOLOGY.rules.length} exercises</div>
+      </div>
     </div>
   </div>
   <div class="ipa-panel ${ipaActivePanel==='charts'?'active':''}" id="ipa-charts"></div>
   <div class="ipa-panel ${ipaActivePanel==='transcription'?'active':''}" id="ipa-transcription"></div>
   <div class="ipa-panel ${ipaActivePanel==='reference'?'active':''}" id="ipa-reference"></div>
-  <div class="ipa-panel ${ipaActivePanel==='quiz'?'active':''}" id="ipa-quiz"></div>`;
+  <div class="ipa-panel ${ipaActivePanel==='quiz'?'active':''}" id="ipa-quiz"></div>
+  <div class="ipa-panel ${ipaActivePanel==='phonology'?'active':''}" id="ipa-phonology"></div>`;
 
   document.getElementById('lngs-practice').innerHTML = html;
   if (ipaActivePanel === 'charts') renderIpaCharts();
   if (ipaActivePanel === 'transcription') renderIpaTranscription();
   if (ipaActivePanel === 'reference') renderIpaReference();
   if (ipaActivePanel === 'quiz') renderIpaQuiz();
+  if (ipaActivePanel === 'phonology') renderPhonologyPanel();
 }
 
 function ipaShowPanel(panel) {
@@ -6641,6 +6830,192 @@ function ipaResetQuiz() {
   renderIpaQuiz();
 }
 
+// ======================== PHONOLOGY ANALYSIS ========================
+
+function renderPhonologyPanel() {
+  const mp = IPA_PHONOLOGY.minimalPairs;
+  const nc = IPA_PHONOLOGY.naturalClasses;
+  const rl = IPA_PHONOLOGY.rules;
+
+  let html = `<div class="card">
+    <div class="card-title" style="font-size:16px">Phonology Analysis Exercises</div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:16px">Bridge from phonetics (Weeks 1-3) to phonology (Week 4+). Three exercise types: identify minimal pairs, classify natural classes, and learn phonological rules.</p>
+    <div class="ipa-tools" style="grid-template-columns:repeat(3,1fr)">
+      <div class="ipa-tool-card ${phonActiveEx==='mp'?'active':''}" onclick="phonShowEx('mp')">
+        <div class="ipa-tool-icon">\u2194\uFE0F</div>
+        <div class="ipa-tool-title">Minimal Pairs</div>
+        <div class="ipa-tool-desc">Are these two words a minimal pair?</div>
+        <div class="ipa-tool-stat">${mp.length} pairs</div>
+      </div>
+      <div class="ipa-tool-card ${phonActiveEx==='nc'?'active':''}" onclick="phonShowEx('nc')">
+        <div class="ipa-tool-icon">\uD83D\uDCCA</div>
+        <div class="ipa-tool-title">Natural Classes</div>
+        <div class="ipa-tool-desc">Identify shared features of sound groups.</div>
+        <div class="ipa-tool-stat">${nc.length} exercises</div>
+      </div>
+      <div class="ipa-tool-card ${phonActiveEx==='rules'?'active':''}" onclick="phonShowEx('rules')">
+        <div class="ipa-tool-icon">\u2699\uFE0F</div>
+        <div class="ipa-tool-title">Phonological Rules</div>
+        <div class="ipa-tool-desc">Learn allophonic and morphophonemic rules.</div>
+        <div class="ipa-tool-stat">${rl.length} rules</div>
+      </div>
+    </div>
+  </div>`;
+
+  if (phonActiveEx === 'mp') html += renderPhonMP();
+  if (phonActiveEx === 'nc') html += renderPhonNC();
+  if (phonActiveEx === 'rules') html += renderPhonRules();
+
+  document.getElementById('ipa-phonology').innerHTML = html;
+}
+
+function phonShowEx(ex) {
+  phonActiveEx = phonActiveEx === ex ? null : ex;
+  phonMPIdx = 0; phonMPAnswered = false;
+  phonNCIdx = 0; phonNCRevealed = false;
+  phonRuleIdx = 0; phonRuleRevealed = false;
+  renderPhonologyPanel();
+}
+
+function renderPhonMP() {
+  const pairs = IPA_PHONOLOGY.minimalPairs;
+  const p = pairs[phonMPIdx];
+  let html = `<div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <div class="card-title" style="font-size:15px;margin:0">Minimal Pairs (${phonMPIdx+1}/${pairs.length})</div>
+      <div style="display:flex;gap:6px">
+        <button onclick="phonMPNav(-1)" class="map-btn map-btn-secondary" ${phonMPIdx===0?'disabled':''}>\u25C0</button>
+        <button onclick="phonMPNav(1)" class="map-btn map-btn-secondary" ${phonMPIdx===pairs.length-1?'disabled':''}>\u25B6</button>
+      </div>
+    </div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:16px">Do these two words form a <strong>minimal pair</strong>? (Differ in exactly one phoneme, same position)</p>
+    <div style="display:flex;gap:20px;justify-content:center;margin-bottom:16px">
+      <div style="text-align:center;padding:16px 24px;background:var(--surface);border-radius:10px;min-width:100px">
+        <div style="font-size:20px;font-weight:700;color:var(--text);margin-bottom:4px">${p.word1}</div>
+        <div style="font-size:16px;font-family:serif;color:var(--lngs)">/${p.ipa1}/</div>
+      </div>
+      <div style="text-align:center;padding:16px 24px;background:var(--surface);border-radius:10px;min-width:100px">
+        <div style="font-size:20px;font-weight:700;color:var(--text);margin-bottom:4px">${p.word2}</div>
+        <div style="font-size:16px;font-family:serif;color:var(--lngs)">/${p.ipa2}/</div>
+      </div>
+    </div>`;
+
+  if (!phonMPAnswered) {
+    html += `<div style="display:flex;gap:10px;justify-content:center">
+      <button onclick="phonMPAnswer(true)" class="map-btn map-btn-primary" style="background:var(--lngs);min-width:120px">Yes, Minimal Pair</button>
+      <button onclick="phonMPAnswer(false)" class="map-btn map-btn-secondary" style="min-width:120px">No, Not Minimal</button>
+    </div>`;
+  } else {
+    const userSaidYes = phonMPUserAnswer;
+    const correct = userSaidYes === p.isMinimal;
+    html += `<div style="padding:14px;border-radius:8px;margin-top:8px;${correct?'background:#ecfdf5;border:1px solid #a7f3d0':'background:#fef2f2;border:1px solid #fecaca'}">
+      <div style="font-size:14px;font-weight:700;margin-bottom:6px;color:${correct?'#047857':'#b91c1c'}">${correct?'Correct!':'Not quite.'} ${p.isMinimal?'Yes \u2014 this IS a minimal pair':'No \u2014 this is NOT a minimal pair'}</div>
+      <div style="font-size:13px;color:#374151;margin-bottom:4px"><strong>${p.contrast}</strong></div>
+      <div style="font-size:12px;color:#4b5563;line-height:1.6">${p.explanation}</div>
+    </div>
+    <div style="text-align:center;margin-top:12px">
+      <button onclick="phonMPNav(1)" class="map-btn map-btn-primary" style="background:var(--lngs)" ${phonMPIdx===pairs.length-1?'disabled':''}>Next Pair \u25B6</button>
+    </div>`;
+  }
+  html += `</div>`;
+  return html;
+}
+
+let phonMPUserAnswer = null;
+function phonMPAnswer(ans) {
+  phonMPUserAnswer = ans;
+  phonMPAnswered = true;
+  renderPhonologyPanel();
+}
+
+function phonMPNav(dir) {
+  phonMPIdx = Math.max(0, Math.min(IPA_PHONOLOGY.minimalPairs.length-1, phonMPIdx+dir));
+  phonMPAnswered = false;
+  phonMPUserAnswer = null;
+  renderPhonologyPanel();
+}
+
+function renderPhonNC() {
+  const items = IPA_PHONOLOGY.naturalClasses;
+  const nc = items[phonNCIdx];
+  let html = `<div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <div class="card-title" style="font-size:15px;margin:0">Natural Classes (${phonNCIdx+1}/${items.length})</div>
+      <div style="display:flex;gap:6px">
+        <button onclick="phonNCNav(-1)" class="map-btn map-btn-secondary" ${phonNCIdx===0?'disabled':''}>\u25C0</button>
+        <button onclick="phonNCNav(1)" class="map-btn map-btn-secondary" ${phonNCIdx===items.length-1?'disabled':''}>\u25B6</button>
+      </div>
+    </div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:16px">What <strong>natural class</strong> do these sounds share? Think about their common features.</p>
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:16px">
+      ${nc.sounds.map(s => `<div style="width:44px;height:44px;border-radius:50%;background:var(--lngs);color:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;font-family:serif;font-weight:700">${s}</div>`).join('')}
+    </div>
+    <div style="text-align:center;font-size:14px;font-weight:600;color:var(--text);margin-bottom:12px">${nc.prompt}</div>`;
+
+  if (!phonNCRevealed) {
+    html += `<div style="text-align:center"><button onclick="phonNCReveal()" class="map-btn map-btn-primary" style="background:var(--lngs)">Reveal Answer</button></div>`;
+  } else {
+    html += `<div style="padding:14px;border-radius:8px;background:#ecfdf5;border:1px solid #a7f3d0">
+      <div style="font-size:15px;font-weight:700;color:#047857;margin-bottom:6px">${nc.answer}</div>
+      <div style="font-size:12px;color:var(--lngs);font-weight:600;margin-bottom:6px">Features: [${nc.features.join(', ')}]</div>
+      <div style="font-size:12px;color:#4b5563;line-height:1.6">${nc.explanation}</div>
+    </div>
+    <div style="text-align:center;margin-top:12px">
+      <button onclick="phonNCNav(1)" class="map-btn map-btn-primary" style="background:var(--lngs)" ${phonNCIdx===items.length-1?'disabled':''}>Next Exercise \u25B6</button>
+    </div>`;
+  }
+  html += `</div>`;
+  return html;
+}
+
+function phonNCReveal() { phonNCRevealed = true; renderPhonologyPanel(); }
+function phonNCNav(dir) {
+  phonNCIdx = Math.max(0, Math.min(IPA_PHONOLOGY.naturalClasses.length-1, phonNCIdx+dir));
+  phonNCRevealed = false;
+  renderPhonologyPanel();
+}
+
+function renderPhonRules() {
+  const rules = IPA_PHONOLOGY.rules;
+  const r = rules[phonRuleIdx];
+  const typeColor = r.type === 'allophonic' ? '#d97706' : '#7c3aed';
+  const typeBg = r.type === 'allophonic' ? '#fef3c7' : '#f3e8ff';
+  let html = `<div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <div class="card-title" style="font-size:15px;margin:0">Phonological Rules (${phonRuleIdx+1}/${rules.length})</div>
+      <div style="display:flex;gap:6px">
+        <button onclick="phonRuleNav(-1)" class="map-btn map-btn-secondary" ${phonRuleIdx===0?'disabled':''}>\u25C0</button>
+        <button onclick="phonRuleNav(1)" class="map-btn map-btn-secondary" ${phonRuleIdx===rules.length-1?'disabled':''}>\u25B6</button>
+      </div>
+    </div>
+    <div style="text-align:center;margin-bottom:16px">
+      <div style="font-size:20px;font-weight:700;color:var(--text);margin-bottom:4px">${r.name}</div>
+      <span style="display:inline-block;padding:2px 10px;border-radius:4px;font-size:11px;font-weight:700;background:${typeBg};color:${typeColor}">${r.type}</span>
+    </div>
+    <div style="text-align:center;font-family:serif;font-size:16px;color:var(--text);padding:14px;background:var(--surface);border-radius:8px;margin-bottom:12px;letter-spacing:0.5px">${r.formal}</div>
+    <div style="text-align:center;font-size:14px;margin-bottom:16px"><strong>Example:</strong> ${r.example}</div>`;
+
+  if (!phonRuleRevealed) {
+    html += `<div style="text-align:center"><button onclick="phonRuleReveal()" class="map-btn map-btn-primary" style="background:var(--lngs)">Show Explanation</button></div>`;
+  } else {
+    html += `<div style="padding:14px;border-radius:8px;background:#ecfdf5;border:1px solid #a7f3d0">
+      <div style="font-size:12px;color:#4b5563;line-height:1.7">${r.explanation}</div>
+    </div>
+    <div style="text-align:center;margin-top:12px">
+      <button onclick="phonRuleNav(1)" class="map-btn map-btn-primary" style="background:var(--lngs)" ${phonRuleIdx===rules.length-1?'disabled':''}>Next Rule \u25B6</button>
+    </div>`;
+  }
+  html += `</div>`;
+  return html;
+}
+
+function phonRuleReveal() { phonRuleRevealed = true; renderPhonologyPanel(); }
+function phonRuleNav(dir) {
+  phonRuleIdx = Math.max(0, Math.min(IPA_PHONOLOGY.rules.length-1, phonRuleIdx+dir));
+  phonRuleRevealed = false;
+  renderPhonologyPanel();
+}
+
 // ======================== MAP QUIZ TRAINER ========================
 
 let mapActivePanel = null;
@@ -7064,6 +7439,76 @@ function mapPauseTimer() {
 function mapResetTimer() {
   mapPauseTimer();
   mapTimerSeconds = 600;
+}
+
+// ======================== ANHS INTERACTIVE TIMELINE ========================
+
+function renderTimeline() {
+  const types = { military:'Military', political:'Political', cultural:'Cultural', personal:'Personal' };
+  const counts = { military:0, political:0, cultural:0, personal:0 };
+  ANHS_TIMELINE.forEach(e => counts[e.type]++);
+
+  let html = `<div class="card">
+    <div class="card-title" style="font-size:18px">Interactive Timeline: Alexander the Great</div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:12px">35 key events from Philip II's rise to Alexander's death. Click any event to expand details. Filter by type or era.</p>
+    <div class="tl-stats">
+      <div class="tl-stat"><div class="tl-stat-num">${ANHS_TIMELINE.length}</div><div class="tl-stat-label">Events</div></div>
+      <div class="tl-stat"><div class="tl-stat-num" style="color:#dc2626">${counts.military}</div><div class="tl-stat-label">Military</div></div>
+      <div class="tl-stat"><div class="tl-stat-num" style="color:#2563eb">${counts.political}</div><div class="tl-stat-label">Political</div></div>
+      <div class="tl-stat"><div class="tl-stat-num" style="color:#7c3aed">${counts.cultural + counts.personal}</div><div class="tl-stat-label">Cultural/Personal</div></div>
+    </div>
+    <div class="tl-filters">
+      <span class="tl-filter ${tlFilter==='all'?'active':''}" onclick="tlSetFilter('all')">All</span>
+      <span class="tl-filter ${tlFilter==='military'?'active':''}" onclick="tlSetFilter('military')" style="border-color:#dc2626">Military</span>
+      <span class="tl-filter ${tlFilter==='political'?'active':''}" onclick="tlSetFilter('political')" style="border-color:#2563eb">Political</span>
+      <span class="tl-filter ${tlFilter==='cultural'?'active':''}" onclick="tlSetFilter('cultural')" style="border-color:#7c3aed">Cultural</span>
+      <span class="tl-filter ${tlFilter==='personal'?'active':''}" onclick="tlSetFilter('personal')" style="border-color:#059669">Personal</span>
+    </div>
+  </div>`;
+
+  const filtered = tlFilter === 'all' ? ANHS_TIMELINE : ANHS_TIMELINE.filter(e => e.type === tlFilter);
+  let lastEra = null;
+
+  html += `<div class="tl-container"><div class="tl-line"></div>`;
+  for (const ev of filtered) {
+    if (ev.era !== lastEra) {
+      lastEra = ev.era;
+      const eraInfo = ANHS_TIMELINE_ERAS[ev.era];
+      html += `<div class="tl-era" style="color:${eraInfo.color}">${eraInfo.label}</div>`;
+    }
+    const expanded = tlExpandedId === ev.id;
+    const loc = ev.location ? MAP_LOCATIONS.find(l => l.id === ev.location) : null;
+    html += `<div class="tl-event type-${ev.type} ${expanded?'expanded':''}" onclick="tlToggle(${ev.id})">
+      <div class="tl-head">
+        <span class="tl-date">${ev.date}</span>
+        <span class="tl-title">${ev.title}</span>
+        <span class="tl-badges">
+          <span class="tl-badge ${ev.type}">${types[ev.type]}</span>
+          <span class="tl-badge week">Wk ${ev.week}</span>
+        </span>
+      </div>
+      <div class="tl-desc">${ev.desc}</div>
+      ${loc ? `<div class="tl-loc">📍 ${loc.name} (${loc.lat.toFixed(1)}°N, ${loc.lon.toFixed(1)}°E)</div>` : ''}
+    </div>`;
+  }
+  html += `</div>`;
+
+  if (filtered.length === 0) {
+    html += `<div class="card" style="text-align:center;color:var(--muted);padding:40px">No events match the current filter.</div>`;
+  }
+
+  document.getElementById('anhs-timeline').innerHTML = html;
+}
+
+function tlToggle(id) {
+  tlExpandedId = tlExpandedId === id ? null : id;
+  renderTimeline();
+}
+
+function tlSetFilter(f) {
+  tlFilter = f;
+  tlExpandedId = null;
+  renderTimeline();
 }
 
 // ======================== ASTRONOMY CONCEPT LAB ========================
@@ -7819,6 +8264,7 @@ function init() {
   renderCourseAssessments('anhs-assess', 'ANHS2609');
   renderStudyGuide('anhs-guide', 'ANHS2609');
   renderMapPracticeLab();
+  renderTimeline();
   renderCourseWeeks('oles-weeks', 'OLES1603');
   renderCourseAssessments('oles-assess', 'OLES1603');
   renderStudyGuide('oles-guide', 'OLES1603');
