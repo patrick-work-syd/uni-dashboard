@@ -3052,7 +3052,7 @@ const ASTRO_SORTS = [
 
 // ======================== SYNC TRACKER DATA ========================
 
-const LAST_SYNC_DATE = '2026-03-10';
+const LAST_SYNC_DATE = '2026-03-11T09:30';
 
 const SYNC_TRACKER = {
   1: {
@@ -3210,7 +3210,8 @@ const WORKFLOW_TRACKER = {
 // ======================== HELPERS ========================
 
 function dateStr(d) { return d.toISOString().split('T')[0]; }
-function fmtDate(s) { const d = new Date(s+'T00:00:00'); return d.toLocaleDateString('en-AU',{day:'numeric',month:'short'}); }
+function fmtDate(s) { const d = new Date(s.includes('T') ? s : s+'T00:00:00'); return d.toLocaleDateString('en-AU',{day:'numeric',month:'short'}); }
+function fmtDateTime(s) { const d = new Date(s.includes('T') ? s : s+'T00:00:00'); return d.toLocaleDateString('en-AU',{day:'numeric',month:'short'}) + (s.includes('T') ? ' ' + d.toLocaleTimeString('en-AU',{hour:'2-digit',minute:'2-digit',hour12:true}) : ''); }
 function getCurrentWeek() {
   const today = TODAY;
   for (const w of WEEKS) { if (today >= w.start && today <= w.end) return w; }
@@ -3349,7 +3350,7 @@ function renderDashboard() {
     `Week ${weekNum} — ${TODAY.toLocaleDateString('en-AU',{weekday:'long',day:'numeric',month:'long',year:'numeric'})}`;
 
   // Sync reminder — check if content needs updating
-  const LAST_SYNC = new Date(LAST_SYNC_DATE + 'T00:00:00');
+  const LAST_SYNC = new Date(LAST_SYNC_DATE.includes('T') ? LAST_SYNC_DATE : LAST_SYNC_DATE + 'T00:00:00');
   const daysSinceSync = Math.floor((TODAY - LAST_SYNC) / 86400000);
   const hasStudyGuide = !!STUDY_GUIDES[Object.keys(STUDY_GUIDES)[0]]?.[weekNum];
   let syncHtml = '';
@@ -3358,7 +3359,7 @@ function renderDashboard() {
     syncHtml = `<div style="background:#fefce8;border:1px solid #facc15;border-radius:10px;padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;gap:12px;cursor:pointer" onclick="showView('sync')">
       <span style="font-size:20px">🔄</span>
       <div style="flex:1">
-        <div style="font-size:13px;font-weight:700;color:${urgency}">Weekly sync ${daysSinceSync >= 7 ? 'overdue' : 'due soon'} — last sync ${fmtDate(LAST_SYNC_DATE)}</div>
+        <div style="font-size:13px;font-weight:700;color:${urgency}">Weekly sync ${daysSinceSync >= 7 ? 'overdue' : 'due soon'} — last sync ${fmtDateTime(LAST_SYNC_DATE)}</div>
         <div style="font-size:12px;color:var(--muted)">Log into Canvas first, then run the sync to update Week ${weekNum} content & study guides</div>
       </div>
       <span style="font-size:12px;color:var(--info);font-weight:600">Go to Sync →</span>
@@ -4234,7 +4235,7 @@ function renderSyncPage() {
   const stats = syncGetStats();
   const week = getCurrentWeek();
   const weekNum = week ? week.num : '?';
-  const lastSync = new Date(LAST_SYNC_DATE + 'T00:00:00');
+  const lastSync = new Date(LAST_SYNC_DATE.includes('T') ? LAST_SYNC_DATE : LAST_SYNC_DATE + 'T00:00:00');
   const daysSince = Math.floor((TODAY - lastSync) / 86400000);
   const pct = stats.total > 0 ? Math.round((stats.done / (stats.total - stats.na)) * 100) : 0;
   const totalSources = Object.values(SYNC_NOTEBOOKLM).reduce((s,c) => s + c.count, 0);
@@ -4247,7 +4248,7 @@ function renderSyncPage() {
         <div class="sync-summary-sub">${stats.pending} pending \u2022 ${stats.na} N/A</div></div>
       <div class="sync-progress"><div class="sync-progress-fill ${pct===100?'complete':''}" style="width:${pct}%"></div></div>
       <div style="text-align:right"><div class="sync-summary-stat" style="font-size:12px">Last sync</div>
-        <div class="sync-summary-sub">${fmtDate(LAST_SYNC_DATE)}</div></div>
+        <div class="sync-summary-sub">${fmtDateTime(LAST_SYNC_DATE)}</div></div>
     </div>`;
 
   document.getElementById('sync-stat-tracker').textContent = stats.actionable > 0 ? stats.actionable + ' pending' : 'All done';
