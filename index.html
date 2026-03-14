@@ -1506,6 +1506,8 @@ const DASHBOARD_CHANGELOG = [
   { date: '2026-03-11', action: 'update', target: 'WORKFLOW_TRACKER', detail: 'anhs-timeline enhancement status: idea\u2192done.' },
   { date: '2026-03-11', action: 'add', target: 'IPA_PHONOLOGY', detail: 'New Phonology Analysis panel in IPA Practice Lab: 15 minimal pair exercises (yes/no + explanation), 10 natural class identifications, 8 phonological rules (allophonic + morphophonemic). 5th tool card spanning full width.' },
   { date: '2026-03-11', action: 'update', target: 'WORKFLOW_TRACKER', detail: 'ipa-phonology enhancement status: planned\u2192done. 33 exercises total.' },
+  { date: '2026-03-14', action: 'update', target: 'SYNC_TRACKER', detail: 'Weekly sync (browser-verified). Added Week 4 tracker (11 items: 2 done, 9 pending). OLES1603 Week 4 page NOW ACCESSIBLE (was 403) — "How the Universe began" (Big Bang, Hubble expansion, CMB). Extracted to file. LNGS1001 Week 4 "What\'s on" already collected (phoneme + allophony). INFO1113: 1 new Ed lesson "EFT - SC 1" (password-protected, 12 Mar). No Task 2, no Week 4 lesson. No new announcements across any course.' },
+  { date: '2026-03-14', action: 'add', target: 'FILES', detail: 'OLES1603 Week 04 - How the Universe Began.md extracted from Canvas page. Includes 2 videos (Hubble discovery, CMB discovery), 4 readings (Hubble paper + accessible summary, Penzias & Wilson, CMB theory), tutorial student notes download, 2 discussion topics.' },
 ];
 
 const WEEKLY_CONTENT = {
@@ -1553,7 +1555,7 @@ const WEEKLY_CONTENT = {
     1: { lecture:'Astronomy Through the Ages', tutorial:'Tutorial 1 - Intro', reading:'See Canvas page' },
     2: { lecture:'Astronomy without a Telescope', tutorial:'Tutorial 2 - Scientists of Mog', reading:'See Canvas page' },
     3: { lecture:'Stars & Constellations', tutorial:'Tutorial 3 - Project Intro', reading:'See Canvas page' },
-    4: { lecture:'The Big Bang', tutorial:'Big Bang activity', reading:'See Canvas page' },
+    4: { lecture:'How the Universe Began (Big Bang)', tutorial:'Big Bang evidence discussion', reading:'Hubble 1929, Penzias & Wilson 1965 (see Canvas page)' },
     5: { lecture:'Galaxies & Initial Project Ideas', tutorial:'Project ideas workshop', reading:'See Canvas page' },
     6: { lecture:'Galaxies & Galaxy Zoo', tutorial:'Galaxy Zoo citizen science', reading:'See Canvas page' },
     7: { lecture:'Life Elsewhere', tutorial:'Life elsewhere discussion', reading:'See Canvas page' },
@@ -3225,7 +3227,7 @@ const ASTRO_SORTS = [
 
 // ======================== SYNC TRACKER DATA ========================
 
-const LAST_SYNC_DATE = '2026-03-11T09:30';
+const LAST_SYNC_DATE = '2026-03-14T14:00';
 
 const SYNC_TRACKER = {
   1: {
@@ -3282,6 +3284,22 @@ const SYNC_TRACKER = {
       { id:'oles-w3-transcript', course:'OLES1603', type:'transcript', desc:'Lecture transcript', status:'done', file:'Week 03 - Astronomy-transcript.txt', note:'43KB, downloaded 10 Mar via Echo360, uploaded to NotebookLM' },
       { id:'oles-w3-page', course:'OLES1603', type:'page', desc:'Canvas page', status:'done', file:'Week 03 - Stars and Constellations.md' },
     ]
+  },
+  4: {
+    label: 'Week 4 (16\u201322 Mar)',
+    items: [
+      { id:'info-w4-transcript', course:'INFO1113', type:'transcript', desc:'Lecture transcript', status:'pending' },
+      { id:'info-w4-lesson', course:'INFO1113', type:'lesson', desc:'Ed lesson (Week 4)', status:'pending', note:'No Week 4 lesson on Ed yet as of 14 Mar' },
+      { id:'info-w4-tutorial', course:'INFO1113', type:'tutorial', desc:'Tutorial 4', status:'pending' },
+      { id:'lngs-w4-mon-transcript', course:'LNGS1001', type:'transcript', desc:'Monday transcript', status:'pending' },
+      { id:'lngs-w4-tue-transcript', course:'LNGS1001', type:'transcript', desc:'Tuesday transcript', status:'pending' },
+      { id:'lngs-w4-mon-slides', course:'LNGS1001', type:'slides', desc:'Monday slides', status:'pending' },
+      { id:'lngs-w4-tue-slides', course:'LNGS1001', type:'slides', desc:'Tuesday slides', status:'pending' },
+      { id:'lngs-w4-page', course:'LNGS1001', type:'page', desc:'Canvas What\'s on', status:'done', file:'Week 04 - Whats on.md', note:'Phonology: phoneme + allophony. Reading: Clark & Yallop 1990.' },
+      { id:'anhs-w4-transcript', course:'ANHS2609', type:'transcript', desc:'Lecture transcript', status:'pending' },
+      { id:'oles-w4-transcript', course:'OLES1603', type:'transcript', desc:'Lecture transcript', status:'pending' },
+      { id:'oles-w4-page', course:'OLES1603', type:'page', desc:'Canvas page', status:'done', file:'Week 04 - How the Universe Began.md', note:'Big Bang theory, Hubble expansion, CMB. Extracted 14 Mar.' },
+    ]
   }
 };
 
@@ -3289,7 +3307,7 @@ const SYNC_NOTEBOOKLM = {
   INFO1113: { id:'f01b2550', count:16 },
   LNGS1001: { id:'dd81c06a', count:48 },
   ANHS2609: { id:'c91afde3', count:13 },
-  OLES1603: { id:'51de57d4', count:18 }
+  OLES1603: { id:'51de57d4', count:19 }
 };
 
 const SYNC_EMAIL_SCHEDULE = [
@@ -3372,7 +3390,7 @@ const WORKFLOW_TRACKER = {
     { id:'links', desc:'Material links verified', status:'done', date:'2026-03-04' },
     { id:'calendar-wk3', desc:'Week 3 assessments in calendar', status:'done', date:'2026-03-03' },
     { id:'prep-wk3', desc:'Week 3 prep checklist items', status:'done', date:'2026-03-03' },
-    { id:'nbml-sync', desc:'NotebookLM sources uploaded', status:'done', date:'2026-03-11', note:'INFO:16, LNGS:48, ANHS:13, OLES:18 (MCP-verified — +03b Suprasegmentals slides PDF 11 Mar)' },
+    { id:'nbml-sync', desc:'NotebookLM sources uploaded', status:'done', date:'2026-03-14', note:'INFO:16, LNGS:48, ANHS:13, OLES:19 (MCP-verified 14 Mar — +Week 4 Big Bang page)' },
     { id:'validation', desc:'Data validation checks passing', status:'done', date:'2026-03-03' },
     { id:'assess-prep-wk3', desc:'Assessment prep guides for Week 3 due dates', status:'done', date:'2026-03-08', note:'Coding Challenge, Map Quiz, Assignment 1 — all have rubric/rules/tips/files' },
     { id:'assess-prep-wk4', desc:'Assessment prep guide for Idea Exploration (Wk4)', status:'done', date:'2026-03-08', note:'OLES1603 10% — rubric/rules/tips/files added' },
