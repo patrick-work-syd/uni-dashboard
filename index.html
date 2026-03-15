@@ -933,12 +933,14 @@ document.getElementById('pin-input').focus();
   <div class="tabs">
     <div class="tab active" onclick="switchTab(this,'lngs-weeks')">Weekly Content</div>
     <div class="tab" onclick="switchTab(this,'lngs-assess')">Assessments</div>
-    <div class="tab" onclick="switchTab(this,'lngs-guide')">Study Guide</div>
+    <div class="tab" onclick="switchTab(this,'lngs-visual')">Visual Guide</div>
+    <div class="tab" onclick="switchTab(this,'lngs-guide')">Reference</div>
     <div class="tab" onclick="switchTab(this,'lngs-practice')">Practice Tools</div>
     <div class="tab" onclick="switchTab(this,'lngs-files')">Materials</div>
   </div>
   <div class="tab-content active" id="lngs-weeks"></div>
   <div class="tab-content" id="lngs-assess"></div>
+  <div class="tab-content" id="lngs-visual"></div>
   <div class="tab-content" id="lngs-guide"></div>
   <div class="tab-content" id="lngs-practice"></div>
   <div class="tab-content" id="lngs-files">
@@ -1018,13 +1020,15 @@ document.getElementById('pin-input').focus();
   <div class="tabs">
     <div class="tab active" onclick="switchTab(this,'anhs-weeks')">Weekly Content</div>
     <div class="tab" onclick="switchTab(this,'anhs-assess')">Assessments</div>
-    <div class="tab" onclick="switchTab(this,'anhs-guide')">Study Guide</div>
+    <div class="tab" onclick="switchTab(this,'anhs-visual')">Visual Guide</div>
+    <div class="tab" onclick="switchTab(this,'anhs-guide')">Reference</div>
     <div class="tab" onclick="switchTab(this,'anhs-practice')">Practice Tools</div>
     <div class="tab" onclick="switchTab(this,'anhs-timeline')">Timeline</div>
     <div class="tab" onclick="switchTab(this,'anhs-files')">Materials</div>
   </div>
   <div class="tab-content active" id="anhs-weeks"></div>
   <div class="tab-content" id="anhs-assess"></div>
+  <div class="tab-content" id="anhs-visual"></div>
   <div class="tab-content" id="anhs-guide"></div>
   <div class="tab-content" id="anhs-practice"></div>
   <div class="tab-content" id="anhs-timeline"></div>
@@ -1103,12 +1107,14 @@ document.getElementById('pin-input').focus();
   <div class="tabs">
     <div class="tab active" onclick="switchTab(this,'oles-weeks')">Weekly Content</div>
     <div class="tab" onclick="switchTab(this,'oles-assess')">Assessments</div>
-    <div class="tab" onclick="switchTab(this,'oles-guide')">Study Guide</div>
+    <div class="tab" onclick="switchTab(this,'oles-visual')">Visual Guide</div>
+    <div class="tab" onclick="switchTab(this,'oles-guide')">Reference</div>
     <div class="tab" onclick="switchTab(this,'oles-practice')">Practice Lab</div>
     <div class="tab" onclick="switchTab(this,'oles-files')">Materials</div>
   </div>
   <div class="tab-content active" id="oles-weeks"></div>
   <div class="tab-content" id="oles-assess"></div>
+  <div class="tab-content" id="oles-visual"></div>
   <div class="tab-content" id="oles-guide"></div>
   <div class="tab-content" id="oles-practice"></div>
   <div class="tab-content" id="oles-files">
@@ -1308,9 +1314,9 @@ const COURSES = {
 const ASSESSMENTS = [
   { date:'2026-02-27', course:'OLES1603', name:'Continuous: Astronomically-aligned building', weight:'1%', type:'continuous', mark:'1/1', desc:'Weekly Canvas task. Research and identify a building or structure aligned with astronomical phenomena (solstice, equinox, star alignments). Submit via Canvas.' },
   { date:'2026-03-02', course:'OLES1603', name:'EFT: Online Discussion', weight:'1%', type:'discussion', mark:'1/1', desc:'Early Feedback Task. Make a meaningful contribution on the Ed Discussion forum before end of Week 3 (e.g. post a picture of your astronomically-aligned structure, or share sky observations). Marked 1/1 on 2 Mar.' },
-  { date:'2026-03-06', course:'INFO1113', name:'Task 1', weight:'4%', type:'task', desc:'Marked online coding task on Ed. Covers Java basics from Weeks 1-2: variables, types, expressions, I/O, and conditionals. Similar format to Task 0 (VoteDifference). Submit on Ed before 11:59pm.' },
-  { date:'2026-03-06', course:'OLES1603', name:'Continuous: Scientists of Mog', weight:'1%', type:'continuous', desc:'Tutorial role-play exercise due 6 Mar 23:59. You are scientists in the city of Mog (a swamp city where clouds have always hidden the sky). New observations emerge that contradict orthodox theories. In groups of 3, analyse a briefing paper for 35 minutes and develop a logical explanation of Mog\'s universe. Then present conclusions to the class. Submit the Week 2 Question Sheet documenting: your group, the observations analysed, and your scientific conclusions. Graded pass/fail on engagement.' },
-  { date:'2026-03-13', course:'INFO1113', name:'Coding Challenge', weight:'4%', type:'task', desc:'Invigilated, in-person coding test during your Week 3 tutorial (Fri 2-4pm). 40 minutes, AI strictly prohibited. Early Feedback Task assessing LO1-LO5: Java syntax, control flow, loops, I/O (Scanner + command-line args), static methods, arrays, and strings. Practice EdStem challenges (Volume of Cylinder, Golden Ratio) from scratch without AI.',
+  { date:'2026-03-06', course:'INFO1113', name:'Task 1', weight:'4%', type:'task', mark:'graded (not yet posted)', desc:'Marked online coding task on Ed. Covers Java basics from Weeks 1-2: variables, types, expressions, I/O, and conditionals. Similar format to Task 0 (VoteDifference). Submitted 4 Mar. Graded 15 Mar but instructor has not posted the mark yet.' },
+  { date:'2026-03-06', course:'OLES1603', name:'Continuous: Scientists of Mog', weight:'1%', type:'continuous', mark:'1/1', desc:'Tutorial role-play exercise due 6 Mar 23:59. You are scientists in the city of Mog (a swamp city where clouds have always hidden the sky). New observations emerge that contradict orthodox theories. In groups of 3, analyse a briefing paper for 35 minutes and develop a logical explanation of Mog\'s universe. Then present conclusions to the class. Submit the Week 2 Question Sheet documenting: your group, the observations analysed, and your scientific conclusions. Graded pass/fail on engagement. Marked 1/1.' },
+  { date:'2026-03-13', course:'INFO1113', name:'Coding Challenge', weight:'4%', type:'task', mark:'graded (not yet posted)', desc:'Invigilated, in-person coding test during your Week 3 tutorial (Fri 2-4pm). 40 minutes, AI strictly prohibited. Early Feedback Task assessing LO1-LO5: Java syntax, control flow, loops, I/O (Scanner + command-line args), static methods, arrays, and strings. Graded 15 Mar but instructor has not posted the mark yet.',
     prep: {
       rubric: [
         { q:'Correctness', pts:3, topic:'Program produces correct output for all test cases (edge cases, boundary values)' },
@@ -1342,7 +1348,7 @@ const ASSESSMENTS = [
       ]
     }
   },
-  { date:'2026-03-13', course:'ANHS2609', name:'EFT Map Quiz (in tutorial)', weight:'3%', type:'quiz', desc:'Closed-book, in-person, 10 minutes. Fill-in-the-blank map exercise — identify key locations from Alexander\'s campaigns (cities, battle sites, regions). Must attend tutorial. Contact tutor if absent.',
+  { date:'2026-03-13', course:'ANHS2609', name:'EFT Map Quiz (in tutorial)', weight:'3%', type:'quiz', mark:'completed (awaiting grade)', desc:'Closed-book, in-person, 10 minutes. Fill-in-the-blank map exercise — identify key locations from Alexander\'s campaigns (cities, battle sites, regions). Completed in tutorial 13 Mar. Canvas shows unsubmitted (paper-based). Awaiting grade.',
     prep: {
       rubric: [
         { q:'Map labels', pts:1, topic:'Correctly identify cities, battle sites, and regions on a blank map' },
@@ -1368,7 +1374,7 @@ const ASSESSMENTS = [
       ]
     }
   },
-  { date:'2026-03-13', course:'LNGS1001', name:'Assignment 1 - Phonetic transcription', weight:'10%', type:'assignment', url:'https://canvas.sydney.edu.au/courses/72232/assignments/670995', desc:'Early Feedback Task covering Weeks 1-3 content: introduction to linguistics, phonetics (consonants and vowels), stress, and tone. AI tools allowed. Check Canvas for specific requirements and submission format.',
+  { date:'2026-03-13', course:'LNGS1001', name:'Assignment 1 - Phonetic transcription', weight:'10%', type:'assignment', mark:'submitted (awaiting grade)', url:'https://canvas.sydney.edu.au/courses/72232/assignments/670995', desc:'Early Feedback Task covering Weeks 1-3 content: introduction to linguistics, phonetics (consonants and vowels), stress, and tone. AI tools allowed. Submitted 13 Mar 12:00. Awaiting grading.',
     prep: {
       rubric: [
         { q:'Q2', pts:1, topic:'Basic sentence transcription' },
@@ -1510,6 +1516,9 @@ const DASHBOARD_CHANGELOG = [
   { date: '2026-03-11', action: 'update', target: 'WORKFLOW_TRACKER', detail: 'ipa-phonology enhancement status: planned\u2192done. 33 exercises total.' },
   { date: '2026-03-14', action: 'update', target: 'SYNC_TRACKER', detail: 'Weekly sync (browser-verified). Added Week 4 tracker (11 items: 2 done, 9 pending). OLES1603 Week 4 page NOW ACCESSIBLE (was 403) — "How the Universe began" (Big Bang, Hubble expansion, CMB). Extracted to file. LNGS1001 Week 4 "What\'s on" already collected (phoneme + allophony). INFO1113: 1 new Ed lesson "EFT - SC 1" (password-protected, 12 Mar). No Task 2, no Week 4 lesson. No new announcements across any course.' },
   { date: '2026-03-14', action: 'add', target: 'FILES', detail: 'OLES1603 Week 04 - How the Universe Began.md extracted from Canvas page. Includes 2 videos (Hubble discovery, CMB discovery), 4 readings (Hubble paper + accessible summary, Penzias & Wilson, CMB theory), tutorial student notes download, 2 discussion topics.' },
+  { date: '2026-03-16', action: 'update', target: 'ASSESSMENTS', detail: 'Marks update from Canvas API: OLES1603 Scientists of Mog 1/1 (new). INFO1113 Task 1 + Coding Challenge graded 15 Mar but marks not yet posted by instructor. LNGS1001 A1 submitted 13 Mar, awaiting grade. ANHS2609 Map Quiz completed in tutorial, awaiting grade.' },
+  { date: '2026-03-16', action: 'add', target: 'VISUAL_GUIDES', detail: 'Visual guides added for LNGS1001, ANHS2609, OLES1603 Weeks 1-3 (9 new HTML files). Dashboard updated with Visual Guide tabs for all 4 courses.' },
+  { date: '2026-03-16', action: 'fix', target: 'SYNC', detail: 'Fixed sync script UTF-8 BOM issue (em dashes caused PS 5.1 parse error). Fixed $useChrome not passed to Start-Job. Changed schedule from Sun+Wed to daily at 10:00 AM. Deploy script updated to copy all 4 courses visual guides.' },
 ];
 
 const WEEKLY_CONTENT = {
@@ -3287,7 +3296,7 @@ const ASTRO_SORTS = [
 
 // ======================== SYNC TRACKER DATA ========================
 
-const LAST_SYNC_DATE = '2026-03-14T14:00';
+const LAST_SYNC_DATE = '2026-03-16T10:00';
 
 const SYNC_TRACKER = {
   1: {
@@ -3357,6 +3366,10 @@ const SYNC_TRACKER = {
       { id:'lngs-w4-tue-slides', course:'LNGS1001', type:'slides', desc:'Tuesday slides', status:'pending' },
       { id:'lngs-w4-page', course:'LNGS1001', type:'page', desc:'Canvas What\'s on', status:'done', file:'Week 04 - Whats on.md', note:'Phonology: phoneme + allophony. Reading: Clark & Yallop 1990.' },
       { id:'anhs-w4-transcript', course:'ANHS2609', type:'transcript', desc:'Lecture transcript', status:'pending' },
+      { id:'anhs-w4-page', course:'ANHS2609', type:'page', desc:'Canvas lecture page', status:'done', file:'Week 04 - The Fall of Persia.md', note:'Alexander\'s campaigns to 331BC. Readings: Arrian Bk 2-3, Bosworth 1993 Ch.2 pp.55-94, Briant 1996. Extracted 16 Mar.' },
+      { id:'anhs-w4-tutorial', course:'ANHS2609', type:'tutorial', desc:'Tutorial page', status:'done', file:'Week 04 - Alexander in Egypt.md', note:'Alexander at Siwah oracle. Divine parentage claim. Plutarch + Arrian sources. Extracted 16 Mar.' },
+      { id:'lngs-w4-tutorial', course:'LNGS1001', type:'tutorial', desc:'Tutorial content page', status:'done', file:'Tutorial Content - Week 4.md', note:'Allophony problems: Cree, Even, Japanese. Extracted 16 Mar.' },
+      { id:'lngs-w4-extras', course:'LNGS1001', type:'page', desc:'Extras page', status:'done', file:'Extras - Week 4.md', note:'Cree language video (Elder Isabel Arcand). Extracted 16 Mar.' },
       { id:'oles-w4-transcript', course:'OLES1603', type:'transcript', desc:'Lecture transcript', status:'pending' },
       { id:'oles-w4-page', course:'OLES1603', type:'page', desc:'Canvas page', status:'done', file:'Week 04 - How the Universe Began.md', note:'Big Bang theory, Hubble expansion, CMB. Extracted 14 Mar.' },
     ]
@@ -4091,7 +4104,7 @@ function renderCourseAssessments(containerId, courseCode) {
 // ======================== STUDY GUIDES ========================
 
 // Weeks that have standalone visual guides (selfTest drills hidden from Reference tab)
-const VISUAL_GUIDE_WEEKS = { INFO1113: [1, 2, 3] };
+const VISUAL_GUIDE_WEEKS = { INFO1113: [1, 2, 3], LNGS1001: [1, 2, 3], ANHS2609: [1, 2, 3], OLES1603: [1, 2, 3] };
 
 function renderStudyGuide(containerId, courseCode) {
   const guides = STUDY_GUIDES[courseCode];
@@ -4271,7 +4284,7 @@ function renderVisualGuides(containerId, courseCode) {
     html += `<button class="vg-week-btn ${w===defaultWeek?'active':''}" onclick="switchVisualWeek(this,${w},'${courseCode}')" style="padding:6px 14px;border-radius:8px;border:1px solid var(--border);background:${w===defaultWeek?course.color:'#fff'};color:${w===defaultWeek?'#fff':'inherit'};font-size:12px;font-weight:600;cursor:pointer" data-week="${w}" data-color="${course.color}">Wk ${w}: ${title}</button>`;
   });
   html += `</div>
-    <iframe id="vg-frame-${courseCode}" src="INFO1113 Object-Oriented Programming/visual-guide-week${defaultWeek}.html" style="width:100%;border:none;border-radius:0 0 12px 12px;min-height:700px" onload="autoResizeVgFrame(this)"></iframe>
+    <iframe id="vg-frame-${courseCode}" src="${course.folder}/visual-guide-week${defaultWeek}.html" style="width:100%;border:none;border-radius:0 0 12px 12px;min-height:700px" onload="autoResizeVgFrame(this)"></iframe>
   </div>`;
   document.getElementById(containerId).innerHTML = html;
 }
@@ -4284,7 +4297,7 @@ function switchVisualWeek(btn, week, courseCode) {
   btn.style.background = btn.dataset.color;
   btn.style.color = '#fff';
   const frame = document.getElementById('vg-frame-'+courseCode);
-  frame.src = 'INFO1113 Object-Oriented Programming/visual-guide-week'+week+'.html';
+  frame.src = COURSES[courseCode].folder+'/visual-guide-week'+week+'.html';
 }
 
 function autoResizeVgFrame(iframe) {
@@ -8418,15 +8431,18 @@ function init() {
   renderPracticeLab();
   renderCourseWeeks('lngs-weeks', 'LNGS1001');
   renderCourseAssessments('lngs-assess', 'LNGS1001');
+  renderVisualGuides('lngs-visual', 'LNGS1001');
   renderStudyGuide('lngs-guide', 'LNGS1001');
   renderIpaPracticeLab();
   renderCourseWeeks('anhs-weeks', 'ANHS2609');
   renderCourseAssessments('anhs-assess', 'ANHS2609');
+  renderVisualGuides('anhs-visual', 'ANHS2609');
   renderStudyGuide('anhs-guide', 'ANHS2609');
   renderMapPracticeLab();
   renderTimeline();
   renderCourseWeeks('oles-weeks', 'OLES1603');
   renderCourseAssessments('oles-assess', 'OLES1603');
+  renderVisualGuides('oles-visual', 'OLES1603');
   renderStudyGuide('oles-guide', 'OLES1603');
   renderAstroPracticeLab();
   renderSyncPage();
