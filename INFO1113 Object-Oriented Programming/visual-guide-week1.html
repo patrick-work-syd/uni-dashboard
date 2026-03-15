@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>INFO1113 — Week 1 Visual Guide</title>
+<style>
+:root {
+  --blue: #3b82f6; --blue-light: #eff6ff; --blue-dark: #1e40af;
+  --green: #10b981; --green-light: #ecfdf5;
+  --orange: #f59e0b; --orange-light: #fffbeb;
+  --purple: #8b5cf6; --purple-light: #f5f3ff;
+  --red: #ef4444; --red-light: #fef2f2;
+  --gray-50: #f8fafc; --gray-100: #f1f5f9; --gray-200: #e2e8f0;
+  --gray-400: #94a3b8; --gray-600: #475569; --gray-800: #1e293b;
+  --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --mono: 'SF Mono', 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: var(--font); background: var(--gray-50); color: var(--gray-800); line-height: 1.65; }
+
+.header { background: linear-gradient(135deg, var(--blue-dark) 0%, var(--blue) 100%); color: #fff; padding: 32px 0 28px; }
+.header-inner { max-width: 800px; margin: 0 auto; padding: 0 24px; }
+.header-tag { font-size: 12px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; opacity: 0.8; margin-bottom: 8px; }
+.header h1 { font-size: 26px; font-weight: 700; margin-bottom: 4px; }
+.header p { font-size: 14px; opacity: 0.85; }
+.header-reassure { margin-top: 14px; padding: 12px 16px; background: rgba(255,255,255,0.12); border-radius: 10px; font-size: 13px; line-height: 1.5; }
+
+.progress-bar { max-width: 800px; margin: 0 auto; padding: 16px 24px 0; }
+.progress-track { background: var(--gray-200); height: 6px; border-radius: 3px; overflow: hidden; }
+.progress-fill { background: var(--green); height: 100%; width: 0%; border-radius: 3px; transition: width 0.5s ease; }
+.progress-label { font-size: 12px; color: var(--gray-400); margin-top: 6px; text-align: right; }
+
+.content { max-width: 800px; margin: 0 auto; padding: 24px; }
+
+.step { background: #fff; border: 1px solid var(--gray-200); border-radius: 16px; margin-bottom: 20px; overflow: hidden; }
+.step-header { display: flex; align-items: center; gap: 12px; padding: 18px 22px; cursor: pointer; user-select: none; }
+.step-header:hover { background: var(--gray-50); }
+.step-num { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; flex-shrink: 0; }
+.step-num.locked { background: var(--gray-200); color: var(--gray-400); }
+.step-num.active { background: var(--blue); color: #fff; }
+.step-num.done { background: var(--green); color: #fff; }
+.step-title { flex: 1; }
+.step-title h3 { font-size: 16px; font-weight: 600; }
+.step-title .step-sub { font-size: 12px; color: var(--gray-400); margin-top: 1px; }
+.step-chevron { font-size: 18px; color: var(--gray-400); transition: transform 0.2s; }
+.step.open .step-chevron { transform: rotate(90deg); }
+.step-body { display: none; padding: 0 22px 22px; }
+.step.open .step-body { display: block; }
+
+.diagram { background: var(--gray-50); border: 1px solid var(--gray-200); border-radius: 12px; padding: 20px; margin: 14px 0; text-align: center; overflow-x: auto; }
+.diagram svg { max-width: 100%; height: auto; }
+
+.prose { font-size: 15px; color: var(--gray-600); margin: 12px 0; }
+.prose strong { color: var(--gray-800); }
+
+.label { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 4px; }
+.label-idea { color: var(--green); } .label-how { color: var(--blue); } .label-trap { color: var(--red); } .label-why { color: var(--purple); } .label-tip { color: var(--orange); }
+
+pre { background: #1e293b; color: #e2e8f0; padding: 14px 16px; border-radius: 10px; font-family: var(--mono); font-size: 13px; line-height: 1.7; overflow-x: auto; margin: 10px 0; white-space: pre; }
+pre .kw { color: #c084fc; } pre .str { color: #86efac; } pre .cmt { color: #64748b; font-style: italic; }
+pre .type { color: #67e8f9; } pre .num { color: #fbbf24; } pre .ann { color: #f472b6; }
+code { font-family: var(--mono); font-size: 0.88em; background: var(--gray-100); padding: 1px 5px; border-radius: 4px; }
+
+.compare { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 14px 0; }
+@media (max-width: 600px) { .compare { grid-template-columns: 1fr; } }
+.cmp-box { border-radius: 10px; padding: 14px; }
+.cmp-box.python { background: var(--orange-light); border: 1px solid #fed7aa; }
+.cmp-box.java { background: var(--blue-light); border: 1px solid #bfdbfe; }
+.cmp-box.before { background: var(--red-light); border: 1px solid #fecaca; }
+.cmp-box.after { background: var(--green-light); border: 1px solid #a7f3d0; }
+.cmp-box h4 { font-size: 12px; font-weight: 700; margin-bottom: 6px; }
+.cmp-box.python h4 { color: #b45309; } .cmp-box.java h4 { color: var(--blue-dark); }
+.cmp-box.before h4 { color: var(--red); } .cmp-box.after h4 { color: #065f46; }
+.cmp-box pre { font-size: 12.5px; padding: 10px; margin: 0; }
+
+.callout { display: flex; gap: 10px; padding: 14px 16px; border-radius: 10px; margin: 14px 0; font-size: 14px; line-height: 1.55; }
+.callout-icon { font-size: 18px; flex-shrink: 0; line-height: 1.5; }
+.callout.tip { background: var(--blue-light); border: 1px solid #bfdbfe; }
+.callout.warn { background: var(--red-light); border: 1px solid #fecaca; }
+.callout.ok { background: var(--green-light); border: 1px solid #a7f3d0; }
+
+.analogy { background: var(--purple-light); border: 1px solid #ddd6fe; border-radius: 12px; padding: 16px; margin: 14px 0; }
+.analogy-label { font-size: 11px; font-weight: 700; color: var(--purple); letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 4px; }
+.analogy p { font-size: 14px; color: var(--gray-600); }
+
+.check { background: var(--green-light); border: 1px solid #a7f3d0; border-radius: 12px; padding: 18px; margin: 18px 0; }
+.check-title { font-size: 13px; font-weight: 700; color: var(--green); margin-bottom: 6px; }
+.check-q { font-size: 14px; margin-bottom: 10px; }
+.check textarea { width: 100%; padding: 8px 10px; border: 1px solid #a7f3d0; border-radius: 8px; font-family: var(--font); font-size: 13px; resize: vertical; min-height: 44px; background: #fff; }
+.check textarea:focus { outline: 2px solid var(--green); border-color: transparent; }
+.check-reveal { margin-top: 8px; }
+.check-reveal button { background: var(--green); color: #fff; border: none; padding: 7px 16px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; }
+.check-reveal button:hover { background: #059669; }
+.check-reveal button:disabled { background: var(--gray-400); cursor: not-allowed; }
+.check-answer { display: none; margin-top: 10px; padding: 12px; background: #fff; border-radius: 8px; border: 1px solid #a7f3d0; font-size: 13px; line-height: 1.6; }
+.check-answer.show { display: block; }
+.check-rating { display: none; margin-top: 8px; gap: 8px; }
+.check-rating.show { display: flex; }
+.check-rating button { padding: 5px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid var(--gray-200); background: #fff; }
+.check-rating .got-it { color: var(--green); border-color: #a7f3d0; }
+.check-rating .not-yet { color: var(--red); border-color: #fecaca; }
+
+.lab-link { display: flex; align-items: center; gap: 10px; padding: 14px 16px; background: #fff; border: 2px solid var(--blue); border-radius: 12px; margin: 16px 0; text-decoration: none; color: var(--gray-800); transition: all 0.15s; }
+.lab-link:hover { background: var(--blue-light); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(59,130,246,0.15); }
+.lab-link-icon { font-size: 24px; }
+.lab-link-text { flex: 1; }
+.lab-link-title { font-size: 14px; font-weight: 700; color: var(--blue-dark); }
+.lab-link-desc { font-size: 12px; color: var(--gray-400); }
+.lab-link-arrow { font-size: 18px; color: var(--blue); font-weight: 700; }
+
+.summary-box { padding: 18px; border-radius: 12px; margin: 18px 0; }
+.summary-box.blue { background: var(--blue-light); border: 1px solid #bfdbfe; }
+.summary-box h4 { font-size: 15px; margin-bottom: 6px; color: var(--blue-dark); }
+.summary-box p { font-size: 14px; color: var(--gray-600); }
+
+.self-test { background: #fff; border: 2px solid var(--orange); border-radius: 16px; padding: 22px; margin: 28px 0; }
+.self-test-title { font-size: 18px; font-weight: 700; color: var(--orange); margin-bottom: 4px; }
+.self-test-sub { font-size: 13px; color: var(--gray-400); margin-bottom: 16px; }
+.st-q { margin-bottom: 16px; }
+.st-q-header { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.st-q-num { font-size: 12px; font-weight: 700; color: var(--orange); background: var(--orange-light); padding: 2px 8px; border-radius: 4px; }
+.st-q-bloom { font-size: 10px; color: var(--gray-400); }
+.st-q p { font-size: 14px; margin-bottom: 6px; }
+.st-q textarea { width: 100%; padding: 8px 10px; border: 1px solid #fed7aa; border-radius: 8px; font-family: var(--font); font-size: 13px; resize: vertical; min-height: 44px; background: #fff; }
+.st-q textarea:focus { outline: 2px solid var(--orange); border-color: transparent; }
+.st-q .check-reveal button { background: var(--orange); }
+.st-q .check-reveal button:hover { background: #d97706; }
+.st-q .check-reveal button:disabled { background: var(--gray-400); }
+.st-q .check-answer { border-color: #fed7aa; }
+
+.nav-footer { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; border-top: 1px solid var(--gray-200); margin-top: 28px; }
+.nav-btn { display: inline-flex; align-items: center; gap: 6px; padding: 9px 18px; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; border: 1px solid var(--gray-200); background: #fff; color: var(--gray-600); text-decoration: none; }
+.nav-btn:hover { background: var(--gray-100); }
+.nav-btn.primary { background: var(--blue); color: #fff; border-color: var(--blue); }
+.nav-btn.primary:hover { background: var(--blue-dark); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="header-tag">INFO1113 · Week 1 · Visual Guide</div>
+    <h1>Java Fundamentals & Your First OOP Program</h1>
+    <p>12 steps · work through at your own pace · each builds on the last</p>
+    <div class="header-reassure">
+      <strong>Feeling lost is normal.</strong> Your lecturer Eduard says: "If you're feeling confused, that's because you're exercising your brain cells. You won't get it all the first time — go through several iterations and each time, try to learn something new." This guide is designed for exactly that — one idea at a time.
+    </div>
+  </div>
+</div>
+
+<div class="progress-bar">
+  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="progress-label" id="progressLabel">0 of 12 complete</div>
+</div>
+
+<div class="content">
+
+<!-- ============ STEP 1 ============ -->
+<div class="step open" id="step-1" data-step="1">
+  <div class="step-header" onclick="toggleStep(1)">
+    <div class="step-num active">1</div>
+    <div class="step-title"><h3>First Impressions: Why Does Java Look Like That?</h3><div class="step-sub">Don't panic — there's a reason for all the extra words</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">Here's the simplest possible program in Python, and the same thing in Java:</p>
+    <div class="compare">
+      <div class="cmp-box python"><h4>Python — 1 line</h4><pre><span class="kw">print</span>(<span class="str">"Hello!"</span>)</pre></div>
+      <div class="cmp-box java"><h4>Java — 5 lines</h4><pre><span class="kw">public class</span> <span class="type">Hello</span> {
+    <span class="kw">public static void</span> main(<span class="type">String</span>[] args) {
+        System.out.println(<span class="str">"Hello!"</span>);
+    }
+}</pre></div>
+    </div>
+    <p class="prose">Yes, Java is more verbose. That's not a mistake — it's a design choice. Every bit of that "extra stuff" exists for a reason, and by the end of this guide you'll understand each piece.</p>
+    <div class="diagram">
+      <svg viewBox="0 0 640 190" xmlns="http://www.w3.org/2000/svg" style="max-width:560px">
+        <style>svg text{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;}</style>
+        <rect x="10" y="10" width="620" height="170" rx="12" fill="#f5f3ff" stroke="#8b5cf6" stroke-width="2"/>
+        <text x="24" y="34" font-size="13" font-weight="700" fill="#8b5cf6">public class Hello</text>
+        <text x="260" y="34" font-size="11" fill="#94a3b8">← Everything lives inside a class (like a container)</text>
+        <rect x="30" y="50" width="580" height="110" rx="10" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.5"/>
+        <text x="44" y="72" font-size="13" font-weight="700" fill="#3b82f6">public static void main(String[] args)</text>
+        <text x="44" y="90" font-size="11" fill="#94a3b8">← The entry point — Java always starts running here</text>
+        <rect x="50" y="102" width="540" height="40" rx="8" fill="#ecfdf5" stroke="#10b981" stroke-width="1.5"/>
+        <text x="64" y="127" font-size="13" font-weight="700" fill="#10b981" font-family="monospace">System.out.println("Hello!");</text>
+        <text x="380" y="127" font-size="11" fill="#94a3b8">← Your actual code</text>
+      </svg>
+    </div>
+    <div class="callout tip"><div class="callout-icon">💡</div><div><strong>The <code>main</code> method is the entry point.</strong> When you run a Java program, the JVM (Java Virtual Machine) looks for a method with this exact signature: <code>public static void main(String[] args)</code>. If it can't find one, your program won't start. Every Java program you run this semester needs this.</div></div>
+    <div class="callout ok"><div class="callout-icon">👍</div><div><strong>You don't need to memorise this yet.</strong> Right now, just understand the nesting: your code goes inside <code>main</code>, which goes inside a <code>class</code>. That's the sandwich. You'll type it so many times it becomes automatic.</div></div>
+    <div class="check" data-check="1">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">In your own words: what are the two "wrappers" that surround your actual code in a Java program? Which one does Java look for first when starting?</div>
+      <textarea placeholder="Type your answer first…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer">The outer wrapper is a <strong>class</strong> (<code>public class Hello { }</code>). The inner wrapper is the <strong>main method</strong> (<code>public static void main(String[] args) { }</code>). Your instructions go inside main, which goes inside the class. When you run the program, Java looks for <code>main</code> — that's where execution begins.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 2 ============ -->
+<div class="step" id="step-2" data-step="2">
+  <div class="step-header" onclick="toggleStep(2)">
+    <div class="step-num locked">2</div>
+    <div class="step-title"><h3>Compile, Then Run: Java's Two-Step Process</h3><div class="step-sub">Python runs directly — Java checks your work first</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">In Python, you type <code>python hello.py</code> and it runs. Java has an extra step: it <strong>compiles</strong> your code first, checking for errors before anything runs.</p>
+    <div class="diagram">
+      <svg viewBox="0 0 680 140" xmlns="http://www.w3.org/2000/svg" style="max-width:600px">
+        <defs><marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#3b82f6"/></marker><marker id="arr-g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#10b981"/></marker></defs>
+        <style>svg text{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;}</style>
+        <rect x="10" y="30" width="160" height="80" rx="10" fill="#f5f3ff" stroke="#8b5cf6" stroke-width="2"/>
+        <text x="90" y="58" text-anchor="middle" font-size="12" font-weight="600" fill="#475569">You write</text>
+        <text x="90" y="80" text-anchor="middle" font-size="14" font-weight="700" fill="#8b5cf6" font-family="monospace">Hello.java</text>
+        <text x="90" y="100" text-anchor="middle" font-size="11" fill="#94a3b8">(source code)</text>
+        <line x1="170" y1="70" x2="228" y2="70" stroke="#3b82f6" stroke-width="2" marker-end="url(#arr)"/>
+        <text x="199" y="60" text-anchor="middle" font-size="12" font-weight="700" fill="#3b82f6" font-family="monospace">javac</text>
+        <rect x="230" y="30" width="180" height="80" rx="10" fill="#eff6ff" stroke="#3b82f6" stroke-width="2"/>
+        <text x="320" y="54" text-anchor="middle" font-size="12" font-weight="600" fill="#475569">Compiler checks &amp; converts</text>
+        <text x="320" y="76" text-anchor="middle" font-size="14" font-weight="700" fill="#3b82f6" font-family="monospace">Hello.class</text>
+        <text x="320" y="100" text-anchor="middle" font-size="11" fill="#94a3b8">(bytecode — errors? stops here!)</text>
+        <line x1="410" y1="70" x2="468" y2="70" stroke="#10b981" stroke-width="2" marker-end="url(#arr-g)"/>
+        <text x="439" y="60" text-anchor="middle" font-size="12" font-weight="700" fill="#10b981" font-family="monospace">java</text>
+        <rect x="470" y="30" width="160" height="80" rx="10" fill="#ecfdf5" stroke="#10b981" stroke-width="2"/>
+        <text x="550" y="54" text-anchor="middle" font-size="12" font-weight="600" fill="#475569">JVM runs your program</text>
+        <text x="550" y="76" text-anchor="middle" font-size="20" fill="#10b981">▶</text>
+        <text x="550" y="100" text-anchor="middle" font-size="11" fill="#94a3b8">Hello!</text>
+      </svg>
+    </div>
+    <p class="prose"><span class="label label-how">Key terms</span></p>
+    <p class="prose"><strong>Bytecode</strong> is the compiled <code>.class</code> file — not human-readable, but what the JVM understands. The <strong>JVM</strong> (Java Virtual Machine) is the program that runs your bytecode. This two-step process is why Java catches many errors <em>before</em> your program ever runs.</p>
+    <div class="callout tip"><div class="callout-icon">💡</div><div><strong>Why is this useful?</strong> In Python, a typo on line 50 only crashes when your program reaches that line. Java's compiler checks <em>everything</em> before running — it catches mistakes up front.</div></div>
+    <div class="callout warn"><div class="callout-icon">⚠️</div><div><strong>The file name must match the class name — exactly.</strong> If your class is called <code>Hello</code>, the file must be <code>Hello.java</code>. Capital H and all. This catches everyone at least once.</div></div>
+<pre><span class="cmt"># In the terminal:</span>
+javac Hello.java     <span class="cmt">← compile (creates Hello.class)</span>
+java Hello           <span class="cmt">← run (note: NO .java or .class extension)</span></pre>
+    <div class="check" data-check="2">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">Your file is called <code>MyProgram.java</code>. What two commands do you type to compile and run it?</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer"><code>javac MyProgram.java</code> to compile, then <code>java MyProgram</code> to run. You type the <code>.java</code> extension for compiling but <strong>not</strong> when running. The class inside must also be called <code>MyProgram</code> — mismatch = compiler error.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 3 ============ -->
+<div class="step" id="step-3" data-step="3">
+  <div class="step-header" onclick="toggleStep(3)">
+    <div class="step-num locked">3</div>
+    <div class="step-title"><h3>Every Variable Has a Type</h3><div class="step-sub">Java won't let you put text where a number should be</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">In Python, you write <code>x = 5</code> and Python figures out the type. Java makes you <strong>say the type out loud</strong>. This is called <strong>strong typing</strong> — once a variable has a type, it can never hold a different type.</p>
+    <div class="compare">
+      <div class="cmp-box python"><h4>Python — type is automatic</h4><pre>age = 19
+name = <span class="str">"Will"</span>
+price = 4.50
+passed = <span class="kw">True</span></pre></div>
+      <div class="cmp-box java"><h4>Java — you declare the type</h4><pre><span class="type">int</span> age = <span class="num">19</span>;
+<span class="type">String</span> name = <span class="str">"Will"</span>;
+<span class="type">double</span> price = <span class="num">4.50</span>;
+<span class="type">boolean</span> passed = <span class="kw">true</span>;</pre></div>
+    </div>
+    <p class="prose">The types you'll use most:</p>
+    <div class="diagram" style="text-align:left;padding:16px 20px;">
+      <table style="width:100%;font-size:13px;border-collapse:collapse;">
+        <tr style="border-bottom:1px solid var(--gray-200);"><td style="padding:6px 0;font-weight:700;color:var(--blue);font-family:var(--mono);width:90px;">int</td><td style="padding:6px 0;">Whole numbers</td><td style="padding:6px 0;color:var(--gray-400);font-family:var(--mono);">int age = 19;</td></tr>
+        <tr style="border-bottom:1px solid var(--gray-200);"><td style="padding:6px 0;font-weight:700;color:var(--blue);font-family:var(--mono);">double</td><td style="padding:6px 0;">Decimal numbers</td><td style="padding:6px 0;color:var(--gray-400);font-family:var(--mono);">double price = 4.50;</td></tr>
+        <tr style="border-bottom:1px solid var(--gray-200);"><td style="padding:6px 0;font-weight:700;color:var(--blue);font-family:var(--mono);">String</td><td style="padding:6px 0;">Text (note the capital S)</td><td style="padding:6px 0;color:var(--gray-400);font-family:var(--mono);">String name = "Will";</td></tr>
+        <tr style="border-bottom:1px solid var(--gray-200);"><td style="padding:6px 0;font-weight:700;color:var(--blue);font-family:var(--mono);">boolean</td><td style="padding:6px 0;">true or false</td><td style="padding:6px 0;color:var(--gray-400);font-family:var(--mono);">boolean ok = true;</td></tr>
+        <tr style="border-bottom:1px solid var(--gray-200);"><td style="padding:6px 0;font-weight:700;color:var(--blue);font-family:var(--mono);">char</td><td style="padding:6px 0;">Single character</td><td style="padding:6px 0;color:var(--gray-400);font-family:var(--mono);">char grade = 'A';</td></tr>
+        <tr><td style="padding:6px 0;font-weight:700;color:var(--blue);font-family:var(--mono);">void</td><td style="padding:6px 0;">No value (for methods that don't return anything)</td><td style="padding:6px 0;color:var(--gray-400);font-family:var(--mono);">public void sayHello() { ... }</td></tr>
+      </table>
+    </div>
+    <div class="callout warn"><div class="callout-icon">⚠️</div><div><strong>Every line ends with a semicolon <code>;</code></strong> — Java requires this. Python doesn't. You <em>will</em> forget semicolons. Also: Java's <code>true</code>/<code>false</code> are lowercase, unlike Python's <code>True</code>/<code>False</code>.</div></div>
+    <div class="callout tip"><div class="callout-icon">💡</div><div><strong>What's <code>void</code>?</strong> You saw <code>public static void main(...)</code> in Step 1. <code>void</code> means "this method doesn't give back a value." It does its job (printing, for example) but doesn't <em>return</em> a result. Methods that return <code>int</code>, <code>String</code>, etc. give back a value you can store.</div></div>
+    <div class="check" data-check="3">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">How would you declare a variable called <code>temperature</code> that holds the value <code>36.5</code> in Java?</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer"><code>double temperature = 36.5;</code> — <code>double</code> because it's a decimal, and don't forget the semicolon.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 4 ============ -->
+<div class="step" id="step-4" data-step="4">
+  <div class="step-header" onclick="toggleStep(4)">
+    <div class="step-num locked">4</div>
+    <div class="step-title"><h3>Getting Input & Importing Tools</h3><div class="step-sub">Java's version of Python's input() — plus how packages work</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">In Python, getting input is one line: <code>name = input("Name: ")</code>. In Java, you need a <strong>Scanner</strong> — a special tool that reads from the keyboard — and you have to <em>import</em> it first.</p>
+    <div class="compare">
+      <div class="cmp-box python"><h4>Python — built in</h4><pre>name = <span class="kw">input</span>(<span class="str">"Name: "</span>)
+<span class="kw">print</span>(<span class="str">"Hello,"</span>, name)</pre></div>
+      <div class="cmp-box java"><h4>Java — need Scanner</h4><pre><span class="kw">import</span> java.util.Scanner;
+
+<span class="kw">public class</span> <span class="type">Greet</span> {
+  <span class="kw">public static void</span> main(<span class="type">String</span>[] args) {
+    <span class="type">Scanner</span> scan = <span class="kw">new</span> <span class="type">Scanner</span>(System.in);
+    System.out.print(<span class="str">"Name: "</span>);
+    <span class="type">String</span> name = scan.nextLine();
+    System.out.println(<span class="str">"Hello, "</span> + name);
+  }
+}</pre></div>
+    </div>
+    <p class="prose"><span class="label label-how">Key details</span></p>
+    <p class="prose"><code>import java.util.Scanner;</code> — goes at the very top of the file. <code>new Scanner(System.in)</code> — creates a scanner listening to keyboard. <code>scan.nextLine()</code> reads text, <code>scan.nextInt()</code> reads a whole number, <code>scan.nextDouble()</code> reads a decimal.</p>
+    <div class="callout tip"><div class="callout-icon">💡</div><div><strong>Imports and Packages:</strong> Java organises tools into <strong>packages</strong> — like folders of useful classes. <code>java.util</code> contains Scanner, ArrayList, and more. The <code>import</code> line tells Java "I want to use this tool." Some things like <code>System.out.println</code> and <code>String</code> don't need importing — they're in <code>java.lang</code>, which is always available.</div></div>
+    <div class="callout tip"><div class="callout-icon">💡</div><div><strong>print vs println:</strong> <code>System.out.print()</code> stays on the same line. <code>System.out.println()</code> adds a new line at the end. Use <code>print</code> for prompts and <code>println</code> for output.</div></div>
+    <div class="check" data-check="4">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">You've created a Scanner called <code>scan</code>. What line reads a whole number into a variable called <code>age</code>?</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer"><code>int age = scan.nextInt();</code> — type (<code>int</code>), variable name (<code>age</code>), scanner method (<code>nextInt()</code>), semicolon.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 5 ============ -->
+<div class="step" id="step-5" data-step="5">
+  <div class="step-header" onclick="toggleStep(5)">
+    <div class="step-num locked">5</div>
+    <div class="step-title"><h3>Scope: What the Curly Braces Mean</h3><div class="step-sub">In Python it's indentation — in Java it's { and }</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">In Python, indentation defines what belongs to what. In Java, <strong>curly braces <code>{ }</code></strong> do that job. Everything between <code>{</code> and <code>}</code> is one block, and variables created inside a block only exist inside that block. That's called <strong>scope</strong>.</p>
+    <div class="compare">
+      <div class="cmp-box python"><h4>Python — indentation = scope</h4><pre><span class="kw">if</span> age >= 18:
+    msg = <span class="str">"Welcome"</span>
+    <span class="kw">print</span>(msg)
+<span class="cmt"># msg still exists here</span></pre></div>
+      <div class="cmp-box java"><h4>Java — curly braces = scope</h4><pre><span class="kw">if</span> (age >= <span class="num">18</span>) {
+    <span class="type">String</span> msg = <span class="str">"Welcome"</span>;
+    System.out.println(msg);
+}
+<span class="cmt">// msg does NOT exist here!</span></pre></div>
+    </div>
+    <div class="diagram">
+      <svg viewBox="0 0 500 180" xmlns="http://www.w3.org/2000/svg" style="max-width:440px">
+        <style>svg text{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;}</style>
+        <rect x="10" y="10" width="480" height="160" rx="12" fill="#f5f3ff" stroke="#8b5cf6" stroke-width="2"/>
+        <text x="20" y="30" font-size="11" font-weight="700" fill="#8b5cf6">CLASS SCOPE</text>
+        <rect x="30" y="40" width="440" height="110" rx="10" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.5"/>
+        <text x="40" y="58" font-size="11" font-weight="700" fill="#3b82f6">METHOD SCOPE</text>
+        <rect x="50" y="66" width="200" height="70" rx="8" fill="#ecfdf5" stroke="#10b981" stroke-width="1.5"/>
+        <text x="60" y="84" font-size="11" font-weight="700" fill="#10b981">IF BLOCK SCOPE</text>
+        <text x="60" y="104" font-size="11" fill="#475569" font-family="monospace">String msg = ...</text>
+        <text x="60" y="122" font-size="10" fill="#94a3b8">msg lives and dies here</text>
+        <text x="290" y="90" font-size="11" fill="#475569">Variables created in an</text>
+        <text x="290" y="106" font-size="11" fill="#475569">inner block are invisible</text>
+        <text x="290" y="122" font-size="11" fill="#475569">to the outer block.</text>
+      </svg>
+    </div>
+    <div class="callout warn"><div class="callout-icon">⚠️</div><div><strong>Common trap:</strong> declaring a variable inside an <code>if</code> or <code>for</code> block and then trying to use it afterwards. Java won't compile. If you need a variable after the block, declare it <em>before</em> the opening <code>{</code>.</div></div>
+    <div class="callout tip"><div class="callout-icon">💡</div><div><strong>Nesting matters:</strong> class braces contain method braces, which contain code. Every <code>{</code> must have a matching <code>}</code>. A missing <code>}</code> is one of the most common beginner errors.</div></div>
+    <div class="check" data-check="5">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">You declare <code>int count = 0;</code> inside a <code>for</code> loop's braces. Can you use <code>count</code> after the loop? Why or why not?</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer"><strong>No.</strong> A variable declared inside <code>{ }</code> only exists within those braces — that's its scope. Once the closing <code>}</code> is reached, the variable is gone. Declare it <em>before</em> the loop if you need it afterwards.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 6 ============ -->
+<div class="step" id="step-6" data-step="6">
+  <div class="step-header" onclick="toggleStep(6)">
+    <div class="step-num locked">6</div>
+    <div class="step-title"><h3>What is Object-Oriented Programming?</h3><div class="step-sub">The big idea behind this entire course</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">Up until now, you've been writing code as a sequence of steps — do this, then this, then this. That's called <strong>procedural programming</strong>. All your Python code has been procedural. It works fine for small programs.</p>
+    <p class="prose"><strong>Object-Oriented Programming (OOP)</strong> is a different way of organising code. Instead of writing steps, you create <em>things</em> — objects — that each know how to do their own job. OOP is a <strong>paradigm</strong> (a style of thinking), not a language. Java was built for it.</p>
+    <div class="analogy"><div class="analogy-label">Your lecturer's example: The BouncerBot</div><p>Imagine a nightclub hires a robot bouncer. In procedural code, you'd write all the logic as one long sequence. In OOP, you'd create separate things: a <strong>Person</strong> (name and age), a <strong>BouncerBot</strong> (knows the rules), and a <strong>Club</strong> (puts them together). Each one is responsible for its own job.</p></div>
+    <div class="diagram">
+      <svg viewBox="0 0 640 220" xmlns="http://www.w3.org/2000/svg" style="max-width:560px">
+        <style>svg text{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;}</style>
+        <defs><marker id="ab" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#3b82f6"/></marker></defs>
+        <text x="120" y="20" text-anchor="middle" font-size="13" font-weight="700" fill="#475569">Procedural</text>
+        <rect x="20" y="30" width="200" height="32" rx="6" fill="#fff7ed" stroke="#f59e0b" stroke-width="1.5"/><text x="120" y="51" text-anchor="middle" font-size="11" fill="#92400e">read name and age</text>
+        <line x1="120" y1="62" x2="120" y2="72" stroke="#f59e0b" stroke-width="1.5"/>
+        <rect x="20" y="72" width="200" height="32" rx="6" fill="#fff7ed" stroke="#f59e0b" stroke-width="1.5"/><text x="120" y="93" text-anchor="middle" font-size="11" fill="#92400e">check if age >= 18</text>
+        <line x1="120" y1="104" x2="120" y2="114" stroke="#f59e0b" stroke-width="1.5"/>
+        <rect x="20" y="114" width="200" height="32" rx="6" fill="#fff7ed" stroke="#f59e0b" stroke-width="1.5"/><text x="120" y="135" text-anchor="middle" font-size="11" fill="#92400e">print decision</text>
+        <text x="120" y="168" text-anchor="middle" font-size="11" fill="#94a3b8">One long script, top to bottom</text>
+        <line x1="280" y1="10" x2="280" y2="200" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="4"/>
+        <text x="460" y="20" text-anchor="middle" font-size="13" font-weight="700" fill="#475569">Object-Oriented</text>
+        <rect x="310" y="34" width="130" height="68" rx="8" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.5"/>
+        <text x="375" y="52" text-anchor="middle" font-size="12" font-weight="700" fill="#1e40af">Person</text><line x1="320" y1="58" x2="430" y2="58" stroke="#bfdbfe" stroke-width="1"/>
+        <text x="322" y="74" font-size="10" fill="#475569">name, age</text><text x="322" y="90" font-size="10" fill="#3b82f6">getName(), getAge()</text>
+        <rect x="460" y="34" width="150" height="68" rx="8" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.5"/>
+        <text x="535" y="52" text-anchor="middle" font-size="12" font-weight="700" fill="#1e40af">BouncerBot</text><line x1="470" y1="58" x2="600" y2="58" stroke="#bfdbfe" stroke-width="1"/>
+        <text x="472" y="74" font-size="10" fill="#475569">minimumAge</text><text x="472" y="90" font-size="10" fill="#3b82f6">checkAge(person)</text>
+        <rect x="385" y="124" width="130" height="56" rx="8" fill="#ecfdf5" stroke="#10b981" stroke-width="1.5"/>
+        <text x="450" y="144" text-anchor="middle" font-size="12" font-weight="700" fill="#065f46">Club</text><line x1="395" y1="150" x2="505" y2="150" stroke="#a7f3d0" stroke-width="1"/>
+        <text x="397" y="168" font-size="10" fill="#10b981">main() — puts it all together</text>
+        <line x1="430" y1="100" x2="430" y2="124" stroke="#3b82f6" stroke-width="1" stroke-dasharray="3" marker-end="url(#ab)"/>
+        <line x1="510" y1="102" x2="490" y2="124" stroke="#3b82f6" stroke-width="1" stroke-dasharray="3" marker-end="url(#ab)"/>
+      </svg>
+    </div>
+    <div class="callout ok"><div class="callout-icon">🔑</div><div><strong>The key shift:</strong> instead of writing instructions that do things to data, you create objects that <em>contain</em> data and know what to do with it.</div></div>
+    <div class="check" data-check="6">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">In the BouncerBot example, why is "minimum age" stored in the BouncerBot rather than in the Club or the Person?</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer">Because checking age is the <strong>bouncer's job</strong>. The BouncerBot needs to know the rule, so it stores the minimum age. Each object is responsible for the data it needs to do its job.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 7 ============ -->
+<div class="step" id="step-7" data-step="7">
+  <div class="step-header" onclick="toggleStep(7)">
+    <div class="step-num locked">7</div>
+    <div class="step-title"><h3>Classes and Objects: Blueprint vs. Real Thing</h3><div class="step-sub">This is the single most important idea in Java</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <div class="analogy"><div class="analogy-label">Think of it this way</div><p>A <strong>class</strong> is like a form template — "Person: name ___, age ___". An <strong>object</strong> is a filled-in form — "Person: name Will, age 19". One template, unlimited forms.</p></div>
+    <div class="diagram">
+      <svg viewBox="0 0 620 180" xmlns="http://www.w3.org/2000/svg" style="max-width:540px">
+        <style>svg text{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;}</style>
+        <rect x="10" y="20" width="190" height="140" rx="10" fill="#f5f3ff" stroke="#8b5cf6" stroke-width="2" stroke-dasharray="6"/>
+        <text x="105" y="16" text-anchor="middle" font-size="11" font-weight="700" fill="#8b5cf6">CLASS (template)</text>
+        <text x="105" y="48" text-anchor="middle" font-size="15" font-weight="700" fill="#1e293b">Person</text>
+        <line x1="30" y1="56" x2="180" y2="56" stroke="#ddd6fe" stroke-width="1"/>
+        <text x="30" y="78" font-size="12" fill="#475569" font-family="monospace">String name</text><text x="30" y="96" font-size="12" fill="#475569" font-family="monospace">int age</text>
+        <line x1="30" y1="108" x2="180" y2="108" stroke="#ddd6fe" stroke-width="1"/>
+        <text x="30" y="128" font-size="12" fill="#475569" font-family="monospace">getName()</text><text x="30" y="146" font-size="12" fill="#475569" font-family="monospace">getAge()</text>
+        <text x="260" y="64" text-anchor="middle" font-size="12" font-weight="700" fill="#94a3b8">new →</text>
+        <text x="260" y="128" text-anchor="middle" font-size="12" font-weight="700" fill="#94a3b8">new →</text>
+        <rect x="320" y="20" width="170" height="60" rx="10" fill="#eff6ff" stroke="#3b82f6" stroke-width="2"/>
+        <text x="405" y="16" text-anchor="middle" font-size="11" font-weight="700" fill="#3b82f6">OBJECT</text>
+        <text x="332" y="46" font-size="12" fill="#1e293b" font-family="monospace">name: <tspan fill="#16a34a">"Eduardo"</tspan></text>
+        <text x="332" y="66" font-size="12" fill="#1e293b" font-family="monospace">age: <tspan fill="#f59e0b">38</tspan></text>
+        <rect x="320" y="100" width="170" height="60" rx="10" fill="#eff6ff" stroke="#3b82f6" stroke-width="2"/>
+        <text x="405" y="96" text-anchor="middle" font-size="11" font-weight="700" fill="#3b82f6">OBJECT</text>
+        <text x="332" y="126" font-size="12" fill="#1e293b" font-family="monospace">name: <tspan fill="#16a34a">"Will"</tspan></text>
+        <text x="332" y="146" font-size="12" fill="#1e293b" font-family="monospace">age: <tspan fill="#f59e0b">19</tspan></text>
+      </svg>
+    </div>
+    <p class="prose">A class has two kinds of things: <strong>fields</strong> (data it stores — also called instance variables) and <strong>methods</strong> (actions it can do). Fields are the blank spaces on the form; methods are the instructions on the form.</p>
+<pre><span class="cmt">// The CLASS — the template</span>
+<span class="kw">public class</span> <span class="type">Person</span> {
+    <span class="type">String</span> name;     <span class="cmt">// field</span>
+    <span class="type">int</span> age;         <span class="cmt">// field</span>
+}
+
+<span class="cmt">// Creating OBJECTS — filling in the template</span>
+<span class="type">Person</span> lecturer = <span class="kw">new</span> <span class="type">Person</span>();
+lecturer.name = <span class="str">"Eduardo"</span>;
+lecturer.age = <span class="num">38</span>;
+
+<span class="type">Person</span> student = <span class="kw">new</span> <span class="type">Person</span>();
+student.name = <span class="str">"Will"</span>;
+student.age = <span class="num">19</span>;</pre>
+    <p class="prose">The keyword <code>new</code> creates an object from the class. Without <code>new</code>, you're just declaring a variable — nothing exists in memory yet.</p>
+    <div class="check" data-check="7">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">What's the difference between a class and an object? Give a concrete example (not Person).</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer">A <strong>class</strong> is a template — defines what data and actions something has. An <strong>object</strong> is a specific instance with actual values. Example: <code>Car</code> is a class (colour, speed, drive()). <code>new Car("red", 60)</code> is an object — a specific car. You can create many objects from one class.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 8 ============ -->
+<div class="step" id="step-8" data-step="8">
+  <div class="step-header" onclick="toggleStep(8)">
+    <div class="step-num locked">8</div>
+    <div class="step-title"><h3>Constructors: Setting Up an Object When It's Created</h3><div class="step-sub">Instead of setting fields one by one, do it all at once</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">In Step 7, we set name and age separately after creating the object. That's clumsy — what if you forget one? A <strong>constructor</strong> is a special method that runs automatically when you say <code>new</code>, letting you provide all the data up front.</p>
+    <div class="compare">
+      <div class="cmp-box before"><h4>Without constructor (messy)</h4><pre><span class="type">Person</span> p = <span class="kw">new</span> <span class="type">Person</span>();
+p.name = <span class="str">"Will"</span>;  <span class="cmt">// easy to forget</span>
+p.age = <span class="num">19</span>;</pre></div>
+      <div class="cmp-box after"><h4>With constructor (clean)</h4><pre><span class="type">Person</span> p = <span class="kw">new</span> <span class="type">Person</span>(<span class="str">"Will"</span>, <span class="num">19</span>);
+<span class="cmt">// name and age set immediately</span></pre></div>
+    </div>
+<pre><span class="kw">public class</span> <span class="type">Person</span> {
+    <span class="type">String</span> name;
+    <span class="type">int</span> age;
+
+    <span class="cmt">// Constructor — same name as the class, no return type</span>
+    <span class="kw">public</span> <span class="type">Person</span>(<span class="type">String</span> name, <span class="type">int</span> age) {
+        <span class="kw">this</span>.name = name;   <span class="cmt">// this.name = the FIELD</span>
+        <span class="kw">this</span>.age = age;     <span class="cmt">// name = the PARAMETER</span>
+    }
+}</pre>
+    <p class="prose"><span class="label label-trap">The tricky bit: <code>this</code></span></p>
+    <p class="prose">The parameter and the field are both called <code>name</code>. <code>this.name</code> means "the field on <em>this object</em>." Without <code>this</code>, <code>name = name;</code> assigns the parameter to itself — the field stays empty.</p>
+    <div class="diagram">
+      <svg viewBox="0 0 500 100" xmlns="http://www.w3.org/2000/svg" style="max-width:440px">
+        <style>svg text{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;}</style>
+        <text x="20" y="30" font-size="16" font-weight="700" font-family="monospace" fill="#1e293b"><tspan fill="#ef4444">this.</tspan><tspan fill="#8b5cf6">name</tspan> = <tspan fill="#10b981">name</tspan>;</text>
+        <line x1="45" y1="40" x2="45" y2="60" stroke="#ef4444" stroke-width="1.5"/><text x="45" y="75" text-anchor="middle" font-size="11" fill="#ef4444" font-weight="600">"this object"</text>
+        <line x1="110" y1="40" x2="110" y2="60" stroke="#8b5cf6" stroke-width="1.5"/><text x="110" y="75" text-anchor="middle" font-size="11" fill="#8b5cf6" font-weight="600">the field</text>
+        <line x1="210" y1="40" x2="210" y2="60" stroke="#10b981" stroke-width="1.5"/><text x="210" y="75" text-anchor="middle" font-size="11" fill="#10b981" font-weight="600">the parameter</text>
+      </svg>
+    </div>
+    <div class="check" data-check="8">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">Write a constructor for a <code>Car</code> class that takes <code>String colour</code> and <code>int wheels</code>. Use <code>this</code> to set the fields.</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer"><code>public Car(String colour, int wheels) { this.colour = colour; this.wheels = wheels; }</code> — same name as the class, no return type, <code>this</code> to distinguish fields from parameters.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 9 ============ -->
+<div class="step" id="step-9" data-step="9">
+  <div class="step-header" onclick="toggleStep(9)">
+    <div class="step-num locked">9</div>
+    <div class="step-title"><h3>Encapsulation: Locking the Data, Providing a Window</h3><div class="step-sub">Why Java makes you hide things and use getters/setters</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <div class="analogy"><div class="analogy-label">Think of it this way</div><p>A car has pedals and a steering wheel (public interface) but you can't reach inside and rearrange the engine (private data). That's <strong>encapsulation</strong>: the object controls who can see and change its data.</p></div>
+    <p class="prose">Mark fields as <code>private</code> so nothing outside the class can touch them. Then provide <code>public</code> <strong>getter</strong> methods (for reading) and optionally <strong>setter</strong> methods (for writing).</p>
+    <div class="diagram">
+      <svg viewBox="0 0 520 170" xmlns="http://www.w3.org/2000/svg" style="max-width:460px">
+        <style>svg text{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;}</style>
+        <rect x="10" y="10" width="500" height="150" rx="12" fill="#fff" stroke="#e2e8f0" stroke-width="2"/>
+        <text x="260" y="32" text-anchor="middle" font-size="13" font-weight="700" fill="#1e293b">Person class</text>
+        <rect x="30" y="44" width="190" height="100" rx="8" fill="#fef2f2" stroke="#fca5a5" stroke-width="1.5" stroke-dasharray="5"/>
+        <text x="125" y="62" text-anchor="middle" font-size="11" font-weight="700" fill="#ef4444">🔒 private</text>
+        <text x="44" y="84" font-size="12" font-family="monospace" fill="#1e293b">String name</text><text x="44" y="104" font-size="12" font-family="monospace" fill="#1e293b">int age</text>
+        <text x="44" y="130" font-size="10" fill="#94a3b8">only Person can see these</text>
+        <rect x="250" y="44" width="240" height="100" rx="8" fill="#ecfdf5" stroke="#86efac" stroke-width="1.5"/>
+        <text x="370" y="62" text-anchor="middle" font-size="11" font-weight="700" fill="#10b981">🔓 public</text>
+        <text x="264" y="84" font-size="12" font-family="monospace" fill="#1e293b">String getName()</text><text x="264" y="104" font-size="12" font-family="monospace" fill="#1e293b">int getAge()</text>
+        <text x="264" y="130" font-size="10" fill="#94a3b8">anyone can call these</text>
+      </svg>
+    </div>
+<pre><span class="kw">public class</span> <span class="type">Person</span> {
+    <span class="kw">private</span> <span class="type">String</span> name;    <span class="cmt">// locked</span>
+    <span class="kw">private</span> <span class="type">int</span> age;
+
+    <span class="kw">public</span> <span class="type">Person</span>(<span class="type">String</span> name, <span class="type">int</span> age) {
+        <span class="kw">this</span>.name = name;
+        <span class="kw">this</span>.age = age;
+    }
+
+    <span class="cmt">// Getters — read access</span>
+    <span class="kw">public</span> <span class="type">String</span> getName() { <span class="kw">return this</span>.name; }
+    <span class="kw">public</span> <span class="type">int</span> getAge() { <span class="kw">return this</span>.age; }
+
+    <span class="cmt">// Setter — write access (only add if you WANT outside code to change it)</span>
+    <span class="kw">public void</span> setName(<span class="type">String</span> name) { <span class="kw">this</span>.name = name; }
+    <span class="cmt">// No setAge — age can't be changed after creation!</span>
+}</pre>
+    <p class="prose"><span class="label label-why">Why bother?</span></p>
+    <p class="prose">If <code>age</code> were public, any code could set <code>person.age = -5</code>. With private fields and no setter, age is set once in the constructor and stays locked. Setters are optional — only add them when you want controlled write access.</p>
+    <div class="check" data-check="9">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">A field is <code>private int score;</code> and there's no setter. Can code outside the class change the score?</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer"><strong>No.</strong> <code>private</code> means only the class itself can access the field. Without a setter, there's no way for outside code to change it. If there's a getter, outside code can <em>read</em> but not <em>write</em> — read-only access.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 10 ============ -->
+<div class="step" id="step-10" data-step="10">
+  <div class="step-header" onclick="toggleStep(10)">
+    <div class="step-num locked">10</div>
+    <div class="step-title"><h3>Static vs Instance: Does It Need an Object?</h3><div class="step-sub">One simple question decides which to use</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">Ask one question: <strong>"Does this method need to know about a specific object's data?"</strong></p>
+    <div class="diagram" style="text-align:left;padding:16px 20px;">
+      <table style="width:100%;font-size:13px;border-collapse:collapse;">
+        <tr style="border-bottom:2px solid var(--gray-200);"><td style="padding:8px 0;font-weight:700;width:50%;color:var(--purple);">STATIC (no object needed)</td><td style="padding:8px 0;font-weight:700;color:var(--blue);">INSTANCE (needs a specific object)</td></tr>
+        <tr style="border-bottom:1px solid var(--gray-200);"><td style="padding:8px 0;font-size:12px;">All data comes through parameters</td><td style="padding:8px 0;font-size:12px;">Reads data from <code>this</code> object</td></tr>
+        <tr style="border-bottom:1px solid var(--gray-200);"><td style="padding:8px 0;font-family:var(--mono);font-size:12px;">static double area(double w, double h)</td><td style="padding:8px 0;font-family:var(--mono);font-size:12px;">String getName()</td></tr>
+        <tr style="border-bottom:1px solid var(--gray-200);"><td style="padding:8px 0;font-size:12px;">Call on the <strong>class</strong>: <code>Math.max(5, 10)</code></td><td style="padding:8px 0;font-size:12px;">Call on an <strong>object</strong>: <code>p.getName()</code></td></tr>
+        <tr><td style="padding:8px 0;font-size:12px;color:var(--gray-400);">Like a calculator — give it numbers, get a result</td><td style="padding:8px 0;font-size:12px;color:var(--gray-400);">Like asking a person — "what's YOUR name?"</td></tr>
+      </table>
+    </div>
+    <div class="callout tip"><div class="callout-icon">💡</div><div><strong>Why <code>main</code> is static:</strong> when your program starts, no objects exist yet. The JVM needs a method it can call without creating an object first. That's <code>public static void main</code>.</div></div>
+    <div class="check" data-check="10">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">Static or instance? (a) <code>computeArea(double width, double height)</code>  (b) <code>getSpeed()</code> on a Car object — no parameters</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer">(a) <strong>Static</strong> — all data comes through parameters. (b) <strong>Instance</strong> — no parameters means the data comes from <code>this</code> object. It needs to know <em>which</em> car's speed.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 11 ============ -->
+<div class="step" id="step-11" data-step="11">
+  <div class="step-header" onclick="toggleStep(11)">
+    <div class="step-num locked">11</div>
+    <div class="step-title"><h3>Single Responsibility: Each Class Does One Job</h3><div class="step-sub">The design rule that makes OOP actually work</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">Now that you know how to create classes, there's one important design rule: <strong>the Single Responsibility Principle (SRP)</strong>. Each class should have one job — not two, not five.</p>
+    <div class="analogy"><div class="analogy-label">Think of it this way</div><p>In a restaurant, the chef cooks, the waiter serves, and the cashier handles payment. You wouldn't ask the chef to also collect money. Each person has a clear role. Same with classes.</p></div>
+    <div class="compare">
+      <div class="cmp-box before"><h4>Bad: one class does everything</h4><pre><span class="kw">public class</span> <span class="type">DoEverything</span> {
+  <span class="type">String</span> name; <span class="type">int</span> age; <span class="type">int</span> minAge;
+  <span class="cmt">// stores data AND checks rules</span>
+  <span class="cmt">// AND runs the program</span>
+  <span class="cmt">// hard to change, hard to test</span>
+}</pre></div>
+      <div class="cmp-box after"><h4>Good: each class has one job</h4><pre><span class="type">Person</span>     <span class="cmt">→ stores identity</span>
+<span class="type">BouncerBot</span> <span class="cmt">→ checks ages</span>
+<span class="type">Club</span>       <span class="cmt">→ runs the show</span>
+<span class="cmt">// each is small, focused, testable</span></pre></div>
+    </div>
+    <p class="prose"><span class="label label-why">Why it matters</span></p>
+    <p class="prose">When each class has one job, bugs are easy to find — if age-checking is broken, look at BouncerBot. You can also change one class without breaking the others. Your lecturer will expect this in assignments.</p>
+    <div class="check" data-check="11">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">You're building a library system. Should a <code>Book</code> class also handle checking books out to members?</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer"><strong>No.</strong> A Book stores book data (title, author, ISBN). Checkout logic belongs in a separate class like <code>Library</code> or <code>CheckoutSystem</code>. Each class does one thing well — that's SRP.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 12 ============ -->
+<div class="step" id="step-12" data-step="12">
+  <div class="step-header" onclick="toggleStep(12)">
+    <div class="step-num locked">12</div>
+    <div class="step-title"><h3>Putting It All Together: The BouncerBot</h3><div class="step-sub">Everything from Steps 1–11 in one real program</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">From your lecture. Three classes, each with a single responsibility:</p>
+    <p class="prose"><span class="label label-how">Person.java</span> — stores data, provides getters (encapsulation)</p>
+<pre><span class="kw">public class</span> <span class="type">Person</span> {
+    <span class="kw">private</span> <span class="type">String</span> name;
+    <span class="kw">private</span> <span class="type">int</span> age;
+
+    <span class="kw">public</span> <span class="type">Person</span>(<span class="type">String</span> name, <span class="type">int</span> age) {
+        <span class="kw">this</span>.name = name;
+        <span class="kw">this</span>.age = age;
+    }
+
+    <span class="kw">public</span> <span class="type">String</span> getName() { <span class="kw">return this</span>.name; }
+    <span class="kw">public</span> <span class="type">int</span> getAge() { <span class="kw">return this</span>.age; }
+}</pre>
+    <p class="prose"><span class="label label-how">BouncerBot.java</span> — knows the rules, checks a Person</p>
+<pre><span class="kw">public class</span> <span class="type">BouncerBot</span> {
+    <span class="kw">private</span> <span class="type">int</span> minimumAge;
+
+    <span class="kw">public</span> <span class="type">BouncerBot</span>(<span class="type">int</span> minimumAge) {
+        <span class="kw">this</span>.minimumAge = minimumAge;
+    }
+
+    <span class="kw">public void</span> checkAge(<span class="type">Person</span> p) {
+        <span class="kw">if</span> (p.getAge() >= <span class="kw">this</span>.minimumAge) {
+            System.out.println(p.getName() + <span class="str">", welcome in!"</span>);
+        } <span class="kw">else</span> {
+            System.out.println(p.getName() + <span class="str">", sorry, too young."</span>);
+        }
+    }
+}</pre>
+    <p class="prose"><span class="label label-how">Club.java</span> — the main program (entry point)</p>
+<pre><span class="kw">public class</span> <span class="type">Club</span> {
+    <span class="kw">public static void</span> main(<span class="type">String</span>[] args) {
+        <span class="type">Person</span> eduardo = <span class="kw">new</span> <span class="type">Person</span>(<span class="str">"Eduardo"</span>, <span class="num">38</span>);
+        <span class="type">Person</span> will = <span class="kw">new</span> <span class="type">Person</span>(<span class="str">"Will"</span>, <span class="num">19</span>);
+        <span class="type">Person</span> kid = <span class="kw">new</span> <span class="type">Person</span>(<span class="str">"Timmy"</span>, <span class="num">12</span>);
+
+        <span class="type">BouncerBot</span> bouncer = <span class="kw">new</span> <span class="type">BouncerBot</span>(<span class="num">18</span>);
+
+        bouncer.checkAge(eduardo);  <span class="cmt">// Eduardo, welcome in!</span>
+        bouncer.checkAge(will);     <span class="cmt">// Will, welcome in!</span>
+        bouncer.checkAge(kid);      <span class="cmt">// Timmy, sorry, too young.</span>
+    }
+}</pre>
+    <div class="callout ok"><div class="callout-icon">🔑</div><div><strong>Notice:</strong> Club doesn't check ages itself — it asks the bouncer. BouncerBot doesn't know names — it asks the Person. Each object does its own job. That's OOP and the Single Responsibility Principle in action.</div></div>
+    <div class="check" data-check="12">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">Why does <code>bouncer.checkAge(will)</code> know Will's name and age, even though we only passed the Person object?</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer">The <code>will</code> object carries its own data (name="Will", age=19). Inside <code>checkAge</code>, the BouncerBot calls <code>p.getName()</code> and <code>p.getAge()</code> to ask the Person for its data. The object brings everything with it.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+
+    <div class="summary-box blue">
+      <h4>Week 1 in one sentence</h4>
+      <p>Java organises code into <strong>classes</strong> (templates) that create <strong>objects</strong> (real things with their own data), hides data with <strong>private</strong> fields and gives controlled access through <strong>public</strong> getters/setters, uses <strong>constructors</strong> to set up objects, and gives each class a <strong>single responsibility</strong>.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ============ SELF-TEST ============ -->
+<div class="self-test">
+  <div class="self-test-title">📝 Week 1 Self-Test</div>
+  <div class="self-test-sub">10 exam-style questions. Try to answer each one before revealing. These cover the full study guide.</div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q1</span><span class="st-q-bloom">Understanding</span></div><p>What is the difference between a class and an object? Give a concrete example.</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">A <strong>class</strong> is a blueprint defining fields and methods. An <strong>object</strong> is a specific instance with actual values. Example: <code>Car</code> class defines colour and speed. <code>new Car("red", 60)</code> is a specific Car object.</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q2</span><span class="st-q-bloom">Applying</span></div><p>Write the constructor syntax for a <code>Car</code> class that takes <code>String colour</code> and <code>int wheels</code>.</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer"><code>public Car(String colour, int wheels) { this.colour = colour; this.wheels = wheels; }</code></div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q3</span><span class="st-q-bloom">Understanding</span></div><p>If I make a field <code>private</code> and don't write a setter, what does that mean for code outside the class?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">Code outside the class <strong>cannot change</strong> that field. It's read-only (if a getter exists) or completely invisible (if no getter either). Set once in the constructor, locked forever.</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q4</span><span class="st-q-bloom">Analysing</span></div><p>Should <code>computeArea(double width, double height)</code> be static or non-static? Why?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer"><strong>Static.</strong> All data comes through parameters — it doesn't need any object's fields. Like a calculator function.</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q5</span><span class="st-q-bloom">Analysing</span></div><p>Should <code>getSpeed()</code> (no parameters) on a Car object be static or non-static? Why?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer"><strong>Non-static (instance).</strong> No parameters means the data comes from <code>this</code> object's speed field. It needs to know <em>which</em> car.</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q6</span><span class="st-q-bloom">Understanding</span></div><p>What does <code>this.age = age;</code> mean inside a constructor? What if you wrote <code>age = age;</code> instead?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer"><code>this.age</code> = the field. <code>age</code> = the parameter. So it sets the field to the parameter value. Without <code>this</code>, <code>age = age;</code> assigns the parameter to itself — the field stays at 0.</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q7</span><span class="st-q-bloom">Understanding</span></div><p>What happens if your file is <code>Bouncer.java</code> but the class inside is <code>BouncerBot</code>?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">Compiler error. The file name must match the public class name exactly (including capitalisation).</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q8</span><span class="st-q-bloom">Understanding</span></div><p>Explain the Java compilation pipeline: what are the three steps from source code to running program?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer"><strong>1.</strong> Write source code (<code>.java</code> file). <strong>2.</strong> Compile with <code>javac</code> → produces bytecode (<code>.class</code> file). Errors stop here. <strong>3.</strong> Run with <code>java</code> → JVM executes the bytecode.</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q9</span><span class="st-q-bloom">Understanding</span></div><p>Why is encapsulation described as being like "a car with pedals and steering wheel but a hidden engine"?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">Pedals/steering = <strong>public methods</strong> (the interface). Engine = <strong>private data</strong> (hidden internals). You interact through controls, not by reaching inside. The class manages its own state.</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q10</span><span class="st-q-bloom">Applying</span></div><p>A <code>Student</code> class has <code>private String name</code> and <code>private double gpa</code>. Write the getter methods for both.</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer"><code>public String getName() { return this.name; }</code> and <code>public double getGpa() { return this.gpa; }</code></div></div>
+</div>
+
+<!-- Practice Lab links -->
+<p class="prose" style="margin-top:20px;"><span class="label label-tip">Practice next</span></p>
+<p class="prose">Now apply what you've learned in the Java Practice Lab:</p>
+
+<a class="lab-link" href="#" onclick="window.parent.openPracticeLabTool('traces',1); return false;"><div class="lab-link-icon">🔍</div><div class="lab-link-text"><div class="lab-link-title">Code Tracing Trainer — Exercises 1–10</div><div class="lab-link-desc">Predict the output of simple Java programs. Start Easy, work up.</div></div><div class="lab-link-arrow">→</div></a>
+<a class="lab-link" href="#" onclick="window.parent.openPracticeLabTool('mistakes',1); return false;"><div class="lab-link-icon">🐍</div><div class="lab-link-text"><div class="lab-link-title">Python → Java Mistakes — Top 10</div><div class="lab-link-desc">Common traps when switching from Python.</div></div><div class="lab-link-arrow">→</div></a>
+<a class="lab-link" href="#" onclick="window.parent.openPracticeLabTool('parsons',1); return false;"><div class="lab-link-icon">🧩</div><div class="lab-link-text"><div class="lab-link-title">Parsons Problems — 1–5</div><div class="lab-link-desc">Arrange scrambled Java code into the right order.</div></div><div class="lab-link-arrow">→</div></a>
+<a class="lab-link" href="#" onclick="window.parent.openPracticeLabTool('debug',1); return false;"><div class="lab-link-icon">🐛</div><div class="lab-link-text"><div class="lab-link-title">Debug Detective — Exercise 1</div><div class="lab-link-desc">Find and fix bugs in broken Java code.</div></div><div class="lab-link-arrow">→</div></a>
+
+<div class="nav-footer">
+  <a class="nav-btn" href="#">← Back to Dashboard</a>
+  <a class="nav-btn primary" href="#">Week 2: Arrays & Strings →</a>
+</div>
+
+</div>
+
+<script>
+const totalSteps=12;let completedSteps=new Set();
+function toggleStep(n){document.getElementById('step-'+n).classList.toggle('open')}
+function enableReveal(ta){const btn=ta.closest('.check,.st-q').querySelector('.check-reveal button');btn.disabled=ta.value.trim().length<5}
+function revealAnswer(btn){const c=btn.closest('.check,.st-q');c.querySelector('.check-answer').classList.add('show');const r=c.querySelector('.check-rating');if(r)r.classList.add('show');btn.style.display='none'}
+function rateCheck(btn,rating){const check=btn.closest('.check'),step=btn.closest('.step'),n=parseInt(step.dataset.step);check.querySelector('.check-rating').querySelectorAll('button').forEach(b=>b.style.opacity='0.4');btn.style.opacity='1';completedSteps.add(n);updateProgress();step.querySelector('.step-num').className='step-num done';const next=document.getElementById('step-'+(n+1));if(next){const nn=next.querySelector('.step-num');if(nn.classList.contains('locked'))nn.className='step-num active'}}
+function updateProgress(){const p=Math.round(completedSteps.size/totalSteps*100);document.getElementById('progressFill').style.width=p+'%';document.getElementById('progressLabel').textContent=completedSteps.size+' of '+totalSteps+' complete'}
+</script>
+</body>
+</html>

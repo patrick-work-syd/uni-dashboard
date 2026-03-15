@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>INFO1113 — Week 2 Visual Guide</title>
+<style>
+:root {
+  --blue: #3b82f6; --blue-light: #eff6ff; --blue-dark: #1e40af;
+  --green: #10b981; --green-light: #ecfdf5;
+  --orange: #f59e0b; --orange-light: #fffbeb;
+  --purple: #8b5cf6; --purple-light: #f5f3ff;
+  --red: #ef4444; --red-light: #fef2f2;
+  --gray-50: #f8fafc; --gray-100: #f1f5f9; --gray-200: #e2e8f0;
+  --gray-400: #94a3b8; --gray-600: #475569; --gray-800: #1e293b;
+  --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --mono: 'SF Mono', 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: var(--font); background: var(--gray-50); color: var(--gray-800); line-height: 1.65; }
+
+.header { background: linear-gradient(135deg, var(--blue-dark) 0%, var(--blue) 100%); color: #fff; padding: 32px 0 28px; }
+.header-inner { max-width: 800px; margin: 0 auto; padding: 0 24px; }
+.header-tag { font-size: 12px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; opacity: 0.8; margin-bottom: 8px; }
+.header h1 { font-size: 26px; font-weight: 700; margin-bottom: 4px; }
+.header p { font-size: 14px; opacity: 0.85; }
+.header-reassure { margin-top: 14px; padding: 12px 16px; background: rgba(255,255,255,0.12); border-radius: 10px; font-size: 13px; line-height: 1.5; }
+
+.progress-bar { max-width: 800px; margin: 0 auto; padding: 16px 24px 0; }
+.progress-track { background: var(--gray-200); height: 6px; border-radius: 3px; overflow: hidden; }
+.progress-fill { background: var(--green); height: 100%; width: 0%; border-radius: 3px; transition: width 0.5s ease; }
+.progress-label { font-size: 12px; color: var(--gray-400); margin-top: 6px; text-align: right; }
+
+.content { max-width: 800px; margin: 0 auto; padding: 24px; }
+
+.step { background: #fff; border: 1px solid var(--gray-200); border-radius: 16px; margin-bottom: 20px; overflow: hidden; }
+.step-header { display: flex; align-items: center; gap: 12px; padding: 18px 22px; cursor: pointer; user-select: none; }
+.step-header:hover { background: var(--gray-50); }
+.step-num { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; flex-shrink: 0; }
+.step-num.locked { background: var(--gray-200); color: var(--gray-400); }
+.step-num.active { background: var(--blue); color: #fff; }
+.step-num.done { background: var(--green); color: #fff; }
+.step-title { flex: 1; }
+.step-title h3 { font-size: 16px; font-weight: 600; }
+.step-title .step-sub { font-size: 12px; color: var(--gray-400); margin-top: 1px; }
+.step-chevron { font-size: 18px; color: var(--gray-400); transition: transform 0.2s; }
+.step.open .step-chevron { transform: rotate(90deg); }
+.step-body { display: none; padding: 0 22px 22px; }
+.step.open .step-body { display: block; }
+
+.diagram { background: var(--gray-50); border: 1px solid var(--gray-200); border-radius: 12px; padding: 20px; margin: 14px 0; text-align: center; overflow-x: auto; }
+.diagram svg { max-width: 100%; height: auto; }
+
+.prose { font-size: 15px; color: var(--gray-600); margin: 12px 0; }
+.prose strong { color: var(--gray-800); }
+
+.label { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 4px; }
+.label-idea { color: var(--green); } .label-how { color: var(--blue); } .label-trap { color: var(--red); } .label-why { color: var(--purple); } .label-tip { color: var(--orange); }
+
+pre { background: #1e293b; color: #e2e8f0; padding: 14px 16px; border-radius: 10px; font-family: var(--mono); font-size: 13px; line-height: 1.7; overflow-x: auto; margin: 10px 0; white-space: pre; }
+pre .kw { color: #c084fc; } pre .str { color: #86efac; } pre .cmt { color: #64748b; font-style: italic; }
+pre .type { color: #67e8f9; } pre .num { color: #fbbf24; } pre .ann { color: #f472b6; }
+code { font-family: var(--mono); font-size: 0.88em; background: var(--gray-100); padding: 1px 5px; border-radius: 4px; }
+
+.compare { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 14px 0; }
+@media (max-width: 600px) { .compare { grid-template-columns: 1fr; } }
+.cmp-box { border-radius: 10px; padding: 14px; }
+.cmp-box.python { background: var(--orange-light); border: 1px solid #fed7aa; }
+.cmp-box.java { background: var(--blue-light); border: 1px solid #bfdbfe; }
+.cmp-box.before { background: var(--red-light); border: 1px solid #fecaca; }
+.cmp-box.after { background: var(--green-light); border: 1px solid #a7f3d0; }
+.cmp-box h4 { font-size: 12px; font-weight: 700; margin-bottom: 6px; }
+.cmp-box.python h4 { color: #b45309; } .cmp-box.java h4 { color: var(--blue-dark); }
+.cmp-box.before h4 { color: var(--red); } .cmp-box.after h4 { color: #065f46; }
+.cmp-box pre { font-size: 12.5px; padding: 10px; margin: 0; }
+
+.callout { display: flex; gap: 10px; padding: 14px 16px; border-radius: 10px; margin: 14px 0; font-size: 14px; line-height: 1.55; }
+.callout-icon { font-size: 18px; flex-shrink: 0; line-height: 1.5; }
+.callout.tip { background: var(--blue-light); border: 1px solid #bfdbfe; }
+.callout.warn { background: var(--red-light); border: 1px solid #fecaca; }
+.callout.ok { background: var(--green-light); border: 1px solid #a7f3d0; }
+
+.analogy { background: var(--purple-light); border: 1px solid #ddd6fe; border-radius: 12px; padding: 16px; margin: 14px 0; }
+.analogy-label { font-size: 11px; font-weight: 700; color: var(--purple); letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 4px; }
+.analogy p { font-size: 14px; color: var(--gray-600); }
+
+.check { background: var(--green-light); border: 1px solid #a7f3d0; border-radius: 12px; padding: 18px; margin: 18px 0; }
+.check-title { font-size: 13px; font-weight: 700; color: var(--green); margin-bottom: 6px; }
+.check-q { font-size: 14px; margin-bottom: 10px; }
+.check textarea { width: 100%; padding: 8px 10px; border: 1px solid #a7f3d0; border-radius: 8px; font-family: var(--font); font-size: 13px; resize: vertical; min-height: 44px; background: #fff; }
+.check textarea:focus { outline: 2px solid var(--green); border-color: transparent; }
+.check-reveal { margin-top: 8px; }
+.check-reveal button { background: var(--green); color: #fff; border: none; padding: 7px 16px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; }
+.check-reveal button:hover { background: #059669; }
+.check-reveal button:disabled { background: var(--gray-400); cursor: not-allowed; }
+.check-answer { display: none; margin-top: 10px; padding: 12px; background: #fff; border-radius: 8px; border: 1px solid #a7f3d0; font-size: 13px; line-height: 1.6; }
+.check-answer.show { display: block; }
+.check-rating { display: none; margin-top: 8px; gap: 8px; }
+.check-rating.show { display: flex; }
+.check-rating button { padding: 5px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid var(--gray-200); background: #fff; }
+.check-rating .got-it { color: var(--green); border-color: #a7f3d0; }
+.check-rating .not-yet { color: var(--red); border-color: #fecaca; }
+
+.lab-link { display: flex; align-items: center; gap: 10px; padding: 14px 16px; background: #fff; border: 2px solid var(--blue); border-radius: 12px; margin: 16px 0; text-decoration: none; color: var(--gray-800); transition: all 0.15s; }
+.lab-link:hover { background: var(--blue-light); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(59,130,246,0.15); }
+.lab-link-icon { font-size: 24px; }
+.lab-link-text { flex: 1; }
+.lab-link-title { font-size: 14px; font-weight: 700; color: var(--blue-dark); }
+.lab-link-desc { font-size: 12px; color: var(--gray-400); }
+.lab-link-arrow { font-size: 18px; color: var(--blue); font-weight: 700; }
+
+.summary-box { padding: 18px; border-radius: 12px; margin: 18px 0; }
+.summary-box.blue { background: var(--blue-light); border: 1px solid #bfdbfe; }
+.summary-box h4 { font-size: 15px; margin-bottom: 6px; color: var(--blue-dark); }
+.summary-box p { font-size: 14px; color: var(--gray-600); }
+
+.self-test { background: #fff; border: 2px solid var(--orange); border-radius: 16px; padding: 22px; margin: 28px 0; }
+.self-test-title { font-size: 18px; font-weight: 700; color: var(--orange); margin-bottom: 4px; }
+.self-test-sub { font-size: 13px; color: var(--gray-400); margin-bottom: 16px; }
+.st-q { margin-bottom: 16px; }
+.st-q-header { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.st-q-num { font-size: 12px; font-weight: 700; color: var(--orange); background: var(--orange-light); padding: 2px 8px; border-radius: 4px; }
+.st-q-bloom { font-size: 10px; color: var(--gray-400); }
+.st-q p { font-size: 14px; margin-bottom: 6px; }
+.st-q textarea { width: 100%; padding: 8px 10px; border: 1px solid #fed7aa; border-radius: 8px; font-family: var(--font); font-size: 13px; resize: vertical; min-height: 44px; background: #fff; }
+.st-q textarea:focus { outline: 2px solid var(--orange); border-color: transparent; }
+.st-q .check-reveal button { background: var(--orange); }
+.st-q .check-reveal button:hover { background: #d97706; }
+.st-q .check-reveal button:disabled { background: var(--gray-400); }
+.st-q .check-answer { border-color: #fed7aa; }
+
+.nav-footer { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; border-top: 1px solid var(--gray-200); margin-top: 28px; }
+.nav-btn { display: inline-flex; align-items: center; gap: 6px; padding: 9px 18px; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; border: 1px solid var(--gray-200); background: #fff; color: var(--gray-600); text-decoration: none; }
+.nav-btn:hover { background: var(--gray-100); }
+.nav-btn.primary { background: var(--blue); color: #fff; border-color: var(--blue); }
+.nav-btn.primary:hover { background: var(--blue-dark); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="header-tag">INFO1113 · Week 2 · Visual Guide</div>
+    <h1>Loops, Static Methods, Arrays & Strings</h1>
+    <p>10 steps · work through at your own pace · each builds on the last</p>
+    <div class="header-reassure">
+      <strong>This week builds on everything from Week 1.</strong> If loops feel familiar from Python — great! The logic is the same, just the syntax is different. Arrays are Java's version of lists, but with one big catch: they can't grow or shrink. By the end, you'll see these concepts work together in real programs.
+    </div>
+  </div>
+</div>
+
+<div class="progress-bar">
+  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="progress-label" id="progressLabel">0 of 10 complete</div>
+</div>
+
+<div class="content">
+
+<!-- ============ STEP 1 ============ -->
+<div class="step open" id="step-1" data-step="1">
+  <div class="step-header" onclick="toggleStep(1)">
+    <div class="step-num active">1</div>
+    <div class="step-title"><h3>Loops in Java: for, while, do-while</h3><div class="step-sub">The logic is the same as Python — just different syntax</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">You know Python loops. Java has the same idea, but the syntax is different. Let's compare:</p>
+    <div class="compare">
+      <div class="cmp-box python"><h4>Python — range()</h4><pre><span class="kw">for</span> i <span class="kw">in</span> <span class="kw">range</span>(<span class="num">5</span>):
+    <span class="kw">print</span>(i)</pre></div>
+      <div class="cmp-box java"><h4>Java — C-style for loop</h4><pre><span class="kw">for</span>(<span class="type">int</span> i=<span class="num">0</span>; i&lt;<span class="num">5</span>; i++) {
+    System.out.println(i);
+}</pre></div>
+    </div>
+    <p class="prose">The Java <code>for</code> loop has three parts inside the brackets: <strong>initialiser</strong> (<code>int i=0</code>), <strong>condition</strong> (<code>i&lt;5</code>), and <strong>increment</strong> (<code>i++</code>). They work together to repeat the block 5 times.</p>
+    <div class="diagram">
+      <svg viewBox="0 0 680 240" xmlns="http://www.w3.org/2000/svg" style="max-width:600px">
+        <style>svg text{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;}</style>
+        <rect x="20" y="20" width="640" height="200" rx="12" fill="#f5f3ff" stroke="#8b5cf6" stroke-width="2"/>
+        <text x="40" y="45" font-size="12" font-weight="700" fill="#8b5cf6">for(int i=0; i&lt;5; i++)</text>
+        <circle cx="80" cy="90" r="20" fill="#3b82f6" stroke="none"/><text x="80" y="97" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">1</text>
+        <text x="110" y="97" font-size="12" fill="#475569"><strong>Initialise:</strong> i starts at 0</text>
+        <circle cx="80" cy="140" r="20" fill="#f59e0b" stroke="none"/><text x="80" y="147" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">2</text>
+        <text x="110" y="147" font-size="12" fill="#475569"><strong>Check:</strong> is i &lt; 5? If yes, run body</text>
+        <circle cx="80" cy="190" r="20" fill="#10b981" stroke="none"/><text x="80" y="197" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">3</text>
+        <text x="110" y="197" font-size="12" fill="#475569"><strong>Increment:</strong> i++ (add 1), then loop back to 2</text>
+      </svg>
+    </div>
+    <p class="prose"><span class="label label-tip">while loops and do-while</span></p>
+    <p class="prose"><code>while</code> loops are simpler — they just check a condition. <code>do-while</code> is new (Python doesn't have it): it runs the body <em>first</em>, then checks.</p>
+    <div class="compare">
+      <div class="cmp-box java"><h4>while — check first</h4><pre><span class="type">int</span> i = <span class="num">0</span>;
+<span class="kw">while</span>(i &lt; <span class="num">5</span>) {
+    System.out.println(i);
+    i++;
+}</pre></div>
+      <div class="cmp-box java"><h4>do-while — run first</h4><pre><span class="type">int</span> i = <span class="num">0</span>;
+<span class="kw">do</span> {
+    System.out.println(i);
+    i++;
+} <span class="kw">while</span>(i &lt; <span class="num">5</span>);</pre></div>
+    </div>
+    <div class="callout ok"><div class="callout-icon">🔑</div><div><strong>Gotcha:</strong> Notice <code>do-while</code> ends with a semicolon after the closing <code>}</code>. That's because it's technically part of the condition.</div></div>
+    <div class="check" data-check="1">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">If a <code>while</code> loop's condition is false from the start, how many times does the body run? What about a <code>do-while</code>?</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer"><strong>while:</strong> 0 times — the condition is checked before the body ever runs. <strong>do-while:</strong> 1 time — the body always runs at least once because it executes before the condition check.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 2 ============ -->
+<div class="step" id="step-2" data-step="2">
+  <div class="step-header" onclick="toggleStep(2)">
+    <div class="step-num locked">2</div>
+    <div class="step-title"><h3>Enhanced For Loop (for-each)</h3><div class="step-sub">Loop through a collection without managing an index</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">Java's enhanced <code>for</code> loop (called <strong>for-each</strong>) is like Python's <code>for item in list</code>. It iterates directly over elements:</p>
+    <div class="compare">
+      <div class="cmp-box python"><h4>Python</h4><pre>fruits = [<span class="str">"apple"</span>, <span class="str">"banana"</span>]
+<span class="kw">for</span> fruit <span class="kw">in</span> fruits:
+    <span class="kw">print</span>(fruit)</pre></div>
+      <div class="cmp-box java"><h4>Java — for-each</h4><pre><span class="type">String</span>[] fruits = {<span class="str">"apple"</span>, <span class="str">"banana"</span>};
+<span class="kw">for</span>(<span class="type">String</span> fruit : fruits) {
+    System.out.println(fruit);
+}</pre></div>
+    </div>
+    <p class="prose">Notice the syntax: <code>for(Type var : array)</code> with a colon. The variable gets each element one by one. You don't need to worry about indices.</p>
+    <div class="callout warn"><div class="callout-icon">⚠️</div><div><strong>Important caveat:</strong> You <em>cannot</em> modify the array while inside a for-each loop. If you need to change elements, use a regular <code>for</code> loop with an index instead.</div></div>
+    <div class="callout tip"><div class="callout-icon">💡</div><div><strong>Strings are tricky in for-each:</strong> You can't directly do <code>for(char c : "hello")</code>. Strings aren't arrays. You need <code>for(char c : "hello".toCharArray())</code> — more on this in Step 5.</div></div>
+    <div class="check" data-check="2">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">Write a for-each loop that prints each name from a String array called <code>names</code>.</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer"><code>for(String name : names) { System.out.println(name); }</code> — notice the colon, and the variable type must match the array's element type.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 3 ============ -->
+<div class="step" id="step-3" data-step="3">
+  <div class="step-header" onclick="toggleStep(3)">
+    <div class="step-num locked">3</div>
+    <div class="step-title"><h3>Arrays: Declaration & Basics</h3><div class="step-sub">Java's version of lists — but with fixed size</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">In Python, lists grow and shrink automatically. Java arrays are different: <strong>they have a fixed size</strong>, declared when you create them.</p>
+    <div class="compare">
+      <div class="cmp-box python"><h4>Python — grows automatically</h4><pre>nums = []
+nums.append(<span class="num">5</span>)
+nums.append(<span class="num">10</span>)</pre></div>
+      <div class="cmp-box java"><h4>Java — fixed size</h4><pre><span class="type">int</span>[] nums = <span class="kw">new int</span>[<span class="num">5</span>];
+<span class="cmt">← declares space for exactly 5 ints</span></pre></div>
+    </div>
+    <p class="prose">Breaking down the declaration:</p>
+    <div class="diagram">
+      <svg viewBox="0 0 680 160" xmlns="http://www.w3.org/2000/svg" style="max-width:600px">
+        <style>svg text{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;}</style>
+        <text x="20" y="40" font-size="13" font-weight="700" fill="#1e293b" font-family="monospace">int[] nums = new int[5];</text>
+        <g>
+          <line x1="40" y1="50" x2="40" y2="85" stroke="#3b82f6" stroke-width="2"/><circle cx="40" cy="50" r="4" fill="#3b82f6"/><text x="55" y="75" font-size="11" fill="#475569"><strong>int[]</strong> ← array of integers</text>
+        </g>
+        <g>
+          <line x1="130" y1="50" x2="130" y2="85" stroke="#f59e0b" stroke-width="2"/><circle cx="130" cy="50" r="4" fill="#f59e0b"/><text x="145" y="75" font-size="11" fill="#475569"><strong>nums</strong> ← variable name</text>
+        </g>
+        <g>
+          <line x1="250" y1="50" x2="250" y2="85" stroke="#10b981" stroke-width="2"/><circle cx="250" cy="50" r="4" fill="#10b981"/><text x="265" y="75" font-size="11" fill="#475569"><strong>new int[5]</strong> ← allocate space for 5 ints</text>
+        </g>
+        <text x="20" y="125" font-size="12" fill="#64748b"><strong>Result:</strong> a memory block with space for 5 integers, all starting at 0</text>
+      </svg>
+    </div>
+    <p class="prose"><span class="label label-how">Default values</span></p>
+    <p class="prose">When you create an array, Java fills it with defaults: <code>0</code> for <code>int</code>, <code>0.0</code> for <code>double</code>, <code>false</code> for <code>boolean</code>, and <code>null</code> for objects (like <code>String</code>).</p>
+    <div class="callout tip"><div class="callout-icon">💡</div><div><strong>Initialising with values:</strong> You can create and fill in one go: <code>int[] nums = {1, 2, 3, 4, 5};</code> — Java counts the elements and allocates the right size.</div></div>
+    <div class="check" data-check="3">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">Declare a String array of 3 elements. What will be the default value of each element?</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer"><code>String[] arr = new String[3];</code> — Each element defaults to <code>null</code> (not an empty string, but no object at all). Trying to call methods on a null element will throw a NullPointerException.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 4 ============ -->
+<div class="step" id="step-4" data-step="4">
+  <div class="step-header" onclick="toggleStep(4)">
+    <div class="step-num locked">4</div>
+    <div class="step-title"><h3>Working With Arrays</h3><div class="step-sub">Accessing, iterating, printing, and common patterns</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">Now you know how to declare arrays. Let's actually use them:</p>
+    <pre><span class="type">int</span>[] scores = {<span class="num">92</span>, <span class="num">87</span>, <span class="num">95</span>, <span class="num">88</span>};
+
+<span class="cmt">// Access by index</span>
+System.out.println(scores[<span class="num">0</span>]); <span class="cmt">← prints 92</span>
+
+<span class="cmt">// Get array length</span>
+System.out.println(scores.length); <span class="cmt">← prints 4</span>
+
+<span class="cmt">// Iterate with for loop</span>
+<span class="kw">for</span>(<span class="type">int</span> i=<span class="num">0</span>; i&lt;scores.length; i++) {
+    System.out.println(scores[i]);
+}</pre>
+    <p class="prose"><span class="label label-how">Arrays.toString()</span></p>
+    <p class="prose">You can't just <code>println</code> an array directly — it prints a memory address hash like <code>[I@15db9742</code>. Use <code>Arrays.toString()</code> instead:</p>
+    <div class="compare">
+      <div class="cmp-box before"><h4>Wrong — memory address</h4><pre>System.out.println(scores);
+<span class="cmt">← [I@15db9742</span></pre></div>
+      <div class="cmp-box after"><h4>Right — readable</h4><pre>System.out.println(Arrays.toString(scores));
+<span class="cmt">← [92, 87, 95, 88]</span></pre></div>
+    </div>
+    <div class="callout tip"><div class="callout-icon">💡</div><div>You need <code>import java.util.Arrays;</code> at the top of your file to use <code>Arrays.toString()</code>.</div></div>
+    <p class="prose"><span class="label label-how">Common array patterns</span></p>
+    <p class="prose">Check if an array contains a value, or count occurrences. These are so common you'll write them many times:</p>
+    <pre><span class="cmt">// Does array contain a value?</span>
+<span class="kw">boolean</span> found = <span class="kw">false</span>;
+<span class="kw">for</span>(<span class="type">int</span> score : scores) {
+    <span class="kw">if</span>(score == <span class="num">95</span>) found = <span class="kw">true</span>;
+}
+
+<span class="cmt">// Count occurrences</span>
+<span class="type">int</span> count = <span class="num">0</span>;
+<span class="kw">for</span>(<span class="type">int</span> score : scores) {
+    <span class="kw">if</span>(score &gt; <span class="num">90</span>) count++;
+}
+System.out.println(count); <span class="cmt">← how many scores are above 90?</span></pre>
+    <div class="check" data-check="4">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">Write a for loop to sum all elements in an int array called <code>nums</code>.</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer"><code>int sum = 0; for(int n : nums) { sum += n; } System.out.println(sum);</code> — or use a regular for loop: <code>for(int i=0; i&lt;nums.length; i++) { sum += nums[i]; }</code></div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 5 ============ -->
+<div class="step" id="step-5" data-step="5">
+  <div class="step-header" onclick="toggleStep(5)">
+    <div class="step-num locked">5</div>
+    <div class="step-title"><h3>Strings in Java: Methods & Operations</h3><div class="step-sub">Strings are objects with powerful built-in methods</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">You know Python strings. In Java, strings are <strong>objects</strong>, and you use methods to manipulate them. Here are the essentials:</p>
+    <div class="diagram" style="text-align:left;padding:16px 20px;">
+      <table style="width:100%;font-size:13px;border-collapse:collapse;">
+        <tr style="border-bottom:1px solid var(--gray-200);"><td style="padding:8px 0;font-weight:700;color:var(--blue);font-family:var(--mono);width:120px;">.length()</td><td style="padding:8px 0;">Number of characters</td><td style="padding:8px 0;color:var(--gray-400);font-family:var(--mono);">"hello".length() → 5</td></tr>
+        <tr style="border-bottom:1px solid var(--gray-200);"><td style="padding:8px 0;font-weight:700;color:var(--blue);font-family:var(--mono);">.charAt(i)</td><td style="padding:8px 0;">Get character at index i</td><td style="padding:8px 0;color:var(--gray-400);font-family:var(--mono);">"hello".charAt(0) → 'h'</td></tr>
+        <tr style="border-bottom:1px solid var(--gray-200);"><td style="padding:8px 0;font-weight:700;color:var(--blue);font-family:var(--mono);">.substring(a,b)</td><td style="padding:8px 0;">Extract part of string</td><td style="padding:8px 0;color:var(--gray-400);font-family:var(--mono);">"hello".substring(1,4) → "ell"</td></tr>
+        <tr style="border-bottom:1px solid var(--gray-200);"><td style="padding:8px 0;font-weight:700;color:var(--blue);font-family:var(--mono);">.toUpperCase()</td><td style="padding:8px 0;">Convert to uppercase</td><td style="padding:8px 0;color:var(--gray-400);font-family:var(--mono);">"hello".toUpperCase() → "HELLO"</td></tr>
+        <tr style="border-bottom:1px solid var(--gray-200);"><td style="padding:8px 0;font-weight:700;color:var(--blue);font-family:var(--mono);">.toLowerCase()</td><td style="padding:8px 0;">Convert to lowercase</td><td style="padding:8px 0;color:var(--gray-400);font-family:var(--mono);">"HELLO".toLowerCase() → "hello"</td></tr>
+        <tr style="border-bottom:1px solid var(--gray-200);"><td style="padding:8px 0;font-weight:700;color:var(--blue);font-family:var(--mono);">.indexOf(str)</td><td style="padding:8px 0;">Find position of substring</td><td style="padding:8px 0;color:var(--gray-400);font-family:var(--mono);">"hello".indexOf("ll") → 2</td></tr>
+        <tr><td style="padding:8px 0;font-weight:700;color:var(--blue);font-family:var(--mono);">.contains(str)</td><td style="padding:8px 0;">Check if contains substring</td><td style="padding:8px 0;color:var(--gray-400);font-family:var(--mono);">"hello".contains("ll") → true</td></tr>
+      </table>
+    </div>
+    <p class="prose"><span class="label label-tip">Important difference from Python</span></p>
+    <p class="prose">In Python, you use <code>len(s)</code> to get string length. In Java, it's the method <code>.length()</code> (with parentheses). Also, <code>.substring(a,b)</code> doesn't include the end index — like Python slicing.</p>
+    <div class="check" data-check="5">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">Given <code>String name = "Eduardo";</code>, write code to get the first three characters.</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer"><code>name.substring(0, 3)</code> → "Edu" (note: the end index 3 is exclusive, so you get indices 0, 1, 2)</div>
+      <div class="check-rating"><div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 6 ============ -->
+<div class="step" id="step-6" data-step="6">
+  <div class="step-header" onclick="toggleStep(6)">
+    <div class="step-num locked">6</div>
+    <div class="step-title"><h3>String Comparison Trap: == vs .equals()</h3><div class="step-sub">The classic Java gotcha — this catches everyone</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">This is a critical concept. Watch what happens when you compare strings:</p>
+    <div class="compare">
+      <div class="cmp-box before"><h4>WRONG — using ==</h4><pre><span class="type">String</span> a = <span class="str">"hello"</span>;
+<span class="type">String</span> b = <span class="str">"hello"</span>;
+<span class="kw">if</span>(a == b) { <span class="cmt">// Sometimes true!</span>
+    System.out.println(<span class="str">"Equal"</span>);
+}</pre></div>
+      <div class="cmp-box after"><h4>RIGHT — using .equals()</h4><pre><span class="type">String</span> a = <span class="str">"hello"</span>;
+<span class="type">String</span> b = <span class="str">"hello"</span>;
+<span class="kw">if</span>(a.equals(b)) { <span class="cmt">// Always true</span>
+    System.out.println(<span class="str">"Equal"</span>);
+}</pre></div>
+    </div>
+    <p class="prose">Why? Because <code>==</code> checks if two variables point to the <strong>exact same object in memory</strong>. <code>.equals()</code> checks if the <strong>content is the same</strong>. Here's a memory diagram:</p>
+    <div class="diagram">
+      <svg viewBox="0 0 680 200" xmlns="http://www.w3.org/2000/svg" style="max-width:600px">
+        <style>svg text{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;}</style>
+        <text x="20" y="25" font-size="12" font-weight="700" fill="#1e293b">Using ==</text>
+        <rect x="20" y="35" width="100" height="60" rx="8" fill="#eff6ff" stroke="#3b82f6" stroke-width="2"/>
+        <text x="70" y="55" text-anchor="middle" font-size="12" font-weight="700" fill="#3b82f6">a</text>
+        <text x="70" y="75" text-anchor="middle" font-size="11" fill="#475569">@0x1234</text>
+        <path d="M120 65 L160 65" stroke="#3b82f6" stroke-width="2" marker-end="url(#arr)"/>
+        <rect x="160" y="35" width="100" height="60" rx="8" fill="#ecfdf5" stroke="#10b981" stroke-width="2"/>
+        <text x="210" y="55" text-anchor="middle" font-size="12" font-weight="600" fill="#10b981">"hello"</text>
+        <text x="210" y="75" text-anchor="middle" font-size="11" fill="#475569">Address: 0x1234</text>
+        <rect x="340" y="35" width="100" height="60" rx="8" fill="#eff6ff" stroke="#3b82f6" stroke-width="2"/>
+        <text x="390" y="55" text-anchor="middle" font-size="12" font-weight="700" fill="#3b82f6">b</text>
+        <text x="390" y="75" text-anchor="middle" font-size="11" fill="#475569">@0x5678</text>
+        <path d="M460 65 L500 65" stroke="#ef4444" stroke-width="2" stroke-dasharray="4" marker-end="url(#arr-fail)"/>
+        <rect x="500" y="35" width="100" height="60" rx="8" fill="#ecfdf5" stroke="#10b981" stroke-width="2"/>
+        <text x="550" y="55" text-anchor="middle" font-size="12" font-weight="600" fill="#10b981">"hello"</text>
+        <text x="550" y="75" text-anchor="middle" font-size="11" fill="#475569">Address: 0x5678</text>
+        <text x="20" y="130" font-size="11" fill="#ef4444"><strong>a == b?</strong> FALSE (different objects)</text>
+        <text x="20" y="150" font-size="11" fill="#10b981"><strong>a.equals(b)?</strong> TRUE (same content)</text>
+        <defs><marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#3b82f6"/></marker><marker id="arr-fail" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#ef4444"/></marker></defs>
+      </svg>
+    </div>
+    <p class="prose">The same string content can exist in two different places in memory. <code>==</code> checks the memory address. <code>.equals()</code> checks the content. <strong>Always use <code>.equals()</code> for string comparison.</strong></p>
+    <div class="callout warn"><div class="callout-icon">⚠️</div><div><strong>Case-insensitive comparison:</strong> Use <code>.equalsIgnoreCase(other)</code> to ignore case: <code>"hello".equalsIgnoreCase("HELLO")</code> → true.</div></div>
+    <div class="check" data-check="6">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">Why is <code>if(userInput == "hello")</code> a bug? What should you use instead?</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer"><code>==</code> checks if userInput and "hello" are the exact same object in memory — they almost certainly aren't, even if they have the same text. Use <code>userInput.equals("hello")</code> to check if the content is the same.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 7 ============ -->
+<div class="step" id="step-7" data-step="7">
+  <div class="step-header" onclick="toggleStep(7)">
+    <div class="step-num locked">7</div>
+    <div class="step-title"><h3>Command-Line Arguments</h3><div class="step-sub">Passing information to your program when you run it</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">Remember in Python lesson 8, you learned <code>sys.argv</code>? Java has the same concept built into <code>main</code>. Those <code>String[] args</code> parameters capture command-line arguments:</p>
+    <pre><span class="kw">public static void</span> main(<span class="type">String</span>[] args) {
+    <span class="cmt">// args[0] is the first argument passed on command line</span>
+    <span class="cmt">// args[1] is the second, etc.</span>
+    <span class="cmt">// args.length is the count</span>
+}</pre>
+    <p class="prose">For example, if you run:</p>
+    <pre><span class="cmt">java MyProgram hello 42 world</span></pre>
+    <p class="prose">Then inside <code>main</code>:</p>
+    <div class="diagram" style="text-align:left;padding:16px 20px;">
+      <table style="width:100%;font-size:13px;border-collapse:collapse;">
+        <tr style="border-bottom:1px solid var(--gray-200);"><td style="padding:8px 0;font-weight:700;color:var(--blue);font-family:var(--mono);width:100px;">args[0]</td><td style="padding:8px 0;">"hello"</td></tr>
+        <tr style="border-bottom:1px solid var(--gray-200);"><td style="padding:8px 0;font-weight:700;color:var(--blue);font-family:var(--mono);">args[1]</td><td style="padding:8px 0;">"42" (note: it's a String, not an int!)</td></tr>
+        <tr style="border-bottom:1px solid var(--gray-200);"><td style="padding:8px 0;font-weight:700;color:var(--blue);font-family:var(--mono);">args[2]</td><td style="padding:8px 0;">"world"</td></tr>
+        <tr><td style="padding:8px 0;font-weight:700;color:var(--blue);font-family:var(--mono);">args.length</td><td style="padding:8px 0;">3</td></tr>
+      </table>
+    </div>
+    <div class="callout tip"><div class="callout-icon">💡</div><div><strong>Arguments are always Strings.</strong> If you need a number, convert it: <code>int age = Integer.parseInt(args[0]);</code>.</div></div>
+    <div class="callout warn"><div class="callout-icon">⚠️</div><div><strong>Different from Python!</strong> In Python's <code>sys.argv</code>, <code>argv[0]</code> is the program name. In Java, <code>args[0]</code> is the <em>first argument</em> — the program name is not included.</div></div>
+    <div class="check" data-check="7">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">Write code to read the first command-line argument and print it in uppercase.</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer"><code>if(args.length > 0) { System.out.println(args[0].toUpperCase()); }</code> — always check the length first to avoid an ArrayIndexOutOfBoundsException.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 8 ============ -->
+<div class="step" id="step-8" data-step="8">
+  <div class="step-header" onclick="toggleStep(8)">
+    <div class="step-num locked">8</div>
+    <div class="step-title"><h3>Static Methods as Utilities</h3><div class="step-sub">Helper functions that don't need object data</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">You learned about static vs instance methods in Week 1. This week, you'll write static methods as <strong>utility functions</strong> — tools that work with arrays and strings:</p>
+    <pre><span class="kw">public static</span> <span class="type">boolean</span> contains(<span class="type">int</span>[] arr, <span class="type">int</span> target) {
+    <span class="kw">for</span>(<span class="type">int</span> x : arr) {
+        <span class="kw">if</span>(x == target) <span class="kw">return true</span>;
+    }
+    <span class="kw">return false</span>;
+}
+
+<span class="kw">public static int</span> count(<span class="type">int</span>[] arr, <span class="type">int</span> target) {
+    <span class="type">int</span> c = <span class="num">0</span>;
+    <span class="kw">for</span>(<span class="type">int</span> x : arr) {
+        <span class="kw">if</span>(x == target) c++;
+    }
+    <span class="kw">return</span> c;
+}</pre>
+    <p class="prose">Why are these static? Because all the data comes through parameters. They don't depend on any object's fields. You call them like this:</p>
+    <pre><span class="type">int</span>[] nums = {<span class="num">5</span>, <span class="num">10</span>, <span class="num">5</span>, <span class="num">15</span>};
+<span class="kw">if</span>(contains(nums, <span class="num">10</span>)) {
+    System.out.println(<span class="str">"Found it!"</span>);
+}
+System.out.println(count(nums, <span class="num">5</span>)); <span class="cmt">← prints 2</span></pre>
+    <p class="prose"><span class="label label-how">Decision: static or instance?</span></p>
+    <div class="compare">
+      <div class="cmp-box after"><h4>Make it static if:</h4><pre>• All data comes from parameters
+• It doesn't need <code>this</code>
+• Example: <code>contains(arr, val)</code>
+  No object data needed.</pre></div>
+      <div class="cmp-box before"><h4>Make it instance if:</h4><pre>• It uses the object's fields
+• Example: a Car object's
+  <code>getSpeed()</code> method reads
+  <code>this.currentSpeed</code></pre></div>
+    </div>
+    <div class="check" data-check="8">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">Write a static method called <code>max</code> that takes an int array and returns the largest element.</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer"><code>public static int max(int[] arr) { int m = arr[0]; for(int x : arr) { if(x > m) m = x; } return m; }</code> — Note: this assumes arr is not empty.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 9 ============ -->
+<div class="step" id="step-9" data-step="9">
+  <div class="step-header" onclick="toggleStep(9)">
+    <div class="step-num locked">9</div>
+    <div class="step-title"><h3>Putting It Together: Occurrence Counter</h3><div class="step-sub">A real example tying loops, arrays, strings, and static methods</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">Here's a program from the course that demonstrates everything you've learned this week. It counts how many times each digit appears in a string:</p>
+    <pre><span class="kw">public class</span> <span class="type">Occurrence</span> {
+    <span class="kw">public static void</span> main(<span class="type">String</span>[] args) {
+        <span class="type">String</span> input = args[<span class="num">0</span>]; <span class="cmt">// Get from command line</span>
+
+        <span class="cmt">// Create array to count digits 0-9</span>
+        <span class="type">int</span>[] counts = <span class="kw">new int</span>[<span class="num">10</span>];
+
+        <span class="cmt">// Loop through each character in the string</span>
+        <span class="kw">for</span>(<span class="type">int</span> i = <span class="num">0</span>; i &lt; input.length(); i++) {
+            <span class="type">char</span> ch = input.charAt(i);
+
+            <span class="cmt">// If it's a digit, increment its counter</span>
+            <span class="kw">if</span>(ch &gt;= <span class="str">'0'</span> &amp;&amp; ch &lt;= <span class="str">'9'</span>) {
+                <span class="type">int</span> digit = ch - <span class="str">'0'</span>; <span class="cmt">// Convert char to int</span>
+                counts[digit]++;
+            }
+        }
+
+        <span class="cmt">// Print results</span>
+        <span class="kw">for</span>(<span class="type">int</span> d = <span class="num">0</span>; d &lt; <span class="num">10</span>; d++) {
+            <span class="kw">if</span>(counts[d] &gt; <span class="num">0</span>) {
+                System.out.println(<span class="str">"Digit "</span> + d + <span class="str">": "</span> + counts[d]);
+            }
+        }
+    }
+}</pre>
+    <p class="prose">Run it: <code>java Occurrence 3141592653</code> — Output shows how many times each digit appears.</p>
+    <p class="prose"><span class="label label-how">Breaking it down</span></p>
+    <ul style="margin: 12px 0; padding-left: 24px; color: var(--gray-600); font-size: 15px;">
+      <li><strong>Command-line arg:</strong> <code>args[0]</code> captures the input string</li>
+      <li><strong>Array:</strong> <code>counts[10]</code> — one slot for each digit</li>
+      <li><strong>Loop:</strong> <code>for(int i = 0; i < input.length(); i++)</code> — iterate through string</li>
+      <li><strong>String method:</strong> <code>charAt(i)</code> — get each character</li>
+      <li><strong>Char to int:</strong> <code>ch - '0'</code> — clever trick to convert '3' to 3</li>
+      <li><strong>Array indexing:</strong> <code>counts[digit]++</code> — increment the right counter</li>
+    </ul>
+    <div class="check" data-check="9">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">What would happen if you removed the <code>if(counts[d] > 0)</code> check in the output loop?</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer">It would print all digits 0-9, even those with count 0. The output would be messier, showing "Digit 4: 0" for digits that never appeared.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 10 ============ -->
+<div class="step" id="step-10" data-step="10">
+  <div class="step-header" onclick="toggleStep(10)">
+    <div class="step-num locked">10</div>
+    <div class="step-title"><h3>2D Arrays (Brief Intro)</h3><div class="step-sub">Arrays of arrays — grids of data</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">You know regular arrays. A <strong>2D array</strong> is an array of arrays — think of it as a grid or table:</p>
+    <div class="compare">
+      <div class="cmp-box java"><h4>Declare a 2D array</h4><pre><span class="type">int</span>[][] grid =
+    <span class="kw">new int</span>[<span class="num">3</span>][<span class="num">4</span>];
+<span class="cmt">← 3 rows, 4 columns</span></pre></div>
+      <div class="cmp-box java"><h4>Access elements</h4><pre>grid[<span class="num">0</span>][<span class="num">0</span>] = <span class="num">5</span>;
+grid[<span class="num">1</span>][<span class="num">2</span>] = <span class="num">10</span>;
+System.out.println(grid[<span class="num">0</span>][<span class="num">1</span>]);</pre></div>
+    </div>
+    <p class="prose">To traverse a 2D array, you nest loops:</p>
+    <pre><span class="kw">for</span>(<span class="type">int</span> row = <span class="num">0</span>; row &lt; <span class="num">3</span>; row++) {
+    <span class="kw">for</span>(<span class="type">int</span> col = <span class="num">0</span>; col &lt; <span class="num">4</span>; col++) {
+        System.out.print(grid[row][col] + <span class="str">" "</span>);
+    }
+    System.out.println(); <span class="cmt">// New line after each row</span>
+}</pre>
+    <p class="prose"><span class="label label-how">Python connection</span></p>
+    <p class="prose">In Python, you might have used nested lists: <code>grid = [[1, 2], [3, 4]]</code>. Java 2D arrays are similar, but with fixed dimensions. Each row must have the same number of columns (in a regular 2D array).</p>
+    <div class="callout tip"><div class="callout-icon">💡</div><div><strong>Get dimensions:</strong> <code>grid.length</code> is the number of rows. <code>grid[0].length</code> is the number of columns (of the first row).</div></div>
+    <div class="check" data-check="10">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">Declare a 2D array called <code>matrix</code> with 2 rows and 3 columns, and initialise it with the values 1, 2, 3 in the first row and 4, 5, 6 in the second.</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer"><code>int[][] matrix = {{1, 2, 3}, {4, 5, 6}};</code> or <code>int[][] matrix = new int[2][3]; matrix[0][0]=1; matrix[0][1]=2;</code> etc.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+
+    <div class="summary-box blue">
+      <h4>Week 2 in one sentence</h4>
+      <p>Java offers multiple loop styles (for, while, do-while, for-each) for different situations; arrays are fixed-size collections indexed from 0; Strings are objects with powerful methods; always use <code>.equals()</code> not <code>==</code> for string comparison; and you can write reusable static methods that work with arrays and command-line arguments.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ============ SELF-TEST ============ -->
+<div class="self-test">
+  <div class="self-test-title">📝 Week 2 Self-Test</div>
+  <div class="self-test-sub">10 exam-style questions. Try to answer each one before revealing. These cover the full study guide.</div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q1</span><span class="st-q-bloom">Applying</span></div><p>Write a for loop that prints all even numbers from 2 to 20. Then rewrite it using a while loop.</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer"><strong>For loop:</strong> <code>for(int i=2; i<=20; i+=2) System.out.println(i);</code> <strong>While loop:</strong> <code>int i=2; while(i<=20) { System.out.println(i); i+=2; }</code></div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q2</span><span class="st-q-bloom">Understanding</span></div><p>What is the key difference between a while loop and a do-while loop? When would you choose one over the other?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">A while loop checks the condition before executing the body — it might never run. A do-while always executes at least once, then checks. Use do-while when you need the body to run at minimum once (e.g., menu prompt, input validation).</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q3</span><span class="st-q-bloom">Applying</span></div><p>Declare a String array of 5 elements and write a for-each loop that prints each element on its own line.</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer"><code>String[] names = {"Alice","Bob","Carol","Dan","Eve"}; for(String name : names) System.out.println(name);</code></div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q4</span><span class="st-q-bloom">Understanding</span></div><p>Explain what happens when you try to access an array index that doesn't exist.</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">Java throws an ArrayIndexOutOfBoundsException at runtime. Unlike Python (which uses negative indices for wrap-around), Java has no negative indexing — the valid range is 0 to array.length-1.</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q5</span><span class="st-q-bloom">Applying</span></div><p>Write a static method called countOccurrences(int[] arr, int target) that returns how many times target appears in the array.</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer"><code>public static int countOccurrences(int[] arr, int target) { int count=0; for(int x:arr) if(x==target) count++; return count; }</code></div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q6</span><span class="st-q-bloom">Understanding</span></div><p>Why must you use .equals() instead of == to compare Strings in Java?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer"><code>==</code> compares references (memory addresses) — are these the exact same object? <code>.equals()</code> compares content — do they contain the same characters? Two different String objects can have the same text but <code>==</code> would return false.</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q7</span><span class="st-q-bloom">Remember</span></div><p>What does Arrays.toString(arr) do and why is it necessary?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer"><code>Arrays.toString()</code> returns a human-readable string representation like "[1, 2, 3]". Without it, printing an array with System.out.println gives the memory address hash (e.g., [I@15db9742) because arrays don't override toString().</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q8</span><span class="st-q-bloom">Applying</span></div><p>Write a method that takes a String and returns the number of vowels in it.</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer"><code>public static int countVowels(String s) { int c=0; for(int i=0;i<s.length();i++) { char ch=Character.toLowerCase(s.charAt(i)); if(ch=='a'||ch=='e'||ch=='i'||ch=='o'||ch=='u') c++; } return c; }</code></div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q9</span><span class="st-q-bloom">Understanding</span></div><p>Explain how command-line arguments work in Java. How do you access them?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">Command-line args are passed after the class name: <code>java MyProgram arg1 arg2</code>. They arrive as the <code>String[] args</code> parameter in main(). <code>args[0]</code> is the first argument (not the program name like Python's sys.argv). <code>args.length</code> gives the count.</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q10</span><span class="st-q-bloom">Analyse</span></div><p>A student writes <code>int[] grades; grades[0] = 95;</code> and gets a NullPointerException. What went wrong?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">The array was declared but never instantiated — <code>int[] grades;</code> creates a null reference, not an actual array. Fix: <code>int[] grades = new int[5];</code> or <code>int[] grades = {95, ...};</code> You must allocate memory with new before using an array.</div></div>
+</div>
+
+<!-- Practice Lab links -->
+<p class="prose" style="margin-top:20px;"><span class="label label-tip">Practice next</span></p>
+<p class="prose">Now apply what you've learned in the Java Practice Lab:</p>
+
+<a class="lab-link" href="#" onclick="window.parent.openPracticeLabTool('traces',2); return false;"><div class="lab-link-icon">🔍</div><div class="lab-link-text"><div class="lab-link-title">Code Tracing 11–20</div><div class="lab-link-desc">Trace through loop and array programs step by step</div></div><div class="lab-link-arrow">→</div></a>
+<a class="lab-link" href="#" onclick="window.parent.openPracticeLabTool('mistakes',2); return false;"><div class="lab-link-icon">🐍</div><div class="lab-link-text"><div class="lab-link-title">Python → Java: Loops & Arrays</div><div class="lab-link-desc">Convert Python loop/list patterns to Java equivalents</div></div><div class="lab-link-arrow">→</div></a>
+<a class="lab-link" href="#" onclick="window.parent.openPracticeLabTool('parsons',2); return false;"><div class="lab-link-icon">🧩</div><div class="lab-link-text"><div class="lab-link-title">Parsons Problems 6–10</div><div class="lab-link-desc">Drag-and-drop Java loop and array code into correct order</div></div><div class="lab-link-arrow">→</div></a>
+<a class="lab-link" href="#" onclick="window.parent.openPracticeLabTool('debug',2); return false;"><div class="lab-link-icon">🐛</div><div class="lab-link-text"><div class="lab-link-title">Debug Detective Exercise 2</div><div class="lab-link-desc">Find and fix bugs in array and string programs</div></div><div class="lab-link-arrow">→</div></a>
+
+<div class="nav-footer">
+  <a class="nav-btn" href="#">← Back to Week 1</a>
+  <a class="nav-btn primary" href="#">Week 3: Collections & More →</a>
+</div>
+
+</div>
+
+<script>
+const totalSteps=10;let completedSteps=new Set();
+function toggleStep(n){document.getElementById('step-'+n).classList.toggle('open')}
+function enableReveal(ta){const btn=ta.closest('.check,.st-q').querySelector('.check-reveal button');btn.disabled=ta.value.trim().length<5}
+function revealAnswer(btn){const c=btn.closest('.check,.st-q');c.querySelector('.check-answer').classList.add('show');const r=c.querySelector('.check-rating');if(r)r.classList.add('show');btn.style.display='none'}
+function rateCheck(btn,rating){const check=btn.closest('.check'),step=btn.closest('.step'),n=parseInt(step.dataset.step);check.querySelector('.check-rating').querySelectorAll('button').forEach(b=>b.style.opacity='0.4');btn.style.opacity='1';completedSteps.add(n);updateProgress();step.querySelector('.step-num').className='step-num done';const next=document.getElementById('step-'+(n+1));if(next){const nn=next.querySelector('.step-num');if(nn.classList.contains('locked'))nn.className='step-num active'}}
+function updateProgress(){const p=Math.round(completedSteps.size/totalSteps*100);document.getElementById('progressFill').style.width=p+'%';document.getElementById('progressLabel').textContent=completedSteps.size+' of '+totalSteps+' complete'}
+</script>
+</body>
+</html>

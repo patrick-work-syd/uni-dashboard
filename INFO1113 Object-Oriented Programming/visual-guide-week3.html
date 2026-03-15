@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>INFO1113 — Week 3 Visual Guide</title>
+<style>
+:root {
+  --blue: #3b82f6; --blue-light: #eff6ff; --blue-dark: #1e40af;
+  --green: #10b981; --green-light: #ecfdf5;
+  --orange: #f59e0b; --orange-light: #fffbeb;
+  --purple: #8b5cf6; --purple-light: #f5f3ff;
+  --red: #ef4444; --red-light: #fef2f2;
+  --gray-50: #f8fafc; --gray-100: #f1f5f9; --gray-200: #e2e8f0;
+  --gray-400: #94a3b8; --gray-600: #475569; --gray-800: #1e293b;
+  --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --mono: 'SF Mono', 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: var(--font); background: var(--gray-50); color: var(--gray-800); line-height: 1.65; }
+
+.header { background: linear-gradient(135deg, var(--blue-dark) 0%, var(--blue) 100%); color: #fff; padding: 32px 0 28px; }
+.header-inner { max-width: 800px; margin: 0 auto; padding: 0 24px; }
+.header-tag { font-size: 12px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; opacity: 0.8; margin-bottom: 8px; }
+.header h1 { font-size: 26px; font-weight: 700; margin-bottom: 4px; }
+.header p { font-size: 14px; opacity: 0.85; }
+.header-reassure { margin-top: 14px; padding: 12px 16px; background: rgba(255,255,255,0.12); border-radius: 10px; font-size: 13px; line-height: 1.5; }
+
+.progress-bar { max-width: 800px; margin: 0 auto; padding: 16px 24px 0; }
+.progress-track { background: var(--gray-200); height: 6px; border-radius: 3px; overflow: hidden; }
+.progress-fill { background: var(--green); height: 100%; width: 0%; border-radius: 3px; transition: width 0.5s ease; }
+.progress-label { font-size: 12px; color: var(--gray-400); margin-top: 6px; text-align: right; }
+
+.content { max-width: 800px; margin: 0 auto; padding: 24px; }
+
+.step { background: #fff; border: 1px solid var(--gray-200); border-radius: 16px; margin-bottom: 20px; overflow: hidden; }
+.step-header { display: flex; align-items: center; gap: 12px; padding: 18px 22px; cursor: pointer; user-select: none; }
+.step-header:hover { background: var(--gray-50); }
+.step-num { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; flex-shrink: 0; }
+.step-num.locked { background: var(--gray-200); color: var(--gray-400); }
+.step-num.active { background: var(--blue); color: #fff; }
+.step-num.done { background: var(--green); color: #fff; }
+.step-title { flex: 1; }
+.step-title h3 { font-size: 16px; font-weight: 600; }
+.step-title .step-sub { font-size: 12px; color: var(--gray-400); margin-top: 1px; }
+.step-chevron { font-size: 18px; color: var(--gray-400); transition: transform 0.2s; }
+.step.open .step-chevron { transform: rotate(90deg); }
+.step-body { display: none; padding: 0 22px 22px; }
+.step.open .step-body { display: block; }
+
+.diagram { background: var(--gray-50); border: 1px solid var(--gray-200); border-radius: 12px; padding: 20px; margin: 14px 0; text-align: center; overflow-x: auto; }
+.diagram svg { max-width: 100%; height: auto; }
+
+.prose { font-size: 15px; color: var(--gray-600); margin: 12px 0; }
+.prose strong { color: var(--gray-800); }
+
+.label { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 4px; }
+.label-idea { color: var(--green); } .label-how { color: var(--blue); } .label-trap { color: var(--red); } .label-why { color: var(--purple); } .label-tip { color: var(--orange); }
+
+pre { background: #1e293b; color: #e2e8f0; padding: 14px 16px; border-radius: 10px; font-family: var(--mono); font-size: 13px; line-height: 1.7; overflow-x: auto; margin: 10px 0; white-space: pre; }
+pre .kw { color: #c084fc; } pre .str { color: #86efac; } pre .cmt { color: #64748b; font-style: italic; }
+pre .type { color: #67e8f9; } pre .num { color: #fbbf24; } pre .ann { color: #f472b6; }
+code { font-family: var(--mono); font-size: 0.88em; background: var(--gray-100); padding: 1px 5px; border-radius: 4px; }
+
+.compare { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 14px 0; }
+@media (max-width: 600px) { .compare { grid-template-columns: 1fr; } }
+.cmp-box { border-radius: 10px; padding: 14px; }
+.cmp-box.python { background: var(--orange-light); border: 1px solid #fed7aa; }
+.cmp-box.java { background: var(--blue-light); border: 1px solid #bfdbfe; }
+.cmp-box.before { background: var(--red-light); border: 1px solid #fecaca; }
+.cmp-box.after { background: var(--green-light); border: 1px solid #a7f3d0; }
+.cmp-box h4 { font-size: 12px; font-weight: 700; margin-bottom: 6px; }
+.cmp-box.python h4 { color: #b45309; } .cmp-box.java h4 { color: var(--blue-dark); }
+.cmp-box.before h4 { color: var(--red); } .cmp-box.after h4 { color: #065f46; }
+.cmp-box pre { font-size: 12.5px; padding: 10px; margin: 0; }
+
+.callout { display: flex; gap: 10px; padding: 14px 16px; border-radius: 10px; margin: 14px 0; font-size: 14px; line-height: 1.55; }
+.callout-icon { font-size: 18px; flex-shrink: 0; line-height: 1.5; }
+.callout.tip { background: var(--blue-light); border: 1px solid #bfdbfe; }
+.callout.warn { background: var(--red-light); border: 1px solid #fecaca; }
+.callout.ok { background: var(--green-light); border: 1px solid #a7f3d0; }
+
+.analogy { background: var(--purple-light); border: 1px solid #ddd6fe; border-radius: 12px; padding: 16px; margin: 14px 0; }
+.analogy-label { font-size: 11px; font-weight: 700; color: var(--purple); letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 4px; }
+.analogy p { font-size: 14px; color: var(--gray-600); }
+
+.check { background: var(--green-light); border: 1px solid #a7f3d0; border-radius: 12px; padding: 18px; margin: 18px 0; }
+.check-title { font-size: 13px; font-weight: 700; color: var(--green); margin-bottom: 6px; }
+.check-q { font-size: 14px; margin-bottom: 10px; }
+.check textarea { width: 100%; padding: 8px 10px; border: 1px solid #a7f3d0; border-radius: 8px; font-family: var(--font); font-size: 13px; resize: vertical; min-height: 44px; background: #fff; }
+.check textarea:focus { outline: 2px solid var(--green); border-color: transparent; }
+.check-reveal { margin-top: 8px; }
+.check-reveal button { background: var(--green); color: #fff; border: none; padding: 7px 16px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; }
+.check-reveal button:hover { background: #059669; }
+.check-reveal button:disabled { background: var(--gray-400); cursor: not-allowed; }
+.check-answer { display: none; margin-top: 10px; padding: 12px; background: #fff; border-radius: 8px; border: 1px solid #a7f3d0; font-size: 13px; line-height: 1.6; }
+.check-answer.show { display: block; }
+.check-rating { display: none; margin-top: 8px; gap: 8px; }
+.check-rating.show { display: flex; }
+.check-rating button { padding: 5px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid var(--gray-200); background: #fff; }
+.check-rating .got-it { color: var(--green); border-color: #a7f3d0; }
+.check-rating .not-yet { color: var(--red); border-color: #fecaca; }
+
+.lab-link { display: flex; align-items: center; gap: 10px; padding: 14px 16px; background: #fff; border: 2px solid var(--blue); border-radius: 12px; margin: 16px 0; text-decoration: none; color: var(--gray-800); transition: all 0.15s; }
+.lab-link:hover { background: var(--blue-light); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(59,130,246,0.15); }
+.lab-link-icon { font-size: 24px; }
+.lab-link-text { flex: 1; }
+.lab-link-title { font-size: 14px; font-weight: 700; color: var(--blue-dark); }
+.lab-link-desc { font-size: 12px; color: var(--gray-400); }
+.lab-link-arrow { font-size: 18px; color: var(--blue); font-weight: 700; }
+
+.summary-box { padding: 18px; border-radius: 12px; margin: 18px 0; }
+.summary-box.blue { background: var(--blue-light); border: 1px solid #bfdbfe; }
+.summary-box h4 { font-size: 15px; margin-bottom: 6px; color: var(--blue-dark); }
+.summary-box p { font-size: 14px; color: var(--gray-600); }
+
+.self-test { background: #fff; border: 2px solid var(--orange); border-radius: 16px; padding: 22px; margin: 28px 0; }
+.self-test-title { font-size: 18px; font-weight: 700; color: var(--orange); margin-bottom: 4px; }
+.self-test-sub { font-size: 13px; color: var(--gray-400); margin-bottom: 16px; }
+.st-q { margin-bottom: 16px; }
+.st-q-header { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.st-q-num { font-size: 12px; font-weight: 700; color: var(--orange); background: var(--orange-light); padding: 2px 8px; border-radius: 4px; }
+.st-q-bloom { font-size: 10px; color: var(--gray-400); }
+.st-q p { font-size: 14px; margin-bottom: 6px; }
+.st-q textarea { width: 100%; padding: 8px 10px; border: 1px solid #fed7aa; border-radius: 8px; font-family: var(--font); font-size: 13px; resize: vertical; min-height: 44px; background: #fff; }
+.st-q textarea:focus { outline: 2px solid var(--orange); border-color: transparent; }
+.st-q .check-reveal button { background: var(--orange); }
+.st-q .check-reveal button:hover { background: #d97706; }
+.st-q .check-reveal button:disabled { background: var(--gray-400); }
+.st-q .check-answer { border-color: #fed7aa; }
+
+.nav-footer { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; border-top: 1px solid var(--gray-200); margin-top: 28px; }
+.nav-btn { display: inline-flex; align-items: center; gap: 6px; padding: 9px 18px; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; border: 1px solid var(--gray-200); background: #fff; color: var(--gray-600); text-decoration: none; }
+.nav-btn:hover { background: var(--gray-100); }
+.nav-btn.primary { background: var(--blue); color: #fff; border-color: var(--blue); }
+.nav-btn.primary:hover { background: var(--blue-dark); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="header-tag">INFO1113 · Week 3 · Visual Guide</div>
+    <h1>Inheritance, Exceptions, Polymorphism & File I/O</h1>
+    <p>12 steps · work through at your own pace · each builds on the last</p>
+    <div class="header-reassure">
+      Inheritance is one of the big ideas in Java. It might feel abstract at first, but it's really just about code reuse — if two classes share behaviour, pull the shared parts into a parent class. This guide walks through it one piece at a time.
+    </div>
+  </div>
+</div>
+
+<div class="progress-bar">
+  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="progress-label" id="progressLabel">0 of 12 complete</div>
+</div>
+
+<div class="content">
+
+<!-- ============ STEP 1 ============ -->
+<div class="step open" id="step-1" data-step="1">
+  <div class="step-header" onclick="toggleStep(1)">
+    <div class="step-num active">1</div>
+    <div class="step-title"><h3>What is Inheritance?</h3><div class="step-sub">One class borrows from another — code reuse through hierarchy</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">In Week 1, you created separate classes like <code>Person</code> and <code>Car</code>. Each had its own fields and methods. But sometimes you notice classes share behaviour — they have things in common.</p>
+    <div class="analogy">
+      <div class="analogy-label">Real-World Analogy</div>
+      <p>Think of a university: there are <strong>People</strong> (name, date of birth, address). Some people are <strong>Students</strong> (who are also people, but have extra fields like "student ID" and "GPA"). Some are <strong>Staff</strong> (who are also people, but have "employee ID" and "salary"). All of them share the basic person data. Why write "name, address, etc." twice?</p>
+    </div>
+    <p class="prose"><strong>Inheritance</strong> is how Java solves this: <strong>Student extends Person</strong> means "Student is a special kind of Person." Student automatically gets all of Person's fields and methods, then adds its own.</p>
+    <div class="diagram">
+      <svg viewBox="0 0 640 280" xmlns="http://www.w3.org/2000/svg" style="max-width:560px">
+        <style>svg text{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;}</style>
+        <rect x="240" y="10" width="160" height="90" rx="8" fill="#eff6ff" stroke="#3b82f6" stroke-width="2"/>
+        <text x="320" y="32" text-anchor="middle" font-size="14" font-weight="700" fill="#3b82f6">Person (superclass)</text>
+        <text x="320" y="52" text-anchor="middle" font-size="12" fill="#475569">name: String</text>
+        <text x="320" y="68" text-anchor="middle" font-size="12" fill="#475569">age: int</text>
+        <text x="320" y="84" text-anchor="middle" font-size="12" fill="#475569">getName(), getAge()</text>
+        <line x1="320" y1="100" x2="240" y2="140" stroke="#3b82f6" stroke-width="2" marker-end="url(#arr2)"/>
+        <line x1="320" y1="100" x2="400" y2="140" stroke="#3b82f6" stroke-width="2" marker-end="url(#arr2)"/>
+        <rect x="80" y="140" width="160" height="110" rx="8" fill="#ecfdf5" stroke="#10b981" stroke-width="2"/>
+        <text x="160" y="162" text-anchor="middle" font-size="14" font-weight="700" fill="#10b981">Student (subclass)</text>
+        <text x="160" y="182" text-anchor="middle" font-size="11" fill="#94a3b8">inherits: name, age, getName(), getAge()</text>
+        <text x="160" y="200" text-anchor="middle" font-size="12" fill="#475569">+ studentID: String</text>
+        <text x="160" y="216" text-anchor="middle" font-size="12" fill="#475569">+ gpa: double</text>
+        <text x="160" y="232" text-anchor="middle" font-size="12" fill="#475569">+ getGPA()</text>
+        <rect x="360" y="140" width="160" height="110" rx="8" fill="#ecfdf5" stroke="#10b981" stroke-width="2"/>
+        <text x="440" y="162" text-anchor="middle" font-size="14" font-weight="700" fill="#10b981">Staff (subclass)</text>
+        <text x="440" y="182" text-anchor="middle" font-size="11" fill="#94a3b8">inherits: name, age, getName(), getAge()</text>
+        <text x="440" y="200" text-anchor="middle" font-size="12" fill="#475569">+ employeeID: String</text>
+        <text x="440" y="216" text-anchor="middle" font-size="12" fill="#475569">+ salary: double</text>
+        <text x="440" y="232" text-anchor="middle" font-size="12" fill="#475569">+ getSalary()</text>
+        <defs><marker id="arr2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#3b82f6"/></marker></defs>
+      </svg>
+    </div>
+    <p class="prose">The parent class is called the <strong>superclass</strong>. The child class is called the <strong>subclass</strong>. The subclass inherits (gets for free) all public fields and methods from the superclass, then adds its own.</p>
+    <div class="callout ok"><div class="callout-icon">👍</div><div><strong>This is DRY (Don't Repeat Yourself).</strong> Instead of writing name, age, getName() in both Student and Staff, you write it once in Person.</div></div>
+    <div class="check" data-check="1">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">If Student extends Person, list 4 things a Student object automatically has, without you writing them in the Student class.</div>
+      <textarea placeholder="Type your answer first…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer">name field, age field, getName() method, getAge() method. These come from Person. The Student class only needs to define studentID, gpa, and getGPA().</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 2 ============ -->
+<div class="step" id="step-2" data-step="2">
+  <div class="step-header" onclick="toggleStep(2)">
+    <div class="step-num locked">2</div>
+    <div class="step-title"><h3>The extends Keyword</h3><div class="step-sub">How to write inheritance in Java syntax</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">Here's the syntax. In Java, you use the keyword <code>extends</code> to say "this class is a subclass of that class."</p>
+<pre><span class="kw">public class</span> <span class="type">Person</span> {
+    <span class="kw">private</span> <span class="type">String</span> name;
+    <span class="kw">private</span> <span class="type">int</span> age;
+
+    <span class="kw">public</span> <span class="type">Person</span>(<span class="type">String</span> name, <span class="type">int</span> age) {
+        <span class="kw">this</span>.name = name;
+        <span class="kw">this</span>.age = age;
+    }
+
+    <span class="kw">public</span> <span class="type">String</span> getName() { <span class="kw">return this</span>.name; }
+    <span class="kw">public</span> <span class="type">int</span> getAge() { <span class="kw">return this</span>.age; }
+}
+
+<span class="kw">public class</span> <span class="type">Dog</span> <span class="kw">extends</span> <span class="type">Person</span> {  <span class="cmt">← Dog is a subclass of Person</span>
+    <span class="kw">private</span> <span class="type">String</span> breed;
+
+    <span class="kw">public</span> <span class="type">Dog</span>(<span class="type">String</span> name, <span class="type">int</span> age, <span class="type">String</span> breed) {
+        <span class="kw">super</span>(name, age);  <span class="cmt">← Call parent's constructor</span>
+        <span class="kw">this</span>.breed = breed;
+    }
+
+    <span class="kw">public</span> <span class="type">String</span> getBreed() { <span class="kw">return this</span>.breed; }
+}</pre>
+    <p class="prose"><span class="label label-how">Key points</span></p>
+    <ul style="margin: 8px 0 12px 24px; color: var(--gray-600); font-size: 15px;">
+      <li><strong>extends Person</strong> means Dog inherits from Person</li>
+      <li><strong>super(name, age)</strong> calls the parent's constructor to set up name and age</li>
+      <li>Dog doesn't redeclare name or age — they come from Person</li>
+      <li>Dog is a private, not public superclass member — subclasses inherit them differently</li>
+    </ul>
+    <div class="callout warn"><div class="callout-icon">⚠️</div><div><strong>private fields are NOT inherited.</strong> If Person's name and age are private, Dog can't access them directly. You must call <code>super(name, age)</code> in the constructor to let the parent store them. Or use public/protected fields (more on Step 5).</div></div>
+    <div class="check" data-check="2">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">Write the first line of a class called Cat that extends Animal. Then write a constructor that calls super() to pass a name.</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer"><code>public class Cat extends Animal { public Cat(String name) { super(name); ... } }</code></div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 3 ============ -->
+<div class="step" id="step-3" data-step="3">
+  <div class="step-header" onclick="toggleStep(3)">
+    <div class="step-num locked">3</div>
+    <div class="step-title"><h3>Method Overriding with @Override</h3><div class="step-sub">When a subclass wants its own version of a parent method</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">Sometimes the subclass needs to do something <em>differently</em> than the parent. That's called <strong>overriding</strong> a method — you write a new version in the subclass.</p>
+    <div class="compare">
+      <div class="cmp-box before"><h4>Before override — both same</h4><pre><span class="type">Animal</span> dog = <span class="kw">new</span> <span class="type">Dog</span>();
+dog.speak();
+<span class="cmt">// Output: "Some sound"</span>
+<span class="cmt">// (uses parent's method)</span></pre></div>
+      <div class="cmp-box after"><h4>After override — subclass version runs</h4><pre><span class="type">Animal</span> dog = <span class="kw">new</span> <span class="type">Dog</span>();
+dog.speak();
+<span class="cmt">// Output: "Woof!"</span>
+<span class="cmt">// (uses Dog's own method)</span></pre></div>
+    </div>
+    <p class="prose">Here's how to override:</p>
+<pre><span class="kw">public class</span> <span class="type">Animal</span> {
+    <span class="kw">public</span> <span class="type">String</span> speak() {
+        <span class="kw">return</span> <span class="str">"Some sound"</span>;
+    }
+}
+
+<span class="kw">public class</span> <span class="type">Dog</span> <span class="kw">extends</span> <span class="type">Animal</span> {
+    <span class="ann">@Override</span>  <span class="cmt">← Tells Java this is intentional</span>
+    <span class="kw">public</span> <span class="type">String</span> speak() {
+        <span class="kw">return</span> <span class="str">"Woof!"</span>;
+    }
+}</pre>
+    <p class="prose"><strong>The @Override annotation</strong> (the <code>@</code> symbol) tells Java: "I'm intentionally overriding a parent method." If you misspell the method name, Java throws a compiler error instead of silently creating a new method. It's a safety net.</p>
+    <div class="callout tip"><div class="callout-icon">💡</div><div><strong>@Override is not required, but it's best practice.</strong> Always use it when overriding a parent method — the compiler catches typos.</div></div>
+    <div class="check" data-check="3">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">Write a Dog class that extends Animal. Override the speak() method to return "Woof!" instead of "Some sound".</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer"><code>public class Dog extends Animal { @Override public String speak() { return "Woof!"; } }</code></div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 4 ============ -->
+<div class="step" id="step-4" data-step="4">
+  <div class="step-header" onclick="toggleStep(4)">
+    <div class="step-num locked">4</div>
+    <div class="step-title"><h3>toString(): Making Objects Printable</h3><div class="step-sub">Control how your objects look when printed</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">Every class in Java automatically inherits from a class called <code>Object</code> (even if you don't explicitly extend it). <code>Object</code> has a method called <code>toString()</code> — it's what gets called when you print an object.</p>
+    <p class="prose">By default, it's useless:</p>
+    <div class="compare">
+      <div class="cmp-box before"><h4>Without toString() override</h4><pre><span class="type">Student</span> s = <span class="kw">new</span> <span class="type">Student</span>(<span class="str">"Will"</span>, <span class="num">3.8</span>);
+System.out.println(s);
+<span class="cmt">// Output: Student@7852e922</span>
+<span class="cmt">// (memory address — useless!)</span></pre></div>
+      <div class="cmp-box after"><h4>With toString() override</h4><pre><span class="type">Student</span> s = <span class="kw">new</span> <span class="type">Student</span>(<span class="str">"Will"</span>, <span class="num">3.8</span>);
+System.out.println(s);
+<span class="cmt">// Output: Student[name=Will, gpa=3.8]</span>
+<span class="cmt">// (readable!)</span></pre></div>
+    </div>
+    <p class="prose">Override <code>toString()</code> to return a readable String:</p>
+<pre><span class="kw">public class</span> <span class="type">Student</span> {
+    <span class="kw">private</span> <span class="type">String</span> name;
+    <span class="kw">private</span> <span class="type">double</span> gpa;
+
+    <span class="cmt">// ... constructor ...</span>
+
+    <span class="ann">@Override</span>
+    <span class="kw">public</span> <span class="type">String</span> toString() {
+        <span class="kw">return</span> <span class="str">"Student[name="</span> + name + <span class="str">", gpa="</span> + gpa + <span class="str">"]"</span>;
+    }
+}</pre>
+    <div class="callout ok"><div class="callout-icon">👍</div><div><strong>toString() is a form of @Override.</strong> You're overriding Object's default toString() with your own version. Use @Override before it.</div></div>
+    <div class="check" data-check="4">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">Write a toString() method for a Book class with fields title (String) and pages (int). Make it return "Book[title=..., pages=...]"</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer"><code>@Override public String toString() { return "Book[title=" + title + ", pages=" + pages + "]"; }</code></div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 5 ============ -->
+<div class="step" id="step-5" data-step="5">
+  <div class="step-header" onclick="toggleStep(5)">
+    <div class="step-num locked">5</div>
+    <div class="step-title"><h3>The protected Access Modifier</h3><div class="step-sub">Three access levels: public, private, protected</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">In Week 1, you learned <code>public</code> (anyone can access) and <code>private</code> (only this class). Now there's a third: <code>protected</code> — this class AND its subclasses.</p>
+    <div class="diagram">
+      <svg viewBox="0 0 640 220" xmlns="http://www.w3.org/2000/svg" style="max-width:560px">
+        <style>svg text{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;}</style>
+        <text x="320" y="24" text-anchor="middle" font-size="14" font-weight="700" fill="#475569">Access Modifiers</text>
+        <rect x="20" y="40" width="160" height="160" rx="8" fill="#eff6ff" stroke="#3b82f6" stroke-width="2"/>
+        <text x="100" y="62" text-anchor="middle" font-size="13" font-weight="700" fill="#3b82f6">public</text>
+        <text x="100" y="85" text-anchor="middle" font-size="12" fill="#475569">Anyone</text>
+        <text x="100" y="105" text-anchor="middle" font-size="11" fill="#94a3b8">Other classes,</text>
+        <text x="100" y="122" text-anchor="middle" font-size="11" fill="#94a3b8">subclasses,</text>
+        <text x="100" y="139" text-anchor="middle" font-size="11" fill="#94a3b8">outside code</text>
+        <text x="100" y="160" text-anchor="middle" font-size="13" font-weight="700" fill="#10b981">✓</text>
+        <rect x="240" y="40" width="160" height="160" rx="8" fill="#fef2f2" stroke="#ef4444" stroke-width="2"/>
+        <text x="320" y="62" text-anchor="middle" font-size="13" font-weight="700" fill="#ef4444">private</text>
+        <text x="320" y="85" text-anchor="middle" font-size="12" fill="#475569">Only this class</text>
+        <text x="320" y="122" text-anchor="middle" font-size="11" fill="#94a3b8">Subclasses? No.</text>
+        <text x="320" y="139" text-anchor="middle" font-size="11" fill="#94a3b8">Other code? No.</text>
+        <text x="320" y="160" text-anchor="middle" font-size="13" font-weight="700" fill="#ef4444">✗</text>
+        <rect x="460" y="40" width="160" height="160" rx="8" fill="#f5f3ff" stroke="#8b5cf6" stroke-width="2"/>
+        <text x="540" y="62" text-anchor="middle" font-size="13" font-weight="700" fill="#8b5cf6">protected</text>
+        <text x="540" y="85" text-anchor="middle" font-size="12" fill="#475569">This class +</text>
+        <text x="540" y="105" text-anchor="middle" font-size="11" fill="#94a3b8">subclasses</text>
+        <text x="540" y="122" text-anchor="middle" font-size="11" fill="#94a3b8">Outside code? No.</text>
+        <text x="540" y="160" text-anchor="middle" font-size="13" font-weight="700" fill="#8b5cf6">✓ (subclasses)</text>
+      </svg>
+    </div>
+    <p class="prose">Use <code>protected</code> when a field is <em>private implementation detail</em> for non-subclasses, but subclasses need to access or modify it:</p>
+<pre><span class="kw">public class</span> <span class="type">Animal</span> {
+    <span class="kw">protected</span> <span class="type">String</span> name;  <span class="cmt">← Subclasses can access, others can't</span>
+    <span class="kw">private</span> <span class="type">int</span> age;      <span class="cmt">← Only Animal can access</span>
+
+    <span class="kw">public</span> <span class="type">Animal</span>(<span class="type">String</span> name, <span class="type">int</span> age) {
+        <span class="kw">this</span>.name = name;
+        <span class="kw">this</span>.age = age;
+    }
+}
+
+<span class="kw">public class</span> <span class="type">Dog</span> <span class="kw">extends</span> <span class="type">Animal</span> {
+    <span class="kw">public</span> <span class="type">String</span> getFullName() {
+        <span class="kw">return this</span>.name + <span class="str">" the Dog"</span>;  <span class="cmt">← Can access protected name</span>
+    }
+}</pre>
+    <div class="callout warn"><div class="callout-icon">⚠️</div><div><strong>Be careful with protected.</strong> It exposes internals to subclasses. Generally: fields are private, methods are public, and use protected rarely.</div></div>
+    <div class="check" data-check="5">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">If Animal has a protected field called "name" and a private field called "id", can a Dog subclass access both, either, or neither?</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer">Dog can access <strong>name</strong> (protected) but <strong>not id</strong> (private). Protected means subclasses have access; private means only Animal can access it.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 6 ============ -->
+<div class="step" id="step-6" data-step="6">
+  <div class="step-header" onclick="toggleStep(6)">
+    <div class="step-num locked">6</div>
+    <div class="step-title"><h3>Polymorphism: One Variable, Many Forms</h3><div class="step-sub">A superclass variable can hold any subclass object</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose"><strong>Polymorphism</strong> means "many forms." Here's the key idea: a variable of type <code>Animal</code> can hold a <code>Dog</code> object, a <code>Cat</code> object, or any subclass of Animal.</p>
+    <div class="compare">
+      <div class="cmp-box before"><h4>Without inheritance (separate variables)</h4><pre><span class="type">Dog</span> dog = <span class="kw">new</span> <span class="type">Dog</span>();
+<span class="type">Cat</span> cat = <span class="kw">new</span> <span class="type">Cat</span>();
+<span class="type">Bird</span> bird = <span class="kw">new</span> <span class="type">Bird</span>();
+
+dog.speak();   <span class="cmt">// Woof!</span>
+cat.speak();   <span class="cmt">// Meow!</span>
+bird.speak();  <span class="cmt">// Chirp!</span></pre></div>
+      <div class="cmp-box after"><h4>With polymorphism (one variable type)</h4><pre><span class="type">Animal</span> dog = <span class="kw">new</span> <span class="type">Dog</span>();
+<span class="type">Animal</span> cat = <span class="kw">new</span> <span class="type">Cat</span>();
+<span class="type">Animal</span> bird = <span class="kw">new</span> <span class="type">Bird</span>();
+
+dog.speak();   <span class="cmt">// Woof!</span>
+cat.speak();   <span class="cmt">// Meow!</span>
+bird.speak();  <span class="cmt">// Chirp!</span></pre></div>
+    </div>
+    <p class="prose">The right side (which object is created) determines the behaviour. The left side (the variable type) just says "this is-a type of Animal."</p>
+    <div class="diagram">
+      <svg viewBox="0 0 640 200" xmlns="http://www.w3.org/2000/svg" style="max-width:560px">
+        <style>svg text{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;}</style>
+        <rect x="10" y="20" width="140" height="60" rx="8" fill="#eff6ff" stroke="#3b82f6" stroke-width="2"/>
+        <text x="80" y="35" text-anchor="middle" font-size="13" font-weight="700" fill="#3b82f6">Variable type</text>
+        <text x="80" y="55" text-anchor="middle" font-size="14" font-weight="700" fill="#1e40af" font-family="monospace">Animal</text>
+        <text x="80" y="72" text-anchor="middle" font-size="11" fill="#94a3b8">(the "shape")</text>
+        <line x1="150" y1="50" x2="200" y2="50" stroke="#3b82f6" stroke-width="2"/>
+        <text x="175" y="42" text-anchor="middle" font-size="11" fill="#475569">=</text>
+        <rect x="200" y="20" width="140" height="60" rx="8" fill="#ecfdf5" stroke="#10b981" stroke-width="2"/>
+        <text x="270" y="35" text-anchor="middle" font-size="13" font-weight="700" fill="#10b981">Actual object</text>
+        <text x="270" y="55" text-anchor="middle" font-size="14" font-weight="700" fill="#065f46" font-family="monospace">new Dog()</text>
+        <text x="270" y="72" text-anchor="middle" font-size="11" fill="#94a3b8">(the behaviour)</text>
+        <rect x="390" y="20" width="140" height="60" rx="8" fill="#ecfdf5" stroke="#10b981" stroke-width="2"/>
+        <text x="460" y="35" text-anchor="middle" font-size="13" font-weight="700" fill="#10b981">Result</text>
+        <text x="460" y="55" text-anchor="middle" font-size="13" font-weight="700" fill="#065f46">Dog behaviour</text>
+        <text x="460" y="72" text-anchor="middle" font-size="11" fill="#94a3b8">(speaks "Woof!")</text>
+        <line x1="340" y1="50" x2="390" y2="50" stroke="#10b981" stroke-width="2"/>
+        <text x="365" y="42" text-anchor="middle" font-size="13" font-weight="700" fill="#10b981">→</text>
+        <text x="320" y="130" text-anchor="middle" font-size="12" fill="#475569" font-weight="600">When you call <code>speak()</code>, Java uses the <strong>actual object's</strong> method (Dog), not the variable type (Animal).</text>
+      </svg>
+    </div>
+    <p class="prose">This is powerful: write a function that accepts <code>Animal</code>, and it works with Dog, Cat, Bird, or any subclass:</p>
+<pre><span class="kw">public void</span> makeSound(<span class="type">Animal</span> a) {
+    System.out.println(a.speak());  <span class="cmt">← Works for ANY subclass of Animal</span>
+}</pre>
+    <div class="callout ok"><div class="callout-icon">🔑</div><div><strong>This is the power of inheritance:</strong> write functions that work with the parent type, and they automatically work with all subclasses — now and in the future.</div></div>
+    <div class="check" data-check="6">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">You have <code>Animal cat = new Cat();</code> and call <code>cat.speak()</code>. Does it run Animal's speak() or Cat's speak()? Why?</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer">It runs <strong>Cat's speak()</strong>. The actual object is a Cat, so Cat's overridden method is called. The variable type (Animal) is just the declared type — the actual object determines the behaviour.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 7 ============ -->
+<div class="step" id="step-7" data-step="7">
+  <div class="step-header" onclick="toggleStep(7)">
+    <div class="step-num locked">7</div>
+    <div class="step-title"><h3>Liskov Substitution Principle</h3><div class="step-sub">A design rule: subclasses should be drop-in replacements</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">Here's a simple principle: <strong>if your code works with a superclass, it must work with any subclass without breaking.</strong></p>
+    <p class="prose">Named after Barbara Liskov, it's basically common sense about inheritance. If you write a method that expects an <code>Animal</code>, you should be able to pass a <code>Dog</code>, <code>Cat</code>, or <code>Bird</code> without the function breaking.</p>
+    <div class="analogy">
+      <div class="analogy-label">Real-World Analogy</div>
+      <p>If you're a chef and a recipe says "use a container," you should be able to use any container (pot, bowl, pan) without breaking the recipe. A subclass is like a specialized container — it should work wherever the general container works.</p>
+    </div>
+    <p class="prose"><span class="label label-trap">Violating LSP (Bad Design)</span></p>
+<pre><span class="kw">public class</span> <span class="type">Bird</span> <span class="kw">extends</span> <span class="type">Animal</span> {
+    <span class="kw">public void</span> fly() { System.out.println(<span class="str">"Flying!"</span>); }
+}
+
+<span class="kw">public class</span> <span class="type">Penguin</span> <span class="kw">extends</span> <span class="type">Bird</span> {
+    <span class="ann">@Override</span>
+    <span class="kw">public void</span> fly() {
+        <span class="kw">throw new</span> <span class="type">UnsupportedOperationException</span>(<span class="str">"Penguins don't fly!"</span>);  <span class="cmt">← BREAKS LSP!</span>
+    }
+}</pre>
+    <p class="prose">This violates LSP because code expecting a Bird and calling fly() breaks when given a Penguin. Better design: don't make Penguin extend Bird. Or make Bird more general.</p>
+    <div class="callout tip"><div class="callout-icon">💡</div><div><strong>In practice:</strong> if you catch yourself throwing "unsupported" exceptions in a subclass method, your inheritance hierarchy might be wrong. Rethink the design.</div></div>
+    <div class="check" data-check="7">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">If a method expects a Vehicle and calls start(), and you pass a Car (subclass of Vehicle), should start() work? Explain in terms of LSP.</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer">Yes, absolutely. LSP says that anywhere the code accepts a Vehicle, a Car should work without breaking. If Car's start() breaks the contract, the inheritance design is wrong.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 8 ============ -->
+<div class="step" id="step-8" data-step="8">
+  <div class="step-header" onclick="toggleStep(8)">
+    <div class="step-num locked">8</div>
+    <div class="step-title"><h3>Exceptions: When Things Go Wrong</h3><div class="step-sub">Java's try-catch is like Python's try-except</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">In Python (lessons 1-8), you used try-except to catch errors. Java has try-catch — it's the same idea.</p>
+    <div class="compare">
+      <div class="cmp-box python"><h4>Python try-except</h4><pre><span class="kw">try</span>:
+    x = <span class="num">10</span> / <span class="num">0</span>
+<span class="kw">except</span> <span class="type">ZeroDivisionError</span>:
+    print(<span class="str">"Can't divide by zero!"</span>)</pre></div>
+      <div class="cmp-box java"><h4>Java try-catch</h4><pre><span class="kw">try</span> {
+    <span class="type">int</span> x = <span class="num">10</span> / <span class="num">0</span>;
+} <span class="kw">catch</span> (<span class="type">ArithmeticException</span> e) {
+    System.out.println(<span class="str">"Can't divide by zero!"</span>);
+}</pre></div>
+    </div>
+    <p class="prose">When an error happens, an <strong>exception</strong> is thrown. Your try-catch catches it and handles it gracefully instead of crashing.</p>
+    <p class="prose"><span class="label label-tip">Common exceptions you'll see</span></p>
+    <ul style="margin: 8px 0 12px 24px; color: var(--gray-600); font-size: 15px;">
+      <li><code>NullPointerException</code> — you tried to use a null object (e.g., <code>String s = null; s.length();</code>)</li>
+      <li><code>ArrayIndexOutOfBoundsException</code> — you accessed array[i] where i is too big or negative</li>
+      <li><code>FileNotFoundException</code> — you tried to open a file that doesn't exist</li>
+      <li><code>ArithmeticException</code> — you divided by zero</li>
+    </ul>
+    <div class="diagram">
+      <svg viewBox="0 0 640 200" xmlns="http://www.w3.org/2000/svg" style="max-width:560px">
+        <style>svg text{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;}</style>
+        <rect x="20" y="20" width="180" height="80" rx="8" fill="#eff6ff" stroke="#3b82f6" stroke-width="2"/>
+        <text x="110" y="42" text-anchor="middle" font-size="12" font-weight="600" fill="#475569">Code runs</text>
+        <text x="110" y="62" text-anchor="middle" font-size="13" font-weight="700" fill="#3b82f6">try { ... }</text>
+        <text x="110" y="82" text-anchor="middle" font-size="11" fill="#94a3b8">Everything fine? Continue.</text>
+        <line x1="200" y1="60" x2="258" y2="60" stroke="#ef4444" stroke-width="2"/>
+        <text x="229" y="52" text-anchor="middle" font-size="11" fill="#ef4444" font-weight="600">ERROR!</text>
+        <rect x="260" y="20" width="180" height="80" rx="8" fill="#fef2f2" stroke="#ef4444" stroke-width="2"/>
+        <text x="350" y="42" text-anchor="middle" font-size="12" font-weight="600" fill="#475569">Exception thrown</text>
+        <text x="350" y="62" text-anchor="middle" font-size="13" font-weight="700" fill="#ef4444">catch ( ... )</text>
+        <text x="350" y="82" text-anchor="middle" font-size="11" fill="#94a3b8">Handle the error gracefully</text>
+        <line x1="440" y1="60" x2="498" y2="60" stroke="#10b981" stroke-width="2"/>
+        <rect x="500" y="20" width="140" height="80" rx="8" fill="#ecfdf5" stroke="#10b981" stroke-width="2"/>
+        <text x="570" y="42" text-anchor="middle" font-size="12" font-weight="600" fill="#475569">Continue</text>
+        <text x="570" y="62" text-anchor="middle" font-size="13" font-weight="700" fill="#10b981">Program lives</text>
+        <text x="570" y="82" text-anchor="middle" font-size="11" fill="#94a3b8">No crash!</text>
+      </svg>
+    </div>
+    <div class="callout ok"><div class="callout-icon">👍</div><div><strong>Without try-catch, the program crashes.</strong> With it, you catch the error and decide what to do — print a message, retry, or exit gracefully.</div></div>
+    <div class="check" data-check="8">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">What's the difference between a try-catch block running successfully (no error) vs catching an exception? What happens in each case?</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer">If no error: the try block completes, and the catch block is skipped. If an error occurs: the try block stops immediately, and the catch block runs to handle it. In both cases, the program continues after the try-catch (doesn't crash).</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 9 ============ -->
+<div class="step" id="step-9" data-step="9">
+  <div class="step-header" onclick="toggleStep(9)">
+    <div class="step-num locked">9</div>
+    <div class="step-title"><h3>Defensive Programming</h3><div class="step-sub">Checking for bad input BEFORE it crashes</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">The best exception is the one that never happens. <strong>Defensive programming</strong> means checking for bad data before it causes an error.</p>
+    <div class="compare">
+      <div class="cmp-box before"><h4>Without defensive checks (crashes)</h4><pre><span class="kw">public void</span> setAge(<span class="type">int</span> age) {
+    <span class="kw">this</span>.age = age;  <span class="cmt">← What if age is -5?</span>
+}</pre></div>
+      <div class="cmp-box after"><h4>With defensive checks (safe)</h4><pre><span class="kw">public void</span> setAge(<span class="type">int</span> age) {
+    <span class="kw">if</span> (age < <span class="num">0</span>) {
+        <span class="kw">throw new</span> <span class="type">IllegalArgumentException</span>(
+            <span class="str">"Age cannot be negative!"</span>
+        );
+    }
+    <span class="kw">this</span>.age = age;
+}</pre></div>
+    </div>
+    <p class="prose"><span class="label label-how">Common defensive checks</span></p>
+    <ul style="margin: 8px 0 12px 24px; color: var(--gray-600); font-size: 15px;">
+      <li>Check if a parameter is null: <code>if (name == null) throw new IllegalArgumentException(...);</code></li>
+      <li>Check if a number is in valid range: <code>if (age < 0 || age > 150) throw ...;</code></li>
+      <li>Check if an array index is valid: <code>if (index < 0 || index >= arr.length) throw ...;</code></li>
+      <li>Check if a String is empty: <code>if (name.trim().isEmpty()) throw ...;</code></li>
+    </ul>
+    <div class="callout tip"><div class="callout-icon">💡</div><div><strong>Fail fast, fail loud.</strong> Throw an exception with a clear message as soon as you detect bad data. Don't let bad data silently propagate — it makes bugs much harder to find.</div></div>
+    <div class="check" data-check="9">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">Write two defensive checks in a constructor: (1) name cannot be null, (2) gpa must be between 0.0 and 4.0. Use throw new IllegalArgumentException(message).</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer"><code>if (name == null) throw new IllegalArgumentException("Name cannot be null"); if (gpa < 0.0 || gpa > 4.0) throw new IllegalArgumentException("GPA must be 0.0-4.0");</code></div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 10 ============ -->
+<div class="step" id="step-10" data-step="10">
+  <div class="step-header" onclick="toggleStep(10)">
+    <div class="step-num locked">10</div>
+    <div class="step-title"><h3>File I/O: Reading Files</h3><div class="step-sub">Scanner to read line by line, handling FileNotFoundException</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">In Python, you use <code>open()</code>. In Java, you use <code>Scanner</code> with a <code>File</code>. You must handle <code>FileNotFoundException</code> with try-catch.</p>
+    <div class="compare">
+      <div class="cmp-box python"><h4>Python file reading</h4><pre><span class="kw">with open</span>(<span class="str">'data.txt'</span>) <span class="kw">as</span> f:
+    <span class="kw">for</span> line <span class="kw">in</span> f:
+        print(line.strip())</pre></div>
+      <div class="cmp-box java"><h4>Java file reading</h4><pre><span class="kw">try</span> {
+    <span class="type">Scanner</span> sc = <span class="kw">new</span> <span class="type">Scanner</span>(<span class="kw">new</span> <span class="type">File</span>(<span class="str">"data.txt"</span>));
+    <span class="kw">while</span> (sc.hasNextLine()) {
+        System.out.println(sc.nextLine());
+    }
+    sc.close();
+} <span class="kw">catch</span> (<span class="type">FileNotFoundException</span> e) {
+    System.out.println(<span class="str">"File not found!"</span>);
+}</pre></div>
+    </div>
+    <p class="prose">Key points:</p>
+    <ul style="margin: 8px 0 12px 24px; color: var(--gray-600); font-size: 15px;">
+      <li><code>new Scanner(new File(filename))</code> opens the file</li>
+      <li><code>hasNextLine()</code> checks if there's another line to read</li>
+      <li><code>nextLine()</code> reads the next line (without the newline character)</li>
+      <li><code>sc.close()</code> closes the file — important for cleanup</li>
+      <li><code>FileNotFoundException</code> is thrown if the file doesn't exist — must catch it</li>
+    </ul>
+    <div class="callout warn"><div class="callout-icon">⚠️</div><div><strong>Always close the file.</strong> After reading, call <code>sc.close()</code> to release the file. Or use try-with-resources (Java 7+): <code>try (Scanner sc = new Scanner(...)) { ... }</code> — it auto-closes.</div></div>
+    <div class="check" data-check="10">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">Write code to read "students.txt" line by line using Scanner and print each line, with proper try-catch for FileNotFoundException.</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer"><code>try { Scanner sc = new Scanner(new File("students.txt")); while(sc.hasNextLine()) System.out.println(sc.nextLine()); sc.close(); } catch(FileNotFoundException e) { System.out.println("File not found"); }</code></div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 11 ============ -->
+<div class="step" id="step-11" data-step="11">
+  <div class="step-header" onclick="toggleStep(11)">
+    <div class="step-num locked">11</div>
+    <div class="step-title"><h3>File I/O: Writing Files</h3><div class="step-sub">PrintWriter to write to a file, and why you must close it</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">To write to a file, use <code>PrintWriter</code>. It's similar to System.out.println() but writes to a file instead of the console.</p>
+    <div class="compare">
+      <div class="cmp-box python"><h4>Python file writing</h4><pre><span class="kw">with open</span>(<span class="str">'output.txt'</span>, <span class="str">'w'</span>) <span class="kw">as</span> f:
+    f.write(<span class="str">'Hello, file!'</span>)</pre></div>
+      <div class="cmp-box java"><h4>Java file writing</h4><pre><span class="kw">try</span> {
+    <span class="type">PrintWriter</span> pw = <span class="kw">new</span> <span class="type">PrintWriter</span>(<span class="kw">new</span> <span class="type">File</span>(<span class="str">"output.txt"</span>));
+    pw.println(<span class="str">"Hello, file!"</span>);
+    pw.println(<span class="str">"Second line"</span>);
+    pw.close();
+} <span class="kw">catch</span> (<span class="type">FileNotFoundException</span> e) {
+    System.out.println(<span class="str">"Cannot write to file!"</span>);
+}</pre></div>
+    </div>
+    <p class="prose">Key points:</p>
+    <ul style="margin: 8px 0 12px 24px; color: var(--gray-600); font-size: 15px;">
+      <li><code>new PrintWriter(new File(filename))</code> opens the file for writing</li>
+      <li><code>pw.println(text)</code> writes a line (adds newline)</li>
+      <li><code>pw.print(text)</code> writes without adding newline</li>
+      <li><code>pw.close()</code> must be called — without it, the file won't actually save!</li>
+      <li>If file exists, it's overwritten. If not, it's created</li>
+    </ul>
+    <div class="callout warn"><div class="callout-icon">⚠️</div><div><strong>CRITICAL: You MUST call close().</strong> PrintWriter buffers output — data doesn't actually write to the file until you close. If you forget, your file will be empty.</div></div>
+    <div class="check" data-check="11">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">Write code to create a file "results.txt" and write two lines: "Result: Pass" and "Score: 95". Don't forget close()!</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer"><code>try { PrintWriter pw = new PrintWriter(new File("results.txt")); pw.println("Result: Pass"); pw.println("Score: 95"); pw.close(); } catch(FileNotFoundException e) { System.out.println("Cannot write"); }</code></div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 12 ============ -->
+<div class="step" id="step-12" data-step="12">
+  <div class="step-header" onclick="toggleStep(12)">
+    <div class="step-num locked">12</div>
+    <div class="step-title"><h3>Putting It All Together: Pet Class Hierarchy</h3><div class="step-sub">Inheritance, @Override, exceptions, file I/O in one program</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">Here's a complete example using inheritance (Dog extends Pet), method overriding, toString(), defensive programming, and file I/O:</p>
+    <p class="prose"><span class="label label-how">Pet.java</span> — superclass</p>
+<pre><span class="kw">public class</span> <span class="type">Pet</span> {
+    <span class="kw">protected</span> <span class="type">String</span> name;
+    <span class="kw">protected</span> <span class="type">int</span> age;
+
+    <span class="kw">public</span> <span class="type">Pet</span>(<span class="type">String</span> name, <span class="type">int</span> age) {
+        <span class="kw">if</span> (name == <span class="kw">null</span>) <span class="kw">throw new</span> <span class="type">IllegalArgumentException</span>(<span class="str">"Name cannot be null"</span>);
+        <span class="kw">this</span>.name = name;
+        <span class="kw">this</span>.age = age;
+    }
+
+    <span class="kw">public</span> <span class="type">String</span> speak() { <span class="kw">return</span> <span class="str">"Some sound"</span>; }
+
+    <span class="ann">@Override</span>
+    <span class="kw">public</span> <span class="type">String</span> toString() { <span class="kw">return</span> <span class="str">"Pet["</span> + name + <span class="str">","</span> + age + <span class="str">"]"</span>; }
+}</pre>
+    <p class="prose"><span class="label label-how">Dog.java</span> — subclass, overrides speak()</p>
+<pre><span class="kw">public class</span> <span class="type">Dog</span> <span class="kw">extends</span> <span class="type">Pet</span> {
+    <span class="kw">private</span> <span class="type">String</span> breed;
+
+    <span class="kw">public</span> <span class="type">Dog</span>(<span class="type">String</span> name, <span class="type">int</span> age, <span class="type">String</span> breed) {
+        <span class="kw">super</span>(name, age);  <span class="cmt">← Call parent constructor</span>
+        <span class="kw">this</span>.breed = breed;
+    }
+
+    <span class="ann">@Override</span>
+    <span class="kw">public</span> <span class="type">String</span> speak() { <span class="kw">return</span> <span class="str">"Woof! I'm a "</span> + breed; }
+
+    <span class="ann">@Override</span>
+    <span class="kw">public</span> <span class="type">String</span> toString() { <span class="kw">return</span> <span class="str">"Dog["</span> + name + <span class="str">","</span> + breed + <span class="str">"]"</span>; }
+}</pre>
+    <p class="prose"><span class="label label-how">PetMain.java</span> — uses inheritance and file I/O</p>
+<pre><span class="kw">import</span> java.io.*;
+<span class="kw">import</span> java.util.*;
+
+<span class="kw">public class</span> <span class="type">PetMain</span> {
+    <span class="kw">public static void</span> main(<span class="type">String</span>[] args) {
+        <span class="type">Pet</span> generic = <span class="kw">new</span> <span class="type">Pet</span>(<span class="str">"Fluffy"</span>, <span class="num">3</span>);
+        <span class="type">Pet</span> dog = <span class="kw">new</span> <span class="type">Dog</span>(<span class="str">"Rex"</span>, <span class="num">5</span>, <span class="str">"Labrador"</span>);
+
+        System.out.println(generic.speak());  <span class="cmt">// Some sound</span>
+        System.out.println(dog.speak());      <span class="cmt">// Woof! I'm a Labrador</span>
+
+        <span class="cmt">← Polymorphism: both variables are Pet type, but different behaviour</span>
+
+        <span class="kw">try</span> {
+            <span class="type">PrintWriter</span> pw = <span class="kw">new</span> <span class="type">PrintWriter</span>(<span class="kw">new</span> <span class="type">File</span>(<span class="str">"pets.txt"</span>));
+            pw.println(generic.toString());
+            pw.println(dog.toString());
+            pw.close();
+        } <span class="kw">catch</span> (<span class="type">FileNotFoundException</span> e) {
+            System.out.println(<span class="str">"Error writing pets"</span>);
+        }
+    }
+}</pre>
+    <div class="callout ok"><div class="callout-icon">🔑</div><div><strong>What this program shows:</strong> Dog extends Pet (inheritance), speaks differently (override), has a readable toString(), uses defensive checks (null check), and writes to a file with proper error handling.</div></div>
+    <div class="check" data-check="12">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">In the PetMain code, why can you assign a Dog object to a Pet variable? What happens when you call speak() on that variable?</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer">Because Dog extends Pet (is a subclass), a Dog can be assigned to a Pet reference. When you call speak(), Java uses Dog's overridden version (polymorphism), so it prints "Woof! I'm a Labrador" not "Some sound".</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+
+    <div class="summary-box blue">
+      <h4>Week 3 in one sentence</h4>
+      <p>Java organises related classes into <strong>inheritance hierarchies</strong> (superclass/subclass with <code>extends</code>), lets subclasses <strong>override</strong> parent methods with <code>@Override</code>, supports <strong>polymorphism</strong> (a superclass variable holding a subclass object), handles errors with <strong>try-catch</strong>, prevents bugs with <strong>defensive checks</strong>, and reads/writes files with <code>Scanner</code> and <code>PrintWriter</code>.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ============ SELF-TEST ============ -->
+<div class="self-test">
+  <div class="self-test-title">📝 Week 3 Self-Test</div>
+  <div class="self-test-sub">10 exam-style questions. Try to answer each one before revealing. These cover the full study guide.</div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q1</span><span class="st-q-bloom">Applying</span></div><p>Write a class Dog that extends Animal. Animal has a protected field name and a method speak() that returns "Some sound". Override speak() in Dog to return "Woof!"</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer"><code>public class Dog extends Animal { @Override public String speak() { return "Woof!"; } }</code></div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q2</span><span class="st-q-bloom">Understanding</span></div><p>Explain the difference between overriding a method and overloading it.</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer"><strong>Overriding:</strong> subclass replaces a parent method (same name, same parameters, different body). <strong>Overloading:</strong> same class has multiple methods with the same name but different parameters. Override is about inheritance; overload is about convenience in one class.</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q3</span><span class="st-q-bloom">Understanding</span></div><p>What does the @Override annotation do? What happens if you misspell the method name?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer"><code>@Override</code> tells the compiler "I intend to override a parent method." If you misspell the method name, the compiler throws an error instead of silently creating a new method — it's a safety net.</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q4</span><span class="st-q-bloom">Applying</span></div><p>Write a toString() method for a Student class that has name (String) and gpa (double).</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer"><code>@Override public String toString() { return "Student[name=" + name + ", gpa=" + gpa + "]"; }</code></div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q5</span><span class="st-q-bloom">Understanding</span></div><p>Explain what polymorphism means using the Animal/Dog/Cat example.</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">Polymorphism means a variable of type Animal can hold a Dog or a Cat. When you call <code>animal.speak()</code>, Java calls the actual object's version (Dog's or Cat's), not Animal's. The variable type is the "shape" but the object determines the behaviour.</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q6</span><span class="st-q-bloom">Understanding</span></div><p>What is the Liskov Substitution Principle in simple terms?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">If your code works with a superclass, it should work with any subclass without breaking. Example: if a method expects an Animal, passing a Dog should work perfectly. If Dog breaks that contract, the inheritance design is wrong.</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q7</span><span class="st-q-bloom">Applying</span></div><p>Write a try-catch block that reads a file called "data.txt" using Scanner and prints each line. Handle FileNotFoundException.</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer"><code>try { Scanner sc = new Scanner(new File("data.txt")); while(sc.hasNextLine()) System.out.println(sc.nextLine()); sc.close(); } catch(FileNotFoundException e) { System.out.println("File not found: " + e.getMessage()); }</code></div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q8</span><span class="st-q-bloom">Understanding</span></div><p>What is the difference between a checked and unchecked exception?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer"><strong>Checked exceptions</strong> (like FileNotFoundException) must be handled with try-catch or declared with throws — the compiler enforces this. <strong>Unchecked exceptions</strong> (like NullPointerException, ArrayIndexOutOfBoundsException) are programming errors and don't require explicit handling (but you should avoid them).</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q9</span><span class="st-q-bloom">Understanding</span></div><p>Why is defensive programming important? Give two examples of defensive checks.</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">Defensive programming prevents bugs before they crash. Examples: (1) Check if a parameter is null: <code>if(name == null) throw new IllegalArgumentException()</code>. (2) Validate array index: <code>if(index < 0 || index >= arr.length) throw new IllegalArgumentException()</code>. Fail fast and loud.</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q10</span><span class="st-q-bloom">Applying</span></div><p>Write a PrintWriter program that creates a file "output.txt" and writes three lines: "Line 1", "Line 2", "Line 3". Don't forget close()!</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer"><code>try { PrintWriter pw = new PrintWriter(new File("output.txt")); pw.println("Line 1"); pw.println("Line 2"); pw.println("Line 3"); pw.close(); } catch(FileNotFoundException e) { System.out.println("Cannot write"); }</code></div></div>
+</div>
+
+<!-- Practice Lab links -->
+<p class="prose" style="margin-top:20px;"><span class="label label-tip">Practice next</span></p>
+<p class="prose">Now apply what you've learned in the Java Practice Lab:</p>
+
+<a class="lab-link" href="#" onclick="window.parent.openPracticeLabTool('traces',3); return false;"><div class="lab-link-icon">🔍</div><div class="lab-link-text"><div class="lab-link-title">Code Tracing 21–30</div><div class="lab-link-desc">Trace through inheritance and polymorphism programs</div></div><div class="lab-link-arrow">→</div></a>
+<a class="lab-link" href="#" onclick="window.parent.openPracticeLabTool('mistakes',3); return false;"><div class="lab-link-icon">↔</div><div class="lab-link-text"><div class="lab-link-title">Python → Java: OOP Patterns</div><div class="lab-link-desc">Understand Java inheritance coming from Python basics</div></div><div class="lab-link-arrow">→</div></a>
+<a class="lab-link" href="#" onclick="window.parent.openPracticeLabTool('parsons',3); return false;"><div class="lab-link-icon">🧩</div><div class="lab-link-text"><div class="lab-link-title">Parsons Problems 11–15</div><div class="lab-link-desc">Arrange inheritance and file I/O code in correct order</div></div><div class="lab-link-arrow">→</div></a>
+<a class="lab-link" href="#" onclick="window.parent.openPracticeLabTool('debug',3); return false;"><div class="lab-link-icon">🐛</div><div class="lab-link-text"><div class="lab-link-title">Debug Detective Exercise 3</div><div class="lab-link-desc">Find bugs in inheritance hierarchies and exception handling</div></div><div class="lab-link-arrow">→</div></a>
+
+<div class="nav-footer">
+  <a class="nav-btn" href="#">← Back to Dashboard</a>
+  <a class="nav-btn primary" href="#">Week 4: Interfaces & Abstract Classes →</a>
+</div>
+
+</div>
+
+<script>
+const totalSteps=12;let completedSteps=new Set();
+function toggleStep(n){document.getElementById('step-'+n).classList.toggle('open')}
+function enableReveal(ta){const btn=ta.closest('.check,.st-q').querySelector('.check-reveal button');btn.disabled=ta.value.trim().length<5}
+function revealAnswer(btn){const c=btn.closest('.check,.st-q');c.querySelector('.check-answer').classList.add('show');const r=c.querySelector('.check-rating');if(r)r.classList.add('show');btn.style.display='none'}
+function rateCheck(btn,rating){const check=btn.closest('.check'),step=btn.closest('.step'),n=parseInt(step.dataset.step);check.querySelector('.check-rating').querySelectorAll('button').forEach(b=>b.style.opacity='0.4');btn.style.opacity='1';completedSteps.add(n);updateProgress();step.querySelector('.step-num').className='step-num done';const next=document.getElementById('step-'+(n+1));if(next){const nn=next.querySelector('.step-num');if(nn.classList.contains('locked'))nn.className='step-num active'}}
+function updateProgress(){const p=Math.round(completedSteps.size/totalSteps*100);document.getElementById('progressFill').style.width=p+'%';document.getElementById('progressLabel').textContent=completedSteps.size+' of '+totalSteps+' complete'}
+</script>
+</body>
+</html>
