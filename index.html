@@ -862,12 +862,14 @@ document.getElementById('pin-input').focus();
   <div class="tabs">
     <div class="tab active" onclick="switchTab(this,'info-weeks')">Weekly Content</div>
     <div class="tab" onclick="switchTab(this,'info-assess')">Assessments</div>
-    <div class="tab" onclick="switchTab(this,'info-guide')">Study Guide</div>
+    <div class="tab" onclick="switchTab(this,'info-visual')">Visual Guide</div>
+    <div class="tab" onclick="switchTab(this,'info-guide')">Reference</div>
     <div class="tab" onclick="switchTab(this,'info-practice')">Practice Lab</div>
     <div class="tab" onclick="switchTab(this,'info-files')">Materials</div>
   </div>
   <div class="tab-content active" id="info-weeks"></div>
   <div class="tab-content" id="info-assess"></div>
+  <div class="tab-content" id="info-visual"></div>
   <div class="tab-content" id="info-guide"></div>
   <div class="tab-content" id="info-practice"></div>
   <div class="tab-content" id="info-files">
@@ -2701,7 +2703,20 @@ const JPL_CODE_TRACES = [
   { id:23, difficulty:3, title:'2D array row vs column', code:'int[][] grid = {{1,2,3},{4,5,6}};\nSystem.out.println(grid.length);\nSystem.out.println(grid[0].length);\nSystem.out.println(grid[1][2]);', answer:'2\n3\n6', walkthrough:'grid.length = number of rows (2). grid[0].length = columns in first row (3). grid[1][2] = row 1, col 2 = 6. Remember: [row][col], and grid.length is ROWS not columns!' },
   { id:24, difficulty:3, title:'Loop with continue', code:'int sum = 0;\nfor (int i = 1; i <= 6; i++) {\n  if (i % 3 == 0) continue;\n  sum += i;\n}\nSystem.out.println(sum);', answer:'12', walkthrough:'i=1: 1%3!=0, sum=1. i=2: 2%3!=0, sum=3. i=3: 3%3==0, SKIP. i=4: sum=7. i=5: sum=12. i=6: 6%3==0, SKIP. Total: 1+2+4+5=12.' },
   { id:25, difficulty:3, title:'Char arithmetic and casting', code:'char c = \'A\';\nint n = c + 1;\nchar d = (char)(c + 2);\nSystem.out.println(n);\nSystem.out.println(d);\nSystem.out.println(\'0\' + 5);', answer:'66\nC\n53', walkthrough:'\'A\' is 65 in ASCII. c+1=66 (int). (char)(65+2)=67=\'C\'. \'0\' is 48 in ASCII, 48+5=53 (int, because result of char+int is int). This char-to-int trick is used in digit frequency counting!' },
+  { id:26, difficulty:1, title:'Basic inheritance', code:'class Animal { String speak() { return "..."; } }\nclass Dog extends Animal { String speak() { return "Woof"; } }\n// in main:\nAnimal a = new Dog();\nSystem.out.println(a.speak());', answer:'Woof', walkthrough:'Even though \'a\' is declared as Animal, the actual object is a Dog. Java calls Dog\'s speak() method because of polymorphism — the runtime type determines which method runs.' },
+  { id:27, difficulty:1, title:'super() constructor call', code:'class Person { String name;\n  Person(String name) { this.name = name; System.out.println("Person: " + name); } }\nclass Student extends Person {\n  Student(String name) { super(name); System.out.println("Student: " + name); } }\n// in main:\nStudent s = new Student("Will");', answer:'Person: Will\nStudent: Will', walkthrough:'super(name) calls the parent\'s constructor first. Parent constructors always run before the child\'s code. So Person prints first, then Student.' },
+  { id:28, difficulty:1, title:'toString override', code:'class Book {\n  String title;\n  Book(String t) { this.title = t; }\n  public String toString() { return "Book[" + title + "]"; }\n}\n// in main:\nBook b = new Book("Dune");\nSystem.out.println(b);', answer:'Book[Dune]', walkthrough:'When you pass an object to println, Java automatically calls its toString() method. Our override returns "Book[Dune]" instead of the default hash like Book@1a2b3c.' },
+  { id:29, difficulty:2, title:'Protected access', code:'class Animal {\n  protected String name;\n  Animal(String n) { this.name = n; }\n}\nclass Cat extends Animal {\n  Cat(String n) { super(n); }\n  void greet() { System.out.println("I am " + name); }\n}\n// in main:\nCat c = new Cat("Whiskers");\nc.greet();', answer:'I am Whiskers', walkthrough:'Protected fields are accessible in subclasses. Cat inherits the name field from Animal and can use it directly in greet(). If name were private, this would not compile.' },
+  { id:30, difficulty:2, title:'Polymorphism with array', code:'class Shape { String type() { return "Shape"; } }\nclass Circle extends Shape { String type() { return "Circle"; } }\nclass Square extends Shape { String type() { return "Square"; } }\n// in main:\nShape[] shapes = { new Circle(), new Square(), new Shape() };\nfor (Shape s : shapes) System.out.println(s.type());', answer:'Circle\nSquare\nShape', walkthrough:'Each element in the array is a different subclass. The for-each loop calls type() on each — Java uses the actual object\'s method (polymorphism), not the array\'s declared type.' },
+  { id:31, difficulty:2, title:'try-catch basic', code:'try {\n  int[] arr = {1, 2, 3};\n  System.out.println(arr[5]);\n  System.out.println("After access");\n} catch (ArrayIndexOutOfBoundsException e) {\n  System.out.println("Caught: " + e.getMessage());\n}\nSystem.out.println("Done");', answer:'Caught: Index 5 out of bounds for length 3\nDone', walkthrough:'arr[5] throws an exception because the array only has indices 0-2. "After access" is NEVER printed — execution jumps to the catch block. After the catch, "Done" prints normally because the exception was handled.' },
+  { id:32, difficulty:2, title:'Inheritance and method not overridden', code:'class Vehicle {\n  String honk() { return "Beep"; }\n  String describe() { return "I am a vehicle"; }\n}\nclass Truck extends Vehicle {\n  String honk() { return "HOOONK"; }\n}\n// in main:\nTruck t = new Truck();\nSystem.out.println(t.honk());\nSystem.out.println(t.describe());', answer:'HOOONK\nI am a vehicle', walkthrough:'Truck overrides honk() so its version runs. But Truck does NOT override describe(), so it inherits Vehicle\'s version. A subclass only replaces methods it explicitly overrides.' },
+  { id:33, difficulty:3, title:'Multiple catch blocks', code:'String[] data = {"42", "hello", "7"};\nfor (String s : data) {\n  try {\n    int n = Integer.parseInt(s);\n    System.out.println(10 / n);\n  } catch (NumberFormatException e) {\n    System.out.println("NaN");\n  } catch (ArithmeticException e) {\n    System.out.println("DivErr");\n  }\n}', answer:'0\nNaN\n1', walkthrough:'"42" parses to 42, 10/42=0 (integer division). "hello" fails parseInt → NumberFormatException → "NaN". "7" parses to 7, 10/7=1 (integer division truncates). Each iteration has its own try-catch scope.' },
+  { id:34, difficulty:3, title:'Inheritance chain', code:'class A { String who() { return "A"; } }\nclass B extends A { String who() { return "B"; } }\nclass C extends B { }\n// in main:\nA obj = new C();\nSystem.out.println(obj.who());', answer:'B', walkthrough:'C extends B but does NOT override who(). So C inherits B\'s who() which returns "B". Even though obj is declared as type A, the runtime type is C, and Java walks up from C to find the nearest override (B\'s). This is the method resolution order.' },
+  { id:35, difficulty:3, title:'Exception in constructor', code:'class Safe {\n  int value;\n  Safe(int v) {\n    if (v < 0) throw new IllegalArgumentException("negative");\n    this.value = v;\n    System.out.println("Created: " + v);\n  }\n}\n// in main:\ntry {\n  Safe a = new Safe(10);\n  Safe b = new Safe(-5);\n  Safe c = new Safe(20);\n} catch (IllegalArgumentException e) {\n  System.out.println("Error: " + e.getMessage());\n}\nSystem.out.println("End");', answer:'Created: 10\nError: negative\nEnd', walkthrough:'Safe(10) succeeds and prints "Created: 10". Safe(-5) throws IllegalArgumentException — execution jumps to catch, so "Created: -5" never prints and Safe(20) never runs. After catch, "End" prints. The exception stopped the constructor mid-execution.' },
 ];
+
+// Week classification for filtering
+const JPL_TRACE_WEEKS = {1:1,2:1,3:1,4:1,5:1,6:1,7:1,8:1, 9:2,10:2,11:2,12:1,13:1,14:2,15:2,16:2,17:2, 18:2,19:2,20:2,21:2,22:2,23:2,24:2,25:2, 26:3,27:3,28:3,29:3,30:3,31:3,32:3,33:3,34:3,35:3};
 
 const JPL_MISTAKES = [
   { id:1, category:'syntax', risk:3, title:'Missing semicolons', pythonHabit:'x = 5\\nprint(x)', javaError:'int x = 5\\nSystem.out.println(x)', javaFix:'int x = 5;\\nSystem.out.println(x);', explanation:'Java requires a semicolon at the end of every statement. The compiler will refuse to compile without them.' },
@@ -2786,6 +2801,11 @@ const JPL_PARSONS = [
   { id:8, title:'Getter and Setter', week:1, description:'Arrange these lines to create a Student class with encapsulated name and GPA fields.', lines:['public class Student {','  private String name;','  private double gpa;','  public Student(String name, double gpa) {','    this.name = name;','    this.gpa = gpa;','  }','  public String getName() { return this.name; }','  public double getGpa() { return this.gpa; }','  public void setGpa(double gpa) { this.gpa = gpa; }','}'], distractors:['name = name','public int getGpa() { return this.gpa; }'], hint:'Private fields, constructor initialises them with this.field = param, getters return the field, setter assigns a new value.' },
   { id:9, title:'Array of Objects', week:2, description:'Arrange these lines to create an array of 3 Book objects and print their titles.', lines:['Book[] books = new Book[3];','books[0] = new Book("1984");','books[1] = new Book("Dune");','books[2] = new Book("Hamlet");','for (int i = 0; i < books.length; i++) {','  System.out.println(books[i].getTitle());','}'], distractors:['books = [Book("1984"), Book("Dune")]','books.append(new Book("Hamlet"))'], hint:'First create the array with new, then assign each element, then iterate with a for loop.' },
   { id:10, title:'Command-Line Args', week:2, description:'Arrange these lines to read two command-line arguments, convert to integers, and print their sum.', lines:['public static void main(String[] args) {','  if (args.length < 2) {','    System.out.println("Need 2 arguments");','    return;','  }','  int a = Integer.parseInt(args[0]);','  int b = Integer.parseInt(args[1]);','  System.out.println("Sum: " + (a + b));','}'], distractors:['a = int(args[0])','import sys'], hint:'Always check args.length before accessing elements, use Integer.parseInt() to convert Strings to ints.' },
+  { id:11, title:'Simple Inheritance', week:3, description:'Arrange these lines to create Animal and Dog classes where Dog extends Animal and overrides speak().', lines:['public class Animal {','  public String speak() {','    return "...";','  }','}','public class Dog extends Animal {','  @Override','  public String speak() {','    return "Woof!";','  }','}'], distractors:['def speak(self):','class Dog(Animal):'], hint:'The parent class comes first. Dog uses \'extends\' and \'@Override\' to replace the parent\'s speak() method.' },
+  { id:12, title:'Constructor with super()', week:3, description:'Arrange these lines to create a Student class that extends Person and calls the parent constructor.', lines:['public class Student extends Person {','  private String studentId;','  public Student(String name, String id) {','    super(name);','    this.studentId = id;','  }','  public String getId() {','    return this.studentId;','  }','}'], distractors:['Person.__init__(self, name)','self.studentId = id'], hint:'super(name) must be the FIRST line in the constructor. Fields are set after calling super.' },
+  { id:13, title:'toString Override', week:3, description:'Arrange these lines to add a toString method to a Pet class.', lines:['@Override','public String toString() {','  return "Pet[name=" + this.name +','    ", age=" + this.age + "]";','}'], distractors:['def __str__(self):','return f"Pet[{self.name}]"'], hint:'@Override goes before the method signature. toString returns a String, typically with class name and field values.' },
+  { id:14, title:'Try-Catch File Reading', week:3, description:'Arrange these lines to read lines from a file using Scanner with proper exception handling.', lines:['try {','  Scanner sc = new Scanner(new File("data.txt"));','  while (sc.hasNextLine()) {','    System.out.println(sc.nextLine());','  }','  sc.close();','} catch (FileNotFoundException e) {','  System.out.println("File not found");','}'], distractors:['f = open("data.txt")','except FileNotFoundError:'], hint:'Scanner wraps a File object. Loop with hasNextLine()/nextLine(). Close when done. The entire block is wrapped in try-catch for FileNotFoundException.' },
+  { id:15, title:'Polymorphic Array', week:3, description:'Arrange these lines to create an array of Animals, add different subclass objects, and call speak() on each.', lines:['Animal[] animals = new Animal[3];','animals[0] = new Dog("Rex");','animals[1] = new Cat("Whiskers");','animals[2] = new Animal("Generic");','for (Animal a : animals) {','  System.out.println(a.speak());','}'], distractors:['animals.append(Dog("Rex"))','for a in animals:'], hint:'An Animal array can hold any subclass. The for-each loop calls speak() — each object uses its own overridden version (polymorphism).' },
 ];
 
 // ======================== DEBUG DETECTIVE ========================
@@ -2810,6 +2830,46 @@ const JPL_DEBUG_EXERCISES = [
         answer:'double total = (marks[0] + marks[1] + marks[2]) * 0.04\n    + (marks[3] * 0.04)\n    + (marks[4] + marks[5] + marks[6]) * 0.03\n    + (marks[7] * 0.20)\n    + (marks[8] * 0.55);' }
     ],
     takeaway:'Always verify numeric constants against the specification. A common bug is using placeholder weights and forgetting to update them. Adding up all weights to check they sum to 100% is a good sanity check \u2014 but as this exercise shows, the sum can be correct while individual values are still wrong. The real test is spec-to-code comparison, line by line.'
+  },
+  { id:2, difficulty:2, title:'Array Index Off-By-One', skill:'Loop boundary analysis',
+    scenario:'A student wrote a method to find the second-largest element in an array. It works for most inputs but crashes on some. The test case below shows the crash.',
+    code:'public static int secondLargest(int[] arr) {\n  int max = arr[0];\n  int second = arr[0];\n  for (int i = 0; i <= arr.length; i++) {\n    if (arr[i] > max) {\n      second = max;\n      max = arr[i];\n    } else if (arr[i] > second && arr[i] != max) {\n      second = arr[i];\n    }\n  }\n  return second;\n}',
+    testCase:{ input:'arr = {3, 7, 1, 5}', expected:'5', buggyOutput:'ArrayIndexOutOfBoundsException' },
+    steps:[
+      { question:'The loop condition is `i <= arr.length`. For an array of length 4, what values does i take? What is the valid index range?',
+        hint:'Array indices go from 0 to length-1.',
+        answer:'i goes 0,1,2,3,4. But valid indices are 0-3. When i=4, arr[4] is out of bounds. Fix: change <= to <.' },
+      { question:'After fixing the loop, there\'s still a logic bug. What happens if all elements are the same, e.g., {5, 5, 5}?',
+        hint:'Both max and second start at arr[0]. Walk through the loop.',
+        answer:'If all elements equal, neither branch runs. second stays as arr[0]=5, which equals max. The method returns 5 but there IS no second-largest. Need to handle this edge case.' },
+      { question:'What\'s the initial value of second? Is arr[0] always a good choice?',
+        hint:'What if arr has only 1 element? What if second should be smaller than max initially?',
+        answer:'Starting second=arr[0] means second starts equal to max. Better: start second=Integer.MIN_VALUE so only actual second-largest values are captured. Or check arr.length >= 2 first.' },
+      { question:'Write the fixed method.',
+        hint:'Fix: < not <=, initialise second to Integer.MIN_VALUE, and add a length check.',
+        answer:'public static int secondLargest(int[] arr) {\n  if (arr.length < 2) throw new IllegalArgumentException("Need 2+ elements");\n  int max = arr[0];\n  int second = Integer.MIN_VALUE;\n  for (int i = 1; i < arr.length; i++) {\n    if (arr[i] > max) { second = max; max = arr[i]; }\n    else if (arr[i] > second && arr[i] != max) { second = arr[i]; }\n  }\n  return second;\n}' }
+    ],
+    takeaway:'Off-by-one errors are the most common loop bug. Always check: does your loop use < or <=? Does it start at 0 or 1? For algorithms with special cases (duplicates, single elements), trace through those edge cases explicitly.'
+  },
+  { id:3, difficulty:3, title:'Broken Override', skill:'Method signature analysis',
+    scenario:'A student created a class hierarchy for a pet shelter. The Dog class should override speak() from Animal, but the program prints the wrong output.',
+    code:'class Animal {\n  protected String name;\n  Animal(String name) { this.name = name; }\n  public String speak() { return name + " says: ..."; }\n  public String toString() { return "Animal[" + name + "]"; }\n}\n\nclass Dog extends Animal {\n  private String breed;\n  Dog(String name, String breed) {\n    super(name);\n    this.breed = breed;\n  }\n  public String speak(String volume) { return name + " says: WOOF!"; }\n  public String toString() { return "Dog[" + name + ", " + breed + "]"; }\n}\n\n// in main:\nAnimal pet = new Dog("Rex", "Lab");\nSystem.out.println(pet.speak());\nSystem.out.println(pet);',
+    testCase:{ input:'pet = new Dog("Rex", "Lab")', expected:'Rex says: WOOF!\nDog[Rex, Lab]', buggyOutput:'Rex says: ...\nDog[Rex, Lab]' },
+    steps:[
+      { question:'The toString() override works (prints Dog[Rex, Lab]). But speak() doesn\'t. Compare the method signatures: Animal.speak() vs Dog.speak(String volume). What\'s different?',
+        hint:'Count the parameters.',
+        answer:'Animal.speak() has 0 parameters. Dog.speak(String volume) has 1 parameter. These are NOT the same method — Dog\'s version is an OVERLOAD (new method), not an OVERRIDE (replacement).' },
+      { question:'When we call pet.speak() (no arguments), which class\'s method runs? Why?',
+        hint:'pet is declared as Animal. speak() with no args only exists in Animal.',
+        answer:'Animal\'s speak() runs because Dog never overrode the no-argument version. Dog added a NEW method speak(String), which doesn\'t replace the original.' },
+      { question:'How would adding @Override above Dog\'s speak method help catch this bug?',
+        hint:'@Override tells the compiler to check that you\'re actually overriding a parent method.',
+        answer:'If you write @Override above speak(String volume), the compiler throws an error: "method does not override a method from its superclass." This catches the mistake at compile time instead of producing wrong output at runtime.' },
+      { question:'Write the corrected Dog.speak() method.',
+        hint:'Remove the parameter so the signature matches Animal.speak().',
+        answer:'@Override\npublic String speak() { return name + " says: WOOF!"; }' }
+    ],
+    takeaway:'Overriding requires the EXACT same method signature (name + parameters). If you change the parameters, you create an overload — a completely different method. Always use @Override to let the compiler verify your intention. This is one of the most common inheritance bugs in Java.'
   }
 ];
 
@@ -4030,6 +4090,9 @@ function renderCourseAssessments(containerId, courseCode) {
 
 // ======================== STUDY GUIDES ========================
 
+// Weeks that have standalone visual guides (selfTest drills hidden from Reference tab)
+const VISUAL_GUIDE_WEEKS = { INFO1113: [1, 2, 3] };
+
 function renderStudyGuide(containerId, courseCode) {
   const guides = STUDY_GUIDES[courseCode];
   const currentWeek = getCurrentWeek()?.num || 1;
@@ -4117,8 +4180,9 @@ function renderStudyGuide(containerId, courseCode) {
       html += `</ul></div>`;
     }
 
-    // Self-Test Questions (interactive, write-first)
-    if (g.selfTest && g.selfTest.length > 0) {
+    // Self-Test Questions (interactive, write-first) — skip for weeks with visual guides
+    const hasVisualGuide = VISUAL_GUIDE_WEEKS[courseCode]?.includes(w);
+    if (!hasVisualGuide && g.selfTest && g.selfTest.length > 0) {
       const quizId = `quiz-${courseCode}-${w}`;
       // Spaced retrieval: pull questions from earlier weeks
       const spacedQs = getSpacedRetrievalQuestions(courseCode, w);
@@ -4185,6 +4249,49 @@ function toggleSgWeek(header) {
   header.classList.toggle('open');
   const body = header.nextElementSibling;
   body.classList.toggle('open');
+}
+
+/* ── Visual Guide Tab ── */
+function renderVisualGuides(containerId, courseCode) {
+  const weeks = VISUAL_GUIDE_WEEKS[courseCode];
+  if (!weeks || weeks.length === 0) {
+    document.getElementById(containerId).innerHTML = '<div class="sg-empty"><p>No visual guides available yet.</p></div>';
+    return;
+  }
+  const course = COURSES[courseCode];
+  const currentWeek = getCurrentWeek()?.num || 1;
+  const guideData = STUDY_GUIDES[courseCode];
+  const defaultWeek = weeks.includes(currentWeek) ? currentWeek : weeks[0];
+
+  let html = `<div class="vg-container">
+    <div style="padding:14px 18px 10px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+      <span style="font-weight:600;font-size:13px">Select week:</span>`;
+  weeks.forEach(w => {
+    const title = guideData[w]?.title || 'Week '+w;
+    html += `<button class="vg-week-btn ${w===defaultWeek?'active':''}" onclick="switchVisualWeek(this,${w},'${courseCode}')" style="padding:6px 14px;border-radius:8px;border:1px solid var(--border);background:${w===defaultWeek?course.color:'#fff'};color:${w===defaultWeek?'#fff':'inherit'};font-size:12px;font-weight:600;cursor:pointer" data-week="${w}" data-color="${course.color}">Wk ${w}: ${title}</button>`;
+  });
+  html += `</div>
+    <iframe id="vg-frame-${courseCode}" src="INFO1113 Object-Oriented Programming/visual-guide-week${defaultWeek}.html" style="width:100%;border:none;border-radius:0 0 12px 12px;min-height:700px" onload="autoResizeVgFrame(this)"></iframe>
+  </div>`;
+  document.getElementById(containerId).innerHTML = html;
+}
+
+function switchVisualWeek(btn, week, courseCode) {
+  const container = btn.closest('.vg-container');
+  container.querySelectorAll('.vg-week-btn').forEach(b => {
+    b.style.background = '#fff'; b.style.color = 'inherit';
+  });
+  btn.style.background = btn.dataset.color;
+  btn.style.color = '#fff';
+  const frame = document.getElementById('vg-frame-'+courseCode);
+  frame.src = 'INFO1113 Object-Oriented Programming/visual-guide-week'+week+'.html';
+}
+
+function autoResizeVgFrame(iframe) {
+  try {
+    const h = iframe.contentDocument.documentElement.scrollHeight;
+    iframe.style.height = (h + 40) + 'px';
+  } catch(e) { iframe.style.height = '900px'; }
 }
 
 const BLOOM_LABELS = {1:'Remember', 2:'Understand', 3:'Apply', 4:'Analyse'};
@@ -5278,6 +5385,7 @@ function getCarriedOverItems(currentWeekNum) {
 // ======================== JAVA PRACTICE LAB ========================
 
 let jplActivePanel = null;
+let jplWeekFilter = 0; // 0=all, 1=week1, 2=week2, 3=week3
 let jplTraceIdx = 0;
 let jplTimerInterval = null;
 let jplTimerSeconds = 2400; // 40 minutes
@@ -5471,6 +5579,9 @@ window.addEventListener('beforeunload', jplEndSession);
 
 function renderPracticeLab() {
   const state = jplGetState();
+  const filteredTraces = jplWeekFilter ? JPL_CODE_TRACES.filter(t => JPL_TRACE_WEEKS[t.id] === jplWeekFilter) : JPL_CODE_TRACES;
+  const filteredParsons = jplWeekFilter ? JPL_PARSONS.filter(p => p.week === jplWeekFilter) : JPL_PARSONS;
+  const filteredDebug = jplWeekFilter ? JPL_DEBUG_EXERCISES.filter(d => (jplWeekFilter===1?[1]:jplWeekFilter===2?[2]:jplWeekFilter===3?[3]:[]).includes(d.id)) : JPL_DEBUG_EXERCISES;
   const traceDone = Object.keys(state).filter(k => k.startsWith('trace-') && state[k] !== undefined).length;
   const mistakeDone = Object.keys(state).filter(k => k.startsWith('mistake-') && state[k]).length;
   const challengeDone = Object.keys(state).filter(k => k.startsWith('challenge-') && state[k]).length;
@@ -5495,12 +5606,19 @@ function renderPracticeLab() {
         <p style="margin:0"><strong>Repetition:</strong> Do one full pass through all traces and mistakes. A few days later, reset and redo them \u2014 spaced repetition locks in the patterns. For challenges, try each problem at least twice on different days.</p>
       </div>
     </details>
+    <div style="display:flex;gap:8px;margin-bottom:14px;align-items:center">
+      <span style="font-size:12px;font-weight:600;color:var(--muted)">Filter by week:</span>
+      <button class="jpl-filter-btn ${jplWeekFilter===0?'active':''}" onclick="jplFilterWeek(0)" style="padding:4px 12px;border-radius:6px;border:1px solid var(--border);background:${jplWeekFilter===0?'var(--info)':'#fff'};color:${jplWeekFilter===0?'#fff':'inherit'};font-size:11px;font-weight:600;cursor:pointer">All</button>
+      <button class="jpl-filter-btn ${jplWeekFilter===1?'active':''}" onclick="jplFilterWeek(1)" style="padding:4px 12px;border-radius:6px;border:1px solid var(--border);background:${jplWeekFilter===1?'var(--info)':'#fff'};color:${jplWeekFilter===1?'#fff':'inherit'};font-size:11px;font-weight:600;cursor:pointer">Week 1</button>
+      <button class="jpl-filter-btn ${jplWeekFilter===2?'active':''}" onclick="jplFilterWeek(2)" style="padding:4px 12px;border-radius:6px;border:1px solid var(--border);background:${jplWeekFilter===2?'var(--info)':'#fff'};color:${jplWeekFilter===2?'#fff':'inherit'};font-size:11px;font-weight:600;cursor:pointer">Week 2</button>
+      <button class="jpl-filter-btn ${jplWeekFilter===3?'active':''}" onclick="jplFilterWeek(3)" style="padding:4px 12px;border-radius:6px;border:1px solid var(--border);background:${jplWeekFilter===3?'var(--info)':'#fff'};color:${jplWeekFilter===3?'#fff':'inherit'};font-size:11px;font-weight:600;cursor:pointer">Week 3</button>
+    </div>
     <div class="jpl-tools">
       <div class="jpl-tool-card ${jplActivePanel==='traces'?'active':''}" onclick="jplShowPanel('traces')">
         <div class="jpl-tool-icon">\uD83D\uDD0D</div>
         <div class="jpl-tool-title">Code Tracing Trainer</div>
         <div class="jpl-tool-desc">Predict the output of Java code. Build your mental model.</div>
-        <div class="jpl-tool-stat">${traceDone}/${JPL_CODE_TRACES.length} traced</div>
+        <div class="jpl-tool-stat">${traceDone}/${filteredTraces.length} traced</div>
       </div>
       <div class="jpl-tool-card ${jplActivePanel==='mistakes'?'active':''}" onclick="jplShowPanel('mistakes')">
         <div class="jpl-tool-icon">\u26A0\uFE0F</div>
@@ -5524,13 +5642,13 @@ function renderPracticeLab() {
         <div class="jpl-tool-icon">\uD83E\uDDE9</div>
         <div class="jpl-tool-title">Parsons Problems</div>
         <div class="jpl-tool-desc">Arrange scrambled code lines in correct order.</div>
-        <div class="jpl-tool-stat">${parsonsDone}/${JPL_PARSONS.length} solved</div>
+        <div class="jpl-tool-stat">${parsonsDone}/${filteredParsons.length} solved</div>
       </div>
       <div class="jpl-tool-card ${jplActivePanel==='debug'?'active':''}" onclick="jplShowPanel('debug')">
         <div class="jpl-tool-icon">\uD83D\uDD75\uFE0F</div>
         <div class="jpl-tool-title">Debug Detective</div>
         <div class="jpl-tool-desc">Find bugs in code using guided investigation steps.</div>
-        <div class="jpl-tool-stat">${debugDone}/${JPL_DEBUG_EXERCISES.length} solved</div>
+        <div class="jpl-tool-stat">${debugDone}/${filteredDebug.length} solved</div>
       </div>
     </div>
   </div>
@@ -5551,12 +5669,32 @@ function renderPracticeLab() {
   if (jplActivePanel === 'debug') renderJplDebug();
 }
 
+function jplFilterWeek(w) {
+  jplWeekFilter = w;
+  renderPracticeLab();
+}
+
 function jplShowPanel(panel) {
   const opening = jplActivePanel !== panel;
   jplActivePanel = jplActivePanel === panel ? null : panel;
   if (opening) {
     jplLogEvent('panel_open', { panel });
     jplStartSession();
+  }
+  renderPracticeLab();
+}
+
+function openPracticeLabTool(panel, week) {
+  jplWeekFilter = week || 0;
+  jplActivePanel = panel;
+  // Switch to practice tab
+  const infoView = document.querySelector('#info-practice')?.closest('.view');
+  if (infoView) {
+    infoView.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    infoView.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    const practiceTab = infoView.querySelector('[onclick*="info-practice"]');
+    if (practiceTab) practiceTab.classList.add('active');
+    document.getElementById('info-practice')?.classList.add('active');
   }
   renderPracticeLab();
 }
@@ -5588,7 +5726,8 @@ function jplResetDebug() {
 
 function renderJplDebug() {
   const state = jplGetState();
-  const ex = JPL_DEBUG_EXERCISES[jplDebugIdx];
+  const exercises = jplWeekFilter ? JPL_DEBUG_EXERCISES.filter(d => (jplWeekFilter===1?[1]:jplWeekFilter===2?[2]:jplWeekFilter===3?[3]:[]).includes(d.id)) : JPL_DEBUG_EXERCISES;
+  const ex = exercises[jplDebugIdx];
   const diffLabels = {1:'Easy',2:'Medium',3:'Hard'};
   const isCompleted = state[`debug-${ex.id}`] === 'completed';
   const stepsRevealed = ex.steps.filter((_, i) => state[`debug-${ex.id}-s${i}`] === 'answer').length;
@@ -5673,12 +5812,13 @@ function renderJplDebug() {
 
 function renderJplTraces() {
   const state = jplGetState();
-  const trace = JPL_CODE_TRACES[jplTraceIdx];
+  const traces = jplWeekFilter ? JPL_CODE_TRACES.filter(t => JPL_TRACE_WEEKS[t.id] === jplWeekFilter) : JPL_CODE_TRACES;
+  const trace = traces[jplTraceIdx];
   const diffLabels = {1:'Easy',2:'Medium',3:'Hard'};
   const traceState = state['trace-'+trace.id]; // undefined=untried, 'correct', 'incorrect', 'skipped'
 
   let dotsHtml = '<div class="jpl-trace-dots">';
-  JPL_CODE_TRACES.forEach((t, i) => {
+  traces.forEach((t, i) => {
     const s = state['trace-'+t.id];
     let cls = '';
     if (i === jplTraceIdx) cls = 'current';
@@ -5689,15 +5829,15 @@ function renderJplTraces() {
   });
   dotsHtml += '</div>';
 
-  const correctCount = JPL_CODE_TRACES.filter(t => state['trace-'+t.id] === 'correct').length;
-  const attemptCount = JPL_CODE_TRACES.filter(t => state['trace-'+t.id] !== undefined).length;
-  const pct = Math.round(correctCount / JPL_CODE_TRACES.length * 100);
+  const correctCount = traces.filter(t => state['trace-'+t.id] === 'correct').length;
+  const attemptCount = traces.filter(t => state['trace-'+t.id] !== undefined).length;
+  const pct = Math.round(correctCount / traces.length * 100);
 
   let html = `<div class="card">
     <div class="card-title">\uD83D\uDD0D Code Tracing Trainer</div>
     <p style="font-size:12px;color:var(--muted);margin-bottom:12px">Read the code carefully. Type what you think the program will print, then check your answer. <strong>This is the #1 skill for the Coding Challenge.</strong></p>
     <div class="jpl-progress">
-      <span>\uD83C\uDFAF ${correctCount}/${JPL_CODE_TRACES.length} correct</span>
+      <span>\uD83C\uDFAF ${correctCount}/${traces.length} correct</span>
       <div class="jpl-progress-bar"><div class="jpl-progress-fill" style="width:${pct}%;background:${pct===100?'#16a34a':'var(--info)'}"></div></div>
       <span>${pct}%</span>
       <span onclick="jplResetTraces()" style="font-size:10px;color:var(--muted);cursor:pointer;text-decoration:underline;margin-left:4px">reset</span>
@@ -5705,7 +5845,7 @@ function renderJplTraces() {
     <div class="jpl-trace-nav">
       <button class="jpl-btn jpl-btn-secondary" onclick="jplGoTrace(${Math.max(0,jplTraceIdx-1)})" ${jplTraceIdx===0?'disabled':''}>\u2190 Prev</button>
       ${dotsHtml}
-      <button class="jpl-btn jpl-btn-secondary" onclick="jplGoTrace(${Math.min(JPL_CODE_TRACES.length-1,jplTraceIdx+1)})" ${jplTraceIdx===JPL_CODE_TRACES.length-1?'disabled':''}>Next \u2192</button>
+      <button class="jpl-btn jpl-btn-secondary" onclick="jplGoTrace(${Math.min(traces.length-1,jplTraceIdx+1)})" ${jplTraceIdx===traces.length-1?'disabled':''}>Next \u2192</button>
     </div>
     <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
       <span style="font-weight:700;font-size:15px">Trace #${trace.id}: ${trace.title}</span>
@@ -6145,14 +6285,15 @@ let jplParsonsIdx = 0;
 
 function jplRenderParsons() {
   const state = jplGetState();
-  const solved = JPL_PARSONS.filter(p => state['parsons-'+p.id]).length;
-  const pct = Math.round(solved / JPL_PARSONS.length * 100);
+  const problems = jplWeekFilter ? JPL_PARSONS.filter(p => p.week === jplWeekFilter) : JPL_PARSONS;
+  const solved = problems.filter(p => state['parsons-'+p.id]).length;
+  const pct = Math.round(solved / problems.length * 100);
 
   let html = `<div class="card">
     <div class="card-title">\uD83E\uDDE9 Parsons Problems</div>
     <p style="font-size:12px;color:var(--muted);margin-bottom:12px">Arrange scrambled code lines in the correct order. Distractor lines (wrong code) are mixed in \u2014 exclude them. Research shows Parsons problems achieve equal learning in less time than writing from scratch (Ericson, Georgia Tech).</p>
     <div class="jpl-progress">
-      <span>\uD83C\uDFAF ${solved}/${JPL_PARSONS.length} solved</span>
+      <span>\uD83C\uDFAF ${solved}/${problems.length} solved</span>
       <div class="jpl-progress-bar"><div class="jpl-progress-fill" style="width:${pct}%;background:${pct===100?'#16a34a':'var(--info)'}"></div></div>
       <span>${pct}%</span>
       <span onclick="jplResetParsons()" style="font-size:10px;color:var(--muted);cursor:pointer;text-decoration:underline;margin-left:4px">reset</span>
@@ -6160,7 +6301,7 @@ function jplRenderParsons() {
 
   // Problem selector
   html += `<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:12px 0">`;
-  JPL_PARSONS.forEach((p, i) => {
+  problems.forEach((p, i) => {
     const done = state['parsons-'+p.id];
     const active = i === jplParsonsIdx;
     html += `<div style="padding:8px;text-align:center;border:2px solid ${active?'var(--info)':done?'#bbf7d0':'var(--border)'};border-radius:6px;cursor:pointer;background:${active?'#eff6ff':done?'#f0fdf4':'var(--card)'};font-size:12px;font-weight:600" onclick="jplSelectParsons(${i})">${done?'\u2705 ':''} #${p.id}</div>`;
@@ -8273,6 +8414,7 @@ function init() {
   renderCourseWeeks('info-weeks', 'INFO1113');
   renderCourseAssessments('info-assess', 'INFO1113');
   renderStudyGuide('info-guide', 'INFO1113');
+  renderVisualGuides('info-visual', 'INFO1113');
   renderPracticeLab();
   renderCourseWeeks('lngs-weeks', 'LNGS1001');
   renderCourseAssessments('lngs-assess', 'LNGS1001');
