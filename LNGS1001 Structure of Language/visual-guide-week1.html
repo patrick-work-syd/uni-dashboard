@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LNGS1001 — Week 1 Visual Guide</title>
+<style>
+:root {
+  --green: #10b981; --green-light: #ecfdf5; --green-dark: #065f46;
+  --blue: #3b82f6; --blue-light: #eff6ff;
+  --orange: #f59e0b; --orange-light: #fffbeb;
+  --purple: #8b5cf6; --purple-light: #f5f3ff;
+  --red: #ef4444; --red-light: #fef2f2;
+  --gray-50: #f8fafc; --gray-100: #f1f5f9; --gray-200: #e2e8f0;
+  --gray-400: #94a3b8; --gray-600: #475569; --gray-800: #1e293b;
+  --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --mono: 'SF Mono', 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: var(--font); background: var(--gray-50); color: var(--gray-800); line-height: 1.65; }
+
+.header { background: linear-gradient(135deg, var(--green-dark) 0%, var(--green) 100%); color: #fff; padding: 32px 0 28px; }
+.header-inner { max-width: 800px; margin: 0 auto; padding: 0 24px; }
+.header-tag { font-size: 12px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; opacity: 0.8; margin-bottom: 8px; }
+.header h1 { font-size: 26px; font-weight: 700; margin-bottom: 4px; }
+.header p { font-size: 14px; opacity: 0.85; }
+.header-reassure { margin-top: 14px; padding: 12px 16px; background: rgba(255,255,255,0.12); border-radius: 10px; font-size: 13px; line-height: 1.5; }
+
+.progress-bar { max-width: 800px; margin: 0 auto; padding: 16px 24px 0; }
+.progress-track { background: var(--gray-200); height: 6px; border-radius: 3px; overflow: hidden; }
+.progress-fill { background: var(--green); height: 100%; width: 0%; border-radius: 3px; transition: width 0.5s ease; }
+.progress-label { font-size: 12px; color: var(--gray-400); margin-top: 6px; text-align: right; }
+
+.content { max-width: 800px; margin: 0 auto; padding: 24px; }
+
+.step { background: #fff; border: 1px solid var(--gray-200); border-radius: 16px; margin-bottom: 20px; overflow: hidden; }
+.step-header { display: flex; align-items: center; gap: 12px; padding: 18px 22px; cursor: pointer; user-select: none; }
+.step-header:hover { background: var(--gray-50); }
+.step-num { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; flex-shrink: 0; }
+.step-num.locked { background: var(--gray-200); color: var(--gray-400); }
+.step-num.active { background: var(--green); color: #fff; }
+.step-num.done { background: var(--green); color: #fff; }
+.step-title { flex: 1; }
+.step-title h3 { font-size: 16px; font-weight: 600; }
+.step-title .step-sub { font-size: 12px; color: var(--gray-400); margin-top: 1px; }
+.step-chevron { font-size: 18px; color: var(--gray-400); transition: transform 0.2s; }
+.step.open .step-chevron { transform: rotate(90deg); }
+.step-body { display: none; padding: 0 22px 22px; }
+.step.open .step-body { display: block; }
+
+.diagram { background: var(--gray-50); border: 1px solid var(--gray-200); border-radius: 12px; padding: 20px; margin: 14px 0; text-align: center; overflow-x: auto; }
+.diagram svg { max-width: 100%; height: auto; }
+
+.prose { font-size: 15px; color: var(--gray-600); margin: 12px 0; }
+.prose strong { color: var(--gray-800); }
+
+.label { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 4px; }
+.label-idea { color: var(--green); } .label-how { color: var(--blue); } .label-trap { color: var(--red); } .label-why { color: var(--purple); } .label-tip { color: var(--orange); }
+
+.compare { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 14px 0; }
+@media (max-width: 600px) { .compare { grid-template-columns: 1fr; } }
+.cmp-box { border-radius: 10px; padding: 14px; }
+.cmp-box.informal { background: var(--orange-light); border: 1px solid #fed7aa; }
+.cmp-box.formal { background: var(--blue-light); border: 1px solid #bfdbfe; }
+.cmp-box.before { background: var(--red-light); border: 1px solid #fecaca; }
+.cmp-box.after { background: var(--green-light); border: 1px solid #a7f3d0; }
+.cmp-box h4 { font-size: 12px; font-weight: 700; margin-bottom: 6px; }
+.cmp-box.informal h4 { color: #b45309; } .cmp-box.formal h4 { color: var(--blue-dark); }
+.cmp-box.before h4 { color: var(--red); } .cmp-box.after h4 { color: var(--green-dark); }
+.cmp-box p { font-size: 13px; line-height: 1.55; }
+
+.callout { display: flex; gap: 10px; padding: 14px 16px; border-radius: 10px; margin: 14px 0; font-size: 14px; line-height: 1.55; }
+.callout-icon { font-size: 18px; flex-shrink: 0; line-height: 1.5; }
+.callout.tip { background: var(--blue-light); border: 1px solid #bfdbfe; }
+.callout.warn { background: var(--red-light); border: 1px solid #fecaca; }
+.callout.ok { background: var(--green-light); border: 1px solid #a7f3d0; }
+
+.analogy { background: var(--purple-light); border: 1px solid #ddd6fe; border-radius: 12px; padding: 16px; margin: 14px 0; }
+.analogy-label { font-size: 11px; font-weight: 700; color: var(--purple); letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 4px; }
+.analogy p { font-size: 14px; color: var(--gray-600); }
+
+.check { background: var(--green-light); border: 1px solid #a7f3d0; border-radius: 12px; padding: 18px; margin: 18px 0; }
+.check-title { font-size: 13px; font-weight: 700; color: var(--green); margin-bottom: 6px; }
+.check-q { font-size: 14px; margin-bottom: 10px; }
+.check textarea { width: 100%; padding: 8px 10px; border: 1px solid #a7f3d0; border-radius: 8px; font-family: var(--font); font-size: 13px; resize: vertical; min-height: 44px; background: #fff; }
+.check textarea:focus { outline: 2px solid var(--green); border-color: transparent; }
+.check-reveal { margin-top: 8px; }
+.check-reveal button { background: var(--green); color: #fff; border: none; padding: 7px 16px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; }
+.check-reveal button:hover { background: #059669; }
+.check-reveal button:disabled { background: var(--gray-400); cursor: not-allowed; }
+.check-answer { display: none; margin-top: 10px; padding: 12px; background: #fff; border-radius: 8px; border: 1px solid #a7f3d0; font-size: 13px; line-height: 1.6; }
+.check-answer.show { display: block; }
+.check-rating { display: none; margin-top: 8px; gap: 8px; }
+.check-rating.show { display: flex; }
+.check-rating button { padding: 5px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid var(--gray-200); background: #fff; }
+.check-rating .got-it { color: var(--green); border-color: #a7f3d0; }
+.check-rating .not-yet { color: var(--red); border-color: #fecaca; }
+
+.lab-link { display: flex; align-items: center; gap: 10px; padding: 14px 16px; background: #fff; border: 2px solid var(--green); border-radius: 12px; margin: 16px 0; text-decoration: none; color: var(--gray-800); transition: all 0.15s; }
+.lab-link:hover { background: var(--green-light); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(16,185,129,0.15); }
+.lab-link-icon { font-size: 24px; }
+.lab-link-text { flex: 1; }
+.lab-link-title { font-size: 14px; font-weight: 700; color: var(--green-dark); }
+.lab-link-desc { font-size: 12px; color: var(--gray-400); }
+.lab-link-arrow { font-size: 18px; color: var(--green); font-weight: 700; }
+
+.summary-box { padding: 18px; border-radius: 12px; margin: 18px 0; }
+.summary-box.green { background: var(--green-light); border: 1px solid #a7f3d0; }
+.summary-box h4 { font-size: 15px; margin-bottom: 6px; color: var(--green-dark); }
+.summary-box p { font-size: 14px; color: var(--gray-600); }
+
+.self-test { background: #fff; border: 2px solid var(--orange); border-radius: 16px; padding: 22px; margin: 28px 0; }
+.self-test-title { font-size: 18px; font-weight: 700; color: var(--orange); margin-bottom: 4px; }
+.self-test-sub { font-size: 13px; color: var(--gray-400); margin-bottom: 16px; }
+.st-q { margin-bottom: 16px; }
+.st-q-header { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.st-q-num { font-size: 12px; font-weight: 700; color: var(--orange); background: var(--orange-light); padding: 2px 8px; border-radius: 4px; }
+.st-q-bloom { font-size: 10px; color: var(--gray-400); }
+.st-q p { font-size: 14px; margin-bottom: 6px; }
+.st-q textarea { width: 100%; padding: 8px 10px; border: 1px solid #fed7aa; border-radius: 8px; font-family: var(--font); font-size: 13px; resize: vertical; min-height: 44px; background: #fff; }
+.st-q textarea:focus { outline: 2px solid var(--orange); border-color: transparent; }
+.st-q .check-reveal button { background: var(--orange); }
+.st-q .check-reveal button:hover { background: #d97706; }
+.st-q .check-reveal button:disabled { background: var(--gray-400); }
+.st-q .check-answer { border-color: #fed7aa; }
+
+.nav-footer { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; border-top: 1px solid var(--gray-200); margin-top: 28px; }
+.nav-btn { display: inline-flex; align-items: center; gap: 6px; padding: 9px 18px; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; border: 1px solid var(--gray-200); background: #fff; color: var(--gray-600); text-decoration: none; }
+.nav-btn:hover { background: var(--gray-100); }
+.nav-btn.primary { background: var(--green); color: #fff; border-color: var(--green); }
+.nav-btn.primary:hover { background: var(--green-dark); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="header-tag">LNGS1001 · Week 1 · Visual Guide</div>
+    <h1>What is Language? Introduction to Linguistics</h1>
+    <p>10 steps · work through at your own pace · each builds on the last</p>
+    <div class="header-reassure">
+      <strong>No prior knowledge of linguistics needed.</strong> This week introduces the big ideas you'll build on all semester. Linguistics is the scientific study of language — if you've ever wondered why languages are the way they are, you're in the right place.
+    </div>
+  </div>
+</div>
+
+<div class="progress-bar">
+  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="progress-label" id="progressLabel">0 of 10 complete</div>
+</div>
+
+<div class="content">
+
+<!-- ============ STEP 1 ============ -->
+<div class="step open" id="step-1" data-step="1">
+  <div class="step-header" onclick="toggleStep(1)">
+    <div class="step-num active">1</div>
+    <div class="step-title"><h3>What IS Linguistics?</h3><div class="step-sub">Not what you think</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">Linguistics is the <strong>scientific study of human language</strong>. It's NOT about learning foreign languages or correcting grammar. A linguist isn't a translator — a linguist is someone who knows <em>about</em> languages, not just someone who knows many languages.</p>
+    <div class="compare">
+      <div class="cmp-box informal"><h4>Everyday idea</h4><p>Someone who speaks lots of languages</p></div>
+      <div class="cmp-box formal"><h4>Linguistic definition</h4><p>A scientist who studies the structure and function of human language</p></div>
+    </div>
+    <p class="prose">Think of it this way: speaking 5 languages fluently is amazing — but it doesn't make you a linguist any more than being a great cook makes you a food chemist.</p>
+    <div class="callout tip"><div class="callout-icon">💡</div><div><strong>The question linguists ask:</strong> "How does language work?" Not "am I speaking it correctly?" or "which language is best?" Those are prescriptive questions. Linguists are <strong>descriptive</strong> — we study what IS.</div></div>
+    <div class="check" data-check="1">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">In your own words, explain why a polyglot (someone who speaks 5 languages) is not necessarily a linguist.</div>
+      <textarea placeholder="Type your answer first…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer">Speaking many languages is a practical skill. Linguistics is studying how languages work — their structure, patterns, origins. You can speak 5 languages without knowing why they're structured the way they are, and you can be a linguist studying languages you don't actually speak.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 2 ============ -->
+<div class="step" id="step-2" data-step="2">
+  <div class="step-header" onclick="toggleStep(2)">
+    <div class="step-num locked">2</div>
+    <div class="step-title"><h3>7,000 Languages and Counting</h3><div class="step-sub">The scale of human language diversity</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">Roughly <strong>7,000 languages</strong> exist today. Only 4% have official status. Papua New Guinea alone has 860+ languages — that's 13% of the world's languages with 0.1% of the world's population. Languages near the equator tend to be more diverse than languages in colder regions.</p>
+    <div class="diagram">
+      <svg viewBox="0 0 620 180" xmlns="http://www.w3.org/2000/svg" style="max-width:560px">
+        <style>svg text{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;}</style>
+        <rect x="10" y="10" width="600" height="160" rx="12" fill="#ecfdf5" stroke="#10b981" stroke-width="2"/>
+        <text x="24" y="34" font-size="13" font-weight="700" fill="#065f46">Language Distribution</text>
+        <text x="24" y="58" font-size="11" fill="#475569">Most languages</text><rect x="24" y="62" width="220" height="16" rx="4" fill="#10b981"/><text x="250" y="75" font-size="11" fill="#475569">spoken by small communities</text>
+        <text x="24" y="98" font-size="11" fill="#475569">Few languages</text><rect x="24" y="102" width="80" height="16" rx="4" fill="#a7f3d0"/><text x="114" y="115" font-size="11" fill="#475569">spoken by billions</text>
+        <text x="24" y="140" font-size="11" fill="#94a3b8">~100,000 languages have existed in human history</text>
+        <text x="24" y="156" font-size="11" fill="#94a3b8">Only ~4% have official status</text>
+      </svg>
+    </div>
+    <div class="callout ok"><div class="callout-icon">👍</div><div><strong>The baseline for human language groups historically was 10–2,000 people.</strong> Way smaller than modern nation-states. This is why "one country, one language" is a very recent invention — and even then, it's rarely true.</div></div>
+    <div class="check" data-check="2">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">Why is it misleading to associate one country with one language? Give one example.</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer">Countries are political units; languages are cultural/biological units. Papua New Guinea has one government but 860+ languages. India has 22 official languages. Switzerland has 4 official languages but multiple regional languages. One nation = many languages is the norm, not the exception.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 3 ============ -->
+<div class="step" id="step-3" data-step="3">
+  <div class="step-header" onclick="toggleStep(3)">
+    <div class="step-num locked">3</div>
+    <div class="step-title"><h3>No Primitive Languages</h3><div class="step-sub">Every human language is complex</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">Colonial-era claims that indigenous languages were "primitive" or "meagre" are <strong>empirically false</strong>. Linguists have studied languages worldwide and found they are all highly complex. Australian Aboriginal languages, for example, have been described as extremely complex by scholars who actually study them.</p>
+    <div class="compare">
+      <div class="cmp-box before"><h4>Historical myth</h4><p>Some languages are simpler than others</p></div>
+      <div class="cmp-box after"><h4>Scientific fact</h4><p>All human languages exhibit comparable complexity across different structural levels</p></div>
+    </div>
+    <div class="callout warn"><div class="callout-icon">⚠️</div><div><strong>The "primitive language" idea was used to justify mistreatment of indigenous peoples.</strong> This is not a political opinion — it's a scientific fact that all human languages are equally complex. When complexity is measured across multiple dimensions (phonology, morphology, syntax, semantics), no language comes out "simpler."</div></div>
+    <div class="check" data-check="3">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">What evidence would you use to counter someone claiming that an unwritten language must be "primitive"?</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer">Writing is a technology, not a measure of language complexity. (1) Chinese is one of the oldest written languages but has simple word order; Japanese has elaborate grammar. (2) Unwritten languages can have highly complex sounds, word structure, and grammar. (3) Writing was invented ~5,000 years ago, but all languages have existed for much longer. Complexity and writing are independent.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 4 ============ -->
+<div class="step" id="step-4" data-step="4">
+  <div class="step-header" onclick="toggleStep(4)">
+    <div class="step-num locked">4</div>
+    <div class="step-title"><h3>What Makes Human Language Special?</h3><div class="step-sub">Design features that set us apart</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">Animals communicate, but human language has unique properties called <strong>Hockett's design features</strong>. Four key ones:</p>
+    <div class="diagram">
+      <svg viewBox="0 0 640 160" xmlns="http://www.w3.org/2000/svg" style="max-width:600px">
+        <style>svg text{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;}</style>
+        <rect x="10" y="10" width="140" height="140" rx="10" fill="#ecfdf5" stroke="#10b981" stroke-width="1.5"/>
+        <text x="80" y="32" text-anchor="middle" font-size="12" font-weight="700" fill="#065f46">Arbitrariness</text>
+        <text x="80" y="54" text-anchor="middle" font-size="11" fill="#475569">Word ↔ meaning</text>
+        <text x="80" y="70" text-anchor="middle" font-size="10" fill="#94a3b8">no natural link</text>
+        <text x="80" y="130" text-anchor="middle" font-size="11" fill="#065f46">"dog" ≠ bark</text>
+
+        <rect x="160" y="10" width="140" height="140" rx="10" fill="#ecfdf5" stroke="#10b981" stroke-width="1.5"/>
+        <text x="230" y="32" text-anchor="middle" font-size="12" font-weight="700" fill="#065f46">Displacement</text>
+        <text x="230" y="54" text-anchor="middle" font-size="11" fill="#475569">Talk about things</text>
+        <text x="230" y="70" text-anchor="middle" font-size="10" fill="#94a3b8">not here/now</text>
+        <text x="230" y="130" text-anchor="middle" font-size="11" fill="#065f46">"yesterday"</text>
+
+        <rect x="310" y="10" width="140" height="140" rx="10" fill="#ecfdf5" stroke="#10b981" stroke-width="1.5"/>
+        <text x="380" y="32" text-anchor="middle" font-size="12" font-weight="700" fill="#065f46">Productivity</text>
+        <text x="380" y="54" text-anchor="middle" font-size="11" fill="#475569">Create sentences</text>
+        <text x="380" y="70" text-anchor="middle" font-size="10" fill="#94a3b8">never spoken before</text>
+        <text x="380" y="130" text-anchor="middle" font-size="11" fill="#065f46">infinite creativity</text>
+
+        <rect x="460" y="10" width="160" height="140" rx="10" fill="#ecfdf5" stroke="#10b981" stroke-width="1.5"/>
+        <text x="540" y="32" text-anchor="middle" font-size="12" font-weight="700" fill="#065f46">Duality</text>
+        <text x="540" y="54" text-anchor="middle" font-size="11" fill="#475569">Meaningless sounds</text>
+        <text x="540" y="70" text-anchor="middle" font-size="10" fill="#94a3b8">combine into meaning</text>
+        <text x="540" y="130" text-anchor="middle" font-size="11" fill="#065f46">/k/ + /æ/ + /t/ = cat</text>
+      </svg>
+    </div>
+    <p class="prose"><strong>Arbitrariness:</strong> The word "dog" has no natural connection to actual dogs — it's arbitrary. Different languages prove this: English uses "dog," French uses "chien," Japanese uses "inu." No universal "dog sound."</p>
+    <p class="prose"><strong>Displacement:</strong> We can talk about things not present — yesterday, Mars, fictional characters, abstract ideas. Bees dance about food locations (here & now); humans discuss the past and future.</p>
+    <div class="check" data-check="4">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">Give an example of "displacement" — say something that refers to a time, place, or thing not present in this room.</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer">Any sentence about the past, future, or absent things: "I went to the library yesterday." "Sydney Opera House is beautiful." "There are probably aliens somewhere." "I'm thinking about having pizza for dinner." These all refer to things not in front of you right now.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 5 ============ -->
+<div class="step" id="step-5" data-step="5">
+  <div class="step-header" onclick="toggleStep(5)">
+    <div class="step-num locked">5</div>
+    <div class="step-title"><h3>Language Functions</h3><div class="step-sub">What do we DO with language?</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">Using the example: "I spoke to Sibby last night. Her sister had a baby boy." Language serves three key functions:</p>
+    <div class="diagram">
+      <svg viewBox="0 0 640 140" xmlns="http://www.w3.org/2000/svg" style="max-width:600px">
+        <style>svg text{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;}</style>
+        <rect x="10" y="10" width="190" height="120" rx="10" fill="#ecfdf5" stroke="#10b981" stroke-width="1.5"/>
+        <text x="105" y="32" text-anchor="middle" font-size="12" font-weight="700" fill="#065f46">Describing</text>
+        <text x="105" y="52" text-anchor="middle" font-size="11" fill="#475569">Convey information</text>
+        <text x="105" y="72" text-anchor="middle" font-size="11" fill="#475569">about states of affairs</text>
+        <text x="105" y="110" text-anchor="middle" font-size="11" fill="#065f46">"had a baby boy"</text>
+
+        <rect x="220" y="10" width="200" height="120" rx="10" fill="#ecfdf5" stroke="#10b981" stroke-width="1.5"/>
+        <text x="320" y="32" text-anchor="middle" font-size="12" font-weight="700" fill="#065f46">Organising Language</text>
+        <text x="320" y="52" text-anchor="middle" font-size="11" fill="#475569">Linking parts of discourse</text>
+        <text x="320" y="72" text-anchor="middle" font-size="11" fill="#475569">(pronouns, reference)</text>
+        <text x="320" y="110" text-anchor="middle" font-size="11" fill="#065f46">"Her" = Sibby</text>
+
+        <rect x="430" y="10" width="200" height="120" rx="10" fill="#ecfdf5" stroke="#10b981" stroke-width="1.5"/>
+        <text x="530" y="32" text-anchor="middle" font-size="12" font-weight="700" fill="#065f46">Social Bonding</text>
+        <text x="530" y="52" text-anchor="middle" font-size="11" fill="#475569">Maintain relationships</text>
+        <text x="530" y="72" text-anchor="middle" font-size="11" fill="#475569">& express solidarity</text>
+        <text x="530" y="110" text-anchor="middle" font-size="11" fill="#065f46">sharing good news</text>
+      </svg>
+    </div>
+    <div class="check" data-check="5">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">Find an example from your own recent conversation where language was primarily serving a <strong>social function</strong> rather than informational.</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer">Any "phatic" language: "Hey, how are you?" (don't need an answer). "Nice weather today!" Gossip about friends. "You look great!" Compliments. Small talk. Sharing memes. These maintain bonds rather than transfer critical information — the social function outweighs the informational one.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 6 ============ -->
+<div class="step" id="step-6" data-step="6">
+  <div class="step-header" onclick="toggleStep(6)">
+    <div class="step-num locked">6</div>
+    <div class="step-title"><h3>Descriptive vs Prescriptive</h3><div class="step-sub">The most important distinction in linguistics</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose"><strong>Prescriptive grammar</strong> = rules telling you how you "should" speak ("don't split infinitives"). <strong>Descriptive grammar</strong> = describing how people actually speak. <strong>Linguistics is fundamentally descriptive.</strong></p>
+    <div class="compare">
+      <div class="cmp-box informal"><h4>Prescriptive view</h4><p>"That's bad grammar!" / "Never end with a preposition"</p></div>
+      <div class="cmp-box formal"><h4>Descriptive view</h4><p>"That usage is common in informal registers and follows a pattern of notional agreement"</p></div>
+    </div>
+    <p class="prose">Example: "The committee has/have not decided." Prescriptivists argue about which is "correct," but linguists ask: when do speakers use each form, and why? (Answer: "have" when you're thinking of the group as individuals; "has" when thinking of it as a unit.)</p>
+    <div class="callout tip"><div class="callout-icon">💡</div><div><strong>When you catch yourself thinking "that's wrong" about how someone speaks — stop.</strong> Ask instead: "Why do they say it that way? What pattern does it follow?" That's the linguistic mindset.</div></div>
+    <div class="check" data-check="6">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">Is it "wrong" to say "they are not decided" instead of "they have not decided"? Explain using the descriptive/prescriptive distinction.</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer">Not "wrong" — it's a different pattern. Prescriptively, it violates a rule. Descriptively, it shows that "decide" can be used as an adjective ("not decided") in some dialects or registers. Linguists describe what people say; they don't judge. If enough people say something, it's a valid part of the language.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 7 ============ -->
+<div class="step" id="step-7" data-step="7">
+  <div class="step-header" onclick="toggleStep(7)">
+    <div class="step-num locked">7</div>
+    <div class="step-title"><h3>Speech is Primary, Writing is Secondary</h3><div class="step-sub">Separating sound from spelling</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">Every human community has <strong>spoken language</strong>. Not all have <strong>writing</strong>. Children learn to speak naturally without instruction; reading and writing must be taught. Writing was invented only ~5,000 years ago.</p>
+    <div class="compare">
+      <div class="cmp-box informal"><h4>Naive view</h4><p>English has 26 letters = 26 sounds</p></div>
+      <div class="cmp-box formal"><h4>Linguistic reality</h4><p>English has ~44 distinct sounds (phonemes) but only 26 letters; spelling often fails to capture pronunciation</p></div>
+    </div>
+    <p class="prose">English spelling is famously inconsistent: "ough" is pronounced differently in cough, through, though, tough, bough, thought. George Bernard Shaw's GHOTI = "fish" (GH as in 'enough', O as in 'women', TI as in 'nation').</p>
+    <div class="check" data-check="7">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">The word "knight" has 6 letters. How many distinct sounds does it have when you say it aloud?</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer">Three sounds: /n/ + /aɪ/ + /t/. The k, n, and gh are silent. This shows that letters ≠ sounds. Writing is just a visual code for speech; it often fails to represent the actual sounds.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 8 ============ -->
+<div class="step" id="step-8" data-step="8">
+  <div class="step-header" onclick="toggleStep(8)">
+    <div class="step-num locked">8</div>
+    <div class="step-title"><h3>The IPA: One Sound, One Symbol</h3><div class="step-sub">A universal notation for speech</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">The <strong>International Phonetic Alphabet (IPA)</strong> solves the spelling problem by providing one symbol for each distinct sound in any human language. Created in 1888, continuously revised. The principle: <strong>bi-uniqueness</strong> — one symbol per sound, one sound per symbol.</p>
+    <p class="prose">The IPA chart organises:</p>
+    <ul style="margin: 12px 0 12px 30px; color: var(--gray-600); font-size: 14px;">
+      <li><strong>Consonants</strong> by place of articulation (where: lips, teeth, palate) and manner (how: plosive, fricative, nasal)</li>
+      <li><strong>Vowels</strong> by tongue height (high/mid/low) and backness (front/central/back)</li>
+    </ul>
+    <div class="callout tip"><div class="callout-icon">💡</div><div><strong>You don't need to memorise the entire IPA chart.</strong> Focus on understanding HOW it's organised — then you can always look up specific symbols. By Weeks 2–3, you'll be comfortable with the basics.</div></div>
+    <div class="check" data-check="8">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">Why can't the English alphabet serve as a phonetic transcription system? Give two specific problems.</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer">(1) One letter = many sounds: 'c' is /k/ in "cat" and /s/ in "city." (2) Many sounds = one letter: 'ough' sounds like /ɔf/, /u/, /oʊ/, /ʌf/ in different words. English spelling is historical, not phonetic. IPA solves this: one symbol = always one sound.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 9 ============ -->
+<div class="step" id="step-9" data-step="9">
+  <div class="step-header" onclick="toggleStep(9)">
+    <div class="step-num locked">9</div>
+    <div class="step-title"><h3>Language Endangerment</h3><div class="step-sub">When languages die</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">Of 7,000 languages, <strong>most are endangered</strong>. There's a strong correlation between population size and endangerment: the smaller a language's speaker community, the more at risk it is.</p>
+    <p class="prose">Almost no Australian Aboriginal languages are spoken by more than 1,000 people. Some have only dozens of elderly speakers left. The key mechanism is <strong>intergenerational disruption</strong> — older speakers don't pass the language to children. Languages like English sit at the top-left (massive population, not endangered); languages like Kyadil sit at the bottom-right (tiny population, critically endangered).</p>
+    <div class="callout warn"><div class="callout-icon">⚠️</div><div><strong>Why does this matter?</strong> When a language dies, humanity loses a unique way of expressing thought, unique knowledge encoded in that language (e.g., Aboriginal ecological knowledge), and a window into human cognition. Language diversity is cultural and intellectual heritage.</div></div>
+    <div class="check" data-check="9">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">What is "intergenerational disruption" and why is it the key factor in language death?</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer">Intergenerational disruption = when parents don't teach children the language. A language survives only if children learn it naturally from infants onward. If parents abandon the language (for economic reasons, discrimination, urbanisation), children don't acquire it, and it dies. It's the critical link in language transmission breaking.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 10 ============ -->
+<div class="step" id="step-10" data-step="10">
+  <div class="step-header" onclick="toggleStep(10)">
+    <div class="step-num locked">10</div>
+    <div class="step-title"><h3>Levels of Linguistic Analysis</h3><div class="step-sub">The roadmap for the whole course</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">Linguistics analyses language at six levels, each building on the last:</p>
+    <div class="diagram">
+      <svg viewBox="0 0 640 80" xmlns="http://www.w3.org/2000/svg" style="max-width:600px">
+        <style>svg text{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;}</style>
+        <defs><marker id="arr-g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#10b981"/></marker></defs>
+        <text x="20" y="26" font-size="12" font-weight="700" fill="#065f46">Phonetics</text><rect x="20" y="30" width="70" height="30" rx="6" fill="#ecfdf5" stroke="#10b981" stroke-width="1.5"/><text x="55" y="51" text-anchor="middle" font-size="10" fill="#475569">Sounds</text>
+        <line x="90" y="45" x2="108" y2="45" stroke="#10b981" stroke-width="2" marker-end="url(#arr-g)"/>
+        <text x="130" y="26" font-size="12" font-weight="700" fill="#065f46">Phonology</text><rect x="120" y="30" width="70" height="30" rx="6" fill="#ecfdf5" stroke="#10b981" stroke-width="1.5"/><text x="155" y="51" text-anchor="middle" font-size="10" fill="#475569">Sound systems</text>
+        <line x="190" y="45" x2="208" y2="45" stroke="#10b981" stroke-width="2" marker-end="url(#arr-g)"/>
+        <text x="220" y="26" font-size="12" font-weight="700" fill="#065f46">Morphology</text><rect x="220" y="30" width="70" height="30" rx="6" fill="#ecfdf5" stroke="#10b981" stroke-width="1.5"/><text x="255" y="51" text-anchor="middle" font-size="10" fill="#475569">Word structure</text>
+        <line x="290" y="45" x2="308" y2="45" stroke="#10b981" stroke-width="2" marker-end="url(#arr-g)"/>
+        <text x="330" y="26" font-size="12" font-weight="700" fill="#065f46">Syntax</text><rect x="320" y="30" width="70" height="30" rx="6" fill="#ecfdf5" stroke="#10b981" stroke-width="1.5"/><text x="355" y="51" text-anchor="middle" font-size="10" fill="#475569">Sentences</text>
+        <line x="390" y="45" x2="408" y2="45" stroke="#10b981" stroke-width="2" marker-end="url(#arr-g)"/>
+        <text x="425" y="26" font-size="12" font-weight="700" fill="#065f46">Semantics</text><rect x="420" y="30" width="70" height="30" rx="6" fill="#ecfdf5" stroke="#10b981" stroke-width="1.5"/><text x="455" y="51" text-anchor="middle" font-size="10" fill="#475569">Meaning</text>
+        <line x="490" y="45" x2="508" y2="45" stroke="#10b981" stroke-width="2" marker-end="url(#arr-g)"/>
+        <text x="525" y="26" font-size="12" font-weight="700" fill="#065f46">Pragmatics</text><rect x="520" y="30" width="100" height="30" rx="6" fill="#ecfdf5" stroke="#10b981" stroke-width="1.5"/><text x="570" y="51" text-anchor="middle" font-size="10" fill="#475569">Context &amp; use</text>
+      </svg>
+    </div>
+    <p class="prose"><strong>Phonetics & Phonology</strong> (Weeks 2–5): How do we make and perceive sounds?<br><strong>Morphology</strong> (Weeks 6–7): How do we build words from smaller parts?<br><strong>Syntax</strong> (Weeks 8–9): How do we combine words into sentences?<br><strong>Semantics & Pragmatics</strong> (Week 10+): How do we create and understand meaning?</p>
+    <div class="check" data-check="10">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">Which level of analysis would you use to explain why "un-happy" is a valid English word but "happy-un" is not?</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer"><strong>Morphology.</strong> "un-" is a prefix (goes before the root), and "-un" is not a standard suffix in English. This is a rule about word structure — how morphemes (meaningful units) can be combined. Phonetics/phonology only cares about sounds, not meaning. Syntax cares about sentences. Morphology is the right level.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+
+    <div class="summary-box green">
+      <h4>Week 1 in one sentence</h4>
+      <p>Linguistics is the scientific, <strong>descriptive</strong> study of how human language works — from the sounds we make to the complex social meanings we express. All 7,000 human languages are equally complex, speech is primary and writing secondary, and language is endangered but uniquely capable of infinite creativity through just a few levels of analysis.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ============ SELF-TEST ============ -->
+<div class="self-test">
+  <div class="self-test-title">📝 Week 1 Self-Test</div>
+  <div class="self-test-sub">10 exam-style questions. Try to answer each one before revealing. These cover the full study guide.</div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q1</span><span class="st-q-bloom">Understanding</span></div><p>What is the approximate number of languages spoken in the world today?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">Approximately 7,000 (estimates range from 6,000–8,000 depending on where you draw the line between "language" and "dialect"). Only about 4% have official status.</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q2</span><span class="st-q-bloom">Understanding</span></div><p>Name the four key design features of human language discussed in this week.</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">Arbitrariness (no natural link between form and meaning), displacement (talk about absent things), productivity (create novel sentences), and duality of patterning (meaningless units combine into meaningful ones).</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q3</span><span class="st-q-bloom">Understanding</span></div><p>Explain the difference between descriptive and prescriptive grammar.</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">Prescriptive grammar tells speakers how they "should" speak according to rules and standards. Descriptive grammar describes how speakers actually do speak, without judgment. Linguistics adopts the descriptive approach — we study what IS, not what "should be."</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q4</span><span class="st-q-bloom">Understanding</span></div><p>Why do linguists say "speech is primary and writing is secondary"?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">All human communities have spoken language, but not all have writing. Children acquire speech naturally without instruction, while reading/writing must be taught. Writing was invented only ~5,000 years ago. Speech changes faster than writing, so writing often fails to reflect actual pronunciation.</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q5</span><span class="st-q-bloom">Understanding</span></div><p>What is the principle of bi-uniqueness in the IPA?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">One symbol represents exactly one sound, and each sound is represented by exactly one symbol. This eliminates the ambiguity of conventional alphabets where one letter can represent multiple sounds (e.g., English 'c' = /k/ in 'cat' or /s/ in 'city').</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q6</span><span class="st-q-bloom">Apply</span></div><p>A friend says "Aboriginal languages are just simple dialects." Using what you learned this week, explain why this is wrong.</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">All human languages studied to date, including Aboriginal Australian languages, exhibit comparable complexity. Aboriginal languages aren't dialects of a single language — they are as different from each other as French is from Russian. The ~250+ distinct Australian Aboriginal languages each have complex grammar, phonology, and vocabulary. The "primitive language" myth was debunked by systematic scientific study.</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q7</span><span class="st-q-bloom">Apply</span></div><p>Give an original example of each of Hockett's four design features using English.</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">Arbitrariness: "chair" has no natural connection to the furniture. Displacement: "I'll meet you at the café tomorrow at 3pm" refers to a future time/place. Productivity: "My purple giraffe negotiated a ceasefire with the sentient toaster" — novel sentence never before uttered. Duality: /k/, /æ/, /t/ are meaningless individually but combine to form "cat".</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q8</span><span class="st-q-bloom">Apply</span></div><p>Analyse this sentence for all three language functions: "Did you hear? Sarah got the promotion — I'm so happy for her!"</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">Describing the world: reports the fact that Sarah got promoted. Organising language: "her" refers back to "Sarah" (anaphora). Maintaining social relationships: sharing good news, expressing solidarity, reinforcing the bond with the listener through genuine emotional support.</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q9</span><span class="st-q-bloom">Analyse</span></div><p>English has the same word "bank" for a financial institution and the side of a river. What does this tell us about the relationship between words and meanings?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">This demonstrates arbitrariness — the link between a word's form and its meaning is not fixed or natural. If there were a natural connection between sound and meaning, one form couldn't have two unrelated meanings. This also shows that context, not the word itself, determines meaning.</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q10</span><span class="st-q-bloom">Analyse</span></div><p>Papua New Guinea has 860+ languages but only 0.1% of the world's population. Most of Europe, with far more people, has far fewer languages. What factors might explain this difference?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">Historical: European languages underwent centuries of political consolidation (nation-states imposed single official languages). Geographic: PNG's mountainous terrain and island geography isolate communities. Social: proximity to the equator correlates with greater linguistic diversity. Political: colonialism and lingua francas reduced European diversity while PNG's decentralised political structure preserved it.</div></div>
+</div>
+
+<!-- Practice Lab links -->
+<p class="prose" style="margin-top:20px;"><span class="label label-tip">Practice next</span></p>
+<p class="prose">Now apply what you've learned:</p>
+
+<a class="lab-link" href="#" onclick="window.parent.openPracticeLabTool('ipa',1); return false;"><div class="lab-link-icon">🗣</div><div class="lab-link-text"><div class="lab-link-title">IPA Transcription Drill</div><div class="lab-link-desc">Practise identifying IPA symbols for English consonants</div></div><div class="lab-link-arrow">→</div></a>
+<a class="lab-link" href="#" onclick="window.parent.openPracticeLabTool('flashcards',1); return false;"><div class="lab-link-icon">📚</div><div class="lab-link-text"><div class="lab-link-title">Key Terms Flashcards</div><div class="lab-link-desc">Test yourself on Week 1 terminology — design features, levels of analysis</div></div><div class="lab-link-arrow">→</div></a>
+<a class="lab-link" href="#" onclick="window.parent.openPracticeLabTool('phonology',1); return false;"><div class="lab-link-icon">🔬</div><div class="lab-link-text"><div class="lab-link-title">Phonology Analysis</div><div class="lab-link-desc">Explore minimal pairs and phonemic concepts</div></div><div class="lab-link-arrow">→</div></a>
+
+<div class="nav-footer">
+  <a class="nav-btn" href="#">← Back to Dashboard</a>
+  <a class="nav-btn primary" href="#">Week 2: Phonetics & Sounds →</a>
+</div>
+
+</div>
+
+<script>
+const totalSteps=10;let completedSteps=new Set();
+function toggleStep(n){document.getElementById('step-'+n).classList.toggle('open')}
+function enableReveal(ta){const btn=ta.closest('.check,.st-q').querySelector('.check-reveal button');btn.disabled=ta.value.trim().length<5}
+function revealAnswer(btn){const c=btn.closest('.check,.st-q');c.querySelector('.check-answer').classList.add('show');const r=c.querySelector('.check-rating');if(r)r.classList.add('show');btn.style.display='none'}
+function rateCheck(btn,rating){const check=btn.closest('.check'),step=btn.closest('.step'),n=parseInt(step.dataset.step);check.querySelector('.check-rating').querySelectorAll('button').forEach(b=>b.style.opacity='0.4');btn.style.opacity='1';completedSteps.add(n);updateProgress();step.querySelector('.step-num').className='step-num done';const next=document.getElementById('step-'+(n+1));if(next){const nn=next.querySelector('.step-num');if(nn.classList.contains('locked'))nn.className='step-num active'}}
+function updateProgress(){const p=Math.round(completedSteps.size/totalSteps*100);document.getElementById('progressFill').style.width=p+'%';document.getElementById('progressLabel').textContent=completedSteps.size+' of '+totalSteps+' complete'}
+</script>
+</body>
+</html>

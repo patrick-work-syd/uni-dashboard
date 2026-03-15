@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ANHS2609 Week 3: Philip and Alexander - Visual Guide</title>
+    <style>
+        :root {
+            --orange: #f59e0b;
+            --orange-light: #fffbeb;
+            --orange-dark: #b45309;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-600: #4b5563;
+            --gray-900: #111827;
+            --white: #ffffff;
+            --green-600: #16a34a;
+            --blue-600: #2563eb;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--gray-50);
+            color: var(--gray-900);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--orange-dark) 0%, var(--orange) 100%);
+            color: var(--white);
+            padding: 40px 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 25px rgba(180, 83, 9, 0.2);
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.95;
+            margin-bottom: 5px;
+        }
+
+        .course-meta {
+            font-size: 0.95em;
+            opacity: 0.9;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            margin-bottom: 30px;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--gray-700);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background-color: var(--gray-200);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--orange-dark), var(--orange));
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+
+        /* Navigation Tabs */
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            border-bottom: 2px solid var(--gray-200);
+            padding-bottom: 0;
+        }
+
+        .tab-button {
+            padding: 12px 20px;
+            background: none;
+            border: none;
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--gray-600);
+            transition: all 0.3s ease;
+            font-size: 0.95em;
+        }
+
+        .tab-button:hover {
+            color: var(--orange-dark);
+            border-bottom-color: var(--orange-light);
+        }
+
+        .tab-button.active {
+            color: var(--orange-dark);
+            border-bottom-color: var(--orange);
+        }
+
+        /* Content Area */
+        .content-wrapper {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
+        }
+
+        .step-card {
+            background: var(--white);
+            border-left: 5px solid var(--orange);
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            display: none;
+        }
+
+        .step-card.active {
+            display: block;
+        }
+
+        .step-card:hover {
+            box-shadow: 0 8px 20px rgba(180, 83, 9, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .step-number {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--orange-dark), var(--orange));
+            color: var(--white);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+
+        .step-title {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: var(--orange-dark);
+            margin-bottom: 15px;
+            margin-top: 10px;
+        }
+
+        .step-content {
+            font-size: 1em;
+            color: var(--gray-700);
+            line-height: 1.7;
+        }
+
+        .step-content p {
+            margin-bottom: 12px;
+        }
+
+        .step-content ul {
+            margin-left: 20px;
+            margin-bottom: 12px;
+        }
+
+        .step-content li {
+            margin-bottom: 8px;
+        }
+
+        .callout {
+            background: var(--orange-light);
+            border-left: 4px solid var(--orange);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+            font-style: italic;
+            color: var(--orange-dark);
+            font-weight: 500;
+        }
+
+        .check-prompt {
+            background: #elf5f3;
+            border-left: 4px solid var(--green-600);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+            color: var(--green-600);
+            font-weight: 500;
+        }
+
+        /* SVG Diagram */
+        .diagram-container {
+            background: var(--gray-100);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Self-Test Section */
+        .self-test-section {
+            background: var(--white);
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .self-test-section h2 {
+            color: var(--orange-dark);
+            font-size: 1.8em;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .question-item {
+            margin-bottom: 25px;
+            padding-bottom: 25px;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .question-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .question-text {
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: 10px;
+            font-size: 1.05em;
+        }
+
+        .bloom-tag {
+            display: inline-block;
+            background: var(--orange-light);
+            color: var(--orange-dark);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-right: 8px;
+            margin-bottom: 10px;
+        }
+
+        .answer-text {
+            background: var(--gray-50);
+            padding: 12px;
+            border-radius: 4px;
+            color: var(--gray-700);
+            margin-top: 8px;
+            line-height: 1.6;
+            font-size: 0.95em;
+        }
+
+        /* Practice Links */
+        .practice-section {
+            background: var(--white);
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            margin-top: 30px;
+        }
+
+        .practice-section h2 {
+            color: var(--orange-dark);
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .practice-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .practice-link {
+            background: linear-gradient(135deg, var(--orange-light) 0%, var(--white) 100%);
+            border: 2px solid var(--orange);
+            padding: 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .practice-link:hover {
+            background: linear-gradient(135deg, var(--orange) 0%, var(--orange-light) 100%);
+            color: var(--white);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(180, 83, 9, 0.2);
+        }
+
+        .practice-link:hover .practice-title,
+        .practice-link:hover .practice-icon {
+            color: var(--white);
+        }
+
+        .practice-icon {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            transition: color 0.3s ease;
+            color: var(--orange-dark);
+        }
+
+        .practice-title {
+            font-weight: 700;
+            font-size: 1.1em;
+            margin-bottom: 10px;
+            color: var(--orange-dark);
+            transition: color 0.3s ease;
+        }
+
+        .practice-description {
+            font-size: 0.9em;
+            color: var(--gray-700);
+        }
+
+        .practice-link:hover .practice-description {
+            color: var(--white);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: var(--gray-600);
+            border-top: 2px solid var(--gray-200);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .nav-tabs {
+                overflow-x: auto;
+            }
+
+            .steps-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .practice-links {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Hide/Show tabs */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>Philip and Alexander: Succession, Innovation & Military Genius</h1>
+            <p>ANHS2609: Alexander and the Hellenistic World</p>
+            <p style="margin-top: 10px; font-size: 1em;">Week 3 Visual Guide</p>
+            <div class="course-meta">
+                <strong>Focus:</strong> Philip II's reign, military innovations, succession tensions, and Alexander's rise to power
+            </div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress-container">
+            <div class="progress-label">
+                <span>Course Progress</span>
+                <span id="progress-text">Step 1 of 12</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill" style="width: 8.33%;"></div>
+            </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="nav-tabs">
+            <button class="tab-button active" onclick="switchTab('steps')">Learning Steps</button>
+            <button class="tab-button" onclick="switchTab('selftest')">Self-Test Questions</button>
+            <button class="tab-button" onclick="switchTab('practice')">Practice Lab</button>
+        </div>
+
+        <!-- STEPS TAB -->
+        <div id="steps" class="tab-content active">
+            <!-- Navigation for steps -->
+            <div style="display: flex; justify-content: space-between; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;">
+                <button onclick="previousStep()" style="padding: 10px 20px; background: var(--gray-200); border: none; border-radius: 4px; cursor: pointer; font-weight: 600;">← Previous</button>
+                <select id="step-selector" onchange="goToStep(this.value)" style="padding: 10px 15px; border: 2px solid var(--orange); border-radius: 4px; cursor: pointer; font-weight: 600; color: var(--gray-900);">
+                    <option value="0">Step 1: Philip's Theban Education</option>
+                    <option value="1">Step 2: The Vergina Royal Tombs</option>
+                    <option value="2">Step 3: Seven Military Innovations</option>
+                    <option value="3">Step 4: The Sarissa in Detail</option>
+                    <option value="4">Step 5: Battle of Chaeronea (338 BC)</option>
+                    <option value="5">Step 6: The Wedding Banquet Incident</option>
+                    <option value="6">Step 7: Alexander at Troy</option>
+                    <option value="7">Step 8: Demosthenes' Political Arc</option>
+                    <option value="8">Step 9: Alexander's Path to Power</option>
+                    <option value="9">Step 10: Ma's Question: Commander vs Army</option>
+                    <option value="10">Step 11: Evidence Evaluation</option>
+                    <option value="11">Step 12: Looking Ahead: The Fall of Persia</option>
+                </select>
+                <button onclick="nextStep()" style="padding: 10px 20px; background: var(--orange); color: var(--white); border: none; border-radius: 4px; cursor: pointer; font-weight: 600;">Next →</button>
+            </div>
+
+            <div class="steps-grid">
+                <!-- Step 1 -->
+                <div class="step-card active">
+                    <div class="step-number">1</div>
+                    <h3 class="step-title">Philip's Theban Education</h3>
+                    <div class="step-content">
+                        <p>As a teenager, Philip II was a hostage in Thebes — a situation that fundamentally shaped his understanding of power and military innovation.</p>
+                        <p><strong>Key mentors:</strong></p>
+                        <ul>
+                            <li><strong>Pelopidas</strong> — legendary leader of the Sacred Band of Thebes</li>
+                            <li><strong>Epaminondas</strong> — military genius who revolutionized Greek warfare with the oblique phalanx</li>
+                        </ul>
+                        <p>Philip studied their advanced military tactics and statecraft, then <strong>imported these innovations back to Macedon when he became king</strong>. This education is KEY to understanding Philip's military revolution.</p>
+                        <p style="margin-top: 15px;"><strong>Why this matters:</strong> Philip's early exposure to cutting-edge military thinking meant that Macedon, traditionally a peripheral kingdom, could leap ahead of the established Greek city-states in military sophistication.</p>
+                    </div>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <h3 class="step-title">The Vergina Royal Tombs</h3>
+                    <div class="step-content">
+                        <p>The archaeological site of Vergina in northern Greece provides some of our most important material evidence for the Macedonian royal family.</p>
+                        <p><strong>Key artifacts:</strong></p>
+                        <ul>
+                            <li><strong>Gold larnax</strong> (burial chest) — demonstrates royal wealth and craftsmanship</li>
+                            <li><strong>Ivory heads</strong> — sculptural portraiture of royal family members</li>
+                            <li><strong>Tomb contents</strong> — weapons, vessels, luxury goods</li>
+                        </ul>
+                        <p>These finds reveal:</p>
+                        <ul>
+                            <li>Advanced artistic and sculptural practices in the Macedonian court</li>
+                            <li>Sophisticated burial practices reflecting Hellenistic influence</li>
+                            <li>The material culture and wealth of the Macedonian elite</li>
+                        </ul>
+                        <div class="callout">Vergina provides some of our best material evidence for the Macedonian royal family — without it, we would rely almost entirely on Greek literary sources that often looked down on Macedon as barbaric.</div>
+                    </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <h3 class="step-title">Seven Military Innovations</h3>
+                    <div class="step-content">
+                        <p>Philip II didn't just create a bigger army — he fundamentally transformed how warfare was conducted. His seven major innovations collectively created the most formidable military force in the ancient world.</p>
+                        <ol style="margin-left: 25px; margin-bottom: 15px;">
+                            <li><strong>Sarissa:</strong> 15-20 foot pike, replacing shorter hoplite spears</li>
+                            <li><strong>Cavalry wedge formation:</strong> mobile, devastating strike forces</li>
+                            <li><strong>Professionalization:</strong> standing army with regular pay (not seasonal conscripts)</li>
+                            <li><strong>Pezhetairoi:</strong> elite "Companion" infantry units</li>
+                            <li><strong>Engineering corps:</strong> equipped with torsion catapults and siege technology</li>
+                            <li><strong>Baggage train reform:</strong> streamlined logistics for faster movement</li>
+                            <li><strong>Phalanx refinements:</strong> synchronized heavy infantry tactics</li>
+                        </ol>
+                        <p><strong>Combined effect:</strong> These innovations allowed Macedon to project power over vast distances, adapt to different terrain, and maintain operations longer than any rival. This system would dominate the Mediterranean for over a century.</p>
+                    </div>
+                </div>
+
+                <!-- Step 4 -->
+                <div class="step-card">
+                    <div class="step-number">4</div>
+                    <h3 class="step-title">The Sarissa in Detail</h3>
+                    <div class="step-content">
+                        <p>The sarissa is perhaps the most iconic symbol of Macedonian military superiority.</p>
+                        <p><strong>Physical specifications:</strong></p>
+                        <ul>
+                            <li><strong>Length:</strong> 15-20 feet (roughly 4.5-6 meters)</li>
+                            <li><strong>Comparison:</strong> Greek hoplite spear was only ~8 feet</li>
+                            <li><strong>Grip:</strong> Required both hands to wield</li>
+                            <li><strong>Shield:</strong> Soldiers carried smaller shields compared to traditional hoplites</li>
+                        </ul>
+                        <p><strong>Tactical advantage:</strong> In phalanx formation, multiple ranks of sarissa points extended far beyond the front line, creating an impenetrable wall that could devastate enemy formations before they closed to hand-to-hand combat.</p>
+                        <p><strong>Disadvantages:</strong> The sarissa was unwieldy in broken terrain and made the formation vulnerable to flanking attacks. Success depended on cohesion and discipline.</p>
+                        <div class="diagram-container">
+                            <svg width="400" height="250" viewBox="0 0 400 250">
+                                <!-- Title -->
+                                <text x="200" y="20" font-weight="bold" font-size="16" text-anchor="middle" fill="#b45309">Sarissa vs Hoplite Spear</text>
+                                
+                                <!-- Hoplite Spear -->
+                                <text x="80" y="50" font-size="12" font-weight="bold" fill="#666">Hoplite Spear (~8 ft)</text>
+                                <line x1="80" y1="60" x2="80" y2="160" stroke="#9ca3af" stroke-width="3"/>
+                                <circle cx="80" cy="60" r="4" fill="#2563eb"/>
+                                <polygon points="80,155 75,165 85,165" fill="#2563eb"/>
+                                
+                                <!-- Sarissa -->
+                                <text x="320" y="50" font-size="12" font-weight="bold" fill="#666">Sarissa (15-20 ft)</text>
+                                <line x1="320" y1="60" x2="320" y2="200" stroke="#f59e0b" stroke-width="3"/>
+                                <circle cx="320" cy="60" r="4" fill="#b45309"/>
+                                <polygon points="320,195 315,205 325,205" fill="#b45309"/>
+                                
+                                <!-- Measurement labels -->
+                                <text x="40" y="110" font-size="11" fill="#666">8 ft</text>
+                                <text x="340" y="130" font-size="11" fill="#666">15-20 ft</text>
+                                
+                                <!-- Formation callout -->
+                                <rect x="20" y="190" width="360" height="50" fill="#fffbeb" stroke="#f59e0b" stroke-width="2" rx="4"/>
+                                <text x="200" y="210" font-size="11" text-anchor="middle" fill="#b45309" font-weight="bold">In phalanx formation, overlapping</text>
+                                <text x="200" y="225" font-size="11" text-anchor="middle" fill="#b45309">sarissas created an impenetrable wall</text>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 5 -->
+                <div class="step-card">
+                    <div class="step-number">5</div>
+                    <h3 class="step-title">Battle of Chaeronea (338 BC)</h3>
+                    <div class="step-content">
+                        <p>Chaeronea was the decisive battle that gave Philip control over mainland Greece and marked the end of the classical Greek city-state system.</p>
+                        <p><strong>The matchup:</strong> Philip II and his Macedonian army faced a coalition of Athens and Thebes — the two great powers of classical Greece.</p>
+                        <p><strong>Alexander's role:</strong> At age 18, Alexander commanded the cavalry on the right flank and personally led the devastating charge that destroyed the Sacred Band of Thebes — the legendary unit that had mentored his father decades earlier.</p>
+                        <p><strong>Philip's contrasting aftermath strategy:</strong></p>
+                        <ul>
+                            <li><strong>Athens:</strong> Treated relatively mercifully, incorporated into the League of Corinth as an allied power</li>
+                            <li><strong>Thebes:</strong> Destroyed as a warning — a brutal message about the cost of resistance</li>
+                        </ul>
+                        <p><strong>Significance:</strong> Chaeronea ended the independence of the Greek city-states and established Macedonian hegemony. The victory demonstrated both Philip's military genius AND the terrible effectiveness of his innovations.</p>
+                    </div>
+                </div>
+
+                <!-- Step 6 -->
+                <div class="step-card">
+                    <div class="step-number">6</div>
+                    <h3 class="step-title">The Wedding Banquet Incident</h3>
+                    <div class="step-content">
+                        <p>This family drama reveals the volatile politics and succession anxieties of the Macedonian court.</p>
+                        <p><strong>The scene:</strong> Philip married Cleopatra Eurydice, a noblewoman from a prominent Macedonian family. At the wedding feast, her uncle Attalus stood to make a toast.</p>
+                        <p><strong>The insult:</strong> Attalus toasted, hoping for a "legitimate heir" — directly implying that Alexander (whose mother Olympias was from Epirus, not Macedon) was illegitimate.</p>
+                        <p><strong>The reaction:</strong></p>
+                        <ul>
+                            <li>Alexander threw his cup at Attalus in rage</li>
+                            <li>Philip drew his sword on his own son in anger</li>
+                            <li>Philip was so drunk he fell over trying to pursue Alexander</li>
+                        </ul>
+                        <p><strong>Alexander's cutting remark:</strong> "Look, here is a man preparing to cross from Europe to Asia, and he cannot cross from one couch to another" — a devastating mockery of his father's drunkenness and pretensions.</p>
+                        <p><strong>What it reveals:</strong> Deep family dysfunction, succession anxiety, questions about Alexander's legitimacy as a half-Macedonian heir, and the violent, unstable nature of Macedonian court politics.</p>
+                    </div>
+                </div>
+
+                <!-- Step 7 -->
+                <div class="step-card">
+                    <div class="step-number">7</div>
+                    <h3 class="step-title">Alexander at Troy</h3>
+                    <div class="step-content">
+                        <p>Before engaging the Persians, Alexander made a symbolic pilgrimage to Troy's ruins — deliberately constructing a mythological narrative for his campaign.</p>
+                        <p><strong>The pilgrimage:</strong> Alexander visited the supposed tomb of Achilles (his supposed ancestor through his mother Olympias) and performed elaborate rituals.</p>
+                        <p><strong>His actions:</strong></p>
+                        <ul>
+                            <li>Ran naked around Achilles' tomb in honor</li>
+                            <li>Laid a wreath at the site</li>
+                            <li>Declared that Achilles was blessed because Homer immortalized him</li>
+                        </ul>
+                        <p><strong>The propaganda:</strong> Alexander deliberately framed his Persian campaign as a new Trojan War — himself as a new Achilles, the Greeks as heroic warriors, the Persians as "barbarians" to be conquered.</p>
+                        <p><strong>Genuine belief or calculated propaganda?</strong> Almost certainly BOTH. Alexander genuinely identified with Achilles' ideals of honor and martial excellence AND strategically used this mythology to motivate troops, justify conquest, and connect his campaign to the foundational myths of Greek civilization.</p>
+                    </div>
+                </div>
+
+                <!-- Step 8 -->
+                <div class="step-card">
+                    <div class="step-number">8</div>
+                    <h3 class="step-title">Demosthenes' Political Arc</h3>
+                    <div class="step-content">
+                        <p>The Athenian orator Demosthenes' career shows the political reality of living under Macedonian domination.</p>
+                        <p><strong>The Philippics (351-341 BC):</strong> Four famous speeches where Demosthenes urged Athenian resistance to Philip's expansion.</p>
+                        <p><strong>His evolving role:</strong></p>
+                        <ul>
+                            <li>Gave passionate speeches against Macedonian power</li>
+                            <li>Participated in both military campaigns and diplomatic negotiations</li>
+                            <li>After Chaeronea (338 BC), continued political activity despite Macedonian domination</li>
+                            <li>Maintained his opposition to Macedonian rule until his death</li>
+                        </ul>
+                        <p><strong>His end (322 BC):</strong> Demosthenes died by suicide, refusing to submit to Macedonian authority. He remains a symbol of Greek resistance to domination.</p>
+                        <p><strong>Historical importance:</strong> His speeches are primary sources that reveal Athens' perspective on Philip — the fears, the political debates, and the sense that Greek independence was being lost.</p>
+                        <div class="check-prompt">How do Demosthenes' speeches help us understand the Athenian perspective on Philip's threat?</div>
+                    </div>
+                </div>
+
+                <!-- Step 9 -->
+                <div class="step-card">
+                    <div class="step-number">9</div>
+                    <h3 class="step-title">Alexander's Path to Power</h3>
+                    <div class="step-content">
+                        <p>Philip's assassination in 336 BC suddenly made Alexander king at age 20 — and he had to consolidate power immediately.</p>
+                        <p><strong>Securing the throne (336 BC):</strong></p>
+                        <ul>
+                            <li>Eliminated potential rivals within Macedon</li>
+                            <li>Consolidated support among the Macedonian nobility</li>
+                            <li>Inherited Philip's generals, administrators, and military infrastructure</li>
+                        </ul>
+                        <p><strong>Establishing authority (335-334 BC):</strong></p>
+                        <ul>
+                            <li>Quickly crushed Greek revolts against Macedonian rule</li>
+                            <li>Destroyed Thebes (335 BC) as a brutal warning — the same city that had mentored his father</li>
+                            <li>Demonstrated that he was as ruthless as Philip</li>
+                        </ul>
+                        <p><strong>What he inherited from Philip:</strong></p>
+                        <ul>
+                            <li>A professional, battle-tested, innovative army</li>
+                            <li>Control over Greece through the League of Corinth</li>
+                            <li>Detailed plans for invading Persia</li>
+                            <li>Administrative systems for governing conquered territory</li>
+                        </ul>
+                        <p><strong>What he added:</strong> Personal charisma, tactical genius, willingness to take enormous personal risks, and a vision of world conquest that transcended his father's ambitions.</p>
+                    </div>
+                </div>
+
+                <!-- Step 10 -->
+                <div class="step-card">
+                    <div class="step-number">10</div>
+                    <h3 class="step-title">Ma's Question: Commander vs Army</h3>
+                    <div class="step-content">
+                        <p>A central debate in Alexander scholarship concerns how much of his success came from personal leadership versus institutional inheritance from Philip.</p>
+                        <p><strong>The scholarly framework (Ma 2013):</strong> "Alexander's Decision-Making as Historical Problem" challenges the traditional "great man" narrative.</p>
+                        <p><strong>The core tension:</strong></p>
+                        <ul>
+                            <li><strong>On one hand:</strong> The Macedonian army was already formidable before Alexander. Philip had created the institutional framework, the tactical innovations, and the invasion plan.</li>
+                            <li><strong>On the other hand:</strong> Alexander's personal leadership, his willingness to fight alongside his men, his tactical improvisation, and his charisma transformed military campaign into conquest of the known world.</li>
+                        </ul>
+                        <p><strong>The historical question:</strong> Can we separate the commander from the institution? How much should we credit the army versus the man?</p>
+                        <p><strong>For your thinking:</strong> The best answer probably acknowledges that both were essential. Philip built a machine; Alexander drove it to places Philip never imagined. Neither without the other would have changed the world.</p>
+                    </div>
+                </div>
+
+                <!-- Step 11 -->
+                <div class="step-card">
+                    <div class="step-number">11</div>
+                    <h3 class="step-title">Evidence Evaluation: Comparing Philip and Alexander</h3>
+                    <div class="step-content">
+                        <p>A fundamental challenge in understanding Philip II is that <strong>we have far more literary evidence for Alexander than for Philip</strong>. This creates an imbalance in our historical record.</p>
+                        <p><strong>The evidence gap:</strong></p>
+                        <ul>
+                            <li><strong>For Philip:</strong> Fewer surviving texts, heavily biased Greek sources that treated him as "barbaric", limited contemporary accounts</li>
+                            <li><strong>For Alexander:</strong> Abundant accounts from Alexander's own historians, propaganda materials, and centuries of later writers fascinated by his legend</li>
+                        </ul>
+                        <p><strong>The consequence:</strong> Philip's achievements may be undervalued simply because later sources focused on Alexander. We might be telling an incomplete story.</p>
+                        <p><strong>How material evidence helps:</strong> The Vergina tombs provide archaeological evidence independent of literary bias. The tomb contents tell us about royal wealth, artistic sophistication, and material culture in ways that texts cannot.</p>
+                        <p><strong>Key insight:</strong> Good historical interpretation requires evaluating what we DON'T have as much as what we do. The absence of Alexander's own writings, the loss of Philip's records, and the survival bias of Greek texts all shape what we can know.</p>
+                    </div>
+                </div>
+
+                <!-- Step 12 -->
+                <div class="step-card">
+                    <div class="step-number">12</div>
+                    <h3 class="step-title">Looking Ahead: The Fall of Persia</h3>
+                    <div class="step-content">
+                        <p>By the end of Week 3, Alexander possesses everything needed to transform the ancient world.</p>
+                        <p><strong>What he has:</strong></p>
+                        <ul>
+                            <li>The throne of Macedon and Greece</li>
+                            <li>An army that has proven itself invincible</li>
+                            <li>Control over the resources of the richest power in the Greek world</li>
+                            <li>A detailed invasion plan inherited from Philip</li>
+                            <li>Support from Greek city-states (through the League of Corinth)</li>
+                            <li>His own personal ambition to exceed his father</li>
+                        </ul>
+                        <p><strong>What comes next (Week 4):</strong> The conquest of the Persian Empire — the greatest superpower of the ancient world.</p>
+                        <p><strong>The major battles:</strong></p>
+                        <ul>
+                            <li><strong>Granicus River (334 BC):</strong> Alexander's first major victory against Persian forces</li>
+                            <li><strong>Issus (333 BC):</strong> Confrontation with the Great King himself</li>
+                            <li><strong>Gaugamela (331 BC):</strong> The decisive battle that ended the Persian Empire</li>
+                        </ul>
+                        <p><strong>The stakes:</strong> What began as Philip's plan for a Greek invasion of Persia became Alexander's total conquest of the Persian Empire. Over the next decade, Alexander would create an empire stretching from Greece to India — fundamentally reshaping the ancient world and initiating the Hellenistic age.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SELF-TEST TAB -->
+        <div id="selftest" class="tab-content">
+            <div class="self-test-section">
+                <h2>Self-Test Questions: Week 3</h2>
+                <p style="margin-bottom: 20px; color: var(--gray-700);">Test your understanding with these 12 questions covering all major concepts from this week. Answers reveal on click — attempt the question first before looking!</p>
+
+                <!-- Q1 -->
+                <div class="question-item">
+                    <div class="question-text">
+                        Q1: Name three of Philip II's seven military innovations.
+                    </div>
+                    <span class="bloom-tag">Remembering</span>
+                    <button onclick="toggleAnswer(this)" style="background: var(--orange); color: var(--white); padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; margin-bottom: 10px;">Show Answer</button>
+                    <div class="answer-text" style="display: none;">
+                        <strong>Any three of the following:</strong> sarissa (15-20 foot pike), cavalry wedge formation, professionalization with pay scales, Pezhetairoi (elite infantry), engineering corps with torsion catapults, baggage train reform, phalanx refinements.
+                    </div>
+                </div>
+
+                <!-- Q2 -->
+                <div class="question-item">
+                    <div class="question-text">
+                        Q2: Why was Philip's time as a hostage in Thebes important for Macedon's military development?
+                    </div>
+                    <span class="bloom-tag">Understanding</span>
+                    <button onclick="toggleAnswer(this)" style="background: var(--orange); color: var(--white); padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; margin-bottom: 10px;">Show Answer</button>
+                    <div class="answer-text" style="display: none;">
+                        Philip learned advanced military tactics and statecraft from Pelopidas and Epaminondas, leaders of the Sacred Band of Thebes. When he became king of Macedon, he imported these innovations into his own military system, creating the most powerful army in the Greek world.
+                    </div>
+                </div>
+
+                <!-- Q3 -->
+                <div class="question-item">
+                    <div class="question-text">
+                        Q3: What happened at the Battle of Chaeronea (338 BC)?
+                    </div>
+                    <span class="bloom-tag">Remembering</span>
+                    <button onclick="toggleAnswer(this)" style="background: var(--orange); color: var(--white); padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; margin-bottom: 10px;">Show Answer</button>
+                    <div class="answer-text" style="display: none;">
+                        Philip II defeated a coalition of Athens and Thebes. Alexander, age 18, commanded the right flank cavalry and personally led a devastating charge that destroyed the Sacred Band of Thebes. This victory gave Macedon control over mainland Greece and ended the independence of the Greek city-states.
+                    </div>
+                </div>
+
+                <!-- Q4 -->
+                <div class="question-item">
+                    <div class="question-text">
+                        Q4: Why did Philip treat Athens and Thebes differently after Chaeronea?
+                    </div>
+                    <span class="bloom-tag">Analysing</span>
+                    <button onclick="toggleAnswer(this)" style="background: var(--orange); color: var(--white); padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; margin-bottom: 10px;">Show Answer</button>
+                    <div class="answer-text" style="display: none;">
+                        Philip was relatively merciful to Athens, incorporating it into the League of Corinth as an allied power, because Athens could be useful as an ally. Thebes was completely destroyed as a brutal warning — demonstrating the cost of resistance. This shows Philip's strategic thinking: preserve what could serve him, and make examples of those who challenged him.
+                    </div>
+                </div>
+
+                <!-- Q5 -->
+                <div class="question-item">
+                    <div class="question-text">
+                        Q5: What does the wedding banquet incident reveal about Macedonian court politics?
+                    </div>
+                    <span class="bloom-tag">Analysing</span>
+                    <button onclick="toggleAnswer(this)" style="background: var(--orange); color: var(--white); padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; margin-bottom: 10px;">Show Answer</button>
+                    <div class="answer-text" style="display: none;">
+                        The incident reveals: (1) deep tensions about Alexander's legitimacy (his mother Olympias was from Epirus, not purely Macedonian), (2) family dysfunction and succession anxiety, (3) questions about who would inherit the throne, and (4) the volatile and often violent nature of Macedonian court life where disputes could escalate instantly.
+                    </div>
+                </div>
+
+                <!-- Q6 -->
+                <div class="question-item">
+                    <div class="question-text">
+                        Q6: Was Alexander's visit to Troy genuine heroic devotion or calculated propaganda? Defend your answer.
+                    </div>
+                    <span class="bloom-tag">Evaluating</span>
+                    <button onclick="toggleAnswer(this)" style="background: var(--orange); color: var(--white); padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; margin-bottom: 10px;">Show Answer</button>
+                    <div class="answer-text" style="display: none;">
+                        <strong>Open-ended answer.</strong> The best responses acknowledge BOTH elements: Alexander genuinely identified with Achilles' ideals of honor and martial excellence (he grew up reading Homer). AND he strategically used this mythology to motivate troops, justify conquest as a heroic endeavor, and connect his campaign to the foundational myths of Greek civilization. Great historical figures often combine genuine belief with political calculation.
+                    </div>
+                </div>
+
+                <!-- Q7 -->
+                <div class="question-item">
+                    <div class="question-text">
+                        Q7: What is a sarissa and how did it differ from a standard Greek hoplite spear?
+                    </div>
+                    <span class="bloom-tag">Remembering</span>
+                    <button onclick="toggleAnswer(this)" style="background: var(--orange); color: var(--white); padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; margin-bottom: 10px;">Show Answer</button>
+                    <div class="answer-text" style="display: none;">
+                        A sarissa is a 15-20 foot pike (compared to the hoplite spear at ~8 feet). It required two hands to wield, necessitating a smaller shield. In phalanx formation, overlapping sarissas created an impenetrable wall of spear points, giving Macedonian infantry a decisive advantage in head-to-head battles.
+                    </div>
+                </div>
+
+                <!-- Q8 -->
+                <div class="question-item">
+                    <div class="question-text">
+                        Q8: What does the Vergina archaeological site tell us about the Macedonian royal family?
+                    </div>
+                    <span class="bloom-tag">Understanding</span>
+                    <button onclick="toggleAnswer(this)" style="background: var(--orange); color: var(--white); padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; margin-bottom: 10px;">Show Answer</button>
+                    <div class="answer-text" style="display: none;">
+                        The gold larnax, ivory sculptural heads, and tomb contents reveal: the royal family's considerable wealth, their artistic sophistication and patronage of fine crafts, advanced burial practices reflecting Hellenistic influence, and the material culture of the Macedonian court. This archaeological evidence is crucial because it comes independent of Greek literary sources that often depicted Macedon as barbaric.
+                    </div>
+                </div>
+
+                <!-- Q9 -->
+                <div class="question-item">
+                    <div class="question-text">
+                        Q9: Using Ma's framework, argue whether Alexander's military success was primarily due to personal leadership or institutional inheritance from Philip.
+                    </div>
+                    <span class="bloom-tag">Applying</span>
+                    <button onclick="toggleAnswer(this)" style="background: var(--orange); color: var(--white); padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; margin-bottom: 10px;">Show Answer</button>
+                    <div class="answer-text" style="display: none;">
+                        <strong>Open-ended answer.</strong> Strong responses should: acknowledge that Philip created the institutional foundations (army, tactics, invasion plan), explain that Alexander inherited a formidable military machine, but then show how Alexander's personal charisma, tactical genius, willingness to lead from the front, and strategic vision transformed conquest into world domination. The best answer concludes that neither the commander nor the institution alone would have succeeded — both were necessary.
+                    </div>
+                </div>
+
+                <!-- Q10 -->
+                <div class="question-item">
+                    <div class="question-text">
+                        Q10: How did Alexander secure his throne after Philip's assassination in 336 BC?
+                    </div>
+                    <span class="bloom-tag">Remembering</span>
+                    <button onclick="toggleAnswer(this)" style="background: var(--orange); color: var(--white); padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; margin-bottom: 10px;">Show Answer</button>
+                    <div class="answer-text" style="display: none;">
+                        Alexander eliminated potential rivals within Macedon, consolidated support from the Macedonian nobility, and quickly crushed Greek revolts. He destroyed Thebes in 335 BC as a brutal warning to demonstrate that he was as ruthless as his father and would tolerate no challenge to his rule.
+                    </div>
+                </div>
+
+                <!-- Q11 -->
+                <div class="question-item">
+                    <div class="question-text">
+                        Q11: Why might Philip II's achievements be undervalued in ancient sources?
+                    </div>
+                    <span class="bloom-tag">Understanding</span>
+                    <button onclick="toggleAnswer(this)" style="background: var(--orange); color: var(--white); padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; margin-bottom: 10px;">Show Answer</button>
+                    <div class="answer-text" style="display: none;">
+                        Later authors focused on Alexander's more dramatic and extensive campaigns, giving him the lion's share of historical attention. We have far more literary evidence for Alexander than for Philip. Material evidence from Vergina helps redress this imbalance by providing independent evidence for Macedonian court sophistication and royal culture.
+                    </div>
+                </div>
+
+                <!-- Q12 -->
+                <div class="question-item">
+                    <div class="question-text">
+                        Q12: How did Alexander frame his Persian campaign in mythological terms, and why?
+                    </div>
+                    <span class="bloom-tag">Analysing</span>
+                    <button onclick="toggleAnswer(this)" style="background: var(--orange); color: var(--white); padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; margin-bottom: 10px;">Show Answer</button>
+                    <div class="answer-text" style="display: none;">
+                        Alexander framed his Persian campaign as a new Trojan War — Greeks vs "barbarians" — with himself as a new Achilles. This provided cultural legitimacy by connecting to Homer and Greek foundational myths, motivated troops by giving them a heroic narrative, justified conquest as a civilizational struggle, and leveraged Alexander's own identification with Achilles (his supposed ancestor) to claim quasi-divine status.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PRACTICE TAB -->
+        <div id="practice" class="tab-content">
+            <div class="practice-section">
+                <h2>Practice Lab Tools</h2>
+                <p style="margin-bottom: 25px; color: var(--gray-700);">Deepen your learning with these interactive practice tools. Click any card to launch the practice lab.</p>
+                
+                <div class="practice-links">
+                    <!-- Practice 1 -->
+                    <div class="practice-link" onclick="window.parent.openPracticeLabTool('map', 3)">
+                        <div class="practice-icon">Map</div>
+                        <div class="practice-title">Map Quiz Practice</div>
+                        <div class="practice-description">Master battle sites and key locations for the EFT Map Quiz</div>
+                    </div>
+
+                    <!-- Practice 2 -->
+                    <div class="practice-link" onclick="window.parent.openPracticeLabTool('concepts', 3)">
+                        <div class="practice-icon">Military</div>
+                        <div class="practice-title">Military Innovations Drill</div>
+                        <div class="practice-description">Test your knowledge of Philip's seven military reforms</div>
+                    </div>
+
+                    <!-- Practice 3 -->
+                    <div class="practice-link" onclick="window.parent.openPracticeLabTool('timeline', 3)">
+                        <div class="practice-icon">Timeline</div>
+                        <div class="practice-title">Timeline Practice</div>
+                        <div class="practice-description">From Philip's rise to Alexander's early campaigns</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>ANHS2609 Visual Guide — Week 3: Philip and Alexander</p>
+            <p style="font-size: 0.9em; margin-top: 10px;">Standalone HTML guide | Orange theme | 12 learning steps | Self-assessment tools</p>
+        </div>
+    </div>
+
+    <script>
+        const totalSteps = 12;
+        let currentStep = 0;
+
+        // Tab switching
+        function switchTab(tabName) {
+            // Hide all tabs
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.remove('active'));
+
+            // Remove active class from all buttons
+            const buttons = document.querySelectorAll('.tab-button');
+            buttons.forEach(btn => btn.classList.remove('active'));
+
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+
+            // Add active class to clicked button
+            event.target.classList.add('active');
+        }
+
+        // Step navigation
+        function showStep(stepIndex) {
+            if (stepIndex < 0 || stepIndex >= totalSteps) return;
+
+            currentStep = stepIndex;
+
+            // Hide all step cards
+            const cards = document.querySelectorAll('.step-card');
+            cards.forEach(card => card.classList.remove('active'));
+
+            // Show current step
+            cards[currentStep].classList.add('active');
+
+            // Update selector
+            document.getElementById('step-selector').value = currentStep;
+
+            // Update progress
+            updateProgress();
+
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function nextStep() {
+            showStep(currentStep + 1);
+        }
+
+        function previousStep() {
+            showStep(currentStep - 1);
+        }
+
+        function goToStep(value) {
+            showStep(parseInt(value));
+        }
+
+        function updateProgress() {
+            const percentage = ((currentStep + 1) / totalSteps) * 100;
+            document.getElementById('progress-fill').style.width = percentage + '%';
+            document.getElementById('progress-text').textContent = `Step ${currentStep + 1} of ${totalSteps}`;
+        }
+
+        // Answer toggle for self-test
+        function toggleAnswer(button) {
+            const answerDiv = button.nextElementSibling;
+            if (answerDiv.style.display === 'none') {
+                answerDiv.style.display = 'block';
+                button.textContent = 'Hide Answer';
+            } else {
+                answerDiv.style.display = 'none';
+                button.textContent = 'Show Answer';
+            }
+        }
+
+        // Initialize
+        showStep(0);
+    </script>
+</body>
+</html>

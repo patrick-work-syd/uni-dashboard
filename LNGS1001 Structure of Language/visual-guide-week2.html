@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LNGS1001 — Week 2 Visual Guide</title>
+<style>
+:root {
+  --green: #10b981; --green-light: #ecfdf5; --green-dark: #065f46;
+  --blue: #3b82f6; --blue-light: #eff6ff;
+  --orange: #f59e0b; --orange-light: #fffbeb;
+  --purple: #8b5cf6; --purple-light: #f5f3ff;
+  --red: #ef4444; --red-light: #fef2f2;
+  --gray-50: #f8fafc; --gray-100: #f1f5f9; --gray-200: #e2e8f0;
+  --gray-400: #94a3b8; --gray-600: #475569; --gray-800: #1e293b;
+  --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --mono: 'SF Mono', 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: var(--font); background: var(--gray-50); color: var(--gray-800); line-height: 1.65; }
+
+.header { background: linear-gradient(135deg, var(--green-dark) 0%, var(--green) 100%); color: #fff; padding: 32px 0 28px; }
+.header-inner { max-width: 800px; margin: 0 auto; padding: 0 24px; }
+.header-tag { font-size: 12px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; opacity: 0.8; margin-bottom: 8px; }
+.header h1 { font-size: 26px; font-weight: 700; margin-bottom: 4px; }
+.header p { font-size: 14px; opacity: 0.85; }
+.header-reassure { margin-top: 14px; padding: 12px 16px; background: rgba(255,255,255,0.12); border-radius: 10px; font-size: 13px; line-height: 1.5; }
+
+.progress-bar { max-width: 800px; margin: 0 auto; padding: 16px 24px 0; }
+.progress-track { background: var(--gray-200); height: 6px; border-radius: 3px; overflow: hidden; }
+.progress-fill { background: var(--green); height: 100%; width: 0%; border-radius: 3px; transition: width 0.5s ease; }
+.progress-label { font-size: 12px; color: var(--gray-400); margin-top: 6px; text-align: right; }
+
+.content { max-width: 800px; margin: 0 auto; padding: 24px; }
+
+.step { background: #fff; border: 1px solid var(--gray-200); border-radius: 16px; margin-bottom: 20px; overflow: hidden; }
+.step-header { display: flex; align-items: center; gap: 12px; padding: 18px 22px; cursor: pointer; user-select: none; }
+.step-header:hover { background: var(--gray-50); }
+.step-num { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; flex-shrink: 0; }
+.step-num.locked { background: var(--gray-200); color: var(--gray-400); }
+.step-num.active { background: var(--green); color: #fff; }
+.step-num.done { background: var(--green); color: #fff; }
+.step-title { flex: 1; }
+.step-title h3 { font-size: 16px; font-weight: 600; }
+.step-title .step-sub { font-size: 12px; color: var(--gray-400); margin-top: 1px; }
+.step-chevron { font-size: 18px; color: var(--gray-400); transition: transform 0.2s; }
+.step.open .step-chevron { transform: rotate(90deg); }
+.step-body { display: none; padding: 0 22px 22px; }
+.step.open .step-body { display: block; }
+
+.diagram { background: var(--gray-50); border: 1px solid var(--gray-200); border-radius: 12px; padding: 20px; margin: 14px 0; text-align: center; overflow-x: auto; }
+.diagram svg { max-width: 100%; height: auto; }
+
+.prose { font-size: 15px; color: var(--gray-600); margin: 12px 0; }
+.prose strong { color: var(--gray-800); }
+
+.label { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 4px; }
+.label-idea { color: var(--green); } .label-how { color: var(--blue); } .label-trap { color: var(--red); } .label-why { color: var(--purple); } .label-tip { color: var(--orange); }
+
+.compare { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 14px 0; }
+@media (max-width: 600px) { .compare { grid-template-columns: 1fr; } }
+.cmp-box { border-radius: 10px; padding: 14px; }
+.cmp-box.informal { background: var(--orange-light); border: 1px solid #fed7aa; }
+.cmp-box.formal { background: var(--blue-light); border: 1px solid #bfdbfe; }
+.cmp-box.before { background: var(--red-light); border: 1px solid #fecaca; }
+.cmp-box.after { background: var(--green-light); border: 1px solid #a7f3d0; }
+.cmp-box h4 { font-size: 12px; font-weight: 700; margin-bottom: 6px; }
+.cmp-box.informal h4 { color: #b45309; } .cmp-box.formal h4 { color: var(--blue-dark); }
+.cmp-box.before h4 { color: var(--red); } .cmp-box.after h4 { color: var(--green-dark); }
+.cmp-box p { font-size: 13px; line-height: 1.55; }
+
+.callout { display: flex; gap: 10px; padding: 14px 16px; border-radius: 10px; margin: 14px 0; font-size: 14px; line-height: 1.55; }
+.callout-icon { font-size: 18px; flex-shrink: 0; line-height: 1.5; }
+.callout.tip { background: var(--blue-light); border: 1px solid #bfdbfe; }
+.callout.warn { background: var(--red-light); border: 1px solid #fecaca; }
+.callout.ok { background: var(--green-light); border: 1px solid #a7f3d0; }
+
+.analogy { background: var(--purple-light); border: 1px solid #ddd6fe; border-radius: 12px; padding: 16px; margin: 14px 0; }
+.analogy-label { font-size: 11px; font-weight: 700; color: var(--purple); letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 4px; }
+.analogy p { font-size: 14px; color: var(--gray-600); }
+
+.check { background: var(--green-light); border: 1px solid #a7f3d0; border-radius: 12px; padding: 18px; margin: 18px 0; }
+.check-title { font-size: 13px; font-weight: 700; color: var(--green); margin-bottom: 6px; }
+.check-q { font-size: 14px; margin-bottom: 10px; }
+.check textarea { width: 100%; padding: 8px 10px; border: 1px solid #a7f3d0; border-radius: 8px; font-family: var(--font); font-size: 13px; resize: vertical; min-height: 44px; background: #fff; }
+.check textarea:focus { outline: 2px solid var(--green); border-color: transparent; }
+.check-reveal { margin-top: 8px; }
+.check-reveal button { background: var(--green); color: #fff; border: none; padding: 7px 16px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; }
+.check-reveal button:hover { background: #059669; }
+.check-reveal button:disabled { background: var(--gray-400); cursor: not-allowed; }
+.check-answer { display: none; margin-top: 10px; padding: 12px; background: #fff; border-radius: 8px; border: 1px solid #a7f3d0; font-size: 13px; line-height: 1.6; }
+.check-answer.show { display: block; }
+.check-rating { display: none; margin-top: 8px; gap: 8px; }
+.check-rating.show { display: flex; }
+.check-rating button { padding: 5px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid var(--gray-200); background: #fff; }
+.check-rating .got-it { color: var(--green); border-color: #a7f3d0; }
+.check-rating .not-yet { color: var(--red); border-color: #fecaca; }
+
+.lab-link { display: flex; align-items: center; gap: 10px; padding: 14px 16px; background: #fff; border: 2px solid var(--green); border-radius: 12px; margin: 16px 0; text-decoration: none; color: var(--gray-800); transition: all 0.15s; }
+.lab-link:hover { background: var(--green-light); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(16,185,129,0.15); }
+.lab-link-icon { font-size: 24px; }
+.lab-link-text { flex: 1; }
+.lab-link-title { font-size: 14px; font-weight: 700; color: var(--green-dark); }
+.lab-link-desc { font-size: 12px; color: var(--gray-400); }
+.lab-link-arrow { font-size: 18px; color: var(--green); font-weight: 700; }
+
+.summary-box { padding: 18px; border-radius: 12px; margin: 18px 0; }
+.summary-box.green { background: var(--green-light); border: 1px solid #a7f3d0; }
+.summary-box h4 { font-size: 15px; margin-bottom: 6px; color: var(--green-dark); }
+.summary-box p { font-size: 14px; color: var(--gray-600); }
+
+.self-test { background: #fff; border: 2px solid var(--orange); border-radius: 16px; padding: 22px; margin: 28px 0; }
+.self-test-title { font-size: 18px; font-weight: 700; color: var(--orange); margin-bottom: 4px; }
+.self-test-sub { font-size: 13px; color: var(--gray-400); margin-bottom: 16px; }
+.st-q { margin-bottom: 16px; }
+.st-q-header { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.st-q-num { font-size: 12px; font-weight: 700; color: var(--orange); background: var(--orange-light); padding: 2px 8px; border-radius: 4px; }
+.st-q-bloom { font-size: 10px; color: var(--gray-400); }
+.st-q p { font-size: 14px; margin-bottom: 6px; }
+.st-q textarea { width: 100%; padding: 8px 10px; border: 1px solid #fed7aa; border-radius: 8px; font-family: var(--font); font-size: 13px; resize: vertical; min-height: 44px; background: #fff; }
+.st-q textarea:focus { outline: 2px solid var(--orange); border-color: transparent; }
+.st-q .check-reveal button { background: var(--orange); }
+.st-q .check-reveal button:hover { background: #d97706; }
+.st-q .check-reveal button:disabled { background: var(--gray-400); }
+.st-q .check-answer { border-color: #fed7aa; }
+
+.nav-footer { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; border-top: 1px solid var(--gray-200); margin-top: 28px; }
+.nav-btn { display: inline-flex; align-items: center; gap: 6px; padding: 9px 18px; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; border: 1px solid var(--gray-200); background: #fff; color: var(--gray-600); text-decoration: none; }
+.nav-btn:hover { background: var(--gray-100); }
+.nav-btn.primary { background: var(--green); color: #fff; border-color: var(--green); }
+.nav-btn.primary:hover { background: var(--green-dark); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="header-tag">LNGS1001 · Week 2 · Visual Guide</div>
+    <h1>Phonetics I: Consonants</h1>
+    <p>10 steps · work through at your own pace · each builds on the last</p>
+    <div class="header-reassure">
+      Week 2 gets technical — but every concept maps to something you can feel in your own mouth. Touch your throat, feel your tongue, and use your body as a lab.
+    </div>
+  </div>
+</div>
+
+<div class="progress-bar">
+  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="progress-label" id="progressLabel">0 of 10 complete</div>
+</div>
+
+<div class="content">
+
+<!-- ============ STEP 1 ============ -->
+<div class="step open" id="step-1" data-step="1">
+  <div class="step-header" onclick="toggleStep(1)">
+    <div class="step-num active">1</div>
+    <div class="step-title"><h3>From Spelling to Sound</h3><div class="step-sub">Why we need phonetics</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">Week 1 showed that writing ≠ sound. This week we learn how to scientifically describe speech sounds. <strong>Phonetics is the empirical study of speech sounds</strong> — production (articulatory), transmission (acoustic), and perception (auditory). We focus on articulatory phonetics: how we physically make sounds using our lungs, larynx, and vocal tract.</p>
+    <div class="compare">
+      <div class="cmp-box informal"><h4>Everyday notion</h4><p>I make sounds with my mouth</p></div>
+      <div class="cmp-box formal"><h4>Linguistic definition</h4><p>Speech is pulmonic egressive airflow modified by articulators in the supralaryngeal vocal tract</p></div>
+    </div>
+    <p class="prose">This week, we focus specifically on <strong>consonants</strong> — sounds made by obstructing, narrowing, or diverting airflow. Next week we'll tackle vowels, which have unobstructed airflow.</p>
+    <div class="check" data-check="1">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">What are the three branches of phonetics, and which one does this course focus on?</div>
+      <textarea placeholder="Type your answer first…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer">The three branches are: (1) Articulatory phonetics — how we produce sounds; (2) Acoustic phonetics — how sound travels and what its physical properties are; (3) Auditory/perceptual phonetics — how we hear and perceive sounds. This course focuses on articulatory phonetics — understanding how the vocal tract makes consonants and vowels.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 2 ============ -->
+<div class="step" id="step-2" data-step="2">
+  <div class="step-header" onclick="toggleStep(2)">
+    <div class="step-num locked">2</div>
+    <div class="step-title"><h3>The Vocal Tract</h3><div class="step-sub">Your personal sound lab</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">Air from your lungs passes through the larynx (containing vocal folds), then through the <strong>supralaryngeal vocal tract</strong>. We modify this airflow using <strong>active articulators</strong> (tongue, lips — things that move) and <strong>passive articulators</strong> (teeth, hard palate, alveolar ridge — things that stay still).</p>
+    <div class="diagram">
+      <svg viewBox="0 0 400 320" xmlns="http://www.w3.org/2000/svg" style="max-width:380px">
+        <style>svg text{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;}</style>
+        <defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#10b981"/></marker></defs>
+        <!-- Lungs -->
+        <rect x="20" y="240" width="60" height="60" rx="8" fill="#d1fae5" stroke="#10b981" stroke-width="2"/>
+        <text x="50" y="275" text-anchor="middle" font-size="12" font-weight="700" fill="#065f46">Lungs</text>
+        <!-- Larynx -->
+        <circle cx="130" cy="260" r="20" fill="#a7f3d0" stroke="#10b981" stroke-width="2"/>
+        <text x="130" y="263" text-anchor="middle" font-size="10" font-weight="700" fill="#065f46">Larynx</text>
+        <text x="130" y="290" text-anchor="middle" font-size="9" fill="#475569">(vocal folds)</text>
+        <!-- Arrow -->
+        <path d="M 80 260 L 110 260" stroke="#10b981" stroke-width="2.5" marker-end="url(#arrow)"/>
+        <!-- Pharynx & Vocal Tract (side view outline) -->
+        <path d="M 150 120 Q 160 140 170 160 L 170 220 Q 170 240 160 250 Q 140 270 120 280 L 120 300 Q 120 320 140 320 L 200 320 Q 220 310 220 280 L 220 240 Q 230 200 240 160 Q 250 140 260 120 Z" fill="none" stroke="#10b981" stroke-width="2" opacity="0.4"/>
+        <!-- Pharynx label -->
+        <text x="155" y="200" font-size="11" font-weight="700" fill="#065f46">Pharynx</text>
+        <!-- Hard palate -->
+        <path d="M 180 140 Q 210 130 240 135" stroke="#10b981" stroke-width="2.5" fill="none"/>
+        <text x="240" y="120" font-size="10" fill="#065f46">Hard palate</text>
+        <!-- Alveolar ridge -->
+        <path d="M 200 155 Q 220 150 240 155" stroke="#10b981" stroke-width="2.5" fill="none"/>
+        <text x="245" y="150" font-size="10" fill="#065f46">Alveolar ridge</text>
+        <!-- Teeth -->
+        <rect x="200" y="165" width="25" height="25" rx="3" fill="none" stroke="#10b981" stroke-width="2"/>
+        <text x="215" y="200" text-anchor="middle" font-size="10" fill="#065f46">Teeth</text>
+        <!-- Lips -->
+        <path d="M 220 310 Q 240 305 260 310" stroke="#10b981" stroke-width="3" fill="none"/>
+        <text x="260" y="315" font-size="10" fill="#065f46">Lips</text>
+        <!-- Tongue (active articulator) -->
+        <ellipse cx="200" cy="220" rx="30" ry="20" fill="#dbeafe" stroke="#3b82f6" stroke-width="2" stroke-dasharray="5,5"/>
+        <text x="200" y="215" text-anchor="middle" font-size="10" font-weight="700" fill="#1e40af">Tongue</text>
+        <text x="200" y="240" text-anchor="middle" font-size="9" fill="#1e40af">(active)</text>
+        <!-- Legend -->
+        <rect x="20" y="10" width="140" height="50" rx="6" fill="#ecfdf5" stroke="#10b981" stroke-width="1.5"/>
+        <text x="30" y="28" font-size="11" font-weight="700" fill="#065f46">Vocal Tract Components</text>
+        <rect x="30" y="35" width="8" height="8" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.5"/>
+        <text x="42" y="40" font-size="10" fill="#475569">Active articulators</text>
+        <rect x="30" y="48" width="8" height="8" fill="none" stroke="#10b981" stroke-width="2"/>
+        <text x="42" y="53" font-size="10" fill="#475569">Passive articulators</text>
+      </svg>
+    </div>
+    <div class="callout tip"><div class="callout-icon">💡</div><div><strong>Pro tip:</strong> Run your finger along the roof of your mouth from your teeth backward. You'll feel the hard palate, then a soft bump (velar area). These are the places where your tongue contacts to make different sounds.</div></div>
+    <div class="check" data-check="2">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">Name two active articulators and two passive articulators.</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer">Active articulators (things that move): tongue, lips, vocal folds. Passive articulators (things that stay still): teeth, hard palate, alveolar ridge, pharyngeal walls. The key distinction is that active articulators move toward a passive one to create an obstruction or narrowing.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 3 ============ -->
+<div class="step" id="step-3" data-step="3">
+  <div class="step-header" onclick="toggleStep(3)">
+    <div class="step-num locked">3</div>
+    <div class="step-title"><h3>Voicing</h3><div class="step-sub">Vocal fold vibration makes all the difference</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">Place your hand on your throat. Say "ssss" — no vibration (voiceless). Say "zzzz" — vibration (voiced). <strong>The only difference between /s/ and /z/ is whether your vocal folds vibrate.</strong> Same distinction applies to /f/ vs /v/, /p/ vs /b/, /t/ vs /d/.</p>
+    <div class="compare">
+      <div class="cmp-box informal"><h4>Everyday observation</h4><p>Some sounds buzz in your throat</p></div>
+      <div class="cmp-box formal"><h4>Linguistic definition</h4><p>Voiced sounds involve vibration of the vocal folds; voiceless sounds do not</p></div>
+    </div>
+    <div class="callout ok"><div class="callout-icon">✋</div><div><strong>The voicing test:</strong> On the IPA chart, voiced sounds appear on the RIGHT side of a cell, voiceless on the LEFT. This matters because many consonants differ ONLY in voicing — they are identical in place and manner.</div></div>
+    <div class="callout tip"><div class="callout-icon">💡</div><div><strong>Try this:</strong> Say "a pair" slowly. You'll feel vibration stop at the /p/ and restart at the vowel. Now say "a bear" — vibration continues the whole way through. Your vocal folds shut down for voiceless /p/ but stay vibrating for voiced /b/.</div></div>
+    <div class="check" data-check="3">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">Put your hand on your throat and say /f/ then /v/. What's the single physical difference between them?</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer">/f/ is voiceless (no vibration in your throat); /v/ is voiced (you feel vibration). Both are made by placing your lower lip against your upper teeth and creating turbulent airflow. The ONLY difference is voicing — whether the vocal folds vibrate. They are a voiced–voiceless pair.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 4 ============ -->
+<div class="step" id="step-4" data-step="4">
+  <div class="step-header" onclick="toggleStep(4)">
+    <div class="step-num locked">4</div>
+    <div class="step-title"><h3>Aspiration</h3><div class="step-sub">The puff of air you never noticed</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">Hold your hand in front of your mouth. Say "pair" — feel a puff of air on the /p/. Now say "spare" — no puff on the /p/. The first is aspirated [pʰ], the second is unaspirated [p]. <strong>In English, voiceless stops (/p/, /t/, /k/) are aspirated at the start of a word but unaspirated after /s/.</strong> Aspiration is marked with a superscript ʰ.</p>
+    <div class="compare">
+      <div class="cmp-box informal"><h4>Naive view</h4><p>The P in "pin" and "spin" sound the same</p></div>
+      <div class="cmp-box formal"><h4>Phonetic reality</h4><p>"Pin" /pʰɪn/ has aspirated [pʰ]; "spin" /spɪn/ has unaspirated [p]. They're acoustically different, but English treats them as the same phoneme</p></div>
+    </div>
+    <div class="callout warn"><div class="callout-icon">⚠️</div><div><strong>Aspiration is predictable in English:</strong> You don't need to learn which words are aspirated. The rule is automatic: voiceless stops are aspirated word-initially (and before stressed vowels) but unaspirated after /s/. This is why aspiration is not contrastive in English — it's determined by the environment.</div></div>
+    <div class="check" data-check="4">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">Say "top" and "stop". Which has an aspirated /t/? How could you test this?</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer">"Top" has aspirated [tʰ]; "stop" has unaspirated [t]. Test it: hold your hand in front of your mouth. You'll feel a puff on the /t/ in "top" (because it's word-initial) but not in "stop" (because it follows /s/). Aspiration = a puff of voiceless air between the stop release and the vowel onset.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 5 ============ -->
+<div class="step" id="step-5" data-step="5">
+  <div class="step-header" onclick="toggleStep(5)">
+    <div class="step-num locked">5</div>
+    <div class="step-title"><h3>Place of Articulation</h3><div class="step-sub">WHERE you obstruct the air</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">Consonants are classified by <strong>WHERE in the mouth you obstruct the airflow.</strong> English uses most major places. Run your tongue back through your mouth and notice where it makes contact:</p>
+    <div class="diagram">
+      <svg viewBox="0 0 520 200" xmlns="http://www.w3.org/2000/svg" style="max-width:500px">
+        <style>svg text{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;}</style>
+        <rect x="10" y="10" width="500" height="180" rx="8" fill="#ecfdf5" stroke="#10b981" stroke-width="1.5"/>
+        <text x="20" y="32" font-size="13" font-weight="700" fill="#065f46">Places of Articulation (left to right)</text>
+        <g id="place-group">
+          <text x="40" y="65" font-size="11" font-weight="700" fill="#065f46">(1) Bilabial</text><text x="40" y="82" font-size="10" fill="#475569">/p, b, m/</text>
+          <text x="100" y="65" font-size="11" font-weight="700" fill="#065f46">(2) Labiodental</text><text x="100" y="82" font-size="10" fill="#475569">/f, v/</text>
+          <text x="185" y="65" font-size="11" font-weight="700" fill="#065f46">(3) Dental</text><text x="185" y="82" font-size="10" fill="#475569">/θ, ð/</text>
+          <text x="260" y="65" font-size="11" font-weight="700" fill="#065f46">(4) Alveolar</text><text x="260" y="82" font-size="10" fill="#475569">/t, d, n, s, z, l, r/</text>
+          <text x="40" y="115" font-size="11" font-weight="700" fill="#065f46">(5) Post-alveolar</text><text x="40" y="132" font-size="10" fill="#475569">/ʃ, ʒ/</text>
+          <text x="155" y="115" font-size="11" font-weight="700" fill="#065f46">(6) Palatal</text><text x="155" y="132" font-size="10" fill="#475569">/j/</text>
+          <text x="245" y="115" font-size="11" font-weight="700" fill="#065f46">(7) Velar</text><text x="245" y="132" font-size="10" fill="#475569">/k, g, ŋ/</text>
+          <text x="355" y="115" font-size="11" font-weight="700" fill="#065f46">(8) Glottal</text><text x="355" y="132" font-size="10" fill="#475569">/h, ʔ/</text>
+          <text x="40" y="165" font-size="10" fill="#94a3b8">Examples: /θ/ = "th" in "thin", /ʃ/ = "sh" in "ship", /ŋ/ = "ng" in "sing", /ʔ/ = glottal stop in "uh-oh"</text>
+        </g>
+      </svg>
+    </div>
+    <p class="prose"><strong>Bilabial:</strong> Both lips. <strong>Labiodental:</strong> Lower lip touches upper teeth. <strong>Dental/Alveolar:</strong> Tongue tip touches teeth or the ridge just behind them (most common places in English). <strong>Post-alveolar:</strong> Slightly behind the alveolar ridge (retroflex in some languages; in English, /ʃ/ and /ʒ/). <strong>Palatal:</strong> Tongue body against hard palate (/j/ as in "yes"). <strong>Velar:</strong> Tongue body against soft palate/velum (/k, g, ŋ/). <strong>Glottal:</strong> Vocal folds (/h/ = breathy, /ʔ/ = complete closure).</p>
+    <div class="check" data-check="5">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">Feel where your tongue is when you say /t/. Now say /k/. Describe the difference in place of articulation.</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer">/t/ is alveolar — your tongue tip touches the ridge just behind your upper teeth. /k/ is velar — your tongue body moves back and contacts the soft palate (velum). The place of articulation moves from the front of the mouth (alveolar) to the back (velar).</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 6 ============ -->
+<div class="step" id="step-6" data-step="6">
+  <div class="step-header" onclick="toggleStep(6)">
+    <div class="step-num locked">6</div>
+    <div class="step-title"><h3>Manner of Articulation</h3><div class="step-sub">HOW you obstruct the air</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">While place tells us WHERE, manner tells us <strong>HOW we obstruct the airflow.</strong> The main manners in English:</p>
+    <ul style="margin: 14px 0 14px 30px; color: var(--gray-600); font-size: 14px;">
+      <li><strong>Stops/Plosives:</strong> Complete blockage then release (/p, b, t, d, k, g/)</li>
+      <li><strong>Fricatives:</strong> Narrow gap creates turbulence (/f, v, θ, ð, s, z, ʃ, ʒ, h/)</li>
+      <li><strong>Affricates:</strong> Stop + fricative combined (/tʃ/ as in "church", /dʒ/ as in "judge")</li>
+      <li><strong>Nasals:</strong> Air diverted through nose (/m, n, ŋ/)</li>
+      <li><strong>Approximants/Liquids:</strong> Slight narrowing, no turbulence (/l, r, w, j/)</li>
+    </ul>
+    <div class="diagram">
+      <svg viewBox="0 0 640 160" xmlns="http://www.w3.org/2000/svg" style="max-width:600px">
+        <style>svg text{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;}</style>
+        <rect x="10" y="10" width="118" height="140" rx="8" fill="#ecfdf5" stroke="#10b981" stroke-width="1.5"/>
+        <text x="69" y="32" text-anchor="middle" font-size="12" font-weight="700" fill="#065f46">Stops</text>
+        <text x="69" y="52" text-anchor="middle" font-size="10" fill="#475569">Complete</text><text x="69" y="65" text-anchor="middle" font-size="10" fill="#475569">blockage</text>
+        <text x="69" y="110" text-anchor="middle" font-size="10" fill="#065f46">/p/ /b/ /t/ /d/ /k/ /g/</text>
+        <rect x="138" y="10" width="118" height="140" rx="8" fill="#ecfdf5" stroke="#10b981" stroke-width="1.5"/>
+        <text x="197" y="32" text-anchor="middle" font-size="12" font-weight="700" fill="#065f46">Fricatives</text>
+        <text x="197" y="52" text-anchor="middle" font-size="10" fill="#475569">Turbulent</text><text x="197" y="65" text-anchor="middle" font-size="10" fill="#475569">airflow</text>
+        <text x="197" y="110" text-anchor="middle" font-size="10" fill="#065f46">/f/ /v/ /s/ /z/ /ʃ/ /ʒ/ /h/</text>
+        <rect x="266" y="10" width="118" height="140" rx="8" fill="#ecfdf5" stroke="#10b981" stroke-width="1.5"/>
+        <text x="325" y="32" text-anchor="middle" font-size="12" font-weight="700" fill="#065f46">Nasals</text>
+        <text x="325" y="52" text-anchor="middle" font-size="10" fill="#475569">Air through</text><text x="325" y="65" text-anchor="middle" font-size="10" fill="#475569">nose</text>
+        <text x="325" y="110" text-anchor="middle" font-size="10" fill="#065f46">/m/ /n/ /ŋ/</text>
+        <rect x="394" y="10" width="118" height="140" rx="8" fill="#ecfdf5" stroke="#10b981" stroke-width="1.5"/>
+        <text x="453" y="32" text-anchor="middle" font-size="12" font-weight="700" fill="#065f46">Approximants</text>
+        <text x="453" y="52" text-anchor="middle" font-size="10" fill="#475569">Slight</text><text x="453" y="65" text-anchor="middle" font-size="10" fill="#475569">narrowing</text>
+        <text x="453" y="110" text-anchor="middle" font-size="10" fill="#065f46">/l/ /r/ /w/ /j/</text>
+        <rect x="522" y="10" width="108" height="140" rx="8" fill="#ecfdf5" stroke="#10b981" stroke-width="1.5"/>
+        <text x="576" y="32" text-anchor="middle" font-size="11" font-weight="700" fill="#065f46">Affricates</text>
+        <text x="576" y="52" text-anchor="middle" font-size="10" fill="#475569">Stop +</text><text x="576" y="65" text-anchor="middle" font-size="10" fill="#475569">fricative</text>
+        <text x="576" y="110" text-anchor="middle" font-size="10" fill="#065f46">/tʃ/ /dʒ/</text>
+      </svg>
+    </div>
+    <div class="callout tip"><div class="callout-icon">💡</div><div><strong>Remember the difference:</strong> Say /s/ (fricative — continuous hissing sound) vs. /t/ (stop — quick blockage and release). Manner describes how the airflow is modified: completely stopped, narrowed with turbulence, or diverted.</div></div>
+    <div class="check" data-check="6">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">What manner of articulation do /m/, /n/, and /ŋ/ share? What happens if you plug your nose while saying them?</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer">They are all nasals — oral airflow is blocked, but air escapes through the nasal cavity. If you plug your nose, you can't say them properly (they'll sound like /d, d, g/ instead, depending on the place). The nasal manner is defined by velum lowering, allowing air to flow nasally.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 7 ============ -->
+<div class="step" id="step-7" data-step="7">
+  <div class="step-header" onclick="toggleStep(7)">
+    <div class="step-num locked">7</div>
+    <div class="step-title"><h3>Reading the IPA Consonant Chart</h3><div class="step-sub">Place × Manner × Voicing</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">The IPA consonant chart is a grid. <strong>Columns = place of articulation (left to right: bilabial → glottal). Rows = manner of articulation (top to bottom: stop → approximant). Within each cell: left = voiceless, right = voiced.</strong></p>
+    <p class="prose">To describe any consonant, give three features: voicing + place + manner. Example: /b/ = voiced bilabial stop. /ʃ/ = voiceless post-alveolar fricative. /tʃ/ = voiceless post-alveolar affricate.</p>
+    <div class="diagram">
+      <svg viewBox="0 0 640 240" xmlns="http://www.w3.org/2000/svg" style="max-width:600px">
+        <style>svg text{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;} .header-row { fill: #065f46; font-weight: 700; } .subheader { fill: #475569; font-size: 9px; }</style>
+        <rect x="10" y="10" width="620" height="220" rx="6" fill="#ecfdf5" stroke="#10b981" stroke-width="1.5"/>
+        <text x="20" y="28" font-size="12" font-weight="700" fill="#065f46">Simplified IPA Consonant Chart</text>
+        <!-- Column headers (places) -->
+        <text x="80" y="50" text-anchor="middle" font-size="9" class="header-row">Bilabial</text>
+        <text x="160" y="50" text-anchor="middle" font-size="9" class="header-row">Alveolar</text>
+        <text x="240" y="50" text-anchor="middle" font-size="9" class="header-row">Post-alv</text>
+        <text x="310" y="50" text-anchor="middle" font-size="9" class="header-row">Palatal</text>
+        <text x="380" y="50" text-anchor="middle" font-size="9" class="header-row">Velar</text>
+        <text x="450" y="50" text-anchor="middle" font-size="9" class="header-row">Glottal</text>
+        <!-- Row headers (manners) -->
+        <text x="20" y="75" font-size="9" font-weight="700" fill="#065f46">Stops</text>
+        <text x="20" y="105" font-size="9" font-weight="700" fill="#065f46">Fricatives</text>
+        <text x="20" y="135" font-size="9" font-weight="700" fill="#065f46">Nasals</text>
+        <text x="20" y="165" font-size="9" font-weight="700" fill="#065f46">Liquids</text>
+        <text x="20" y="195" font-size="9" font-weight="700" fill="#065f46">Glides</text>
+        <!-- Stop row cells -->
+        <rect x="50" y="60" width="60" height="30" rx="4" fill="#fff" stroke="#a7f3d0" stroke-width="1"/>
+        <text x="65" y="77" text-anchor="middle" font-size="11" fill="#065f46">p</text><text x="80" y="77" text-anchor="middle" font-size="11" fill="#065f46">b</text>
+        <rect x="130" y="60" width="60" height="30" rx="4" fill="#fff" stroke="#a7f3d0" stroke-width="1"/>
+        <text x="145" y="77" text-anchor="middle" font-size="11" fill="#065f46">t</text><text x="160" y="77" text-anchor="middle" font-size="11" fill="#065f46">d</text>
+        <rect x="210" y="60" width="60" height="30" rx="4" fill="#fff" stroke="#a7f3d0" stroke-width="1"/>
+        <text x="225" y="77" text-anchor="middle" font-size="10" fill="#065f46">tʃ</text><text x="245" y="77" text-anchor="middle" font-size="10" fill="#065f46">dʒ</text>
+        <rect x="280" y="60" width="60" height="30" rx="4" fill="#fff" stroke="#a7f3d0" stroke-width="1"/>
+        <text x="315" y="77" text-anchor="middle" font-size="10" fill="#a7a7a7">(c)</text>
+        <rect x="350" y="60" width="60" height="30" rx="4" fill="#fff" stroke="#a7f3d0" stroke-width="1"/>
+        <text x="365" y="77" text-anchor="middle" font-size="11" fill="#065f46">k</text><text x="380" y="77" text-anchor="middle" font-size="11" fill="#065f46">g</text>
+        <rect x="420" y="60" width="60" height="30" rx="4" fill="#fff" stroke="#a7f3d0" stroke-width="1"/>
+        <text x="450" y="77" text-anchor="middle" font-size="11" fill="#a7a7a7">—</text>
+        <!-- Fricative row cells -->
+        <rect x="50" y="90" width="60" height="30" rx="4" fill="#fff" stroke="#a7f3d0" stroke-width="1"/>
+        <text x="65" y="107" text-anchor="middle" font-size="11" fill="#065f46">f</text><text x="80" y="107" text-anchor="middle" font-size="11" fill="#065f46">v</text>
+        <rect x="130" y="90" width="60" height="30" rx="4" fill="#fff" stroke="#a7f3d0" stroke-width="1"/>
+        <text x="145" y="107" text-anchor="middle" font-size="11" fill="#065f46">s</text><text x="160" y="107" text-anchor="middle" font-size="11" fill="#065f46">z</text>
+        <rect x="210" y="90" width="60" height="30" rx="4" fill="#fff" stroke="#a7f3d0" stroke-width="1"/>
+        <text x="225" y="107" text-anchor="middle" font-size="11" fill="#065f46">ʃ</text><text x="245" y="107" text-anchor="middle" font-size="11" fill="#065f46">ʒ</text>
+        <rect x="280" y="90" width="60" height="30" rx="4" fill="#fff" stroke="#a7f3d0" stroke-width="1"/>
+        <text x="315" y="107" text-anchor="middle" font-size="10" fill="#a7a7a7">—</text>
+        <rect x="350" y="90" width="60" height="30" rx="4" fill="#fff" stroke="#a7f3d0" stroke-width="1"/>
+        <text x="380" y="107" text-anchor="middle" font-size="11" fill="#065f46">x</text>
+        <rect x="420" y="90" width="60" height="30" rx="4" fill="#fff" stroke="#a7f3d0" stroke-width="1"/>
+        <text x="450" y="107" text-anchor="middle" font-size="11" fill="#065f46">h</text>
+        <!-- Nasal row -->
+        <rect x="50" y="120" width="60" height="30" rx="4" fill="#fff" stroke="#a7f3d0" stroke-width="1"/>
+        <text x="80" y="137" text-anchor="middle" font-size="11" fill="#065f46">m</text>
+        <rect x="130" y="120" width="60" height="30" rx="4" fill="#fff" stroke="#a7f3d0" stroke-width="1"/>
+        <text x="160" y="137" text-anchor="middle" font-size="11" fill="#065f46">n</text>
+        <rect x="210" y="120" width="60" height="30" rx="4" fill="#fff" stroke="#a7f3d0" stroke-width="1"/>
+        <text x="240" y="137" text-anchor="middle" font-size="10" fill="#a7a7a7">—</text>
+        <rect x="350" y="120" width="60" height="30" rx="4" fill="#fff" stroke="#a7f3d0" stroke-width="1"/>
+        <text x="380" y="137" text-anchor="middle" font-size="11" fill="#065f46">ŋ</text>
+        <!-- Liquid row -->
+        <rect x="50" y="150" width="60" height="30" rx="4" fill="#fff" stroke="#a7f3d0" stroke-width="1"/>
+        <text x="80" y="167" text-anchor="middle" font-size="11" fill="#065f46">w</text>
+        <rect x="130" y="150" width="60" height="30" rx="4" fill="#fff" stroke="#a7f3d0" stroke-width="1"/>
+        <text x="160" y="167" text-anchor="middle" font-size="11" fill="#065f46">l ɹ</text>
+        <!-- Glide row -->
+        <rect x="280" y="150" width="60" height="30" rx="4" fill="#fff" stroke="#a7f3d0" stroke-width="1"/>
+        <text x="315" y="167" text-anchor="middle" font-size="11" fill="#065f46">j</text>
+        <!-- Key -->
+        <text x="30" y="215" font-size="10" fill="#475569">Left = voiceless | Right = voiced | Shaded = physically impossible</text>
+      </svg>
+    </div>
+    <div class="callout tip"><div class="callout-icon">💡</div><div><strong>You don't need to memorise the entire chart.</strong> Understand the system — then you can always look up any sound by finding its place (column) and manner (row). The beauty of the IPA is that it's systematic.</div></div>
+    <div class="check" data-check="7">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">Using the IPA chart, describe /d/ with three terms (voicing, place, manner). Now do the same for /f/.</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer">/d/ = voiced alveolar stop. /f/ = voiceless labiodental fricative. To find them: /d/ is in the stop row, alveolar column, right side (voiced). /f/ is in the fricative row, labiodental column, left side (voiceless).</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 8 ============ -->
+<div class="step" id="step-8" data-step="8">
+  <div class="step-header" onclick="toggleStep(8)">
+    <div class="step-num locked">8</div>
+    <div class="step-title"><h3>English Consonants in IPA</h3><div class="step-sub">The sounds you already make</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">English has approximately 24 consonant phonemes. Some IPA symbols match English letters (/p, b, t, d, k, g, m, n, f, v, s, z, h, l, r, w, j/). Others look unfamiliar:</p>
+    <ul style="margin: 14px 0 14px 30px; color: var(--gray-600); font-size: 14px;">
+      <li>/θ/ = "th" in "thin" (voiceless dental fricative)</li>
+      <li>/ð/ = "th" in "this" (voiced dental fricative)</li>
+      <li>/ʃ/ = "sh" in "ship" (voiceless post-alveolar fricative)</li>
+      <li>/ʒ/ = "s" in "measure" (voiced post-alveolar fricative)</li>
+      <li>/tʃ/ = "ch" in "church" (voiceless post-alveolar affricate)</li>
+      <li>/dʒ/ = "j" in "judge" (voiced post-alveolar affricate)</li>
+      <li>/ŋ/ = "ng" in "sing" (voiced velar nasal)</li>
+      <li>/ʔ/ = glottal stop in "uh-oh" (voiceless glottal stop)</li>
+    </ul>
+    <div class="callout warn"><div class="callout-icon">⚠️</div><div><strong>Don't be fooled by familiar letters!</strong> In IPA, /j/ = the 'y' sound in "yes" (NOT the English 'j' sound, which is /dʒ/). Similarly, /ŋ/ is a single consonant (the "ng" sound), not two separate sounds.</div></div>
+    <div class="check" data-check="8">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">Transcribe the word "church" in IPA. How many distinct sounds does it have?</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer">/tʃɜːrtʃ/ (or /tʃɝtʃ/ in American English). It has 5 sounds: /tʃ/ (affricate) + /ɜː/ (vowel) + /r/ + /t/ + /ʃ/. The spelling suggests 6 letters (c-h-u-r-c-h), but phonetically there are only 5 sounds. The "ch" at the beginning and end are each single affricates, not separate sounds.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 9 ============ -->
+<div class="step" id="step-9" data-step="9">
+  <div class="step-header" onclick="toggleStep(9)">
+    <div class="step-num locked">9</div>
+    <div class="step-title"><h3>Sounds English Doesn't Have</h3><div class="step-sub">Beyond your native inventory</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">The IPA covers ALL human language sounds, not just English. Languages like French use uvular /ʁ/ (the French 'r'). Arabic has pharyngeal sounds. Many African and Australian languages use retroflex consonants. <strong>Click consonants</strong> (found in languages like Zulu and !Xóõ) use a different airstream mechanism entirely — they're not pulmonic (lung-powered) sounds.</p>
+    <p class="prose">The grey/shaded areas on the full IPA chart represent sounds that are physically impossible. For example, you can't make a nasal at the glottal place because the velum (soft palate) would need to be both raised (to block the mouth) and lowered (to let air out the nose) simultaneously.</p>
+    <div class="callout ok"><div class="callout-icon">👍</div><div><strong>Why this matters:</strong> The IPA doesn't represent just English sounds — it represents the full space of possible human sounds. When you encounter a new language, the IPA helps you know what its sounds might be, even if you've never heard them before.</div></div>
+    <div class="check" data-check="9">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">Why are some cells shaded on the IPA chart? Give an example of a sound combination that is physically impossible.</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer">Shaded areas represent physically impossible sound combinations. Example: a nasal glottal sound is impossible because to make a nasal, the velum must lower (to let air out the nose), but the glottal place requires the vocal folds to close and vibrate. You can't have both conditions simultaneously. The vocal tract anatomy constrains which consonants can exist.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 10 ============ -->
+<div class="step" id="step-10" data-step="10">
+  <div class="step-header" onclick="toggleStep(10)">
+    <div class="step-num locked">10</div>
+    <div class="step-title"><h3>Putting It All Together</h3><div class="step-sub">Three-part descriptions for any consonant</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">For any consonant in any language, you can give a complete description: <strong>(1) Voicing — voiced or voiceless, (2) Place — where the obstruction occurs, (3) Manner — how the airflow is modified.</strong></p>
+    <p class="prose"><strong>Example chain:</strong> "The /z/ in 'zoo'" = voiced alveolar fricative. "The /tʃ/ in 'chip'" = voiceless post-alveolar affricate. "The /ŋ/ in 'sing'" = voiced velar nasal. This three-part system is how linguists worldwide describe and compare sounds across all 7,000+ languages. No matter what sound you encounter, you can break it down into these three features.</p>
+    <div class="callout tip"><div class="callout-icon">💡</div><div><strong>Pro tip:</strong> Always describe consonants in the order (Voicing, Place, Manner). This makes your descriptions consistent and easy to compare. If you can describe a sound, you can transcribe it. If you can transcribe it, you can teach someone to pronounce it.</div></div>
+    <div class="summary-box green">
+      <h4>Week 2 in one sentence</h4>
+      <p>Consonants are sounds made by obstructing or narrowing airflow; every consonant in every language can be described by three articulatory features — <strong>voicing</strong> (whether vocal folds vibrate), <strong>place</strong> (where in the mouth the obstruction occurs), and <strong>manner</strong> (how the air is obstructed) — which are systematically displayed on the IPA consonant chart.</p>
+    </div>
+    <div class="check" data-check="10">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">Describe these three sounds in full IPA terminology: the first sound in "nice", the last sound in "sing", and the middle consonant in "measure".</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer">(1) First sound in "nice" = /n/ = voiced alveolar nasal. (2) Last sound in "sing" = /ŋ/ = voiced velar nasal. (3) Middle consonant in "measure" = /ʒ/ = voiced post-alveolar fricative.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ SELF-TEST ============ -->
+<div class="self-test">
+  <div class="self-test-title">📝 Week 2 Self-Test</div>
+  <div class="self-test-sub">10 exam-style questions. Try to answer each one before revealing. These cover the full study guide.</div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q1</span><span class="st-q-bloom">Understanding</span></div><p>What are the three parameters used to classify consonants in the IPA?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">Voicing (voiced or voiceless), place of articulation (where the obstruction occurs), and manner of articulation (how the airflow is modified).</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q2</span><span class="st-q-bloom">Understanding</span></div><p>Name the six major places of articulation used in English consonants.</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">Bilabial, labiodental, dental/alveolar, post-alveolar, palatal, velar (and glottal for /h/ and /ʔ/).</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q3</span><span class="st-q-bloom">Understanding</span></div><p>Explain the difference between a stop and a fricative, with examples.</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">A stop involves complete blockage of airflow followed by release (e.g., /p/, /t/, /k/). A fricative involves a narrow gap that creates turbulent airflow (e.g., /f/, /s/, /ʃ/). An affricate combines both: a stop release into a fricative (e.g., /tʃ/).</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q4</span><span class="st-q-bloom">Understanding</span></div><p>Why is aspiration in English predictable rather than contrastive?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">In English, aspiration follows a rule: voiceless stops are aspirated word-initially (e.g., [pʰɪn] in "pin") but unaspirated after /s/ (e.g., [spɪn] in "spin"). Since aspiration is predictable from the environment, it doesn't change meaning — 'pin' and 'spin' both contain /p/, just with different aspiration.</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q5</span><span class="st-q-bloom">Understanding</span></div><p>What is the difference between an active and a passive articulator?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">An active articulator moves to create the obstruction (e.g., tongue, lips). A passive articulator stays still while the active one approaches it (e.g., teeth, alveolar ridge, hard palate).</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q6</span><span class="st-q-bloom">Apply</span></div><p>Transcribe the word "think" in IPA and describe each consonant.</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">/θɪŋk/. /θ/ = voiceless dental fricative. /ŋ/ = voiced velar nasal. /k/ = voiceless velar stop.</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q7</span><span class="st-q-bloom">Apply</span></div><p>Your friend claims /p/ and /b/ are completely different sounds. A linguist would say they're closely related. Explain why.</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">They are identical in place (bilabial) and manner (stop). The ONLY difference is voicing: /p/ is voiceless and /b/ is voiced. The IPA chart reflects this by putting them in the same cell, with /p/ on the left (voiceless) and /b/ on the right (voiced).</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q8</span><span class="st-q-bloom">Apply</span></div><p>A speaker of Thai produces a sound that is a voiced aspirated bilabial stop. Where would this appear on the IPA chart?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">It would be in the bilabial column, stop row, on the voiced (right) side. Aspiration would be marked with a superscript ʰ diacritic. This sound doesn't exist in English but is phonemic in Thai.</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q9</span><span class="st-q-bloom">Analyse</span></div><p>English has both /θ/ (as in "thin") and /ð/ (as in "this"). Many languages lack these sounds entirely. What does this tell us about the relationship between the IPA and any particular language?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">The IPA represents the full possibility space of human speech sounds, not the inventory of any single language. Each language selects a subset of possible sounds. English happens to use dental fricatives, but most languages don't. The IPA must be comprehensive precisely because different languages make different selections.</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q10</span><span class="st-q-bloom">Analyse</span></div><p>If you were trying to describe a consonant from a language you'd never heard before, and you could only observe the speaker's mouth, which of the three parameters (voicing, place, manner) would be hardest to determine? Why?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">Voicing would be hardest because it involves vocal fold vibration inside the larynx, which is not directly visible. Place and manner are often visible — you can see lip movements (bilabial), tongue position (dental/alveolar), and whether airflow is fully stopped or continuous. Voicing requires either touching the throat or using acoustic instruments.</div></div>
+</div>
+
+<!-- Practice Lab links -->
+<p class="prose" style="margin-top:20px;"><span class="label label-tip">Practice next</span></p>
+<p class="prose">Now apply what you've learned:</p>
+
+<a class="lab-link" href="#" onclick="window.parent.openPracticeLabTool('ipa',2); return false;"><div class="lab-link-icon">🗣</div><div class="lab-link-text"><div class="lab-link-title">IPA Transcription Drill</div><div class="lab-link-desc">Practise consonant transcription with Week 2 sounds</div></div><div class="lab-link-arrow">→</div></a>
+<a class="lab-link" href="#" onclick="window.parent.openPracticeLabTool('flashcards',2); return false;"><div class="lab-link-icon">📚</div><div class="lab-link-text"><div class="lab-link-title">Key Terms: Phonetics</div><div class="lab-link-desc">Voicing, aspiration, places and manners of articulation</div></div><div class="lab-link-arrow">→</div></a>
+<a class="lab-link" href="#" onclick="window.parent.openPracticeLabTool('phonology',2); return false;"><div class="lab-link-icon">🔬</div><div class="lab-link-text"><div class="lab-link-title">Phonology Analysis</div><div class="lab-link-desc">Explore consonant contrasts and minimal pairs</div></div><div class="lab-link-arrow">→</div></a>
+
+<div class="nav-footer">
+  <a class="nav-btn" href="#">← Back to Dashboard</a>
+  <a class="nav-btn primary" href="#">Week 3: Vowels →</a>
+</div>
+
+</div>
+
+<script>
+const totalSteps=10;let completedSteps=new Set();
+function toggleStep(n){document.getElementById('step-'+n).classList.toggle('open')}
+function enableReveal(ta){const btn=ta.closest('.check,.st-q').querySelector('.check-reveal button');btn.disabled=ta.value.trim().length<5}
+function revealAnswer(btn){const c=btn.closest('.check,.st-q');c.querySelector('.check-answer').classList.add('show');const r=c.querySelector('.check-rating');if(r)r.classList.add('show');btn.style.display='none'}
+function rateCheck(btn,rating){const check=btn.closest('.check'),step=btn.closest('.step'),n=parseInt(step.dataset.step);check.querySelector('.check-rating').querySelectorAll('button').forEach(b=>b.style.opacity='0.4');btn.style.opacity='1';completedSteps.add(n);updateProgress();step.querySelector('.step-num').className='step-num done';const next=document.getElementById('step-'+(n+1));if(next){const nn=next.querySelector('.step-num');if(nn.classList.contains('locked'))nn.className='step-num active'}}
+function updateProgress(){const p=Math.round(completedSteps.size/totalSteps*100);document.getElementById('progressFill').style.width=p+'%';document.getElementById('progressLabel').textContent=completedSteps.size+' of '+totalSteps+' complete'}
+</script>
+</body>
+</html>

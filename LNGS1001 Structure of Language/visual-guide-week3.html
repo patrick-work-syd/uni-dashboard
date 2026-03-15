@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LNGS1001 — Week 3 Visual Guide</title>
+<style>
+:root {
+  --green: #10b981; --green-light: #ecfdf5; --green-dark: #065f46;
+  --blue: #3b82f6; --blue-light: #eff6ff;
+  --orange: #f59e0b; --orange-light: #fffbeb;
+  --purple: #8b5cf6; --purple-light: #f5f3ff;
+  --red: #ef4444; --red-light: #fef2f2;
+  --gray-50: #f8fafc; --gray-100: #f1f5f9; --gray-200: #e2e8f0;
+  --gray-400: #94a3b8; --gray-600: #475569; --gray-800: #1e293b;
+  --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --mono: 'SF Mono', 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: var(--font); background: var(--gray-50); color: var(--gray-800); line-height: 1.65; }
+
+.header { background: linear-gradient(135deg, var(--green-dark) 0%, var(--green) 100%); color: #fff; padding: 32px 0 28px; }
+.header-inner { max-width: 800px; margin: 0 auto; padding: 0 24px; }
+.header-tag { font-size: 12px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; opacity: 0.8; margin-bottom: 8px; }
+.header h1 { font-size: 26px; font-weight: 700; margin-bottom: 4px; }
+.header p { font-size: 14px; opacity: 0.85; }
+.header-reassure { margin-top: 14px; padding: 12px 16px; background: rgba(255,255,255,0.12); border-radius: 10px; font-size: 13px; line-height: 1.5; }
+
+.progress-bar { max-width: 800px; margin: 0 auto; padding: 16px 24px 0; }
+.progress-track { background: var(--gray-200); height: 6px; border-radius: 3px; overflow: hidden; }
+.progress-fill { background: var(--green); height: 100%; width: 0%; border-radius: 3px; transition: width 0.5s ease; }
+.progress-label { font-size: 12px; color: var(--gray-400); margin-top: 6px; text-align: right; }
+
+.content { max-width: 800px; margin: 0 auto; padding: 24px; }
+
+.step { background: #fff; border: 1px solid var(--gray-200); border-radius: 16px; margin-bottom: 20px; overflow: hidden; }
+.step-header { display: flex; align-items: center; gap: 12px; padding: 18px 22px; cursor: pointer; user-select: none; }
+.step-header:hover { background: var(--gray-50); }
+.step-num { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; flex-shrink: 0; }
+.step-num.locked { background: var(--gray-200); color: var(--gray-400); }
+.step-num.active { background: var(--green); color: #fff; }
+.step-num.done { background: var(--green); color: #fff; }
+.step-title { flex: 1; }
+.step-title h3 { font-size: 16px; font-weight: 600; }
+.step-title .step-sub { font-size: 12px; color: var(--gray-400); margin-top: 1px; }
+.step-chevron { font-size: 18px; color: var(--gray-400); transition: transform 0.2s; }
+.step.open .step-chevron { transform: rotate(90deg); }
+.step-body { display: none; padding: 0 22px 22px; }
+.step.open .step-body { display: block; }
+
+.diagram { background: var(--gray-50); border: 1px solid var(--gray-200); border-radius: 12px; padding: 20px; margin: 14px 0; text-align: center; overflow-x: auto; }
+.diagram svg { max-width: 100%; height: auto; }
+
+.prose { font-size: 15px; color: var(--gray-600); margin: 12px 0; }
+.prose strong { color: var(--gray-800); }
+
+.label { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 4px; }
+.label-idea { color: var(--green); } .label-how { color: var(--blue); } .label-trap { color: var(--red); } .label-why { color: var(--purple); } .label-tip { color: var(--orange); }
+
+.compare { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 14px 0; }
+@media (max-width: 600px) { .compare { grid-template-columns: 1fr; } }
+.cmp-box { border-radius: 10px; padding: 14px; }
+.cmp-box.informal { background: var(--orange-light); border: 1px solid #fed7aa; }
+.cmp-box.formal { background: var(--blue-light); border: 1px solid #bfdbfe; }
+.cmp-box.before { background: var(--red-light); border: 1px solid #fecaca; }
+.cmp-box.after { background: var(--green-light); border: 1px solid #a7f3d0; }
+.cmp-box h4 { font-size: 12px; font-weight: 700; margin-bottom: 6px; }
+.cmp-box.informal h4 { color: #b45309; } .cmp-box.formal h4 { color: var(--blue-dark); }
+.cmp-box.before h4 { color: var(--red); } .cmp-box.after h4 { color: var(--green-dark); }
+.cmp-box p { font-size: 13px; line-height: 1.55; }
+
+.callout { display: flex; gap: 10px; padding: 14px 16px; border-radius: 10px; margin: 14px 0; font-size: 14px; line-height: 1.55; }
+.callout-icon { font-size: 18px; flex-shrink: 0; line-height: 1.5; }
+.callout.tip { background: var(--blue-light); border: 1px solid #bfdbfe; }
+.callout.warn { background: var(--red-light); border: 1px solid #fecaca; }
+.callout.ok { background: var(--green-light); border: 1px solid #a7f3d0; }
+
+.analogy { background: var(--purple-light); border: 1px solid #ddd6fe; border-radius: 12px; padding: 16px; margin: 14px 0; }
+.analogy-label { font-size: 11px; font-weight: 700; color: var(--purple); letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 4px; }
+.analogy p { font-size: 14px; color: var(--gray-600); }
+
+.check { background: var(--green-light); border: 1px solid #a7f3d0; border-radius: 12px; padding: 18px; margin: 18px 0; }
+.check-title { font-size: 13px; font-weight: 700; color: var(--green); margin-bottom: 6px; }
+.check-q { font-size: 14px; margin-bottom: 10px; }
+.check textarea { width: 100%; padding: 8px 10px; border: 1px solid #a7f3d0; border-radius: 8px; font-family: var(--font); font-size: 13px; resize: vertical; min-height: 44px; background: #fff; }
+.check textarea:focus { outline: 2px solid var(--green); border-color: transparent; }
+.check-reveal { margin-top: 8px; }
+.check-reveal button { background: var(--green); color: #fff; border: none; padding: 7px 16px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; }
+.check-reveal button:hover { background: #059669; }
+.check-reveal button:disabled { background: var(--gray-400); cursor: not-allowed; }
+.check-answer { display: none; margin-top: 10px; padding: 12px; background: #fff; border-radius: 8px; border: 1px solid #a7f3d0; font-size: 13px; line-height: 1.6; }
+.check-answer.show { display: block; }
+.check-rating { display: none; margin-top: 8px; gap: 8px; }
+.check-rating.show { display: flex; }
+.check-rating button { padding: 5px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid var(--gray-200); background: #fff; }
+.check-rating .got-it { color: var(--green); border-color: #a7f3d0; }
+.check-rating .not-yet { color: var(--red); border-color: #fecaca; }
+
+.lab-link { display: flex; align-items: center; gap: 10px; padding: 14px 16px; background: #fff; border: 2px solid var(--green); border-radius: 12px; margin: 16px 0; text-decoration: none; color: var(--gray-800); transition: all 0.15s; }
+.lab-link:hover { background: var(--green-light); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(16,185,129,0.15); }
+.lab-link-icon { font-size: 24px; }
+.lab-link-text { flex: 1; }
+.lab-link-title { font-size: 14px; font-weight: 700; color: var(--green-dark); }
+.lab-link-desc { font-size: 12px; color: var(--gray-400); }
+.lab-link-arrow { font-size: 18px; color: var(--green); font-weight: 700; }
+
+.summary-box { padding: 18px; border-radius: 12px; margin: 18px 0; }
+.summary-box.green { background: var(--green-light); border: 1px solid #a7f3d0; }
+.summary-box h4 { font-size: 15px; margin-bottom: 6px; color: var(--green-dark); }
+.summary-box p { font-size: 14px; color: var(--gray-600); }
+
+.self-test { background: #fff; border: 2px solid var(--orange); border-radius: 16px; padding: 22px; margin: 28px 0; }
+.self-test-title { font-size: 18px; font-weight: 700; color: var(--orange); margin-bottom: 4px; }
+.self-test-sub { font-size: 13px; color: var(--gray-400); margin-bottom: 16px; }
+.st-q { margin-bottom: 16px; }
+.st-q-header { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.st-q-num { font-size: 12px; font-weight: 700; color: var(--orange); background: var(--orange-light); padding: 2px 8px; border-radius: 4px; }
+.st-q-bloom { font-size: 10px; color: var(--gray-400); }
+.st-q p { font-size: 14px; margin-bottom: 6px; }
+.st-q textarea { width: 100%; padding: 8px 10px; border: 1px solid #fed7aa; border-radius: 8px; font-family: var(--font); font-size: 13px; resize: vertical; min-height: 44px; background: #fff; }
+.st-q textarea:focus { outline: 2px solid var(--orange); border-color: transparent; }
+.st-q .check-reveal button { background: var(--orange); }
+.st-q .check-reveal button:hover { background: #d97706; }
+.st-q .check-reveal button:disabled { background: var(--gray-400); }
+.st-q .check-answer { border-color: #fed7aa; }
+
+.nav-footer { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; border-top: 1px solid var(--gray-200); margin-top: 28px; }
+.nav-btn { display: inline-flex; align-items: center; gap: 6px; padding: 9px 18px; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; border: 1px solid var(--gray-200); background: #fff; color: var(--gray-600); text-decoration: none; }
+.nav-btn:hover { background: var(--gray-100); }
+.nav-btn.primary { background: var(--green); color: #fff; border-color: var(--green); }
+.nav-btn.primary:hover { background: var(--green-dark); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="header-tag">LNGS1001 · Week 3 · Visual Guide</div>
+    <h1>Phonetics II: Vowels & Suprasegmentals</h1>
+    <p>12 steps · Monday & Tuesday lectures · work through at your own pace</p>
+    <div class="header-reassure">
+      <strong>This week covers a lot — vowels AND suprasegmentals.</strong> Don't try to memorise everything at once. Focus on the underlying principles: tongue position for vowels, and how pitch/stress/rhythm layer on top of segments.
+    </div>
+  </div>
+</div>
+
+<div class="progress-bar">
+  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="progress-label" id="progressLabel">0 of 12 complete</div>
+</div>
+
+<div class="content">
+
+<!-- ============ STEP 1 ============ -->
+<div class="step open" id="step-1" data-step="1">
+  <div class="step-header" onclick="toggleStep(1)">
+    <div class="step-num active">1</div>
+    <div class="step-title"><h3>Vowels: No Obstruction</h3><div class="step-sub">Open airflow, shaped by tongue and lips</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">Consonants obstruct airflow; <strong>vowels don't</strong>. When you say "ahh," air flows freely — you're shaping the sound by moving your tongue position and rounding your lips, not blocking anything. Vowels are almost always voiced (vocal folds vibrating). They form the nucleus of every syllable.</p>
+    <div class="compare">
+      <div class="cmp-box informal"><h4>Everyday idea</h4><p>Vowels are A, E, I, O, U</p></div>
+      <div class="cmp-box formal"><h4>Linguistic definition</h4><p>Vowels are speech sounds with unimpeded airflow, classified by tongue height, tongue frontness/backness, and lip rounding</p></div>
+    </div>
+    <p class="prose">The key insight: vowels are characterised by <strong>articulation freedom</strong>, not by arbitrary letter categories. Every vowel can be uniquely described by three parameters: how high your tongue is, where it sits front-to-back, and whether your lips round.</p>
+    <div class="check" data-check="1">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">Say /ɑː/ (as in 'father') and then /s/. What physical difference do you feel in how the air moves?</div>
+      <textarea placeholder="Type your answer first…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer">In /ɑː/, air flows freely through the mouth with your tongue low. In /s/, you constrict the airflow with your tongue near the alveolar ridge, creating friction. /ɑː/ is unobstructed; /s/ is obstructed.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 2 ============ -->
+<div class="step" id="step-2" data-step="2">
+  <div class="step-header" onclick="toggleStep(2)">
+    <div class="step-num locked">2</div>
+    <div class="step-title"><h3>The Vowel Trapezoid</h3><div class="step-sub">A map of your mouth</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">The vowel chart is a <strong>schematic of tongue position</strong> inside your mouth:</p>
+    <div class="diagram">
+      <svg viewBox="0 0 500 300" xmlns="http://www.w3.org/2000/svg" style="max-width:500px">
+        <style>svg text{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;}</style>
+        <!-- Trapezoid outline -->
+        <polygon points="50,50 450,80 420,280 80,250" fill="none" stroke="#10b981" stroke-width="2"/>
+        <!-- Grid lines -->
+        <line x1="50" y1="50" x2="80" y2="250" stroke="#e2e8f0" stroke-width="1"/>
+        <line x1="200" y1="60" x2="200" y2="260" stroke="#e2e8f0" stroke-width="1"/>
+        <line x1="350" y1="70" x2="350" y2="270" stroke="#e2e8f0" stroke-width="1"/>
+        <line x1="450" y1="80" x2="420" y2="280" stroke="#e2e8f0" stroke-width="1"/>
+        <!-- Horizontal grid -->
+        <line x1="50" y1="50" x2="450" y2="80" stroke="#e2e8f0" stroke-width="1"/>
+        <line x1="65" y1="100" x2="435" y2="125" stroke="#e2e8f0" stroke-width="1"/>
+        <line x1="80" y1="150" x2="420" y2="170" stroke="#e2e8f0" stroke-width="1"/>
+        <line x1="80" y1="250" x2="420" y2="280" stroke="#e2e8f0" stroke-width="1"/>
+        <!-- Labels -->
+        <text x="20" y="60" font-size="11" fill="#475569" font-weight="700">Close</text>
+        <text x="20" y="250" font-size="11" fill="#475569" font-weight="700">Open</text>
+        <text x="40" y="300" font-size="11" fill="#475569" font-weight="700">Front</text>
+        <text x="200" y="300" font-size="11" fill="#475569" font-weight="700">Central</text>
+        <text x="420" y="300" font-size="11" fill="#475569" font-weight="700">Back</text>
+        <!-- Cardinal vowels -->
+        <circle cx="70" cy="60" r="5" fill="#10b981" opacity="0.7"/><text x="50" y="50" font-size="12" fill="#065f46" font-weight="700">i</text>
+        <circle cx="100" cy="100" r="5" fill="#10b981" opacity="0.7"/><text x="80" y="95" font-size="12" fill="#065f46" font-weight="700">e</text>
+        <circle cx="110" cy="130" r="5" fill="#10b981" opacity="0.7"/><text x="90" y="125" font-size="12" fill="#065f46" font-weight="700">ɛ</text>
+        <circle cx="130" cy="200" r="5" fill="#10b981" opacity="0.7"/><text x="110" y="195" font-size="12" fill="#065f46" font-weight="700">a</text>
+        <circle cx="200" cy="220" r="5" fill="#10b981" opacity="0.7"/><text x="185" y="215" font-size="12" fill="#065f46" font-weight="700">ɑ</text>
+        <circle cx="380" cy="200" r="5" fill="#10b981" opacity="0.7"/><text x="395" y="205" font-size="12" fill="#065f46" font-weight="700">ɔ</text>
+        <circle cx="410" cy="120" r="5" fill="#10b981" opacity="0.7"/><text x="425" y="125" font-size="12" fill="#065f46" font-weight="700">o</text>
+        <circle cx="440" cy="70" r="5" fill="#10b981" opacity="0.7"/><text x="455" y="75" font-size="12" fill="#065f46" font-weight="700">u</text>
+        <circle cx="200" cy="160" r="5" fill="#a7f3d0" opacity="0.8"/><text x="185" y="155" font-size="12" fill="#065f46" font-weight="700">ə</text>
+        <!-- Legend -->
+        <text x="20" y="320" font-size="10" fill="#94a3b8">● unrounded  ⚪ rounded (right of pair)</text>
+      </svg>
+    </div>
+    <p class="prose"><strong>Top</strong> = tongue high (close vowels like /i/ in "beat"). <strong>Bottom</strong> = tongue low (open vowels like /ɑ/ in "father"). <strong>Left</strong> = tongue front (/i/). <strong>Right</strong> = tongue back (/u/ in "boot"). Within each position, left symbol = unrounded lips, right symbol = rounded lips. The schwa /ə/ sits dead centre — your tongue is nowhere in particular.</p>
+    <div class="callout tip"><div class="callout-icon">💡</div><div><strong>Mirror trick:</strong> Look at yourself in your phone camera. Say 'beat' then 'boot' — watch your lips go from spread to round. Say 'beat' then 'bat' — watch your jaw drop as your tongue lowers.</div></div>
+    <div class="check" data-check="2">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">Where on the vowel trapezoid would you place the vowel in 'boot'? Describe its height, backness, and lip rounding.</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer">/uː/ is high (close), back, and rounded. It sits in the top-right area of the chart — high tongue position, pulled toward the back, with rounded lips.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 3 ============ -->
+<div class="step" id="step-3" data-step="3">
+  <div class="step-header" onclick="toggleStep(3)">
+    <div class="step-num locked">3</div>
+    <div class="step-title"><h3>Monophthongs vs Diphthongs</h3><div class="step-sub">Single targets vs gliding vowels</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">A <strong>monophthong</strong> has one tongue position (e.g., /iː/ in "beat" — tongue stays high and front). A <strong>diphthong</strong> involves movement between two positions (e.g., /aɪ/ in "bite" — tongue starts low then glides up).</p>
+    <div class="diagram">
+      <svg viewBox="0 0 500 280" xmlns="http://www.w3.org/2000/svg" style="max-width:500px">
+        <style>svg text{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;}</style>
+        <!-- Trapezoid -->
+        <polygon points="40,40 440,70 410,260 70,240" fill="none" stroke="#10b981" stroke-width="2"/>
+        <!-- Monophthong example -->
+        <text x="30" y="30" font-size="13" font-weight="700" fill="#065f46">/iː/ (beat)</text>
+        <circle cx="70" cy="50" r="6" fill="#10b981"/><text x="55" y="55" font-size="14" fill="#065f46" font-weight="700">i</text>
+        <!-- Diphthongs with arrows -->
+        <text x="150" y="30" font-size="13" font-weight="700" fill="#065f46">/aɪ/ (bite)</text>
+        <circle cx="130" cy="190" r="6" fill="#f59e0b"/><text x="115" y="195" font-size="12" fill="#b45309">a</text>
+        <circle cx="70" cy="50" r="6" fill="#f59e0b"/><text x="55" y="55" font-size="12" fill="#b45309">ɪ</text>
+        <path d="M135 185 Q100 120 75 55" stroke="#f59e0b" stroke-width="2.5" fill="none" marker-end="url(#arrowOrange)"/>
+        <text x="300" y="30" font-size="13" font-weight="700" fill="#065f46">/eɪ/ (bay)</text>
+        <circle cx="110" cy="100" r="6" fill="#3b82f6"/><text x="95" y="105" font-size="12" fill="#1e40af">e</text>
+        <circle cx="70" cy="50" r="6" fill="#3b82f6"/><text x="55" y="55" font-size="12" fill="#1e40af">ɪ</text>
+        <path d="M115 95 Q100 75 75 55" stroke="#3b82f6" stroke-width="2.5" fill="none" marker-end="url(#arrowBlue)"/>
+        <!-- Defs for arrows -->
+        <defs>
+          <marker id="arrowOrange" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#f59e0b"/></marker>
+          <marker id="arrowBlue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#3b82f6"/></marker>
+        </defs>
+      </svg>
+    </div>
+    <p class="prose">Australian English is rich in diphthongs: /eɪ/ (bay), /aɪ/ (bite), /ɔɪ/ (boy), /əʉ/ (boat), /æɔ/ (bout). English has <strong>18 distinct vowel sounds</strong> — far more than the 5 letters A, E, I, O, U suggest.</p>
+    <div class="check" data-check="3">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">Say 'boy' very slowly. Can you identify the two vowel targets your tongue moves between?</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer">/ɔɪ/: starts with an open back rounded vowel /ɔ/, then glides to a high front vowel /ɪ/. Your tongue moves from the back-low position to the front-high position.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 4 ============ -->
+<div class="step" id="step-4" data-step="4">
+  <div class="step-header" onclick="toggleStep(4)">
+    <div class="step-num locked">4</div>
+    <div class="step-title"><h3>Australian English Vowels</h3><div class="step-sub">18 vowels from 5 letters</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">The Harrington-Cox-Evans (HCE) transcription system is the standard for Australian English. Use this when transcribing the Assignment 1 recordings.</p>
+    <div class="diagram">
+      <svg viewBox="0 0 640 180" xmlns="http://www.w3.org/2000/svg" style="max-width:600px">
+        <style>svg text{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;}</style>
+        <rect x="10" y="10" width="300" height="160" rx="12" fill="#ecfdf5" stroke="#10b981" stroke-width="2"/>
+        <text x="24" y="32" font-size="13" font-weight="700" fill="#065f46">Monophthongs (11)</text>
+        <text x="24" y="54" font-size="12" fill="#475569">/iː/ heed, /ɪ/ hid, /e/ head, /æ/ had, /ɐ/ hud</text>
+        <text x="24" y="72" font-size="12" fill="#475569">/ɒ/ hod, /oː/ hoard, /ʊ/ hood, /ʉː/ who'd</text>
+        <text x="24" y="90" font-size="12" fill="#475569">/ɜː/ herd, /ɐː/ hard</text>
+        <text x="24" y="118" font-size="13" font-weight="700" fill="#065f46">Diphthongs (7)</text>
+        <text x="24" y="140" font-size="12" fill="#475569">/eɪ/ hayed, /ɑe/ hide, /oɪ/ hoyed, /əʉ/ hoed</text>
+        <text x="24" y="158" font-size="12" fill="#475569">/æɔ/ how'd, /ɪə/ heared, /eə/ haired</text>
+
+        <rect x="330" y="10" width="300" height="160" rx="12" fill="#fef2f2" stroke="#ef4444" stroke-width="2"/>
+        <text x="344" y="32" font-size="13" font-weight="700" fill="#991b1b">⚠️ Key principle</text>
+        <text x="344" y="54" font-size="12" fill="#475569"><tspan font-weight="600">Transcribe what you HEAR,</tspan></text>
+        <text x="344" y="72" font-size="12" fill="#475569">not what spelling suggests.</text>
+        <text x="344" y="100" font-size="12" fill="#475569" font-weight="600">Example:</text>
+        <text x="344" y="118" font-size="12" fill="#475569">"Sydney" → /sɪdnɪ/</text>
+        <text x="344" y="136" font-size="12" fill="#475569">(NOT /sɪdniː/)</text>
+        <text x="344" y="158" font-size="12" fill="#475569" font-style="italic">Listen to the recording,</text>
+        <text x="344" y="173" font-size="12" fill="#475569" font-style="italic">not the spelling.</text>
+      </svg>
+    </div>
+    <p class="prose">Vowels are variable — even within Sydney, speakers differ. The HCE system captures the most common General Australian English patterns. When you transcribe the Assignment 1 recordings, focus on what you actually hear in the speaker's voice, not what standard dictionaries might suggest.</p>
+    <div class="callout warn"><div class="callout-icon">⚠️</div><div><strong>Do NOT use ChatGPT to transcribe your assignment.</strong> The recordings capture a specific speaker's pronunciation. Only listening will give you the right transcription.</div></div>
+    <div class="check" data-check="4">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">How many monophthong vowels does General Australian English have? Why is this surprising given English has only 5 vowel letters?</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer">11 monophthongs. This is surprising because English has only 5 vowel letters (a, e, i, o, u), but 11 distinct vowel sounds. The letters are arbitrary — they don't map cleanly to vowels. Words spelled with the same vowel letter can sound completely different: "beat" /iː/ vs "bed" /e/.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 5 ============ -->
+<div class="step" id="step-5" data-step="5">
+  <div class="step-header" onclick="toggleStep(5)">
+    <div class="step-num locked">5</div>
+    <div class="step-title"><h3>Cross-Linguistic Vowel Inventories</h3><div class="step-sub">Different languages, different selections</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">Languages choose different subsets of the vowel space. No language uses ALL possible vowels — each selects a subset based on its phonological system.</p>
+    <div class="diagram">
+      <svg viewBox="0 0 640 200" xmlns="http://www.w3.org/2000/svg" style="max-width:600px">
+        <style>svg text{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;}</style>
+        <rect x="10" y="10" width="300" height="180" rx="10" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.5"/>
+        <text x="24" y="32" font-size="13" font-weight="700" fill="#1e40af">English (≈18 vowels)</text>
+        <text x="24" y="54" font-size="11" fill="#475569">Monophthongs: /iː, ɪ, e, æ, ɐ, ɒ, oː, ʊ, ɜː/</text>
+        <text x="24" y="72" font-size="11" fill="#475569">Diphthongs: /eɪ, aɪ, ɔɪ, əʉ, æɔ, ɪə, eə/</text>
+        <text x="24" y="100" font-size="13" font-weight="700" fill="#1e40af">French (≈12 vowels)</text>
+        <text x="24" y="122" font-size="11" fill="#475569">Has front rounded vowels like /y/ (in "tu")</text>
+        <text x="24" y="140" font-size="11" fill="#475569">English doesn't have /y/ — just /iː/ and /uː/</text>
+        <text x="24" y="158" font-size="11" fill="#475569">Missing rounded front vowels makes French</text>
+        <text x="24" y="176" font-size="11" fill="#475569">sound "different" to English speakers.</text>
+
+        <rect x="330" y="10" width="300" height="180" rx="10" fill="#ecfdf5" stroke="#10b981" stroke-width="1.5"/>
+        <text x="344" y="32" font-size="13" font-weight="700" fill="#065f46">Mandarin (≈10 vowels)</text>
+        <text x="344" y="54" font-size="11" fill="#475569">Has high back unrounded /ɯ/</text>
+        <text x="344" y="72" font-size="11" fill="#475569">(French & English don't)</text>
+        <text x="344" y="100" font-size="13" font-weight="700" fill="#065f46">Lao & Pola</text>
+        <text x="344" y="122" font-size="11" fill="#475569">Lao: contrasts rounded AND unrounded</text>
+        <text x="344" y="140" font-size="11" fill="#475569">back vowels</text>
+        <text x="344" y="158" font-size="11" fill="#475569">Pola: three high vowels /i ɨ u/</text>
+        <text x="344" y="176" font-size="11" fill="#475569">(with distinct central high vowel)</text>
+      </svg>
+    </div>
+    <p class="prose">Getting the wrong vowel in these languages changes meaning entirely. This is why French speakers pronounce English words differently — they project their own vowel system onto English sounds.</p>
+    <div class="check" data-check="5">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">French has the vowel /y/ (high front rounded). English has /iː/ (high front unrounded) and /uː/ (high back rounded). Describe what makes /y/ different from both.</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer">/y/ is HIGH (like /iː/) and ROUNDED (like /uː/), but combines both properties. English separates these: high vowels are either front-unrounded (/iː/) or back-rounded (/uː/). /y/ is a front-rounded vowel — the combination doesn't exist in English.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 6 ============ -->
+<div class="step" id="step-6" data-step="6">
+  <div class="step-header" onclick="toggleStep(6)">
+    <div class="step-num locked">6</div>
+    <div class="step-title"><h3>Syllable Structure</h3><div class="step-sub">Onset, nucleus, coda</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">A syllable has up to three parts: <strong>onset</strong> (initial consonant(s)), <strong>nucleus</strong> (usually a vowel — the core), and <strong>coda</strong> (final consonant(s)). Only the nucleus is required.</p>
+    <div class="diagram">
+      <svg viewBox="0 0 600 200" xmlns="http://www.w3.org/2000/svg" style="max-width:550px">
+        <style>svg text{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; font-weight:600;}</style>
+        <!-- Tree for "cat" -->
+        <text x="50" y="30" font-size="13" fill="#065f46">Word: cat</text>
+        <circle cx="100" cy="50" r="5" fill="#10b981"/><text x="95" y="55" font-size="12" fill="#065f46">σ</text>
+        <line x1="100" y1="55" x2="70" y2="80"/>
+        <line x1="100" y1="55" x2="100" y2="80"/>
+        <line x1="100" y1="55" x2="130" y2="80"/>
+        <rect x="50" y="80" width="40" height="25" fill="#eff6ff" stroke="#3b82f6" rx="5"/><text x="65" y="100" text-anchor="middle" font-size="11" fill="#1e40af">Onset</text>
+        <rect x="80" y="80" width="40" height="25" fill="#ecfdf5" stroke="#10b981" rx="5"/><text x="100" y="100" text-anchor="middle" font-size="11" fill="#065f46">Nuc.</text>
+        <rect x="110" y="80" width="40" height="25" fill="#fef2f2" stroke="#ef4444" rx="5"/><text x="130" y="100" text-anchor="middle" font-size="11" fill="#991b1b">Coda</text>
+        <text x="50" y="130" font-size="11" fill="#475569">/k/</text><text x="95" y="130" font-size="11" fill="#475569">/æ/</text><text x="130" y="130" font-size="11" fill="#475569">/t/</text>
+        <text x="50" y="155" font-size="12" fill="#065f46"><tspan font-weight="700">Rhyme</tspan> = nucleus + coda = /æt/</text>
+        <text x="50" y="175" font-size="12" fill="#065f46">Only nucleus is required</text>
+      </svg>
+    </div>
+    <p class="prose">In English, only the nucleus is required — "oh" /əʊ/ is a valid syllable with no onset or coda. But English allows complex structures: "strengths" /stɹɛŋkθs/ has 3 onset consonants and 4 coda consonants in a single syllable.</p>
+    <div class="check" data-check="6">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">Break the word 'plant' into onset, nucleus, and coda. What is the rhyme?</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer">Onset: /pl/, nucleus: /æ/, coda: /nt/. Rhyme: /ænt/ (nucleus + coda together).</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 7 ============ -->
+<div class="step" id="step-7" data-step="7">
+  <div class="step-header" onclick="toggleStep(7)">
+    <div class="step-num locked">7</div>
+    <div class="step-title"><h3>Sonority & the Sonorant Sandwich</h3><div class="step-sub">Why syllables are shaped the way they are</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">Syllables follow a sonority pattern: they <strong>rise from the edges to a peak at the nucleus</strong>. Vowels are the most sonorant (loudest, most resonant). Stops are the least sonorant. This is why syllable nuclei are almost always vowels, and why consonant clusters at the edges follow specific patterns.</p>
+    <div class="diagram">
+      <svg viewBox="0 0 600 220" xmlns="http://www.w3.org/2000/svg" style="max-width:550px">
+        <style>svg text{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;}</style>
+        <!-- Sonority hierarchy -->
+        <text x="50" y="25" font-size="13" font-weight="700" fill="#065f46">Sonority hierarchy (lowest → highest)</text>
+        <rect x="50" y="35" width="70" height="30" fill="#fef2f2" stroke="#ef4444" stroke-width="1.5" rx="6"/><text x="85" y="58" text-anchor="middle" font-size="11" fill="#991b1b" font-weight="600">Stops</text>
+        <path d="M 125 50 L 135 50" stroke="#10b981" stroke-width="2" marker-end="url(#arr-g)"/>
+        <rect x="140" y="35" width="70" height="30" fill="#ffe4e6" stroke="#f87171" stroke-width="1.5" rx="6"/><text x="175" y="58" text-anchor="middle" font-size="11" fill="#991b1b" font-weight="600">Fricatives</text>
+        <path d="M 215 50 L 225 50" stroke="#10b981" stroke-width="2" marker-end="url(#arr-g)"/>
+        <rect x="230" y="35" width="70" height="30" fill="#fcd5ce" stroke="#fb7185" stroke-width="1.5" rx="6"/><text x="265" y="58" text-anchor="middle" font-size="11" fill="#991b1b" font-weight="600">Nasals</text>
+        <path d="M 305 50 L 315 50" stroke="#10b981" stroke-width="2" marker-end="url(#arr-g)"/>
+        <rect x="320" y="35" width="70" height="30" fill="#dbeafe" stroke="#60a5fa" stroke-width="1.5" rx="6"/><text x="355" y="58" text-anchor="middle" font-size="11" fill="#1e40af" font-weight="600">Liquids</text>
+        <path d="M 395 50 L 405 50" stroke="#10b981" stroke-width="2" marker-end="url(#arr-g)"/>
+        <rect x="410" y="35" width="70" height="30" fill="#ecfdf5" stroke="#10b981" stroke-width="2" rx="6"/><text x="445" y="58" text-anchor="middle" font-size="11" fill="#065f46" font-weight="600">VOWELS</text>
+        <!-- Example -->
+        <text x="50" y="95" font-size="12" font-weight="700" fill="#065f46">Example: /stɹɛŋkθs/ (strengths)</text>
+        <text x="50" y="120" font-size="11" fill="#475569">/st/ (stops) → /ɹ/ (liquid) → /ɛ/ (VOWEL PEAK) → /ŋ/ (nasal) → /kθs/ (stops/fricative)</text>
+        <text x="50" y="140" font-size="11" fill="#475569">The vowel sits at the TOP. Everything around it slopes downward.</text>
+        <text x="50" y="160" font-size="12" font-weight="700" fill="#065f46">Why can't English have /mk/ at the start?</text>
+        <text x="50" y="180" font-size="11" fill="#475569">Because /m/ (nasal) is MORE sonorant than /k/ (stop).</text>
+        <text x="50" y="198" font-size="11" fill="#475569">English requires sonority to RISE toward the nucleus. /km/ is valid (/ɪɡ.nɪm/), but /mk/ isn't.</text>
+        <defs><marker id="arr-g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#10b981"/></marker></defs>
+      </svg>
+    </div>
+    <div class="check" data-check="7">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">Why can't English have a word that starts with /mk/? Think about the sonority hierarchy.</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer">/m/ (nasal) has higher sonority than /k/ (stop). English requires consonant clusters to rise in sonority toward the nucleus. Starting with /mk/ would require sonority to drop (from /m/ to /k/), which violates the sonority principle.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 8 ============ -->
+<div class="step" id="step-8" data-step="8">
+  <div class="step-header" onclick="toggleStep(8)">
+    <div class="step-num locked">8</div>
+    <div class="step-title"><h3>Stress</h3><div class="step-sub">Making syllables stand out</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">Stress = making one syllable more prominent than others, through loudness, pitch, duration, or clearer articulation. <strong>In English, stress is phonemic</strong> — it changes meaning:</p>
+    <div class="diagram">
+      <svg viewBox="0 0 600 150" xmlns="http://www.w3.org/2000/svg" style="max-width:550px">
+        <style>svg text{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;}</style>
+        <rect x="50" y="10" width="240" height="130" rx="10" fill="#ecfdf5" stroke="#10b981" stroke-width="2"/>
+        <text x="65" y="32" font-size="12" font-weight="700" fill="#065f46">INsult (noun)</text>
+        <text x="65" y="52" font-size="11" fill="#475569">Stress on first syllable</text>
+        <text x="65" y="70" font-size="11" fill="#475569">/'ɪn.sʌlt/</text>
+        <text x="65" y="88" font-size="11" fill="#475569">First vowel clear & long</text>
+        <text x="65" y="106" font-size="11" fill="#475569">Second vowel reduces</text>
+        <text x="65" y="124" font-size="11" fill="#475569">toward schwa</text>
+
+        <rect x="310" y="10" width="240" height="130" rx="10" fill="#fef2f2" stroke="#ef4444" stroke-width="2"/>
+        <text x="325" y="32" font-size="12" font-weight="700" fill="#991b1b">inSULT (verb)</text>
+        <text x="325" y="52" font-size="11" fill="#475569">Stress on second syllable</text>
+        <text x="325" y="70" font-size="11" fill="#475569">/ɪn.'sʌlt/</text>
+        <text x="325" y="88" font-size="11" fill="#475569">First vowel reduces</text>
+        <text x="325" y="106" font-size="11" fill="#475569">to schwa (/ɪ/)</text>
+        <text x="325" y="124" font-size="11" fill="#475569">Second vowel clear</text>
+      </svg>
+    </div>
+    <p class="prose"><strong>Informal ↔ Formal:</strong> "I said it louder" ↔ "The stressed syllable has greater amplitude, higher F0, longer duration, and less vowel reduction."</p>
+    <p class="prose">Unstressed syllables reduce toward schwa: phoTOGraphy (the vowels shift). Stress placement changes with suffixes.</p>
+    <div class="check" data-check="8">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">The word 'record' can be a noun or a verb. How does stress distinguish them? What happens to the vowels?</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer">Noun: /'ɹɛ.kɔɹd/ (stress on first syllable). Verb: /ɹə.'kɔɹd/ (stress on second syllable). In the noun, the first vowel is clear /ɛ/. In the verb, the first vowel reduces toward schwa /ə/.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 9 ============ -->
+<div class="step" id="step-9" data-step="9">
+  <div class="step-header" onclick="toggleStep(9)">
+    <div class="step-num locked">9</div>
+    <div class="step-title"><h3>Rhythm: Stress-Timed vs Syllable-Timed</h3><div class="step-sub">Why English and French sound so different</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose"><strong>English is stress-timed:</strong> stressed syllables occur at roughly equal intervals, and unstressed syllables get squished between them. <strong>French is syllable-timed:</strong> each syllable takes roughly the same duration.</p>
+    <div class="diagram">
+      <svg viewBox="0 0 620 160" xmlns="http://www.w3.org/2000/svg" style="max-width:600px">
+        <style>svg text{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;}</style>
+        <!-- English -->
+        <text x="30" y="28" font-size="13" font-weight="700" fill="#1e40af">English (stress-timed)</text>
+        <text x="30" y="48" font-size="11" fill="#475569">"inaTTENtive"</text>
+        <rect x="30" y="58" width="30" height="15" fill="#dbeafe" stroke="#60a5fa" stroke-width="1"/><text x="45" y="70" text-anchor="middle" font-size="9" fill="#1e40af">in</text>
+        <rect x="65" y="58" width="20" height="15" fill="#dbeafe" stroke="#60a5fa" stroke-width="1"/><text x="75" y="70" text-anchor="middle" font-size="9" fill="#1e40af">ə</text>
+        <rect x="90" y="38" width="50" height="35" fill="#3b82f6" stroke="#1e40af" stroke-width="2"/><text x="115" y="63" text-anchor="middle" font-size="10" fill="#fff" font-weight="600">TEN</text>
+        <rect x="145" y="58" width="20" height="15" fill="#dbeafe" stroke="#60a5fa" stroke-width="1"/><text x="155" y="70" text-anchor="middle" font-size="9" fill="#1e40af">tiv</text>
+        <rect x="170" y="58" width="20" height="15" fill="#dbeafe" stroke="#60a5fa" stroke-width="1"/><text x="180" y="70" text-anchor="middle" font-size="9" fill="#1e40af">ə</text>
+        <text x="30" y="105" font-size="11" fill="#475569">Stressed syllables evenly spaced</text>
+        <text x="30" y="125" font-size="11" fill="#475569">Unstressed syllables compressed</text>
+
+        <!-- French -->
+        <text x="320" y="28" font-size="13" font-weight="700" fill="#065f46">French (syllable-timed)</text>
+        <text x="320" y="48" font-size="11" fill="#475569">"i-na-ten-tif"</text>
+        <rect x="320" y="58" width="30" height="25" fill="#a7f3d0" stroke="#10b981" stroke-width="1.5"/><text x="335" y="73" text-anchor="middle" font-size="10" fill="#065f46">i</text>
+        <rect x="355" y="58" width="30" height="25" fill="#a7f3d0" stroke="#10b981" stroke-width="1.5"/><text x="370" y="73" text-anchor="middle" font-size="10" fill="#065f46">na</text>
+        <rect x="390" y="58" width="30" height="25" fill="#a7f3d0" stroke="#10b981" stroke-width="1.5"/><text x="405" y="73" text-anchor="middle" font-size="10" fill="#065f46">ten</text>
+        <rect x="425" y="58" width="30" height="25" fill="#a7f3d0" stroke="#10b981" stroke-width="1.5"/><text x="440" y="73" text-anchor="middle" font-size="10" fill="#065f46">tif</text>
+        <text x="320" y="105" font-size="11" fill="#475569">Each syllable gets equal time</text>
+        <text x="320" y="125" font-size="11" fill="#475569">No compression or reduction</text>
+      </svg>
+    </div>
+    <p class="prose">This is why early text-to-speech (like old Siri) sounded robotic — it used syllable timing instead of stress timing. Modern systems correct for this.</p>
+    <div class="check" data-check="9">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">Why would a native French speaker sound 'choppy' to an English listener, and an English speaker sound 'mumbled' to a French listener?</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer">French speakers apply syllable timing to English, making each syllable equally prominent and distinct — sounding choppy/staccato. English speakers compress unstressed syllables in French, making them harder to hear — sounding mumbled/slurred. Each listener expects their own rhythm pattern.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 10 ============ -->
+<div class="step" id="step-10" data-step="10">
+  <div class="step-header" onclick="toggleStep(10)">
+    <div class="step-num locked">10</div>
+    <div class="step-title"><h3>Tone Systems</h3><div class="step-sub">When pitch changes meaning</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">In <strong>tone languages</strong>, pitch level or pitch movement changes the meaning of a word. Mandarin has 4 tones:</p>
+    <div class="diagram">
+      <svg viewBox="0 0 600 180" xmlns="http://www.w3.org/2000/svg" style="max-width:550px">
+        <style>svg text{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;}</style>
+        <!-- Tone 1 -->
+        <text x="30" y="25" font-size="11" font-weight="700" fill="#065f46">Tone 1 (mā)</text>
+        <polyline points="50,70 60,60 70,60 80,60 90,60 100,60" stroke="#10b981" stroke-width="3" fill="none"/>
+        <text x="105" y="65" font-size="11" fill="#475569">= mother</text>
+        <!-- Tone 2 -->
+        <text x="200" y="25" font-size="11" font-weight="700" fill="#065f46">Tone 2 (má)</text>
+        <polyline points="200,70 210,65 220,60 230,55 240,50 250,50" stroke="#f59e0b" stroke-width="3" fill="none"/>
+        <text x="255" y="65" font-size="11" fill="#475569">= hemp</text>
+        <!-- Tone 3 -->
+        <text x="370" y="25" font-size="11" font-weight="700" fill="#065f46">Tone 3 (mǎ)</text>
+        <polyline points="350,55 360,65 370,70 380,70 390,65 400,55" stroke="#8b5cf6" stroke-width="3" fill="none"/>
+        <text x="405" y="65" font-size="11" fill="#475569">= horse</text>
+        <!-- Tone 4 -->
+        <text x="520" y="25" font-size="11" font-weight="700" fill="#065f46">Tone 4 (mà)</text>
+        <polyline points="480,50 490,60 500,70 510,70 520,70 530,70" stroke="#ef4444" stroke-width="3" fill="none"/>
+        <text x="535" y="65" font-size="11" fill="#475569">= scold</text>
+        <!-- Y-axis for pitch -->
+        <line x1="20" y1="50" x2="20" y2="90" stroke="#94a3b8" stroke-width="1"/>
+        <text x="5" y="55" font-size="10" fill="#94a3b8">high</text>
+        <text x="5" y="90" font-size="10" fill="#94a3b8">low</text>
+      </svg>
+    </div>
+    <p class="prose"><strong>Register tone systems</strong> (e.g., Ibibio, Nigeria) use level pitches (high, mid, low). <strong>Contour tone systems</strong> (e.g., Mandarin) use pitch movement (rising, falling). <strong>Pitch accent languages</strong> (e.g., Tokyo Japanese) have fixed pitch patterns per word.</p>
+    <p class="prose"><strong>Important:</strong> English doesn't use tone to distinguish words. We use intonation (pitch at the sentence level), which is different from lexical tone.</p>
+    <div class="check" data-check="10">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">In Mandarin, mā means 'mother' and mǎ means 'horse'. What type of tone system does Mandarin have — register or contour? Why?</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer">Mandarin has a contour tone system. Tone 1 (mā) is a level high tone (register), but Tone 3 (mǎ) is a falling-rising contour. Contour tones involve pitch movement within the syllable, not just static pitch levels.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 11 ============ -->
+<div class="step" id="step-11" data-step="11">
+  <div class="step-header" onclick="toggleStep(11)">
+    <div class="step-num locked">11</div>
+    <div class="step-title"><h3>Voice Quality</h3><div class="step-sub">Modal, creaky, and breathy</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">Voice quality refers to <strong>HOW your vocal folds vibrate</strong>:</p>
+    <div class="diagram">
+      <svg viewBox="0 0 640 160" xmlns="http://www.w3.org/2000/svg" style="max-width:600px">
+        <style>svg text{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;}</style>
+        <rect x="20" y="10" width="180" height="140" rx="10" fill="#ecfdf5" stroke="#10b981" stroke-width="1.5"/>
+        <text x="35" y="32" font-size="12" font-weight="700" fill="#065f46">Modal voice</text>
+        <text x="35" y="54" font-size="11" fill="#475569">Normal speaking</text>
+        <text x="35" y="72" font-size="11" fill="#475569">Steady, regular</text>
+        <text x="35" y="90" font-size="11" fill="#475569">vocal fold vibration</text>
+        <text x="35" y="120" font-size="10" fill="#94a3b8">Produced by almost everyone,</text>
+        <text x="35" y="135" font-size="10" fill="#94a3b8">every day</text>
+
+        <rect x="230" y="10" width="180" height="140" rx="10" fill="#fef2f2" stroke="#ef4444" stroke-width="1.5"/>
+        <text x="245" y="32" font-size="12" font-weight="700" fill="#991b1b">Creaky voice</text>
+        <text x="245" y="54" font-size="11" fill="#475569">Slower, irregular</text>
+        <text x="245" y="72" font-size="11" fill="#475569">vocal fold vibration</text>
+        <text x="245" y="90" font-size="11" fill="#475569">(Kardashian vocal fry)</text>
+        <text x="245" y="120" font-size="10" fill="#94a3b8">Stylistic in English,</text>
+        <text x="245" y="135" font-size="10" fill="#94a3b8">phonemic in Gujarati</text>
+
+        <rect x="440" y="10" width="180" height="140" rx="10" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.5"/>
+        <text x="455" y="32" font-size="12" font-weight="700" fill="#1e40af">Breathy voice</text>
+        <text x="455" y="54" font-size="11" fill="#475569">Vocal folds apart,</text>
+        <text x="455" y="72" font-size="11" fill="#475569">lots of air escape</text>
+        <text x="455" y="90" font-size="11" fill="#475569">(Marilyn Monroe)</text>
+        <text x="455" y="120" font-size="10" fill="#94a3b8">Stylistic in English,</text>
+        <text x="455" y="135" font-size="10" fill="#94a3b8">phonemic in Jalapa Mazatec</text>
+      </svg>
+    </div>
+    <p class="prose">In English, these are just stylistic/social — they don't change word meaning. But in <strong>Gujarati</strong>, breathy voice is phonemic (bɑr vs b̤ɑr = different words). In <strong>Jalapa Mazatec</strong>, there's a three-way contrast: modal, creaky, and breathy voice on the same vowel, each giving a different word.</p>
+    <div class="callout tip"><div class="callout-icon">💡</div><div><strong>Why is voice quality "suprasegmental"?</strong> Because it overlays the entire utterance (or large chunks of it), not just individual segments. You can apply creaky voice to a whole sentence, affecting all vowels simultaneously.</div></div>
+    <div class="check" data-check="11">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">Why is voice quality considered a suprasegmental feature rather than a segmental one?</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer">Voice quality overlays the entire utterance or large chunks of it, not just individual phonemes. You can speak an entire sentence in breathy voice, affecting all the vowels at once. It's a property of how you're phonating (vocal fold motion), not a discrete segment.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 12 ============ -->
+<div class="step" id="step-12" data-step="12">
+  <div class="step-header" onclick="toggleStep(12)">
+    <div class="step-num locked">12</div>
+    <div class="step-title"><h3>Intonation</h3><div class="step-sub">Pitch at the sentence level</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">Intonation uses <strong>pitch patterns across whole sentences</strong> — not to change word meaning (that's tone), but for pragmatic functions.</p>
+    <div class="diagram">
+      <svg viewBox="0 0 620 180" xmlns="http://www.w3.org/2000/svg" style="max-width:600px">
+        <style>svg text{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;}</style>
+        <!-- Statement -->
+        <text x="30" y="25" font-size="12" font-weight="700" fill="#065f46">"You're coming." (statement)</text>
+        <polyline points="50,60 70,55 90,50 110,50 130,45 150,40" stroke="#10b981" stroke-width="3" fill="none"/>
+        <text x="30" y="85" font-size="11" fill="#475569">Pitch falls at end</text>
+        <!-- Question -->
+        <text x="340" y="25" font-size="12" font-weight="700" fill="#1e40af">"You're coming?" (question)</text>
+        <polyline points="360,60 380,55 400,50 420,50 440,45 460,35" stroke="#3b82f6" stroke-width="3" fill="none"/>
+        <polyline points="460,35 480,45" stroke="#3b82f6" stroke-width="3" fill="none"/>
+        <text x="340" y="85" font-size="11" fill="#475569">Pitch rises at end</text>
+        <!-- Focus -->
+        <text x="30" y="125" font-size="12" font-weight="700" fill="#f59e0b">"HIS first wife was Swedish"</text>
+        <text x="30" y="145" font-size="11" fill="#475569">vs "His FIRST wife was Swedish"</text>
+        <text x="30" y="165" font-size="11" fill="#475569">Focus on one word changes which information is "new"</text>
+      </svg>
+    </div>
+    <p class="prose"><strong>Rising intonation</strong> = question ("You're coming?"). <strong>Falling</strong> = statement ("You're coming."). Focus placement changes meaning: "HIS first wife was Swedish" (not someone else's) vs "His FIRST wife was Swedish" (he's had others). Even pause placement matters: "What's that on the road ahead?" vs "What's that on the road? A head?"</p>
+    <p class="prose">Australian English has <strong>High Rising Terminal (HRT)</strong> — declarative sentences with question-like rising intonation. This is a distinctive feature of Australian English.</p>
+    <div class="check" data-check="12">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">Say 'The assignments will be easy' as a statement, a question, and with uncertainty. What changes in your pitch each time?</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer">Statement: pitch falls at the end. Question: pitch rises at the end. Uncertainty: pitch may rise slightly or remain relatively flat throughout, without the confident fall. The pitch movement signals attitude/intent.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+
+    <div class="summary-box green">
+      <h4>Week 3 in one sentence</h4>
+      <p>Vowels are unobstructed sounds shaped by tongue position and lip rounding; they form the nucleus of syllables and vary across languages. Suprasegmentals — stress, rhythm, tone, voice quality, and intonation — layer on top of segments to add meaning, emotion, and pragmatic function. Together, they show how language packages meaning at multiple levels simultaneously.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ============ SELF-TEST ============ -->
+<div class="self-test">
+  <div class="self-test-title">📝 Week 3 Self-Test</div>
+  <div class="self-test-sub">10 exam-style questions covering vowels and suprasegmentals. Try to answer each one before revealing.</div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q1</span><span class="st-q-bloom">Understanding</span></div><p>What three parameters classify vowels in the IPA?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">Tongue height (close/open), tongue frontness/backness (front/central/back), and lip rounding (rounded/unrounded).</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q2</span><span class="st-q-bloom">Understanding</span></div><p>What is schwa, and where does it sit on the vowel trapezoid?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">Schwa /ə/ is a mid-central vowel — tongue in neutral position, no particular height or frontness, unrounded. It's the most common vowel in unstressed English syllables ('about', 'sofa'). It sits dead centre on the vowel trapezoid.</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q3</span><span class="st-q-bloom">Understanding</span></div><p>Explain the difference between a monophthong and a diphthong.</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">A monophthong is a vowel with a single, stable tongue position (e.g., /iː/ in 'beat'). A diphthong involves tongue movement from one position to another within a single syllable (e.g., /aɪ/ in 'bite' — tongue starts low-central and glides to high-front).</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q4</span><span class="st-q-bloom">Understanding</span></div><p>What are the three components of syllable structure?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">Onset (initial consonant(s)), nucleus (the vowel core), and coda (final consonant(s)). The nucleus is the only required element. Nucleus + coda together form the rhyme.</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q5</span><span class="st-q-bloom">Understanding</span></div><p>What is the 'sonorant sandwich' principle?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">Syllables are structured so that sonority rises from the edges to a peak at the nucleus. The most sonorant sound (usually a vowel) is in the middle, with less sonorant sounds (consonants) at the edges. This is why /stɹɛŋkθs/ ('strengths') is a valid English syllable but */ŋkst/ is not.</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q6</span><span class="st-q-bloom">Apply</span></div><p>The words 'record' (noun) and 'record' (verb) have the same segments. What distinguishes them?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">Stress placement: REcord (noun, stress on first syllable) vs reCORD (verb, stress on second). This demonstrates that stress is phonemic in English — it distinguishes grammatical categories and vowel quality.</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q7</span><span class="st-q-bloom">Apply</span></div><p>In Mandarin, mā (mother), má (hemp), mǎ (horse), mà (scold) differ only in tone. What does this tell us about tone systems?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">In tone languages, pitch changes are phonemic — they change word meaning, just like consonants and vowels do in English. Mandarin is a contour tone language: Tone 1 is high level, Tone 2 is rising, Tone 3 is falling-rising, and Tone 4 is falling.</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q8</span><span class="st-q-bloom">Apply</span></div><p>English uses intonation (pitch at sentence level) but not lexical tone. Japanese uses pitch accent. Mandarin uses contour tones. How would you classify these three languages in terms of how they use pitch?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">English: pitch serves pragmatic functions (questions, focus, emotion) but doesn't distinguish word meaning — non-contrastive intonation. Japanese: pitch patterns are fixed per word (pitch accent) — limited tonal contrast. Mandarin: each syllable carries a contrastive tone that changes word meaning — full contour tone system. This represents a continuum from no lexical pitch contrast (English) to full tonal contrast (Mandarin).</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q9</span><span class="st-q-bloom">Analyse</span></div><p>Voice quality (modal, creaky, breathy) is sociolinguistic in English but phonemic in Gujarati. What does this tell us about the relationship between phonetics and phonology?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">The same phonetic feature can serve different functions in different languages. Creaky voice is physically available to all humans, but whether a language uses it to distinguish word meanings (phonemic) or only for social/stylistic purposes (non-phonemic) is language-specific. This illustrates that phonetics provides the universal 'possibility space' while each language's phonology determines which contrasts are meaningful.</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q10</span><span class="st-q-bloom">Analyse</span></div><p>Australian English has approximately 18 vowel sounds, but English writing uses only 5 vowel letters. Why is spelling so inconsistent compared to transcription?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">Spelling is a technology created centuries ago and hasn't been updated to match actual pronunciation. The vowel system has changed (Great Vowel Shift in Early Modern English), but spelling stayed the same. The IPA transcription system was designed specifically to capture phonetic precision, using a unique symbol for each sound. Spelling is arbitrary and historical; the IPA is systematic and phonetically explicit.</div></div>
+</div>
+
+<!-- Practice Lab links -->
+<p class="prose" style="margin-top:20px;"><span class="label label-tip">Practice next</span></p>
+<p class="prose">Now apply what you've learned:</p>
+
+<a class="lab-link" href="#" onclick="window.parent.openPracticeLabTool('ipa',3); return false;"><div class="lab-link-icon">🗣</div><div class="lab-link-text"><div class="lab-link-title">IPA Transcription Drill</div><div class="lab-link-desc">Practise vowel transcription and diphthong identification</div></div><div class="lab-link-arrow">→</div></a>
+<a class="lab-link" href="#" onclick="window.parent.openPracticeLabTool('flashcards',3); return false;"><div class="lab-link-icon">📚</div><div class="lab-link-text"><div class="lab-link-title">Key Terms: Vowels & Suprasegmentals</div><div class="lab-link-desc">Monophthong, diphthong, schwa, stress, tone, intonation</div></div><div class="lab-link-arrow">→</div></a>
+<a class="lab-link" href="#" onclick="window.parent.openPracticeLabTool('phonology',3); return false;"><div class="lab-link-icon">🔬</div><div class="lab-link-text"><div class="lab-link-title">Phonology Analysis</div><div class="lab-link-desc">Minimal pairs and sound system analysis</div></div><div class="lab-link-arrow">→</div></a>
+
+<div class="nav-footer">
+  <a class="nav-btn" href="#">← Back to Dashboard</a>
+  <a class="nav-btn primary" href="#">Week 4: Phonology →</a>
+</div>
+
+</div>
+
+<script>
+const totalSteps=12;let completedSteps=new Set();
+function toggleStep(n){document.getElementById('step-'+n).classList.toggle('open')}
+function enableReveal(ta){const btn=ta.closest('.check,.st-q').querySelector('.check-reveal button');btn.disabled=ta.value.trim().length<5}
+function revealAnswer(btn){const c=btn.closest('.check,.st-q');c.querySelector('.check-answer').classList.add('show');const r=c.querySelector('.check-rating');if(r)r.classList.add('show');btn.style.display='none'}
+function rateCheck(btn,rating){const check=btn.closest('.check'),step=btn.closest('.step'),n=parseInt(step.dataset.step);check.querySelector('.check-rating').querySelectorAll('button').forEach(b=>b.style.opacity='0.4');btn.style.opacity='1';completedSteps.add(n);updateProgress();step.querySelector('.step-num').className='step-num done';const next=document.getElementById('step-'+(n+1));if(next){const nn=next.querySelector('.step-num');if(nn.classList.contains('locked'))nn.className='step-num active'}}
+function updateProgress(){const p=Math.round(completedSteps.size/totalSteps*100);document.getElementById('progressFill').style.width=p+'%';document.getElementById('progressLabel').textContent=completedSteps.size+' of '+totalSteps+' complete'}
+</script>
+</body>
+</html>

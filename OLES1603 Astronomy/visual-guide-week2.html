@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OLES1603 Week 2: Astronomy without a Telescope</title>
+    <style>
+        :root {
+            --purple: #8b5cf6;
+            --purple-light: #f5f3ff;
+            --purple-dark: #6d28d9;
+            --text-dark: #1f2937;
+            --text-light: #6b7280;
+            --border-color: #e5e7eb;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+            color: var(--text-dark);
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--purple-dark) 0%, var(--purple) 100%);
+            color: white;
+            padding: 2rem 1.5rem;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            font-size: 1rem;
+            opacity: 0.95;
+        }
+
+        /* Main Content */
+        main {
+            flex: 1;
+            padding: 2rem 1.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* Step Container */
+        .step-container {
+            display: none;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .step-container.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .step-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            margin-bottom: 2rem;
+        }
+
+        .step-title {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            gap: 1rem;
+        }
+
+        .step-number {
+            background: linear-gradient(135deg, var(--purple-dark) 0%, var(--purple) 100%);
+            color: white;
+            width: 3rem;
+            height: 3rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+
+        .step-title h2 {
+            font-size: 1.75rem;
+            color: var(--text-dark);
+        }
+
+        .step-content {
+            margin: 1.5rem 0;
+            line-height: 1.8;
+        }
+
+        .step-content ul, .step-content ol {
+            margin: 1rem 0 1rem 1.5rem;
+        }
+
+        .step-content li {
+            margin: 0.8rem 0;
+            color: var(--text-light);
+        }
+
+        .callout {
+            background: var(--purple-light);
+            border-left: 4px solid var(--purple);
+            padding: 1.25rem;
+            border-radius: 6px;
+            margin: 1.5rem 0;
+            font-style: italic;
+            color: var(--text-dark);
+        }
+
+        .callout-warning {
+            background: #fef3c7;
+            border-left-color: var(--warning);
+        }
+
+        .comparison-box {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .comparison-item {
+            background: var(--purple-light);
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 2px solid var(--purple);
+        }
+
+        .comparison-item h4 {
+            color: var(--purple-dark);
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+        }
+
+        .comparison-item ul {
+            margin: 0;
+            padding-left: 1.25rem;
+        }
+
+        .comparison-item li {
+            margin: 0.5rem 0;
+            font-size: 0.95rem;
+        }
+
+        /* Navigation */
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem;
+            background: white;
+            box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.08);
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        button {
+            background: var(--purple);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        button:hover:not(:disabled) {
+            background: var(--purple-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+        }
+
+        button:disabled {
+            background: #d1d5db;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .step-counter {
+            color: var(--text-light);
+            font-weight: 600;
+            flex: 1;
+            text-align: center;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            width: 100%;
+            height: 6px;
+            background: #e5e7eb;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 1rem;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--purple-dark) 0%, var(--purple) 100%);
+            transition: width 0.3s ease;
+        }
+
+        /* Self-Test Section */
+        .selftest-section {
+            background: white;
+            border-radius: 12px;
+            padding: 2.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            margin-bottom: 2rem;
+        }
+
+        .selftest-section h3 {
+            color: var(--purple-dark);
+            margin-bottom: 2rem;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .question-item {
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .question-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .question-text {
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 0.75rem;
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .question-number {
+            background: var(--purple-light);
+            color: var(--purple-dark);
+            padding: 0.25rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            min-width: 2.5rem;
+            text-align: center;
+        }
+
+        .bloom-tag {
+            display: inline-block;
+            background: var(--purple-light);
+            color: var(--purple-dark);
+            padding: 0.3rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-left: 0.75rem;
+        }
+
+        .answer-text {
+            color: var(--text-light);
+            line-height: 1.7;
+            padding-left: 3rem;
+            font-size: 0.95rem;
+        }
+
+        /* Practice Links Section */
+        .practice-links {
+            background: white;
+            border-radius: 12px;
+            padding: 2.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            margin-bottom: 2rem;
+        }
+
+        .practice-links h3 {
+            color: var(--purple-dark);
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        .practice-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .practice-card {
+            background: var(--purple-light);
+            border: 2px solid var(--purple);
+            border-radius: 8px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .practice-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px rgba(139, 92, 246, 0.2);
+            background: white;
+            border-color: var(--purple-dark);
+        }
+
+        .practice-card h4 {
+            color: var(--purple-dark);
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .practice-card p {
+            color: var(--text-light);
+            font-size: 0.95rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.5rem;
+            }
+
+            .step-card {
+                padding: 1.5rem;
+            }
+
+            .step-title h2 {
+                font-size: 1.25rem;
+            }
+
+            .comparison-box {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-container {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+            }
+
+            .step-counter {
+                order: 3;
+                width: 100%;
+            }
+
+            main {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🔭 Astronomy without a Telescope</h1>
+        <p>OLES1603 Astronomy: Exploring the Universe — Week 2</p>
+    </div>
+
+    <main>
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+
+        <!-- STEP 1: Why the Sky is Blue -->
+        <div class="step-container active">
+            <div class="step-card">
+                <div class="step-title">
+                    <div class="step-number">1</div>
+                    <h2>Why the Sky is Blue (and Sunsets are Red)</h2>
+                </div>
+                <div class="step-content">
+                    <ul>
+                        <li><strong>The Sun's spectrum:</strong> The Sun emits the full spectrum of visible light. Although it's brightest in green, it appears white because all colors combine.</li>
+                        <li><strong>Rayleigh scattering:</strong> Blue light has a shorter wavelength and is scattered much MORE by atmospheric molecules than red light. This scattered blue light comes from all directions, making the sky appear blue.</li>
+                        <li><strong>Why sunsets are red:</strong> At sunset, light travels through a much thicker layer of atmosphere. Blue light is scattered out completely, leaving only the longer-wavelength red and orange light to reach your eyes.</li>
+                        <li><strong>Mars sunsets are blue:</strong> Mars has a very thin atmosphere that scatters less light overall, and different dust particles scatter wavelengths differently — so blue light is actually preserved near the sun during Martian sunsets.</li>
+                        <li><strong>Why clouds are white:</strong> Water droplets in clouds scatter ALL colors of light equally (they're large compared to wavelength), so all colors combine to produce white light.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- STEP 2: The Moon's Orbit -->
+        <div class="step-container">
+            <div class="step-card">
+                <div class="step-title">
+                    <div class="step-number">2</div>
+                    <h2>The Moon's Orbit</h2>
+                </div>
+                <div class="step-content">
+                    <ul>
+                        <li><strong>Sidereal month:</strong> 27.3 days — the Moon's orbital period relative to the stars.</li>
+                        <li><strong>Synodic month (lunar month):</strong> ~30 days — the time from one full moon to the next (relative to Earth-Sun alignment). It's longer because Earth is also moving around the Sun.</li>
+                        <li><strong>Tidal locking:</strong> The Moon rotates at exactly the same rate it orbits Earth (27.3 days), so it always shows the same face to us. This isn't special to the Moon — it's the fate of nearly all moons in the solar system.</li>
+                        <li><strong>Libration:</strong> Due to the Moon's elliptical orbit, we can actually see about 59% of the lunar surface over time. The Moon wobbles slightly, allowing us to see slightly around its edges.</li>
+                        <li><strong>Universal pattern:</strong> All large moons in our solar system show the same face to their planets. Even Pluto and its moon Charon are tidally locked to EACH OTHER — they always face each other!</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- STEP 3: The Moon Illusion -->
+        <div class="step-container">
+            <div class="step-card">
+                <div class="step-title">
+                    <div class="step-number">3</div>
+                    <h2>The Moon Illusion</h2>
+                </div>
+                <div class="step-content">
+                    <ul>
+                        <li><strong>It's an illusion:</strong> The Moon appears significantly larger when it's on the horizon than when it's overhead — but this is entirely an optical illusion. The Moon's angular size is identical in both positions.</li>
+                        <li><strong>Why it happens:</strong> Your brain estimates distance partly by comparing objects to surrounding reference frames. When the Moon is on the horizon, you see buildings, trees, and landscape features — your brain misjudges these as being far away.</li>
+                        <li><strong>The trick:</strong> If foreground objects appear far away but the Moon is the same angular size, your brain concludes: "The Moon must be huge!" In reality, the Moon is closer and the same apparent size.</li>
+                        <li><strong>Overhead view:</strong> When the Moon is overhead, there are no nearby reference objects to trick your brain. It appears smaller because there's nothing to create the false distance estimate.</li>
+                        <li><strong>Additional effect:</strong> The Moon also appears slightly redder on the horizon due to the same atmospheric scattering effect that makes sunsets red.</li>
+                    </ul>
+                    <div class="callout">
+                        🧪 <strong>You can test this yourself:</strong> Hold a coin at arm's length and compare the Moon's size at the horizon versus overhead. When you block the coin comparison, the illusion vanishes! The Moon's actual angular size hasn't changed — only your perception of distance changed.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- STEP 4: Lunar Phases -->
+        <div class="step-container">
+            <div class="step-card">
+                <div class="step-title">
+                    <div class="step-number">4</div>
+                    <h2>Lunar Phases</h2>
+                </div>
+                <div class="step-content">
+                    <ul>
+                        <li><strong>What causes phases:</strong> Lunar phases are caused by the changing angle between the Sun, Moon, and Earth. The Moon doesn't change — only the fraction of its sunlit side that faces Earth changes.</li>
+                        <li><strong>The cycle:</strong> New moon → waxing crescent → first quarter → waxing gibbous → full moon → waning gibbous → last quarter → waning crescent → new moon (repeat).</li>
+                        <li><strong>Crescent moons:</strong> Thin crescents appear very close to the sun in the sky (just before sunrise or just after sunset). Thicker crescents appear higher in the sky.</li>
+                        <li><strong>Full moon:</strong> Rises as the sun sets (opposite sides of the sky). It's visible all night and is the most illuminated lunar phase.</li>
+                        <li><strong>Earthshine:</strong> During crescent phases, you can sometimes see the dark part of the Moon faintly illuminated. This is light from the Sun bouncing off Earth, then reflecting from the Moon back to your eyes — a four-step photon journey!</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- STEP 5: Eclipses: Solar and Lunar -->
+        <div class="step-container">
+            <div class="step-card">
+                <div class="step-title">
+                    <div class="step-number">5</div>
+                    <h2>Eclipses: Solar and Lunar</h2>
+                </div>
+                <div class="step-content">
+                    <ul>
+                        <li><strong>Solar eclipse:</strong> The Moon passes directly in front of the Sun, blocking its light. About 2–3 occur each year globally, but they're visible only from a narrow path on Earth.</li>
+                        <li><strong>Lunar eclipse:</strong> Earth's shadow falls on the Moon. This can only happen during a full moon. About 2–3 occur each year globally and are visible from the entire night side of Earth.</li>
+                        <li><strong>Why not every full/new moon?</strong> The Moon's orbit is tilted about 5° from the ecliptic plane (the plane of Earth's orbit). Eclipses only occur when the Moon crosses the ecliptic at the same time it aligns with the Sun or Earth.</li>
+                        <li><strong>Total solar eclipse rarity:</strong> A total solar eclipse is visible from any given location on Earth only once every 100–200 years. The path of totality is narrow and moves across Earth's surface.</li>
+                    </ul>
+                    <div class="callout callout-warning">
+                        ⚠️ <strong>Next total solar eclipse visible from Sydney:</strong> July 22, 2028! Mark your calendar. Total solar eclipses in Sydney are incredibly rare — this is a once-in-a-lifetime event for most people.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- STEP 6: The Perfect Coincidence -->
+        <div class="step-container">
+            <div class="step-card">
+                <div class="step-title">
+                    <div class="step-number">6</div>
+                    <h2>The Perfect Coincidence</h2>
+                </div>
+                <div class="step-content">
+                    <ul>
+                        <li><strong>The numbers:</strong> The Sun is approximately 400 times larger than the Moon AND approximately 400 times farther away from Earth than the Moon.</li>
+                        <li><strong>The result:</strong> This means the Sun and Moon appear to be almost exactly the same angular size in our sky — typically within 1% of each other.</li>
+                        <li><strong>Why it matters:</strong> This cosmic coincidence is why total solar eclipses are possible. The Moon just barely covers the Sun's disc, allowing the corona (Sun's atmosphere) to become visible.</li>
+                        <li><strong>Is it really a coincidence?</strong> Yes. There's no physical law that requires the Sun and Moon to appear the same size. It's pure chance that they're this close in angular size from Earth's perspective.</li>
+                        <li><strong>The future:</strong> The Moon is slowly moving away from Earth at about 3.8 cm per year. Over millions of years, the Moon will eventually be too far away to completely cover the Sun's disc.</li>
+                        <li><strong>What comes next:</strong> When the Moon can no longer fully cover the Sun, only annular eclipses (ring-shaped) will be possible in the distant future.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- STEP 7: What You See During a Total Eclipse -->
+        <div class="step-container">
+            <div class="step-card">
+                <div class="step-title">
+                    <div class="step-number">7</div>
+                    <h2>What You See During a Total Eclipse</h2>
+                </div>
+                <div class="step-content">
+                    <ul>
+                        <li><strong>The corona:</strong> The Sun's outer atmosphere, normally invisible because the bright photosphere outshines it, suddenly becomes visible as a ghostly halo of white light during totality.</li>
+                        <li><strong>Shadow bands:</strong> Strange patterns of light and dark bands race across the ground. This is a pinhole camera effect created by sunlight passing through the edges of leaves and objects, creating crescent-shaped images of the eclipse.</li>
+                        <li><strong>Animals' reactions:</strong> Birds often stop singing because they think it's nighttime. Nocturnal animals may become active. It's eerie and wonderful.</li>
+                        <li><strong>Temperature drop:</strong> The temperature noticeably drops during totality — sometimes by 10°C or more. The loss of direct sunlight becomes physically apparent.</li>
+                        <li><strong>Annular eclipse:</strong> When the Moon is too far from Earth to completely cover the Sun, you see a "ring of fire" around the Moon's silhouette. The Sun's photosphere is still visible around the Moon's edge.</li>
+                        <li><strong>Lunar eclipse colors:</strong> During a lunar eclipse, Earth's atmosphere bends red light (like a sunset) around Earth's shadow, often bathing the Moon in reddish light. The exact color depends on volcanic dust in Earth's atmosphere.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- STEP 8: Naked-Eye Planets -->
+        <div class="step-container">
+            <div class="step-card">
+                <div class="step-title">
+                    <div class="step-number">8</div>
+                    <h2>Naked-Eye Planets</h2>
+                </div>
+                <div class="step-content">
+                    <ul>
+                        <li><strong>The five visible planets:</strong> Mercury, Venus, Mars, Jupiter, and Saturn can all be seen without a telescope. These are the only planets visible to the naked eye.</li>
+                        <li><strong>Their orbits:</strong> All five planets orbit roughly in the same plane as Earth — the ecliptic. This is why they always appear along the zodiacal constellations.</li>
+                        <li><strong>Venus and Mercury:</strong> These orbit closer to the Sun than Earth does, so they only appear near sunrise or sunset — never high in the night sky.</li>
+                        <li><strong>Brightness:</strong> Venus is the brightest planet and sometimes the brightest object in the night sky (after the Moon). Jupiter is also very bright. Mars appears reddish (iron oxide in its soil). Saturn appears pale yellow.</li>
+                        <li><strong>Key difference from stars:</strong> Planets have a finite angular size (though tiny to the naked eye), so their light isn't concentrated to a single point. Stars are so distant they appear as point sources, and atmospheric turbulence scatters this concentrated light, making stars appear to twinkle. Planets don't twinkle noticeably.</li>
+                    </ul>
+                    <div class="comparison-box">
+                        <div class="comparison-item">
+                            <h4>Planets</h4>
+                            <ul>
+                                <li>Don't twinkle (broad light source)</li>
+                                <li>Move relative to stars over weeks/months</li>
+                                <li>Always appear along the ecliptic</li>
+                                <li>Very bright (Venus, Jupiter)</li>
+                            </ul>
+                        </div>
+                        <div class="comparison-item">
+                            <h4>Stars</h4>
+                            <ul>
+                                <li>Twinkle visibly (point source)</li>
+                                <li>Fixed positions (effectively)</li>
+                                <li>Scattered throughout the sky</li>
+                                <li>Brightness varies widely</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- STEP 9: Meteor Showers and Aurorae -->
+        <div class="step-container">
+            <div class="step-card">
+                <div class="step-title">
+                    <div class="step-number">9</div>
+                    <h2>Meteor Showers and Aurorae</h2>
+                </div>
+                <div class="step-content">
+                    <ul>
+                        <li><strong>Meteor showers:</strong> Meteors are NOT stars falling from the sky. They're tiny pieces of space debris (gravel-sized) burning up from friction as they enter Earth's atmosphere at high speed. They appear as brief streaks of light — "shooting stars."</li>
+                        <li><strong>Named by constellation:</strong> Meteor showers are named after the constellation they appear to radiate from, though this is just a perspective effect. The Leonids appear to come from Leo, the Perseids from Perseus, etc.</li>
+                        <li><strong>Annual recurrence:</strong> Meteor showers occur at predictable times each year when Earth's orbit passes through clouds of debris left behind by comets.</li>
+                        <li><strong>Aurorae (Northern and Southern Lights):</strong> Aurorae occur when charged particles from the Sun (solar wind) interact with Earth's magnetic field.</li>
+                        <li><strong>How aurorae work:</strong> Solar wind particles spiral along Earth's magnetic field lines toward the polar regions, colliding with and exciting atmospheric gases (oxygen and nitrogen). These excited atoms emit light.</li>
+                        <li><strong>Aurora colors:</strong> Different gases produce different colors. Oxygen emits green and red light; nitrogen emits blue and purple. The color also depends on the energy of the collisions and altitude.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- STEP 10: Tidal Forces Explained -->
+        <div class="step-container">
+            <div class="step-card">
+                <div class="step-title">
+                    <div class="step-number">10</div>
+                    <h2>Tidal Forces Explained</h2>
+                </div>
+                <div class="step-content">
+                    <ul>
+                        <li><strong>The basic mechanism:</strong> The Moon's gravity pulls on Earth's water, creating tides. The side of Earth facing the Moon experiences stronger gravitational pull, while the far side is pulled less.</li>
+                        <li><strong>Tidal bulges:</strong> Water bulges toward the Moon (side facing it) and away from the Moon (opposite side). These bulges create high tides roughly twice daily as Earth rotates.</li>
+                        <li><strong>Earth is also affected:</strong> While less obvious, the Moon's gravity also subtly pulls on Earth's solid crust. This causes small earthquakes and tidal heating.</li>
+                        <li><strong>Friction slows Earth's rotation:</strong> Friction from tidal movement gradually dissipates energy, slowly slowing Earth's rotation. Earth's day is getting longer at a rate of about 1.7 milliseconds per century.</li>
+                        <li><strong>The Moon's fate:</strong> Eventually (in about 50 billion years), Earth will become tidally locked to the Moon — both will show the same faces to each other, and rotation will stop.</li>
+                        <li><strong>The Moon's past:</strong> This is what happened to the Moon long ago. Tidal friction tidally locked the Moon to Earth, which is why we always see the same face of the Moon.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- STEP 11: Earthshine and Light's Journey -->
+        <div class="step-container">
+            <div class="step-card">
+                <div class="step-title">
+                    <div class="step-number">11</div>
+                    <h2>Earthshine and Light's Journey</h2>
+                </div>
+                <div class="step-content">
+                    <ul>
+                        <li><strong>What is earthshine?</strong> Earthshine is the faint illumination of the Moon's dark side visible during crescent phases. It looks like a ghostly glow around the thin crescent.</li>
+                        <li><strong>The photon's journey:</strong> The path of light is a remarkable four-step process:
+                            <ol style="margin-top: 0.5rem;">
+                                <li>Sun emits light</li>
+                                <li>Light reflects off Earth's oceans and continents</li>
+                                <li>This reflected light illuminates the Moon's dark side</li>
+                                <li>The Moon reflects this light back to your eyes</li>
+                            </ol>
+                        </li>
+                        <li><strong>Why you can only see it during crescents:</strong> The dark side of the Moon is too faint to see when it's opposite the Sun (near full moon). You need a thin crescent so the bright part doesn't wash out the faint earthshine.</li>
+                        <li><strong>How to observe it:</strong> Look for the Moon shortly after sunset (when you see a thin waxing crescent) or before sunrise (thin waning crescent). Let your eyes adapt to darkness. You should be able to see the faint reddish glow on the dark part.</li>
+                        <li><strong>Variability:</strong> Earthshine brightness varies. More clouds on Earth reflect more light, so earthshine is brighter when Earth is cloudier.</li>
+                    </ul>
+                    <div class="callout">
+                        🌙 <strong>Beautiful observation:</strong> Earthshine is one of the most poetic phenomena in astronomy. You're witnessing a chain of reflections across space. Next crescent moon, take time to look for it yourself!
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- STEP 12: What to Look for Tonight -->
+        <div class="step-container">
+            <div class="step-card">
+                <div class="step-title">
+                    <div class="step-number">12</div>
+                    <h2>What to Look for Tonight</h2>
+                </div>
+                <div class="step-content">
+                    <p><strong>You've now learned about all the major naked-eye phenomena in astronomy!</strong> This week covered:</p>
+                    <ul>
+                        <li>Why the sky is blue (Rayleigh scattering) and sunsets are red</li>
+                        <li>The Moon's orbital mechanics and tidal locking</li>
+                        <li>Optical illusions (the Moon illusion) and how our brains perceive the sky</li>
+                        <li>Lunar phases and earthshine</li>
+                        <li>Solar and lunar eclipses, and the cosmic coincidence of the Sun and Moon</li>
+                        <li>The five planets visible without a telescope</li>
+                        <li>Meteor showers and aurorae</li>
+                        <li>Tidal forces and Earth-Moon dynamics</li>
+                    </ul>
+                    <h4 style="margin-top: 1.5rem; color: var(--purple-dark);">Tonight's sky (March, Southern Hemisphere):</h4>
+                    <ul>
+                        <li>Check the Moon's phase and estimate which lunar phase it is</li>
+                        <li>Look for the five naked-eye planets in the zodiacal constellations (near the ecliptic)</li>
+                        <li>If the Moon is a crescent, try to spot earthshine on its dark side</li>
+                        <li>Let your eyes adapt to darkness for 20–30 minutes — avoid phone screens to preserve night vision</li>
+                        <li>Use this knowledge to understand what you're seeing!</li>
+                    </ul>
+                    <h4 style="margin-top: 1.5rem; color: var(--purple-dark);">Next week's topic:</h4>
+                    <p style="color: var(--text-light); margin-top: 0.5rem;">Week 3: "How We Know What We Know" — Telescopes, spectroscopy, and distance measurement. We'll explore the tools and techniques that allow us to learn the compositions, temperatures, and distances of distant stars and galaxies.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SELF-TEST SECTION -->
+        <div class="selftest-section">
+            <h3>Self-Test: Check Your Understanding</h3>
+            <div class="question-item">
+                <div class="question-text">
+                    <span class="question-number">Q1</span>
+                    <span>Why is the sky blue during the day and red during sunset?</span>
+                    <span class="bloom-tag">Understanding</span>
+                </div>
+                <div class="answer-text">
+                    Blue light is scattered more by atmospheric molecules (Rayleigh scattering), making the sky blue. At sunset, light travels through a much thicker atmosphere, so blue light is scattered out completely, leaving only red and orange wavelengths to reach your eyes.
+                </div>
+            </div>
+
+            <div class="question-item">
+                <div class="question-text">
+                    <span class="question-number">Q2</span>
+                    <span>What is tidal locking?</span>
+                    <span class="bloom-tag">Remembering</span>
+                </div>
+                <div class="answer-text">
+                    Tidal locking occurs when a moon rotates at the same rate it orbits its planet, causing it to always show the same face. The Moon is tidally locked to Earth because its rotation period (27.3 days) equals its orbital period (27.3 days).
+                </div>
+            </div>
+
+            <div class="question-item">
+                <div class="question-text">
+                    <span class="question-number">Q3</span>
+                    <span>Why is the "Moon looks bigger on the horizon" an illusion rather than a real size change?</span>
+                    <span class="bloom-tag">Analysing</span>
+                </div>
+                <div class="answer-text">
+                    The Moon's angular size is identical at the horizon and overhead. The illusion occurs because foreground objects (buildings, trees) trick your brain into misjudging distance. If the Moon is the same angular size but appears closer, your brain concludes it must be huge. Test it by holding a coin at arm's length!
+                </div>
+            </div>
+
+            <div class="question-item">
+                <div class="question-text">
+                    <span class="question-number">Q4</span>
+                    <span>Why can total solar eclipses occur on Earth?</span>
+                    <span class="bloom-tag">Understanding</span>
+                </div>
+                <div class="answer-text">
+                    The Sun is ~400 times larger than the Moon but also ~400 times farther away, making them appear the same angular size in our sky. This cosmic coincidence allows the Moon to exactly cover the Sun during a total solar eclipse.
+                </div>
+            </div>
+
+            <div class="question-item">
+                <div class="question-text">
+                    <span class="question-number">Q5</span>
+                    <span>How can you tell a planet from a star with the naked eye?</span>
+                    <span class="bloom-tag">Remembering</span>
+                </div>
+                <div class="answer-text">
+                    Planets have a finite angular size, so their light is spread out. This means planets don't twinkle visibly. Stars are point sources whose concentrated light is scattered by atmospheric turbulence, making them appear to twinkle noticeably. Planets also move relative to the stars over weeks and months.
+                </div>
+            </div>
+
+            <div class="question-item">
+                <div class="question-text">
+                    <span class="question-number">Q6</span>
+                    <span>What causes the Moon to appear red during a lunar eclipse?</span>
+                    <span class="bloom-tag">Understanding</span>
+                </div>
+                <div class="answer-text">
+                    Earth's atmosphere bends red light (same effect as red sunsets) around Earth's shadow. This refracted red light illuminates the Moon during the eclipse, often giving it a reddish or copper color. The exact shade depends on volcanic dust in Earth's atmosphere.
+                </div>
+            </div>
+
+            <div class="question-item">
+                <div class="question-text">
+                    <span class="question-number">Q7</span>
+                    <span>Explain the four-step photon journey in earthshine.</span>
+                    <span class="bloom-tag">Applying</span>
+                </div>
+                <div class="answer-text">
+                    (1) The Sun emits light → (2) Light reflects off Earth's oceans and continents → (3) This reflected light illuminates the Moon's dark side → (4) The Moon reflects this light back to your eyes. You're witnessing light bouncing between Earth and the Moon!
+                </div>
+            </div>
+
+            <div class="question-item">
+                <div class="question-text">
+                    <span class="question-number">Q8</span>
+                    <span>When is the next total solar eclipse visible from Sydney?</span>
+                    <span class="bloom-tag">Remembering</span>
+                </div>
+                <div class="answer-text">
+                    July 22, 2028. This is an incredibly rare event — total solar eclipses are visible from any given location on Earth only once every 100–200 years. This is a once-in-a-lifetime opportunity for most Sydneysiders!
+                </div>
+            </div>
+
+            <div class="question-item">
+                <div class="question-text">
+                    <span class="question-number">Q9</span>
+                    <span>Why do Mars sunsets appear blue instead of red?</span>
+                    <span class="bloom-tag">Understanding</span>
+                </div>
+                <div class="answer-text">
+                    Mars has a very thin atmosphere composed of carbon dioxide with dust particles that scatter light differently than Earth's atmosphere. Blue light isn't fully scattered away by the thin Martian atmosphere, so it's preserved near the sun during sunset, making Martian sunsets appear blue.
+                </div>
+            </div>
+
+            <div class="question-item">
+                <div class="question-text">
+                    <span class="question-number">Q10</span>
+                    <span>Why will only annular eclipses be possible in the far future?</span>
+                    <span class="bloom-tag">Analysing</span>
+                </div>
+                <div class="answer-text">
+                    The Moon is slowly moving away from Earth at about 3.8 cm per year. Eventually, it will be too far away to completely cover the Sun's disc. When this happens, the Sun's photosphere will remain visible around the Moon's silhouette as a "ring of fire" (annulus) — an annular eclipse.
+                </div>
+            </div>
+        </div>
+
+        <!-- PRACTICE LINKS -->
+        <div class="practice-links">
+            <h3>Practice and Review Tools</h3>
+            <div class="practice-grid">
+                <div class="practice-card" onclick="window.parent.openPracticeLabTool('concepts', 2)">
+                    <h4>Astronomy Concept Lab</h4>
+                    <p>Key terms flashcards for naked-eye astronomy. Master the vocabulary of Week 2: scattering, tidal locking, libration, earthshine, and more.</p>
+                </div>
+                <div class="practice-card" onclick="window.parent.openPracticeLabTool('sort', 2)">
+                    <h4>Moon Phase Identification</h4>
+                    <p>Match lunar phases to their descriptions and positions. Learn to recognize crescents, quarters, gibbous, and full phases in real sky observations.</p>
+                </div>
+                <div class="practice-card" onclick="window.parent.openPracticeLabTool('concepts', 2)">
+                    <h4>Eclipse Mechanics Quiz</h4>
+                    <p>Test your understanding of solar and lunar eclipses. Explore why they don't happen every month and how the cosmic coincidence makes them possible.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Navigation -->
+    <div class="nav-container">
+        <button id="prevBtn" onclick="changeStep(-1)">Previous</button>
+        <div class="step-counter"><span id="stepDisplay">1</span> / <span id="totalSteps">12</span></div>
+        <button id="nextBtn" onclick="changeStep(1)">Next</button>
+    </div>
+
+    <script>
+        const totalSteps = 12;
+        let currentStep = 1;
+
+        function updateStep() {
+            // Hide all steps
+            document.querySelectorAll('.step-container').forEach(el => el.classList.remove('active'));
+
+            // Show current step
+            document.querySelectorAll('.step-container')[currentStep - 1].classList.add('active');
+
+            // Update counter
+            document.getElementById('stepDisplay').textContent = currentStep;
+
+            // Update buttons
+            document.getElementById('prevBtn').disabled = currentStep === 1;
+            document.getElementById('nextBtn').disabled = currentStep === totalSteps;
+
+            // Update progress bar
+            const progress = (currentStep / totalSteps) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function changeStep(direction) {
+            const newStep = currentStep + direction;
+            if (newStep >= 1 && newStep <= totalSteps) {
+                currentStep = newStep;
+                updateStep();
+            }
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') changeStep(-1);
+            if (e.key === 'ArrowRight') changeStep(1);
+        });
+
+        // Initialize
+        updateStep();
+    </script>
+</body>
+</html>

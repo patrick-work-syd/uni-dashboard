@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ANHS2609 Week 2: The View from Macedon & Persia - Visual Guide</title>
+    <style>
+        :root {
+            --orange: #f59e0b;
+            --orange-light: #fffbeb;
+            --orange-dark: #b45309;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --white: #ffffff;
+            --success: #10b981;
+            --error: #ef4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--gray-100);
+            color: var(--gray-800);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--orange-dark) 0%, var(--orange) 100%);
+            color: var(--white);
+            padding: 40px 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        header p {
+            font-size: 1.1em;
+            opacity: 0.95;
+        }
+
+        .progress-bar {
+            margin-top: 20px;
+            background-color: rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            overflow: hidden;
+            height: 8px;
+        }
+
+        .progress-fill {
+            background-color: var(--white);
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 3fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .sidebar {
+            background-color: var(--white);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+
+        .step-list {
+            list-style: none;
+        }
+
+        .step-item {
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .step-item:hover {
+            transform: translateX(4px);
+        }
+
+        .step-item button {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--gray-100);
+            border: 2px solid var(--gray-200);
+            border-radius: 6px;
+            text-align: left;
+            font-weight: 500;
+            color: var(--gray-700);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.95em;
+        }
+
+        .step-item button:hover {
+            border-color: var(--orange);
+            background-color: var(--orange-light);
+        }
+
+        .step-item.active button {
+            background-color: var(--orange);
+            color: var(--white);
+            border-color: var(--orange-dark);
+        }
+
+        .step-number {
+            display: inline-block;
+            width: 28px;
+            height: 28px;
+            background-color: var(--gray-300);
+            color: var(--gray-700);
+            border-radius: 50%;
+            text-align: center;
+            line-height: 28px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-right: 8px;
+        }
+
+        .step-item.active .step-number {
+            background-color: var(--orange);
+            color: var(--white);
+        }
+
+        .step-content {
+            background-color: var(--white);
+            border-radius: 8px;
+            padding: 40px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .step {
+            display: none;
+        }
+
+        .step.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .step h2 {
+            color: var(--orange-dark);
+            font-size: 2em;
+            margin-bottom: 20px;
+            border-bottom: 3px solid var(--orange);
+            padding-bottom: 10px;
+        }
+
+        .step h3 {
+            color: var(--orange);
+            font-size: 1.3em;
+            margin-top: 20px;
+            margin-bottom: 12px;
+        }
+
+        .step p {
+            margin-bottom: 15px;
+            color: var(--gray-700);
+            line-height: 1.8;
+        }
+
+        .step ul, .step ol {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .step li {
+            margin-bottom: 10px;
+            color: var(--gray-700);
+        }
+
+        .comparison-box {
+            background-color: var(--orange-light);
+            border-left: 4px solid var(--orange);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .comparison-box h4 {
+            color: var(--orange-dark);
+            margin-bottom: 12px;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 15px;
+        }
+
+        .comparison-item {
+            background-color: var(--white);
+            padding: 15px;
+            border-radius: 4px;
+            border: 1px solid var(--orange);
+        }
+
+        .comparison-item h5 {
+            color: var(--orange);
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .comparison-item p {
+            font-size: 0.95em;
+            margin-bottom: 0;
+        }
+
+        .callout-tip {
+            background-color: #f0fdf4;
+            border-left: 4px solid var(--success);
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .callout-tip strong {
+            color: var(--success);
+        }
+
+        .check-question {
+            background-color: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+            font-style: italic;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid var(--gray-200);
+        }
+
+        button.control-btn {
+            background-color: var(--orange);
+            color: var(--white);
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+            font-size: 1em;
+        }
+
+        button.control-btn:hover {
+            background-color: var(--orange-dark);
+        }
+
+        button.control-btn:disabled {
+            background-color: var(--gray-300);
+            cursor: not-allowed;
+        }
+
+        .step-indicator {
+            color: var(--gray-600);
+            font-weight: 500;
+        }
+
+        .self-test-section {
+            background-color: var(--white);
+            border-radius: 8px;
+            padding: 40px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+        }
+
+        .self-test-section h2 {
+            color: var(--orange-dark);
+            font-size: 2em;
+            margin-bottom: 30px;
+            border-bottom: 3px solid var(--orange);
+            padding-bottom: 10px;
+        }
+
+        .question-container {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .question-container:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .question {
+            background-color: var(--gray-100);
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            font-weight: 500;
+            color: var(--gray-800);
+        }
+
+        .bloom-tag {
+            display: inline-block;
+            background-color: var(--orange);
+            color: var(--white);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .answer {
+            background-color: var(--orange-light);
+            border-left: 4px solid var(--orange);
+            padding: 15px;
+            border-radius: 4px;
+            color: var(--gray-800);
+            display: none;
+        }
+
+        .answer.show {
+            display: block;
+        }
+
+        .toggle-answer-btn {
+            background-color: var(--orange);
+            color: var(--white);
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9em;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+        }
+
+        .toggle-answer-btn:hover {
+            background-color: var(--orange-dark);
+        }
+
+        .practice-section {
+            background-color: var(--white);
+            border-radius: 8px;
+            padding: 40px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+        }
+
+        .practice-section h2 {
+            color: var(--orange-dark);
+            font-size: 2em;
+            margin-bottom: 30px;
+            border-bottom: 3px solid var(--orange);
+            padding-bottom: 10px;
+        }
+
+        .practice-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .practice-card {
+            background-color: var(--orange-light);
+            border: 2px solid var(--orange);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .practice-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 12px rgba(245, 158, 11, 0.2);
+        }
+
+        .practice-card .icon {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .practice-card h3 {
+            color: var(--orange-dark);
+            margin-bottom: 10px;
+        }
+
+        .practice-card p {
+            font-size: 0.95em;
+            color: var(--gray-700);
+            margin: 0;
+        }
+
+        .practice-btn {
+            background-color: var(--orange);
+            color: var(--white);
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+            margin-top: 15px;
+            font-size: 0.95em;
+            width: 100%;
+        }
+
+        .practice-btn:hover {
+            background-color: var(--orange-dark);
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                position: static;
+            }
+
+            header h1 {
+                font-size: 1.8em;
+            }
+
+            .step-content {
+                padding: 20px;
+            }
+
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .practice-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>ANHS2609: Week 2</h1>
+            <p>The View from Macedon & Persia: Worlds in Conflict</p>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </header>
+
+        <div class="main-content">
+            <aside class="sidebar">
+                <ul class="step-list" id="stepList">
+                    <li class="step-item active">
+                        <button onclick="goToStep(0)">
+                            <span class="step-number">1</span>Two Empires, One Collision Course
+                        </button>
+                    </li>
+                    <li class="step-item">
+                        <button onclick="goToStep(1)">
+                            <span class="step-number">2</span>The Achaemenid Persian Empire
+                        </button>
+                    </li>
+                    <li class="step-item">
+                        <button onclick="goToStep(2)">
+                            <span class="step-number">3</span>Macedon: The Unlikely Superpower
+                        </button>
+                    </li>
+                    <li class="step-item">
+                        <button onclick="goToStep(3)">
+                            <span class="step-number">4</span>Philip II Becomes King (359 BC)
+                        </button>
+                    </li>
+                    <li class="step-item">
+                        <button onclick="goToStep(4)">
+                            <span class="step-number">5</span>Philip's Southern Expansion
+                        </button>
+                    </li>
+                    <li class="step-item">
+                        <button onclick="goToStep(5)">
+                            <span class="step-number">6</span>Demosthenes and Athenian Resistance
+                        </button>
+                    </li>
+                    <li class="step-item">
+                        <button onclick="goToStep(6)">
+                            <span class="step-number">7</span>The View from Athens
+                        </button>
+                    </li>
+                    <li class="step-item">
+                        <button onclick="goToStep(7)">
+                            <span class="step-number">8</span>Persian Internal Challenges
+                        </button>
+                    </li>
+                    <li class="step-item">
+                        <button onclick="goToStep(8)">
+                            <span class="step-number">9</span>Comparing Political Systems
+                        </button>
+                    </li>
+                    <li class="step-item">
+                        <button onclick="goToStep(9)">
+                            <span class="step-number">10</span>Setting the Stage
+                        </button>
+                    </li>
+                </ul>
+            </aside>
+
+            <main class="step-content">
+                <!-- Step 1 -->
+                <div class="step active">
+                    <h2>Two Empires, One Collision Course</h2>
+                    <p>The lecture zooms out from Alexander to examine the world he inherited. Rather than viewing history through a single perspective, we must understand the fundamental differences between the civilizations about to collide.</p>
+
+                    <h3>Three Perspectives on Power</h3>
+                    <p>The week introduces three distinct viewpoints:</p>
+                    <ul>
+                        <li><strong>The View from Persia:</strong> An ancient, centralized empire ruling through bureaucracy and the authority of the Great King</li>
+                        <li><strong>The View from Macedon:</strong> A peripheral northern kingdom transforming into a military powerhouse</li>
+                        <li><strong>The View from Athens:</strong> A democratic city-state struggling to maintain independence (introduced in tutorials)</li>
+                    </ul>
+
+                    <h3>Fundamentally Different Political Structures</h3>
+                    <p>These three perspectives represent not just different rulers, but entirely different ways of organizing society, authority, and power. Understanding each system—its strengths and weaknesses—is essential to understanding how Alexander's conquest was possible and why it succeeded so rapidly.</p>
+
+                    <p>This week establishes the context that made Alexander's achievements possible. By examining the "worlds in conflict" before he rose to power, we see the stage that was set for one of history's most dramatic transformations.</p>
+
+                    <div class="controls">
+                        <button class="control-btn" onclick="previousStep()" disabled>← Previous</button>
+                        <span class="step-indicator">Step 1 of 10</span>
+                        <button class="control-btn" onclick="nextStep()">Next →</button>
+                    </div>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="step">
+                    <h2>The Achaemenid Persian Empire</h2>
+                    <p>The Persian Empire was ancient even by the standards of antiquity. Founded in the 6th century BC, it had endured for over 250 years by the time of Alexander, making it one of the most durable empires in history.</p>
+
+                    <h3>Territory and Scale</h3>
+                    <p>The Achaemenid Empire stretched from Egypt in the west to Central Asia in the east—an enormous territory spanning three continents. At its height, it encompassed roughly 2 million square miles and perhaps 50 million people, many of them non-Persian.</p>
+
+                    <h3>The Satrap System</h3>
+                    <p>The empire was ruled by the Great King (also called the King of Kings) through a sophisticated system of provincial governors called <strong>satraps</strong>. Each satrap ruled a large territory, collected taxes, maintained order, and reported to the Great King. This system allowed the empire to function smoothly across vast distances.</p>
+
+                    <h3>Administrative Sophistication</h3>
+                    <p>Persian governance was remarkably advanced for its time:</p>
+                    <ul>
+                        <li>Road networks facilitated trade and communication</li>
+                        <li>A royal postal system allowed rapid transmission of official orders</li>
+                        <li>A common language (Aramaic) was used for administration across diverse regions</li>
+                        <li>Coins standardized trade throughout the empire</li>
+                    </ul>
+
+                    <h3>Religious Tolerance</h3>
+                    <p>One of Persia's distinctive features was religious tolerance. Following the example of Cyrus the Great (founder of the Achaemenid dynasty), Persian rulers generally allowed subject peoples to maintain their own religions, laws, and customs, as long as they paid taxes and remained loyal. This pragmatic approach to rule helped maintain stability across such a diverse empire.</p>
+
+                    <div class="comparison-box">
+                        <h4>Persian Empire vs. Greek Poleis</h4>
+                        <div class="comparison-grid">
+                            <div class="comparison-item">
+                                <h5>Persian Empire</h5>
+                                <p>Centralized monarchy with the Great King at the apex; vast, multi-ethnic; ruled through appointed officials; tribute-based taxation</p>
+                            </div>
+                            <div class="comparison-item">
+                                <h5>Greek Poleis</h5>
+                                <p>Small, independent city-states; fragmented; governed by local assemblies (democracy) or oligarchies; no central authority</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="controls">
+                        <button class="control-btn" onclick="previousStep()">← Previous</button>
+                        <span class="step-indicator">Step 2 of 10</span>
+                        <button class="control-btn" onclick="nextStep()">Next →</button>
+                    </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="step">
+                    <h2>Macedon: The Unlikely Superpower</h2>
+                    <p>Macedon was a kingdom in northern Greece that most Greeks considered semi-barbaric—peripheral to the sophisticated city-state cultures of classical Greece. Yet this "backward" region would produce history's most celebrated conqueror.</p>
+
+                    <h3>A Peripheral Kingdom</h3>
+                    <p>Located north of Thessaly and the established Greek poleis, Macedon was often dismissed by southern Greeks (particularly Athenians) as not truly Greek. The Macedonians spoke a dialect of Greek, but their monarchy and pastoral traditions seemed at odds with the democratic and oligarchic city-states of southern Greece.</p>
+
+                    <h3>Natural Resources and Advantages</h3>
+                    <p>Despite its reputation, Macedon possessed significant advantages:</p>
+                    <ul>
+                        <li><strong>Timber:</strong> Vast forests provided materials for shipbuilding and military equipment</li>
+                        <li><strong>Minerals:</strong> Gold, silver, and other metals supported a wealthy economy</li>
+                        <li><strong>Pasture:</strong> Rich grazing lands supported cavalry breeding—essential for military power</li>
+                        <li><strong>Agricultural surplus:</strong> Fertile plains provided food for a growing population</li>
+                    </ul>
+
+                    <h3>Military Tradition</h3>
+                    <p>Unlike the hoplite-based armies of southern Greece, Macedon maintained a strong cavalry tradition. Horsemen were valued warriors in Macedonian culture, and this emphasis on cavalry would become crucial to Philip II's military reforms.</p>
+
+                    <h3>The Monarchy</h3>
+                    <p>Macedon was a hereditary monarchy, not a democracy or oligarchy. The king ruled as a personal commander and administrator. While the king theoretically needed the support of the Macedonian nobility (the "Companions"), royal authority was far more absolute than in Greek city-states.</p>
+
+                    <p>This system of personal monarchy would prove far more efficient for rapid military expansion than the democracies and oligarchies of southern Greece, which relied on assembly debate and consensus.</p>
+
+                    <div class="controls">
+                        <button class="control-btn" onclick="previousStep()">← Previous</button>
+                        <span class="step-indicator">Step 3 of 10</span>
+                        <button class="control-btn" onclick="nextStep()">Next →</button>
+                    </div>
+                </div>
+
+                <!-- Step 4 -->
+                <div class="step">
+                    <h2>Philip II Becomes King (359 BC)</h2>
+                    <p>In 359 BC, Philip took the Macedonian throne during a period of acute crisis. The kingdom was threatened on multiple fronts by hostile neighbors, and internal instability threatened to tear it apart. Philip's transformation of Macedon from troubled kingdom to superpower began immediately.</p>
+
+                    <h3>Crisis and Opportunity</h3>
+                    <p>When Philip came to power, Macedon was under pressure from:</p>
+                    <ul>
+                        <li><strong>The Illyrians:</strong> A tribal people to the north and west</li>
+                        <li><strong>The Thracians:</strong> A warrior people to the northeast</li>
+                        <li><strong>Internal factions:</strong> Rival claims to the throne threatened civil war</li>
+                    </ul>
+
+                    <h3>Military Reform</h3>
+                    <p>Philip's first priority was reorganizing the Macedonian army. We'll examine the details in Week 3, but his key innovations included introducing the sarissa (a long pike), reorganizing infantry formations, and creating a highly disciplined professional army. These reforms created an unprecedented military advantage over Greek hoplite armies.</p>
+
+                    <h3>Diplomacy Through Marriage</h3>
+                    <p>Philip was a master diplomat as well as a warrior. He used marriage alliances strategically to secure peace and secure alliances with neighboring kingdoms and Greek city-states. Over his lifetime, Philip had <strong>seven different marriages</strong>—each chosen for political reasons, not personal affection.</p>
+
+                    <p>These marriages served to:</p>
+                    <ul>
+                        <li>Create blood ties with neighboring kingdoms</li>
+                        <li>Secure peace treaties and alliances</li>
+                        <li>Produce heirs to strengthen the dynasty</li>
+                        <li>Demonstrate Macedonian power and influence</li>
+                    </ul>
+
+                    <div class="callout-tip">
+                        <strong>Tip:</strong> Philip's genius was combining military innovation with diplomatic manipulation. He didn't just conquer his neighbors—he bound them to him through marriage, treaty, and the creation of a league of Greek states under Macedonian leadership.
+                    </div>
+
+                    <div class="controls">
+                        <button class="control-btn" onclick="previousStep()">← Previous</button>
+                        <span class="step-indicator">Step 4 of 10</span>
+                        <button class="control-btn" onclick="nextStep()">Next →</button>
+                    </div>
+                </div>
+
+                <!-- Step 5 -->
+                <div class="step">
+                    <h2>Philip's Southern Expansion</h2>
+                    <p>Once Philip secured Macedon's borders and reformed its military, he began a systematic expansion southward into Greece. Within two decades, he had brought most Greek poleis under his control or influence.</p>
+
+                    <h3>The Siege of Amphipolis (357 BC)</h3>
+                    <p>One of Philip's first southern conquests was Amphipolis, a city founded by Athens on the Thracian coast. The city controlled access to valuable timber and the gold mines of Mount Pangaeus. When Philip captured it, he demonstrated that Macedonian military power was a force to be reckoned with. Athens declared war in response, but proved unable to stop the Macedonian king.</p>
+
+                    <h3>The Sacred War as Pretext</h3>
+                    <p>Philip used a religious conflict—the Sacred War between various Greek states over control of the sanctuary at Delphi—as a pretext to intervene in central Greek affairs. By gaining control of Delphi and Thermopylae, he positioned himself as a major power in Greek politics.</p>
+
+                    <h3>The Corinthian League</h3>
+                    <p>Rather than ruling Greece as a foreign conqueror, Philip established the League of Corinth in 337 BC. This alliance of Greek states nominally gave them a voice in decisions, but in practice, Philip controlled the league. It provided a veneer of legitimacy for Macedonian dominance and bound the Greek poleis together under Macedonian leadership.</p>
+
+                    <h3>Strategic Control Points</h3>
+                    <p>Philip's key strategic achievements:</p>
+                    <ul>
+                        <li><strong>357 BC:</strong> Capture of Amphipolis and control of Thrace's resources</li>
+                        <li><strong>356 BC:</strong> Victory at the Battle of Crocus Field gave him control of Thessaly</li>
+                        <li><strong>346 BC:</strong> End of the Sacred War; control of central Greece</li>
+                        <li><strong>338 BC:</strong> Victory at the Battle of Chaeronea decisively defeated Athens and Thebes</li>
+                    </ul>
+
+                    <div class="controls">
+                        <button class="control-btn" onclick="previousStep()">← Previous</button>
+                        <span class="step-indicator">Step 5 of 10</span>
+                        <button class="control-btn" onclick="nextStep()">Next →</button>
+                    </div>
+                </div>
+
+                <!-- Step 6 -->
+                <div class="step">
+                    <h2>Demosthenes and Athenian Resistance</h2>
+                    <p>While Philip expanded Macedonian power, the Athenian statesman Demosthenes emerged as the most eloquent voice of resistance against the Macedonian threat. His speeches—the Philippics—remain some of the most powerful political rhetoric ever delivered.</p>
+
+                    <h3>The Philippics (351-341 BC)</h3>
+                    <p>Demosthenes delivered four major speeches (called Philippics, from the Greek word for Philip) between 351 and 341 BC. In these speeches, he:</p>
+                    <ul>
+                        <li>Warned Athenians that Philip was an existential threat to Greek independence</li>
+                        <li>Criticized Athenian complacency and calls for peace with Macedon</li>
+                        <li>Urged military preparations and bold action against Philip</li>
+                        <li>Invoked Athens' glorious past as a free and independent city</li>
+                    </ul>
+
+                    <h3>The Peace of Philocrates (346 BC)</h3>
+                    <p>Despite Demosthenes' warnings, Athens signed a peace treaty with Philip in 346 BC. The Peace of Philocrates was intended as a diplomatic accord between equals, but in practice, it reflected growing Macedonian dominance. Demosthenes and his allies opposed the peace as a humiliating surrender, while others saw it as a pragmatic necessity.</p>
+
+                    <h3>Political Conflict in Athens</h3>
+                    <p>Demosthenes was not unopposed in Athens. The politician Aeschines led the "peace party" that favored accommodation with Philip. Athens was divided between:</p>
+                    <ul>
+                        <li><strong>The War Party (Demosthenes):</strong> Opposed to Macedonian expansion; wanted military resistance</li>
+                        <li><strong>The Peace Party (Aeschines):</strong> Saw resistance as futile; preferred diplomacy and accommodation</li>
+                    </ul>
+
+                    <h3>Tutorial Reading: Demosthenes' Third Philippic</h3>
+                    <p>For tutorials this week, you'll analyze one of Demosthenes' speeches. Pay close attention to:</p>
+                    <ul>
+                        <li>How he depicts Philip as a threat</li>
+                        <li>What arguments he uses to persuade the Athenians to resist</li>
+                        <li>How he appeals to Athenian values and history</li>
+                        <li>Whether his arguments were effective in motivating action</li>
+                    </ul>
+
+                    <div class="controls">
+                        <button class="control-btn" onclick="previousStep()">← Previous</button>
+                        <span class="step-indicator">Step 6 of 10</span>
+                        <button class="control-btn" onclick="nextStep()">Next →</button>
+                    </div>
+                </div>
+
+                <!-- Step 7 -->
+                <div class="step">
+                    <h2>The View from Athens</h2>
+                    <p>From the Athenian perspective, the rise of Macedon was both shocking and deeply threatening. Athens, with its tradition of independence and democracy, faced a fundamentally different kind of enemy than it had ever encountered before.</p>
+
+                    <h3>Athens' Historical Identity</h3>
+                    <p>Athens prided itself on its independence and democratic traditions. The city had:</p>
+                    <ul>
+                        <li>Defeated the Persian Empire at Marathon (490 BC) and Salamis (480 BC)</li>
+                        <li>Built an empire of allied poleis during the Classical period</li>
+                        <li>Developed philosophy, democracy, and culture that defined "Greekness"</li>
+                        <li>Maintained independence despite Persian threats</li>
+                    </ul>
+
+                    <h3>The Macedonian Threat: Different from Persia</h3>
+                    <p>Philip was not a foreign invader like the Persian king. He was a Greek (or at least claimed to be), and he threatened to overturn the entire system of independent Greek city-states. For Athens, this was conceptually difficult to grasp and politically dangerous.</p>
+
+                    <h3>The Failure of Greek Unity</h3>
+                    <p>Despite Demosthenes' warnings and efforts, the Greek city-states failed to unite against Philip until it was too late. The reasons included:</p>
+                    <ul>
+                        <li><strong>Ancient rivalries:</strong> Athens and Thebes, for example, were longstanding competitors</li>
+                        <li><strong>Slow democratic decision-making:</strong> The Athenian assembly could debate endlessly; Philip acted decisively</li>
+                        <li><strong>Economic factors:</strong> Many smaller poleis were exhausted by decades of warfare</li>
+                        <li><strong>Political divisions:</strong> Some Athenians preferred peace with Philip to continued conflict</li>
+                    </ul>
+
+                    <h3>The Final Defeat: Battle of Chaeronea (338 BC)</h3>
+                    <p>When Athens finally took military action, it was too late. At the Battle of Chaeronea in 338 BC, Philip decisively defeated a coalition of Greek city-states led by Athens and Thebes. The battle ended Greek independence and established Macedonian dominance over the entire peninsula.</p>
+
+                    <div class="check-question">
+                        <strong>Check Question:</strong> What was Demosthenes' main argument in the Philippics?
+                    </div>
+
+                    <div class="controls">
+                        <button class="control-btn" onclick="previousStep()">← Previous</button>
+                        <span class="step-indicator">Step 7 of 10</span>
+                        <button class="control-btn" onclick="nextStep()">Next →</button>
+                    </div>
+                </div>
+
+                <!-- Step 8 -->
+                <div class="step">
+                    <h2>Persian Internal Challenges</h2>
+                    <p>While Philip was consolidating Macedonian power in Greece, the Persian Empire—despite its vast size and resources—was showing signs of internal weakness. These weaknesses would prove crucial when Alexander invaded.</p>
+
+                    <h3>Satrapal Revolts</h3>
+                    <p>By the mid-4th century BC, several satraps were rebelling against central authority. The most serious rebellions, known collectively as the Satrap Revolts (370-358 BC), saw provincial governors—some commanding armies as large as those of small kingdoms—attempting to establish their independence from the Great King.</p>
+
+                    <p>While the central government eventually suppressed these revolts, they demonstrated that the empire's vast size was becoming a liability. Controlling so many satraps over such enormous distances was increasingly difficult.</p>
+
+                    <h3>Court Intrigues and Succession Disputes</h3>
+                    <p>The Persian royal court was rife with intrigue, factions, and disputes over succession. When the reigning Great King died, powerful court officials and generals fought for influence over the new ruler. These internal conflicts weakened the empire's ability to respond to external threats.</p>
+
+                    <h3>Darius III's Rise to Power</h3>
+                    <p>Darius III came to the Persian throne around 336 BC through palace conspiracy and court intrigue, not through clear succession. He was a capable military commander but faced significant opposition from powerful satraps and court factions. His path to power was unstable, and he lacked the kind of unified support that a king needed to command absolute loyalty.</p>
+
+                    <h3>The Paradox of Persian Weakness</h3>
+                    <p>Despite these internal challenges, the Persian Empire remained enormous, wealthy, and militarily powerful. It had more soldiers, more resources, and more experience than Macedon. Yet the empire's very size and complexity—the bureaucracy, the distance between the center and the periphery, the autonomy of satraps—created vulnerabilities that Alexander would exploit.</p>
+
+                    <div class="controls">
+                        <button class="control-btn" onclick="previousStep()">← Previous</button>
+                        <span class="step-indicator">Step 8 of 10</span>
+                        <button class="control-btn" onclick="nextStep()">Next →</button>
+                    </div>
+                </div>
+
+                <!-- Step 9 -->
+                <div class="step">
+                    <h2>Comparing Political Systems</h2>
+                    <p>To understand how Alexander conquered both the Greek world and the Persian Empire so rapidly, we must understand the political systems he inherited and faced. Each system had unique strengths and fatal weaknesses.</p>
+
+                    <h3>The Three Political Systems</h3>
+                    <div class="comparison-box">
+                        <h4>Macedon: The Hereditary Monarchy</h4>
+                        <p><strong>Structure:</strong> Absolute monarchy with the king as supreme military commander and administrator</p>
+                        <p><strong>Strengths:</strong> Rapid decision-making; unified command; the king's personal loyalty commanded obedience</p>
+                        <p><strong>Weaknesses:</strong> Dependent on the strength and competence of the individual king; vulnerable to succession crises</p>
+                        <p><strong>Key Institution:</strong> The Companion cavalry—the king's elite warriors and advisors</p>
+                    </div>
+
+                    <div class="comparison-box">
+                        <h4>Persia: The Bureaucratic Empire</h4>
+                        <p><strong>Structure:</strong> Centralized monarchy ruling through appointed satraps and a complex administrative bureaucracy</p>
+                        <p><strong>Strengths:</strong> Vast resources; sophisticated administration; able to rule diverse territories</p>
+                        <p><strong>Weaknesses:</strong> Communication delays; satraps gaining autonomy; vulnerable to court intrigue and succession disputes</p>
+                        <p><strong>Key Institution:</strong> The satrap system—provincial governors with significant local authority</p>
+                    </div>
+
+                    <div class="comparison-box">
+                        <h4>Athens: The Democratic Polis</h4>
+                        <p><strong>Structure:</strong> Democracy where male citizens gather in assembly to debate and vote on decisions</p>
+                        <p><strong>Strengths:</strong> Legitimacy among citizens; collective deliberation; ability to inspire loyalty through shared values</p>
+                        <p><strong>Weaknesses:</strong> Slow decision-making; difficult to coordinate military action; easily divided by internal factions</p>
+                        <p><strong>Key Institution:</strong> The Assembly—where citizens debate and vote on major decisions</p>
+                    </div>
+
+                    <h3>Vulnerability Analysis</h3>
+                    <p>Each system had fatal weaknesses that Alexander would exploit:</p>
+                    <ul>
+                        <li><strong>Macedon:</strong> Would fall apart if the king were killed or incapacitated (as Philip was assassinated in 336 BC)</li>
+                        <li><strong>Persia:</strong> Was vulnerable to a swift military defeat of the Great King; once the central authority fell, the empire fragmented</li>
+                        <li><strong>Athens:</strong> Could not organize unified resistance; democracy was too slow to respond to military threats</li>
+                    </ul>
+
+                    <div class="controls">
+                        <button class="control-btn" onclick="previousStep()">← Previous</button>
+                        <span class="step-indicator">Step 9 of 10</span>
+                        <button class="control-btn" onclick="nextStep()">Next →</button>
+                    </div>
+                </div>
+
+                <!-- Step 10 -->
+                <div class="step">
+                    <h2>Setting the Stage</h2>
+                    <p>By the late 4th century BC, the historical stage was set for one of the most dramatic transformations in human history. Understanding these three perspectives—Macedon, Persia, and Athens—is essential to understanding why Alexander's conquests were possible and why they were so swift.</p>
+
+                    <h3>The World in 338 BC</h3>
+                    <p>By the year of the Battle of Chaeronea, the political landscape was clear:</p>
+                    <ul>
+                        <li><strong>Macedon:</strong> Under Philip's command, had become the dominant power in Greece. All Greek city-states had been brought under Macedonian control or influence, either through conquest or alliance.</li>
+                        <li><strong>Persia:</strong> Still the greatest empire in the world, but internally weakened by satrapal revolts, court intrigues, and a new, unstable ruler in Darius III.</li>
+                        <li><strong>Greece:</strong> United for the first time under Macedonian leadership, but resentful and still cherishing dreams of independence.</li>
+                    </ul>
+
+                    <h3>Philip's Plan</h3>
+                    <p>Philip did not aim merely to rule Greece—his ultimate ambition was to invade and conquer the Persian Empire. In 336 BC, he sent an advance force across the Hellespont to begin preparations for the invasion. But before he could fully launch the campaign, Philip was assassinated.</p>
+
+                    <h3>Alexander's Inheritance</h3>
+                    <p>When Philip died in 336 BC, his young son Alexander inherited:</p>
+                    <ul>
+                        <li>A unified Macedon</li>
+                        <li>A powerful, reformed army</li>
+                        <li>Control over the Greek city-states</li>
+                        <li>A detailed plan for invading Persia</li>
+                        <li>The ambition to conquer the world</li>
+                    </ul>
+
+                    <h3>Looking Ahead: Week 3</h3>
+                    <p>Next week, we'll examine Philip II in detail and then turn to Alexander's early life and the events that brought him to power. We'll see how the young Alexander faced the challenge of maintaining the Macedonian state in the face of internal rebellion and external threat. But with the stage set by his father's achievements, and with the Persian Empire weakened and divided, Alexander was ready for his great conquests.</p>
+
+                    <h3>Key Takeaways</h3>
+                    <p>The week's essential insights:</p>
+                    <ul>
+                        <li>History is shaped by the interaction of different perspectives and political systems</li>
+                        <li>Persia's size was a weakness as well as a strength</li>
+                        <li>Macedon's monarchy was more efficient at waging war than Greek democracy</li>
+                        <li>Greek city-states, despite their cultural superiority, could not resist Macedonian military power</li>
+                        <li>The stage was set for Alexander to accomplish feats that would transform the ancient world</li>
+                    </ul>
+
+                    <div class="controls">
+                        <button class="control-btn" onclick="previousStep()">← Previous</button>
+                        <span class="step-indicator">Step 10 of 10</span>
+                        <button class="control-btn" onclick="nextStep()" disabled>Next →</button>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <!-- Self-Test Section -->
+        <div class="self-test-section">
+            <h2>Self-Test: Knowledge Check</h2>
+            <p style="margin-bottom: 30px; color: var(--gray-700);">Test your understanding of Week 2 concepts. Click each question to reveal the suggested answer.</p>
+
+            <div class="question-container">
+                <div class="question">
+                    Q1: When did Philip II become king of Macedon?
+                    <span class="bloom-tag">Remembering</span>
+                </div>
+                <button class="toggle-answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+                <div class="answer">
+                    <strong>Answer:</strong> 359 BC
+                </div>
+            </div>
+
+            <div class="question-container">
+                <div class="question">
+                    Q2: Why did the Greeks consider Macedonians semi-barbaric?
+                    <span class="bloom-tag">Understanding</span>
+                </div>
+                <button class="toggle-answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+                <div class="answer">
+                    <strong>Answer:</strong> Macedon was a northern kingdom on the periphery of the Greek world, with a monarchy rather than the polis system (democracy/oligarchy) that Greeks valued. Macedonians spoke a dialect of Greek and maintained pastoral traditions that seemed less "civilized" than the city-states of southern Greece.
+                </div>
+            </div>
+
+            <div class="question-container">
+                <div class="question">
+                    Q3: What were the Philippics?
+                    <span class="bloom-tag">Remembering</span>
+                </div>
+                <button class="toggle-answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+                <div class="answer">
+                    <strong>Answer:</strong> Four speeches delivered by Demosthenes between 351-341 BC urging Athenians to resist Philip II of Macedon. They are considered some of the most powerful political rhetoric in Western history.
+                </div>
+            </div>
+
+            <div class="question-container">
+                <div class="question">
+                    Q4: How did Philip II use both military force and diplomacy to expand Macedonian power?
+                    <span class="bloom-tag">Analysing</span>
+                </div>
+                <button class="toggle-answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+                <div class="answer">
+                    <strong>Answer:</strong> Philip combined army reforms (introducing the sarissa and professional discipline) with strategic marriage alliances (seven marriages for political purposes), bribery, intervention in the Sacred War, and treaties like the Peace of Philocrates to bring Greek poleis under his control. He used military power to establish dominance, then used diplomacy to legitimize his rule through the League of Corinth.
+                </div>
+            </div>
+
+            <div class="question-container">
+                <div class="question">
+                    Q5: What was the Persian satrap system?
+                    <span class="bloom-tag">Understanding</span>
+                </div>
+                <button class="toggle-answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+                <div class="answer">
+                    <strong>Answer:</strong> A system of provincial governance where the Great King appointed satraps (governors) to administer vast territories. Each satrap collected taxes, maintained order, and reported to the Great King. This allowed the empire to function smoothly across enormous distances but also created opportunities for satraps to gain autonomy and rebel against central authority.
+                </div>
+            </div>
+
+            <div class="question-container">
+                <div class="question">
+                    Q6: Compare the political systems of Macedon, Persia, and Athens. What was one key vulnerability of each?
+                    <span class="bloom-tag">Analysing</span>
+                </div>
+                <button class="toggle-answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+                <div class="answer">
+                    <strong>Answer:</strong> Macedon: succession crises (monarchy dependent on a strong king, as seen after Philip's assassination). Persia: satrapal revolts weakened central authority, and the bureaucratic system's size made coordination difficult. Athens: slow democratic decision-making in military emergencies; unable to unite with other poleis quickly enough to resist Macedonian expansion.
+                </div>
+            </div>
+
+            <div class="question-container">
+                <div class="question">
+                    Q7: What was the Peace of Philocrates (346 BC)?
+                    <span class="bloom-tag">Remembering</span>
+                </div>
+                <button class="toggle-answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+                <div class="answer">
+                    <strong>Answer:</strong> A diplomatic accord between Athens and Philip II that temporarily ended hostilities. Demosthenes opposed it as a humiliating surrender to Macedon, while others saw it as pragmatic accommodation.
+                </div>
+            </div>
+
+            <div class="question-container">
+                <div class="question">
+                    Q8: Why was Amphipolis strategically important?
+                    <span class="bloom-tag">Analysing</span>
+                </div>
+                <button class="toggle-answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+                <div class="answer">
+                    <strong>Answer:</strong> Amphipolis controlled access to Thracian gold mines and timber resources. Its seizure by Philip in 357 BC directly challenged Athenian interests and demonstrated Macedonian military power. The city was originally founded by Athens and represented Athenian interests in the region.
+                </div>
+            </div>
+
+            <div class="question-container">
+                <div class="question">
+                    Q9: What signs of internal weakness did the Persian Empire show by the mid-4th century BC?
+                    <span class="bloom-tag">Understanding</span>
+                </div>
+                <button class="toggle-answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+                <div class="answer">
+                    <strong>Answer:</strong> Satrapal revolts (particularly the Satrap Revolts of 370-358 BC) challenged central authority; court intrigues and succession disputes weakened the royal government; Darius III rose to power through palace conspiracy rather than clear succession; the vastness of the empire made centralized control increasingly difficult.
+                </div>
+            </div>
+
+            <div class="question-container">
+                <div class="question">
+                    Q10: Which of the three perspectives (Macedon, Persia, Athens) do you think best explains Alexander's later success? Why?
+                    <span class="bloom-tag">Evaluating</span>
+                </div>
+                <button class="toggle-answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+                <div class="answer">
+                    <strong>Answer:</strong> Open-ended. Good answers draw on multiple perspectives: Macedon's military innovations and unified command structure allowed rapid, decisive action. Persia's internal weaknesses (satrapal revolts, succession disputes, bureaucratic delays) made it vulnerable to a swift military defeat at the center. Athens' inability to unite Greek resistance showed that political divisions made resistance to Macedonian power impossible. Alexander succeeded because he inherited Macedon's military advantages and faced enemies (Persian court and fragmented Greek city-states) with fatal systemic weaknesses.
+                </div>
+            </div>
+        </div>
+
+        <!-- Practice Section -->
+        <div class="practice-section">
+            <h2>Practice Activities</h2>
+            <p style="margin-bottom: 30px; color: var(--gray-700);">Deepen your understanding with these interactive practice tools.</p>
+
+            <div class="practice-grid">
+                <div class="practice-card">
+                    <div class="icon">🗺️</div>
+                    <h3>Map Quiz Practice</h3>
+                    <p>Locate Macedon, Athens, Amphipolis, and Persian territories</p>
+                    <button class="practice-btn" onclick="window.parent.openPracticeLabTool('map', 2)">Start Practice</button>
+                </div>
+
+                <div class="practice-card">
+                    <div class="icon">📜</div>
+                    <h3>Source Analysis: Demosthenes</h3>
+                    <p>Analyse the Third Philippic using source-analysis questions</p>
+                    <button class="practice-btn" onclick="window.parent.openPracticeLabTool('concepts', 2)">Start Practice</button>
+                </div>
+
+                <div class="practice-card">
+                    <div class="icon">📅</div>
+                    <h3>Timeline Practice</h3>
+                    <p>Order events from Philip's rise to the Peace of Philocrates</p>
+                    <button class="practice-btn" onclick="window.parent.openPracticeLabTool('timeline', 2)">Start Practice</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const totalSteps = 10;
+        let currentStep = 0;
+
+        function goToStep(stepIndex) {
+            currentStep = stepIndex;
+            updateDisplay();
+            document.querySelector('.step-content').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function nextStep() {
+            if (currentStep < totalSteps - 1) {
+                currentStep++;
+                updateDisplay();
+                document.querySelector('.step-content').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        function previousStep() {
+            if (currentStep > 0) {
+                currentStep--;
+                updateDisplay();
+                document.querySelector('.step-content').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        function updateDisplay() {
+            // Update step content
+            const steps = document.querySelectorAll('.step');
+            steps.forEach((step, index) => {
+                step.classList.remove('active');
+                if (index === currentStep) {
+                    step.classList.add('active');
+                }
+            });
+
+            // Update sidebar
+            const stepItems = document.querySelectorAll('.step-item');
+            stepItems.forEach((item, index) => {
+                item.classList.remove('active');
+                if (index === currentStep) {
+                    item.classList.add('active');
+                }
+            });
+
+            // Update progress bar
+            const progress = ((currentStep + 1) / totalSteps) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+
+            // Update button states
+            document.querySelector('button[onclick="previousStep()"]').disabled = currentStep === 0;
+            const nextButtons = Array.from(document.querySelectorAll('button[onclick="nextStep()"]'));
+            nextButtons.forEach(btn => {
+                btn.disabled = currentStep === totalSteps - 1;
+            });
+        }
+
+        function toggleAnswer(button) {
+            const answer = button.nextElementSibling;
+            answer.classList.toggle('show');
+            button.textContent = answer.classList.contains('show') ? 'Hide Answer' : 'Show Answer';
+        }
+
+        // Initialize
+        updateDisplay();
+    </script>
+</body>
+</html>

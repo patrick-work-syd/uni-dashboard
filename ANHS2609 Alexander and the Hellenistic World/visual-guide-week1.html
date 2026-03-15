@@ -1,0 +1,1338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ANHS2609 Week 1: Sources and Background - Visual Guide</title>
+    <style>
+        :root {
+            --orange: #f59e0b;
+            --orange-light: #fffbeb;
+            --orange-dark: #b45309;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-500: #6b7280;
+            --gray-700: #374151;
+            --gray-900: #111827;
+            --success: #10b981;
+            --error: #ef4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: var(--gray-50);
+            color: var(--gray-900);
+            line-height: 1.6;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, var(--orange-dark) 0%, var(--orange) 100%);
+            color: white;
+            padding: 2rem 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .course-tag {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.25);
+            color: white;
+            padding: 0.4rem 0.8rem;
+            border-radius: 0.25rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.05em;
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .header-subtitle {
+            font-size: 1rem;
+            opacity: 0.95;
+            margin-bottom: 1rem;
+        }
+
+        .reassuring-message {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            font-size: 0.95rem;
+            border-left: 3px solid white;
+        }
+
+        .step-count {
+            font-weight: 600;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            max-width: 900px;
+            margin: 1.5rem auto;
+            padding: 0 1.5rem;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--gray-700);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--gray-200);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--orange-dark), var(--orange));
+            border-radius: 4px;
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 1.5rem;
+        }
+
+        /* Steps */
+        .steps-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .step {
+            background: white;
+            border: 1px solid var(--gray-200);
+            border-radius: 0.75rem;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .step:hover {
+            border-color: var(--orange);
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.1);
+        }
+
+        .step-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.5rem;
+            background: var(--orange-light);
+            cursor: pointer;
+            user-select: none;
+            transition: background 0.2s ease;
+        }
+
+        .step:hover .step-header {
+            background: #fef3c7;
+        }
+
+        .step-num {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--gray-200);
+            color: var(--gray-700);
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .step.active .step-num {
+            background: var(--orange);
+            color: white;
+            box-shadow: 0 2px 8px rgba(245, 158, 11, 0.4);
+        }
+
+        .step-title {
+            flex: 1;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+
+        .step-toggle {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray-500);
+            transition: transform 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .step.active .step-toggle {
+            transform: rotate(180deg);
+            color: var(--orange);
+        }
+
+        .step-content {
+            display: none;
+            padding: 1.5rem;
+            border-top: 1px solid var(--gray-200);
+            background: white;
+            animation: slideDown 0.3s ease;
+        }
+
+        .step.active .step-content {
+            display: block;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Content Styling */
+        .step-content h3 {
+            color: var(--orange-dark);
+            margin-top: 1rem;
+            margin-bottom: 0.75rem;
+            font-size: 1.05rem;
+        }
+
+        .step-content h3:first-child {
+            margin-top: 0;
+        }
+
+        .step-content p {
+            margin-bottom: 1rem;
+            color: var(--gray-700);
+            line-height: 1.7;
+        }
+
+        .step-content ul, .step-content ol {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .step-content li {
+            margin-bottom: 0.5rem;
+            color: var(--gray-700);
+        }
+
+        /* Comparison Boxes */
+        .cmp-box {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .cmp-box > div {
+            padding: 1.25rem;
+            border-radius: 0.75rem;
+            border-left: 4px solid;
+        }
+
+        .cmp-box.classical > div:first-child,
+        .cmp-box.hellenistic > div:last-child {
+            background: #e0e7ff;
+            border-color: #4f46e5;
+        }
+
+        .cmp-box.classical > div:last-child,
+        .cmp-box.hellenistic > div:first-child {
+            background: #fef3c7;
+            border-color: var(--orange);
+        }
+
+        .cmp-box h4 {
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            font-size: 1rem;
+        }
+
+        .cmp-box p {
+            font-size: 0.95rem;
+            margin: 0;
+        }
+
+        /* Callout Boxes */
+        .callout {
+            padding: 1.25rem;
+            border-radius: 0.75rem;
+            border-left: 4px solid var(--orange);
+            background: var(--orange-light);
+            margin: 1.5rem 0;
+            color: var(--orange-dark);
+            font-weight: 500;
+        }
+
+        .callout.warning {
+            border-left-color: #f97316;
+            background: #fed7aa;
+            color: #92400e;
+        }
+
+        .callout.tip {
+            border-left-color: #06b6d4;
+            background: #cffafe;
+            color: #164e63;
+        }
+
+        /* Exercise */
+        .exercise {
+            background: #f0fdf4;
+            border: 2px dashed var(--success);
+            border-radius: 0.75rem;
+            padding: 1.25rem;
+            margin: 1.5rem 0;
+        }
+
+        .exercise h4 {
+            color: #166534;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+        }
+
+        .exercise p {
+            color: #15803d;
+            margin: 0;
+        }
+
+        /* Check Question */
+        .check-question {
+            background: #eff6ff;
+            border: 2px dashed #3b82f6;
+            border-radius: 0.75rem;
+            padding: 1.25rem;
+            margin: 1.5rem 0;
+        }
+
+        .check-question h4 {
+            color: #1e40af;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+        }
+
+        .check-question p {
+            color: #1e3a8a;
+            margin: 0;
+        }
+
+        /* SVG Map Container */
+        .map-container {
+            width: 100%;
+            max-width: 600px;
+            margin: 1.5rem auto;
+            background: white;
+            border: 1px solid var(--gray-200);
+            border-radius: 0.75rem;
+            padding: 1rem;
+        }
+
+        svg {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* Self-Test Section */
+        .self-test {
+            background: var(--gray-50);
+            padding: 2rem 1.5rem;
+            margin-top: 3rem;
+            border-top: 3px solid var(--orange);
+        }
+
+        .self-test-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .self-test h2 {
+            color: var(--orange-dark);
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        .question {
+            background: white;
+            border: 1px solid var(--gray-200);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .question:hover {
+            border-color: var(--orange);
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.1);
+        }
+
+        .question-header {
+            display: flex;
+            align-items: start;
+            gap: 1rem;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .q-number {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--orange-light);
+            color: var(--orange-dark);
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .q-content {
+            flex: 1;
+        }
+
+        .q-text {
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: 0.5rem;
+        }
+
+        .q-blooms {
+            display: inline-block;
+            background: var(--orange);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+        }
+
+        .q-answer {
+            display: none;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--gray-200);
+            color: var(--gray-700);
+            animation: slideDown 0.3s ease;
+        }
+
+        .question.reveal .q-answer {
+            display: block;
+        }
+
+        /* Practice Labs */
+        .practice-labs {
+            background: white;
+            padding: 2rem 1.5rem;
+            margin-top: 1rem;
+            border-top: 2px solid var(--gray-200);
+        }
+
+        .practice-labs-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .practice-labs h2 {
+            color: var(--orange-dark);
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+        }
+
+        .lab-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .lab-link {
+            border: 2px solid var(--gray-200);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .lab-link:hover {
+            border-color: var(--orange);
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .lab-link-icon {
+            font-size: 1.8rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .lab-link-title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--orange-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .lab-link-desc {
+            font-size: 0.9rem;
+            color: var(--gray-600);
+        }
+
+        /* Navigation Footer */
+        footer {
+            background: var(--gray-100);
+            padding: 2rem 1.5rem;
+            border-top: 1px solid var(--gray-200);
+            margin-top: 2rem;
+        }
+
+        .footer-content {
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .footer-nav {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .footer-nav a, .footer-nav button {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            font-size: 0.95rem;
+        }
+
+        .footer-nav button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-prev {
+            background: var(--gray-200);
+            color: var(--gray-900);
+        }
+
+        .btn-prev:hover:not(:disabled) {
+            background: var(--gray-300);
+        }
+
+        .btn-next {
+            background: var(--orange);
+            color: white;
+        }
+
+        .btn-next:hover:not(:disabled) {
+            background: var(--orange-dark);
+        }
+
+        .footer-status {
+            font-size: 0.95rem;
+            color: var(--gray-600);
+            font-weight: 600;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .cmp-box {
+                grid-template-columns: 1fr;
+            }
+
+            .header-subtitle {
+                font-size: 0.95rem;
+            }
+
+            .reassuring-message {
+                font-size: 0.9rem;
+            }
+
+            .step-header {
+                padding: 1.25rem;
+                gap: 0.75rem;
+            }
+
+            .step-content {
+                padding: 1.25rem;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .footer-nav {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+            <span class="course-tag">ANHS2609</span>
+            <h1>Week 1: Sources and Background</h1>
+            <p class="header-subtitle">Alexander in Art & Literature</p>
+            <div class="reassuring-message">
+                <p>This visual guide will walk you through the foundational concepts for this week. You'll learn about the sources we use to study Alexander, the historical context, and how to evaluate evidence critically. Complete all <span class="step-count">10 steps</span> and test your knowledge below!</p>
+            </div>
+        </div>
+    </header>
+
+    <!-- Progress Bar -->
+    <div class="progress-container">
+        <div class="progress-label">
+            <span>Your Progress</span>
+            <span id="progress-text">0 / 10 steps completed</span>
+        </div>
+        <div class="progress-bar">
+            <div class="progress-fill" id="progress-fill"></div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="steps-container" id="steps-container">
+            <!-- Step 1 -->
+            <div class="step" data-step="1">
+                <div class="step-header" onclick="toggleStep(0)">
+                    <div class="step-num">1</div>
+                    <div class="step-title">Why Study Alexander?</div>
+                    <div class="step-toggle">▼</div>
+                </div>
+                <div class="step-content">
+                    <p>Alexander stands at one of the most important crossroads in history—the boundary between two eras with fundamentally different characteristics.</p>
+
+                    <h3>The Two Eras</h3>
+                    <p>His death in 323 BC marks the conventional divide between the <strong>Classical period</strong> and the <strong>Hellenistic period</strong> (323–31 BC).</p>
+
+                    <div class="cmp-box classical">
+                        <div>
+                            <h4>Classical Period</h4>
+                            <p>Greek poleis (independent city-states) as dominant political form. Athens and Sparta compete for leadership. Persian Empire stands as the powerful eastern superpower. Warfare between Greeks and Persia (Persian Wars). Culture remains distinctly Greek.</p>
+                        </div>
+                        <div>
+                            <h4>Hellenistic Period (323–31 BC)</h4>
+                            <p>Alexander's conquest creates vast, centralized kingdoms. Greek culture spreads to Egypt, Persia, India, and beyond. Fusion of Greek and Persian cultural elements. Kings rule through absolute power, not polis autonomy. Period ends with Rome's conquest of Egypt at the Battle of Actium.</p>
+                        </div>
+                    </div>
+
+                    <p><strong>Why this matters:</strong> Alexander didn't just conquer—he fundamentally transformed how the Mediterranean and Near Eastern world were organized. He took Classical Greek culture and refashioned it into something new by incorporating Persian Empire elements and institutions. Understanding this transformation is central to studying the Hellenistic world.</p>
+
+                    <div class="callout">
+                        <strong>Key insight:</strong> The Hellenistic period was not merely a continuation of Classical Greece. It represented a wholesale reimagining of political power, cultural identity, and territorial organization.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="step" data-step="2">
+                <div class="step-header" onclick="toggleStep(1)">
+                    <div class="step-num">2</div>
+                    <div class="step-title">The Alexander Mosaic</div>
+                    <div class="step-toggle">▼</div>
+                </div>
+                <div class="step-content">
+                    <p>One of our most vivid visual representations of Alexander comes from an unexpected place: the floor of a Roman house in Pompeii.</p>
+
+                    <h3>The Discovery</h3>
+                    <p>The famous <strong>Alexander Mosaic</strong> was discovered in the House of the Faun in Pompeii. It depicts either the Battle of Gaugamela (331 BC) or the Battle of Issus (333 BC)—historians debate which. The mosaic shows Alexander on horseback, fearless and dynamic, facing Darius III, the Persian king.</p>
+
+                    <h3>Layers of Interpretation</h3>
+                    <p>This single image demonstrates a crucial principle in studying Alexander: <strong>material evidence is always filtered through choices</strong>. Consider the layers:</p>
+                    <ul>
+                        <li>An original Greek painting (4th century BC) showing a contemporary view</li>
+                        <li>Copied or adapted by Roman artisans (1st century AD) for a Pompeian home</li>
+                        <li>Preserved in ash when Vesuvius erupted (79 AD)</li>
+                        <li>Excavated and displayed (18th century onward)</li>
+                        <li>Interpreted by modern historians with modern biases</li>
+                    </ul>
+
+                    <h3>Standard Portrait Features</h3>
+                    <p>In the mosaic and across ancient coinage and sculpture, Alexander is consistently depicted with these features:</p>
+                    <ul>
+                        <li>Curly or wavy hair</li>
+                        <li>Youthful face (even in images made near the end of his life)</li>
+                        <li>Clean-shaven (Persian style influenced by his time in the East)</li>
+                        <li>Idealized features (more perfect than realistic)</li>
+                        <li>Often shown with head slightly tilted or turned</li>
+                    </ul>
+
+                    <div class="callout">
+                        <strong>Material evidence is powerful but always filtered through the artist's choices and later copying.</strong> The mosaic tells us about both Alexander's legend and Roman attitudes toward power.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="step" data-step="3">
+                <div class="step-header" onclick="toggleStep(2)">
+                    <div class="step-num">3</div>
+                    <div class="step-title">Six Lost Sources</div>
+                    <div class="step-toggle">▼</div>
+                </div>
+                <div class="step-content">
+                    <p>Here's a stark reality: <strong>Alexander left no written records that survive</strong>. None. Not a single letter, diary, or official document from his life remains intact.</p>
+
+                    <h3>What We Lost</h3>
+                    <p>According to ancient citations and fragments, these six categories of primary source material once existed:</p>
+                    <ol>
+                        <li><strong>First-hand campaign documentation</strong> — daily records of military movements and sieges</li>
+                        <li><strong>Letters from Alexander</strong> — correspondence to generals, cities, and his mother Olympias</li>
+                        <li><strong>Court records</strong> — administrative decisions and decrees</li>
+                        <li><strong>Earlier historical accounts</strong> — histories written by contemporary historians</li>
+                        <li><strong>Military records</strong> — troop deployments, logistics, casualties</li>
+                        <li><strong>Administrative materials</strong> — tax records, city charters, personnel lists</li>
+                    </ol>
+
+                    <h3>The Fundamental Challenge</h3>
+                    <p>Everything we know about Alexander comes from <strong>secondhand accounts written centuries after his death</strong>. We never read the original sources. Instead, we read about the original sources, filtered through the interpretations and biases of later authors.</p>
+
+                    <div class="callout warning">
+                        <strong>Think of it this way:</strong> Imagine trying to write a biography using only reviews of a book, never reading the book itself. That's the position we're in with Alexander—we're always one step removed from the original evidence.
+                    </div>
+
+                    <p>This doesn't make studying Alexander impossible—but it fundamentally shapes how we approach the evidence and the conclusions we can draw.</p>
+                </div>
+            </div>
+
+            <!-- Step 4 -->
+            <div class="step" data-step="4">
+                <div class="step-header" onclick="toggleStep(3)">
+                    <div class="step-num">4</div>
+                    <div class="step-title">Four Extant Authors</div>
+                    <div class="step-toggle">▼</div>
+                </div>
+                <div class="step-content">
+                    <p>Since no original Alexander documents survive, we rely on four ancient authors whose works have been preserved. Each offers a different perspective.</p>
+
+                    <h3>Arrian — <em>Anabasis of Alexander</em></h3>
+                    <ul>
+                        <li><strong>Who:</strong> Greek historian (c. 86–160 AD), wrote ~400 years after Alexander</li>
+                        <li><strong>Approach:</strong> Military-focused narrative of Alexander's campaigns</li>
+                        <li><strong>Sources:</strong> Explicitly based on two eyewitness accounts: Ptolemy (general, later Egypt's king) and Aristobulus (engineer in Alexander's army)</li>
+                        <li><strong>Reliability:</strong> Generally considered the most detailed and credible account</li>
+                    </ul>
+
+                    <h3>Plutarch — <em>Life of Alexander</em></h3>
+                    <ul>
+                        <li><strong>Who:</strong> Greek biographer (c. 45–120 AD), ~450 years after Alexander</li>
+                        <li><strong>Approach:</strong> Biographical focus on character, philosophy, and moral lessons</li>
+                        <li><strong>Sources:</strong> Various lost accounts, oral traditions, and other biographies</li>
+                        <li><strong>Bias:</strong> Interested in philosophical and moral themes over military detail</li>
+                    </ul>
+
+                    <h3>Diodorus Siculus — <em>Bibliotheca Historica</em></h3>
+                    <ul>
+                        <li><strong>Who:</strong> Greek historian (c. 90–30 BC), earlier but less detailed</li>
+                        <li><strong>Approach:</strong> Universal history from creation to his own time</li>
+                        <li><strong>Sources:</strong> Earlier historians and compilations</li>
+                        <li><strong>Limitation:</strong> Alexander is one topic among many; less comprehensive</li>
+                    </ul>
+
+                    <h3>Curtius Rufus — <em>Historiae Alexandri Magni</em></h3>
+                    <ul>
+                        <li><strong>Who:</strong> Roman historian (1st century AD), date uncertain</li>
+                        <li><strong>Approach:</strong> Rhetorical and dramatic style, emphasizes personality</li>
+                        <li><strong>Language:</strong> Written in Latin (unique among our major sources)</li>
+                        <li><strong>Reliability:</strong> More dramatic, sometimes less factually precise</li>
+                    </ul>
+
+                    <div class="check-question">
+                        <h4>Quick Check</h4>
+                        <p><strong>Question:</strong> Which two eyewitness sources did Arrian explicitly rely on?</p>
+                        <p><strong>Answer:</strong> Ptolemy and Aristobulus</p>
+                    </div>
+
+                    <p><strong>Key point:</strong> All four authors wrote long after Alexander's lifetime. The closest—Diodorus—was born ~60 years after Alexander died. This temporal distance means their accounts are shaped by the historical events that happened between Alexander's lifetime and theirs.</p>
+                </div>
+            </div>
+
+            <!-- Step 5 -->
+            <div class="step" data-step="5">
+                <div class="step-header" onclick="toggleStep(4)">
+                    <div class="step-num">5</div>
+                    <div class="step-title">Four Questions for Source Analysis</div>
+                    <div class="step-toggle">▼</div>
+                </div>
+                <div class="step-content">
+                    <p>No matter what source you're examining—whether it's Arrian, a mosaic, a coin, or an inscription—you should always ask the same four critical questions:</p>
+
+                    <h3>Question 1: Who wrote it and when?</h3>
+                    <p><strong>Why it matters:</strong> Temporal distance from events shapes interpretation. An account written 50 years later includes memories and biases that developed in the interim. Ask about the author's background, education, and time period.</p>
+
+                    <h3>Question 2: What was their purpose?</h3>
+                    <p><strong>Why it matters:</strong> A history meant to entertain differs from one meant to instruct. An inscription celebrating a king's power has different biases than a philosophical biography. Purpose shapes what details are included and how they're framed.</p>
+
+                    <h3>Question 3: What sources did THEY use?</h3>
+                    <p><strong>Why it matters:</strong> You can only trust an author as far as you trust their sources. If they relied on eyewitnesses, they're more credible. If they relied on hearsay or propaganda, less so. This is the "chain of evidence" problem.</p>
+
+                    <h3>Question 4: What biases might be present?</h3>
+                    <p><strong>Why it matters:</strong> All sources have biases—cultural, political, and personal. A Greek author views Alexander differently than a Persian one. A supporter views him differently than a critic. Identifying biases doesn't invalidate a source; it contextualizes it.</p>
+
+                    <div class="exercise">
+                        <h4>Mini-Exercise: Apply to Arrian</h4>
+                        <p><strong>Apply the four questions to Arrian's Anabasis:</strong></p>
+                        <p><strong>1. Who and when?</strong> Arrian, Greek historian, ~130 AD (~450 years after Alexander died)</p>
+                        <p><strong>2. Purpose?</strong> Military narrative—detailed record of Alexander's campaigns and conquests</p>
+                        <p><strong>3. Sources?</strong> Ptolemy (eyewitness, became king of Egypt, had bias toward legitimacy) and Aristobulus (engineer, may have emphasized technical achievements)</p>
+                        <p><strong>4. Biases?</strong> Greek cultural perspective; likely respected monarchical power; may have emphasized military genius over political reality; inherited any biases from Ptolemy and Aristobulus</p>
+                    </div>
+
+                    <p>These four questions form the foundation of source criticism. Master them, and you'll be able to evaluate any evidence about Alexander.</p>
+                </div>
+            </div>
+
+            <!-- Step 6 -->
+            <div class="step" data-step="6">
+                <div class="step-header" onclick="toggleStep(5)">
+                    <div class="step-num">6</div>
+                    <div class="step-title">Material Evidence vs Literary Sources</div>
+                    <div class="step-toggle">▼</div>
+                </div>
+                <div class="step-content">
+                    <p>When we study Alexander, we combine two fundamentally different types of evidence. Each has strengths and weaknesses.</p>
+
+                    <div class="cmp-box hellenistic">
+                        <div>
+                            <h4>Material Evidence</h4>
+                            <p><strong>Examples:</strong> Coins, mosaics, sculptures, inscriptions, tombs, architectural remains, pottery</p>
+                            <p><strong>Strengths:</strong> Less prone to authorial agenda and bias; represents actual decisions and choices made at the time; can contradict literary accounts</p>
+                            <p><strong>Weaknesses:</strong> Hard to interpret without context; fragmented and incomplete; affected by preservation accidents; requires inference</p>
+                        </div>
+                        <div>
+                            <h4>Literary Sources</h4>
+                            <p><strong>Examples:</strong> Arrian, Plutarch, Diodorus, Curtius, fragments from lost works</p>
+                            <p><strong>Strengths:</strong> Provides narrative and context; explains motivations and consequences; offers multiple perspectives</p>
+                            <p><strong>Weaknesses:</strong> Written long after events; filtered through author's agenda; cannot verify sources; may contain propaganda or distortion</p>
+                        </div>
+                    </div>
+
+                    <h3>Why You Need Both</h3>
+                    <p>The best historical understanding combines both types. Literary sources tell you <em>what happened and why</em>. Material evidence shows you <em>what people actually valued and chose to build</em>. When they agree, you can be more confident. When they conflict, you have a puzzle to solve—which may reveal important truths about bias in the literary record.</p>
+
+                    <h3>Example: Coins as Evidence</h3>
+                    <p>Alexander's coins show his portrait (power and prestige), Greek symbols (cultural identity), and spread across the known world (proving reach of his empire). Literary sources might exaggerate his popularity or minimize local resistance. Coins offer silent testimony to how Alexander presented himself and how widely that image was distributed.</p>
+
+                    <div class="callout tip">
+                        <strong>Tip:</strong> In essays and discussions, always distinguish between types of evidence. "The sources say..." means literary sources. "Material evidence shows..." is coins, inscriptions, etc. Being precise strengthens your arguments.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 7 -->
+            <div class="step" data-step="7">
+                <div class="step-header" onclick="toggleStep(6)">
+                    <div class="step-num">7</div>
+                    <div class="step-title">Ancient Text Referencing</div>
+                    <div class="step-toggle">▼</div>
+                </div>
+                <div class="step-content">
+                    <p>When you read historical scholarship about Alexander, you'll see citations that look unfamiliar. Understanding this system is essential for academic work in ancient history.</p>
+
+                    <h3>The Standard Citation Format</h3>
+                    <p>Ancient texts use a reference system independent of page numbers (texts predate printing). The standard format is:</p>
+                    <p style="background: var(--orange-light); padding: 1rem; border-radius: 0.5rem; font-family: monospace; text-align: center; font-weight: 600;">
+                        Author Abbreviation, Work Abbreviation, Book.Chapter.Section
+                    </p>
+
+                    <h3>Common Examples</h3>
+                    <ul>
+                        <li><strong>Arr. Anab. 1.12.1</strong> — Arrian, Anabasis, Book 1, Chapter 12, Section 1</li>
+                        <li><strong>Plut. Alex. 10.2</strong> — Plutarch, Life of Alexander, Chapter 10, Section 2</li>
+                        <li><strong>Diod. 17.3.4</strong> — Diodorus Siculus, Book 17, Chapter 3, Section 4</li>
+                        <li><strong>Curt. 4.6.3</strong> — Curtius Rufus, Book 4, Chapter 6, Section 3</li>
+                    </ul>
+
+                    <h3>Why This Matters</h3>
+                    <p>This system allows scholars to reference the same passage <em>regardless of which translation or edition they use</em>. Whether reading an ancient Greek manuscript, a 17th-century Latin edition, or a modern English translation, "Arr. Anab. 1.12.1" refers to the identical passage. This makes cross-referencing possible and allows precise academic discussion.</p>
+
+                    <div class="callout tip">
+                        <strong>Tip for essays:</strong> Always use the standard ancient referencing convention when citing sources from Arrian, Plutarch, and other ancient authors. This demonstrates mastery of the material and makes your work verifiable. Example: "According to Arrian, Alexander was crowned king in Babylon (Arr. Anab. 7.22.1)."
+                    </div>
+
+                    <p>Different translations may use slightly different numbering systems, so checking the edition being used is important. But the standard is widely consistent across modern scholarship.</p>
+                </div>
+            </div>
+
+            <!-- Step 8 -->
+            <div class="step" data-step="8">
+                <div class="step-header" onclick="toggleStep(7)">
+                    <div class="step-num">8</div>
+                    <div class="step-title">The Classical World Before Alexander</div>
+                    <div class="step-toggle">▼</div>
+                </div>
+                <div class="step-content">
+                    <p>To understand Alexander's impact, you must first understand what world he inherited.</p>
+
+                    <h3>The Greek Polis System</h3>
+                    <p>Classical Greece was not a unified state. Instead, it consisted of independent city-states called <em>poleis</em> (plural of polis), each with its own government, laws, army, and foreign policy. Major poleis included Athens, Sparta, Thebes, Corinth, and Syracuse (in Sicily).</p>
+
+                    <h3>Athens and Sparta: The Superpowers</h3>
+                    <p>By the 4th century BC, two poleis dominated Greek political thinking:</p>
+                    <ul>
+                        <li><strong>Athens:</strong> Democratic, maritime power, intellectual and cultural center, naval empire</li>
+                        <li><strong>Sparta:</strong> Oligarchic, land-based military power, strict discipline, feared warrior culture</li>
+                    </ul>
+                    <p>These two had fought the Peloponnesian War (431–404 BC) for supremacy, leaving Greece weakened and fractured.</p>
+
+                    <h3>The Persian Empire: Eastern Superpower</h3>
+                    <p>While Greek poleis competed among themselves, the Achaemenid Persian Empire ruled a vast territory stretching from Egypt to India. The Persians had invaded Greece twice (490 and 480 BC), and Greek-Persian conflict shaped political thinking across the Mediterranean.</p>
+
+                    <h3>Constant Warfare</h3>
+                    <p>Classical Greece was characterized by constant inter-polis conflict. Wars between rival cities were routine. Simultaneously, Greek cities feared and fought against Persian expansion. This created a fragmented, unstable political landscape.</p>
+
+                    <h3>What Alexander Changed</h3>
+                    <p>Alexander inherited this fractured world in 336 BC. His Macedonian kingdom was considered semi-barbarian by the southern Greek poleis. Within 13 years, he conquered the Persian Empire, unified Greek and Persian territories, and created a new political order. The classical world of independent city-states would never recover.</p>
+
+                    <div class="callout">
+                        <strong>Key insight:</strong> Alexander didn't create stability where chaos reigned—Greek poleis would have remained divided and competitive without him. But he imposed a centralized monarchical order that fundamentally displaced the polis as the center of political life.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 9 -->
+            <div class="step" data-step="9">
+                <div class="step-header" onclick="toggleStep(8)">
+                    <div class="step-num">9</div>
+                    <div class="step-title">Key Geography</div>
+                    <div class="step-toggle">▼</div>
+                </div>
+                <div class="step-content">
+                    <p>To understand Alexander's campaigns and the Hellenistic world, you must know the geography. The following map shows the key locations you should be familiar with.</p>
+
+                    <div class="map-container">
+                        <svg viewBox="0 0 800 500" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Water -->
+                            <rect width="800" height="500" fill="#e0f2fe"/>
+                            
+                            <!-- Background landmass -->
+                            <path d="M 150 100 L 250 80 L 300 120 L 350 90 L 400 110 L 450 100 L 500 130 L 550 110 L 600 140 L 650 120 L 700 150 L 720 180 L 730 220 L 720 260 L 700 280 L 680 290 L 650 280 L 600 300 L 550 290 L 500 310 L 450 300 L 400 320 L 350 310 L 300 330 L 250 320 L 200 340 L 150 330 L 120 280 L 110 240 L 120 200 L 140 160 Z" fill="#f3e8ff"/>
+                            
+                            <!-- Major regions labeled -->
+                            <text x="180" y="140" font-size="14" font-weight="bold" fill="#7c3aed">MACEDON</text>
+                            <text x="250" y="250" font-size="14" font-weight="bold" fill="#7c3aed">GREECE</text>
+                            <text x="350" y="280" font-size="12" fill="#7c3aed">Athens</text>
+                            <text x="380" y="310" font-size="12" fill="#7c3aed">Sparta</text>
+                            <text x="320" y="360" font-size="14" font-weight="bold" fill="#059669">EGYPT</text>
+                            <text x="500" y="200" font-size="14" font-weight="bold" fill="#dc2626">PERSIA</text>
+                            <text x="620" y="280" font-size="12" fill="#dc2626">Babylon</text>
+                            
+                            <!-- Key cities marked -->
+                            <circle cx="200" cy="120" r="4" fill="#f59e0b"/>
+                            <text x="210" y="120" font-size="11" fill="#b45309">Amphipolis</text>
+                            
+                            <circle cx="240" cy="210" r="4" fill="#f59e0b"/>
+                            <text x="250" y="210" font-size="11" fill="#b45309">Chaeronea</text>
+                            
+                            <circle cx="280" cy="280" r="4" fill="#f59e0b"/>
+                            <text x="290" y="280" font-size="11" fill="#b45309">Athens</text>
+                            
+                            <circle cx="310" cy="310" r="4" fill="#f59e0b"/>
+                            <text x="320" y="310" font-size="11" fill="#b45309">Sparta</text>
+                            
+                            <circle cx="310" cy="150" r="4" fill="#f59e0b"/>
+                            <text x="320" y="150" font-size="11" fill="#b45309">Troy</text>
+                            
+                            <circle cx="320" cy="380" r="4" fill="#10b981"/>
+                            <text x="330" y="380" font-size="11" fill="#059669">Siwah</text>
+                            
+                            <circle cx="620" cy="280" r="4" fill="#f59e0b"/>
+                            <text x="630" y="280" font-size="11" fill="#b45309">Babylon</text>
+                            
+                            <!-- Legend -->
+                            <text x="550" y="450" font-size="12" font-weight="bold" fill="#111827">Key Locations:</text>
+                            <circle cx="560" cy="465" r="3" fill="#f59e0b"/>
+                            <text x="570" y="470" font-size="11" fill="#111827">Alexander's Key Sites</text>
+                            <circle cx="560" cy="485" r="3" fill="#10b981"/>
+                            <text x="570" y="490" font-size="11" fill="#111827">Egyptian Oracle</text>
+                        </svg>
+                    </div>
+
+                    <h3>Locations You Need to Know</h3>
+                    <ul>
+                        <li><strong>Amphipolis:</strong> Alexander's birthplace, Macedonian city</li>
+                        <li><strong>Macedon:</strong> Alexander's home kingdom in northern Greece</li>
+                        <li><strong>Chaeronea:</strong> Site of Alexander's first major victory (338 BC)</li>
+                        <li><strong>Athens & Thebes:</strong> Major Greek city-states Alexander subdued</li>
+                        <li><strong>Sparta:</strong> The other Greek superpower, notably not conquered directly</li>
+                        <li><strong>Troy:</strong> Alexander visited the ruins of ancient Troy in Asia Minor</li>
+                        <li><strong>Siwah Oasis:</strong> In Egypt, where the oracle declared Alexander a pharaoh/son of Amun</li>
+                        <li><strong>Babylon:</strong> Capital of the Persian Empire and Alexander's capital</li>
+                        <li><strong>Persian Empire:</strong> Stretched from Egypt to India—Alexander's target</li>
+                    </ul>
+
+                    <div class="callout warning">
+                        <strong>Important Reminder:</strong> The EFT Map Quiz (3% of your grade) is <strong>closed-book in tutorials, Week 3</strong>. You will need to identify these locations and others on a map. <strong>Start learning the geography now</strong>—don't leave this until the last minute. Regular practice will make this automatic.
+                    </div>
+
+                    <h3>Why Geography Matters</h3>
+                    <p>Alexander's campaigns make sense only if you can visualize the distances and routes. Understanding geography helps you grasp why certain battles happened where they did, why logistics were challenging, and how Alexander managed to maintain control across such vast distances.</p>
+                </div>
+            </div>
+
+            <!-- Step 10 -->
+            <div class="step" data-step="10">
+                <div class="step-header" onclick="toggleStep(9)">
+                    <div class="step-num">10</div>
+                    <div class="step-title">Putting It All Together</div>
+                    <div class="step-toggle">▼</div>
+                </div>
+                <div class="step-content">
+                    <p>You've now learned the foundations needed for this course. Let's consolidate what you've learned and look ahead.</p>
+
+                    <h3>Skills You've Developed This Week</h3>
+                    <p>By studying the sources, evidence, and context, you've practiced:</p>
+                    <ul>
+                        <li><strong>Source criticism:</strong> Asking the four analytical questions about any ancient text or artifact</li>
+                        <li><strong>Evidence evaluation:</strong> Understanding the strengths and limitations of material vs. literary evidence</li>
+                        <li><strong>Temporal awareness:</strong> Recognizing how distance in time shapes what we know</li>
+                        <li><strong>Context understanding:</strong> Seeing Alexander not in isolation but within the Classical world he inherited</li>
+                        <li><strong>Geographic literacy:</strong> Mapping key locations essential for understanding Alexander's campaigns</li>
+                    </ul>
+
+                    <h3>How to Read Primary Sources Critically</h3>
+                    <p>When you encounter a passage from Arrian, Plutarch, or other ancient authors in lectures or readings:</p>
+                    <ol>
+                        <li>Note the source using correct ancient referencing (Arr. Anab. X.Y.Z)</li>
+                        <li>Ask: Who wrote this, and when? (temporal distance matters)</li>
+                        <li>Ask: What was their purpose? (this shapes content selection)</li>
+                        <li>Ask: What's their source material? (chain of evidence)</li>
+                        <li>Identify possible biases: cultural, political, personal</li>
+                        <li>Compare with material evidence if available (coins, inscriptions, etc.)</li>
+                        <li>Synthesize: What can we cautiously conclude?</li>
+                    </ol>
+
+                    <h3>Combining Evidence Types</h3>
+                    <p>The best historical arguments use both material and literary evidence:</p>
+                    <ul>
+                        <li>Literary sources give you narrative and motivation</li>
+                        <li>Material evidence shows what people actually valued and built</li>
+                        <li>When they agree, confidence is high</li>
+                        <li>When they disagree, you've found a puzzle worth investigating</li>
+                    </ul>
+
+                    <div class="callout">
+                        <strong>Core insight for this course:</strong> Alexander is not a single historical figure but a collection of sources and evidence, each filtered through time, bias, and the choices of those who preserved or created them. Understanding Alexander means understanding these filters, not removing them.
+                    </div>
+
+                    <h3>Next Week: Perspectives from Persia and Macedon</h3>
+                    <p>Week 2 will take what you've learned about sources and evidence and apply it to understanding how different cultures—Persians and Macedonians—viewed Alexander. You'll see how the same events can be interpreted very differently depending on perspective.</p>
+
+                    <p><strong>Preparation:</strong> Review the locations you've learned this week. Start practicing the map geography for the Week 3 EFT Map Quiz. Re-read any passages from Arrian or Plutarch that were assigned, and practice applying the four source-analysis questions.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Self-Test Section -->
+    <div class="self-test">
+        <div class="self-test-container">
+            <h2>Self-Test: Check Your Understanding</h2>
+            <p style="margin-bottom: 1.5rem; color: var(--gray-700);">Click each question to reveal the answer. Use these to assess your comprehension before moving to Week 2.</p>
+
+            <!-- Q1 -->
+            <div class="question">
+                <div class="question-header" onclick="toggleQuestion(0)">
+                    <div class="q-number">1</div>
+                    <div class="q-content">
+                        <div class="q-text">Name the four extant ancient authors who wrote about Alexander.</div>
+                        <span class="q-blooms">REMEMBERING</span>
+                    </div>
+                </div>
+                <div class="q-answer">
+                    <p><strong>Answer:</strong> Arrian (Anabasis), Plutarch (Life of Alexander), Diodorus Siculus (Bibliotheca Historica), and Curtius Rufus (Historiae Alexandri Magni).</p>
+                </div>
+            </div>
+
+            <!-- Q2 -->
+            <div class="question">
+                <div class="question-header" onclick="toggleQuestion(1)">
+                    <div class="q-number">2</div>
+                    <div class="q-content">
+                        <div class="q-text">Why is Alexander described as standing at the "crossroads" of two eras?</div>
+                        <span class="q-blooms">UNDERSTANDING</span>
+                    </div>
+                </div>
+                <div class="q-answer">
+                    <p><strong>Answer:</strong> His death in 323 BC marks the conventional boundary between the Classical period (independent Greek poleis) and the Hellenistic period (centralized kingdoms blending Greek and Persian culture). He personally transformed the world from one era to the other.</p>
+                </div>
+            </div>
+
+            <!-- Q3 -->
+            <div class="question">
+                <div class="question-header" onclick="toggleQuestion(2)">
+                    <div class="q-number">3</div>
+                    <div class="q-content">
+                        <div class="q-text">What date marks the end of the Hellenistic period, and what event caused it?</div>
+                        <span class="q-blooms">REMEMBERING</span>
+                    </div>
+                </div>
+                <div class="q-answer">
+                    <p><strong>Answer:</strong> 31 BC, when Rome conquered Egypt at the Battle of Actium, bringing the Mediterranean world under Roman control and ending the Hellenistic age.</p>
+                </div>
+            </div>
+
+            <!-- Q4 -->
+            <div class="question">
+                <div class="question-header" onclick="toggleQuestion(3)">
+                    <div class="q-number">4</div>
+                    <div class="q-content">
+                        <div class="q-text">Why does the loss of all primary sources make studying Alexander particularly challenging?</div>
+                        <span class="q-blooms">ANALYSING</span>
+                    </div>
+                </div>
+                <div class="q-answer">
+                    <p><strong>Answer:</strong> All surviving accounts were written centuries after Alexander died by authors with their own biases, agendas, and cultural perspectives. We cannot verify these accounts against the original sources they claim to use. We're always at least one step removed from the original evidence, reading about books rather than reading the books themselves.</p>
+                </div>
+            </div>
+
+            <!-- Q5 -->
+            <div class="question">
+                <div class="question-header" onclick="toggleQuestion(4)">
+                    <div class="q-number">5</div>
+                    <div class="q-content">
+                        <div class="q-text">Apply the four source-analysis questions to Plutarch's Life of Alexander.</div>
+                        <span class="q-blooms">APPLYING</span>
+                    </div>
+                </div>
+                <div class="q-answer">
+                    <p><strong>Answer:</strong> (1) <strong>Who and when?</strong> Plutarch, Greek biographer, ~100 AD, about 400+ years after Alexander's death. (2) <strong>Purpose?</strong> Biography focused on character, morality, and philosophical lessons rather than military detail. (3) <strong>Sources?</strong> Various lost accounts, oral traditions, and earlier biographies—sources we cannot directly verify. (4) <strong>Biases?</strong> Greek cultural perspective favoring philosophical analysis; interest in moral exemplars; possible admiration for charismatic power; less concerned with political realism or military accuracy.</p>
+                </div>
+            </div>
+
+            <!-- Q6 -->
+            <div class="question">
+                <div class="question-header" onclick="toggleQuestion(5)">
+                    <div class="q-number">6</div>
+                    <div class="q-content">
+                        <div class="q-text">What are the standard portrait features of Alexander in ancient art?</div>
+                        <span class="q-blooms">REMEMBERING</span>
+                    </div>
+                </div>
+                <div class="q-answer">
+                    <p><strong>Answer:</strong> Curly or wavy hair, youthful face (idealized), clean-shaven (reflecting Persian influence), idealized features (more perfect than realistic), often shown with head tilted slightly to one side. These features appear consistently across coins, mosaics, and sculptures.</p>
+                </div>
+            </div>
+
+            <!-- Q7 -->
+            <div class="question">
+                <div class="question-header" onclick="toggleQuestion(6)">
+                    <div class="q-number">7</div>
+                    <div class="q-content">
+                        <div class="q-text">What is the Alexander Mosaic and where was it found?</div>
+                        <span class="q-blooms">REMEMBERING</span>
+                    </div>
+                </div>
+                <div class="q-answer">
+                    <p><strong>Answer:</strong> A famous floor mosaic (likely from the 2nd century BC or earlier, based on Greek originals) depicting either the Battle of Gaugamela or the Battle of Issus between Alexander and Darius III. Found in the House of the Faun in Pompeii, preserved by the eruption of Vesuvius in 79 AD. It demonstrates how material evidence is filtered through artistic choices and later copying.</p>
+                </div>
+            </div>
+
+            <!-- Q8 -->
+            <div class="question">
+                <div class="question-header" onclick="toggleQuestion(7)">
+                    <div class="q-number">8</div>
+                    <div class="q-content">
+                        <div class="q-text">Why might material evidence be considered more reliable than literary sources for some purposes?</div>
+                        <span class="q-blooms">ANALYSING</span>
+                    </div>
+                </div>
+                <div class="q-answer">
+                    <p><strong>Answer:</strong> Material evidence (coins, mosaics, inscriptions, sculptures) is less prone to authorial bias and agenda. It represents actual choices made at the time, not interpretations written decades or centuries later. However, material evidence requires interpretation and context to be meaningful. The ideal approach combines both types: literary sources for narrative and motivation, material evidence for what people actually valued.</p>
+                </div>
+            </div>
+
+            <!-- Q9 -->
+            <div class="question">
+                <div class="question-header" onclick="toggleQuestion(8)">
+                    <div class="q-number">9</div>
+                    <div class="q-content">
+                        <div class="q-text">How would you cite a passage from Arrian's Anabasis using ancient referencing conventions?</div>
+                        <span class="q-blooms">APPLYING</span>
+                    </div>
+                </div>
+                <div class="q-answer">
+                    <p><strong>Answer:</strong> Using the format: Author abbreviation, Work abbreviation, Book.Chapter.Section. For example: <strong>Arr. Anab. 1.12.1</strong> (Arrian, Anabasis, Book 1, Chapter 12, Section 1). This system allows precise reference regardless of translation or edition being used.</p>
+                </div>
+            </div>
+
+            <!-- Q10 -->
+            <div class="question">
+                <div class="question-header" onclick="toggleQuestion(9)">
+                    <div class="q-number">10</div>
+                    <div class="q-content">
+                        <div class="q-text">Why is the Hellenistic period described as a "refashioning" of Classical Greek culture?</div>
+                        <span class="q-blooms">UNDERSTANDING</span>
+                    </div>
+                </div>
+                <div class="q-answer">
+                    <p><strong>Answer:</strong> The successor kingdoms created after Alexander's death blended Greek political institutions and cultural traditions with elements from the Persian Empire and other Near Eastern cultures. It wasn't a simple continuation of Classical Greece but rather a new synthesis—Greek forms combined with Persian absolutism, creating something distinctly different from the polis-based democracy or oligarchy of Classical times.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Practice Labs -->
+    <div class="practice-labs">
+        <div class="practice-labs-container">
+            <h2>Practice Lab Links</h2>
+            <p style="margin-bottom: 1.5rem; color: var(--gray-700);">Ready to deepen your understanding? Try these interactive tools to reinforce what you've learned.</p>
+
+            <div class="lab-links">
+                <!-- Lab 1 -->
+                <div class="lab-link" onclick="window.parent.openPracticeLabTool && window.parent.openPracticeLabTool('map', 1)">
+                    <div class="lab-link-icon">🗺️</div>
+                    <div class="lab-link-title">Map Quiz Practice</div>
+                    <div class="lab-link-desc">Interactive map drill — practice identifying key locations from this week. Essential prep for the Week 3 EFT Map Quiz.</div>
+                </div>
+
+                <!-- Lab 2 -->
+                <div class="lab-link" onclick="window.parent.openPracticeLabTool && window.parent.openPracticeLabTool('concepts', 1)">
+                    <div class="lab-link-icon">📜</div>
+                    <div class="lab-link-title">Source Analysis Drill</div>
+                    <div class="lab-link-desc">Test your knowledge of the four ancient authors, evidence types, and source criticism techniques introduced this week.</div>
+                </div>
+
+                <!-- Lab 3 -->
+                <div class="lab-link" onclick="window.parent.openPracticeLabTool && window.parent.openPracticeLabTool('timeline', 1)">
+                    <div class="lab-link-icon">📅</div>
+                    <div class="lab-link-title">Timeline Practice</div>
+                    <div class="lab-link-desc">Place key events in chronological order: Classical period, Alexander's life, Hellenistic period, and the Battle of Actium.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer Navigation -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-nav">
+                <button class="btn-prev" id="btn-prev" onclick="previousStep()">← Previous</button>
+                <button class="btn-next" id="btn-next" onclick="nextStep()">Next →</button>
+            </div>
+            <div class="footer-status" id="footer-status">Step 1 of 10</div>
+        </div>
+    </footer>
+
+    <script>
+        const totalSteps = 10;
+        let currentStep = 1;
+        let completedSteps = new Set();
+
+        function toggleStep(index) {
+            const step = document.querySelectorAll('.step')[index];
+            step.classList.toggle('active');
+            
+            const stepNum = index + 1;
+            if (step.classList.contains('active')) {
+                completedSteps.add(stepNum);
+            }
+            
+            updateProgress();
+        }
+
+        function toggleQuestion(index) {
+            const question = document.querySelectorAll('.question')[index];
+            question.classList.toggle('reveal');
+        }
+
+        function nextStep() {
+            if (currentStep < totalSteps) {
+                currentStep++;
+                updateCurrentStep();
+            }
+        }
+
+        function previousStep() {
+            if (currentStep > 1) {
+                currentStep--;
+                updateCurrentStep();
+            }
+        }
+
+        function updateCurrentStep() {
+            const steps = document.querySelectorAll('.step');
+            steps.forEach((step, index) => {
+                if (index + 1 === currentStep) {
+                    step.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+            updateFooterStatus();
+        }
+
+        function updateProgress() {
+            const percentage = (completedSteps.size / totalSteps) * 100;
+            document.getElementById('progress-fill').style.width = percentage + '%';
+            document.getElementById('progress-text').textContent = `${completedSteps.size} / ${totalSteps} steps completed`;
+        }
+
+        function updateFooterStatus() {
+            document.getElementById('footer-status').textContent = `Step ${currentStep} of ${totalSteps}`;
+            document.getElementById('btn-prev').disabled = currentStep === 1;
+            document.getElementById('btn-next').disabled = currentStep === totalSteps;
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            updateProgress();
+            updateFooterStatus();
+            // Auto-open first step
+            document.querySelectorAll('.step')[0].classList.add('active');
+            completedSteps.add(1);
+            updateProgress();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OLES1603 Week 1: Astronomy Through the Ages - Visual Guide</title>
+    <style>
+        :root {
+            --purple: #8b5cf6;
+            --purple-light: #f5f3ff;
+            --purple-dark: #6d28d9;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-700: #374151;
+            --gray-900: #111827;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: var(--gray-50);
+            color: var(--gray-900);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        header {
+            background: linear-gradient(135deg, #6d28d9 0%, #8b5cf6 100%);
+            color: white;
+            padding: 3rem 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(107, 40, 217, 0.15);
+        }
+
+        header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.95;
+        }
+
+        .course-meta {
+            font-size: 0.95rem;
+            margin-top: 1rem;
+            opacity: 0.9;
+        }
+
+        .steps-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .step-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            border-left: 4px solid var(--purple);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .step-card:hover {
+            box-shadow: 0 8px 20px rgba(107, 40, 217, 0.12);
+            transform: translateY(-2px);
+        }
+
+        .step-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: var(--purple);
+            color: white;
+            border-radius: 50%;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .step-card h3 {
+            color: var(--gray-900);
+            margin-bottom: 0.75rem;
+            font-size: 1.15rem;
+        }
+
+        .step-card p {
+            color: var(--gray-700);
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .steps-list {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .steps-list h2 {
+            color: var(--purple-dark);
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        .step-detail {
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            background: var(--purple-light);
+            border-left: 4px solid var(--purple);
+            border-radius: 6px;
+            display: none;
+        }
+
+        .step-detail.active {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .step-detail h3 {
+            color: var(--purple-dark);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .step-detail ul {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .step-detail li {
+            margin-bottom: 0.75rem;
+            color: var(--gray-700);
+        }
+
+        .step-detail strong {
+            color: var(--purple-dark);
+        }
+
+        .comparison-box {
+            background: white;
+            border: 2px solid var(--purple);
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .comparison-box > div {
+            padding: 0.75rem;
+        }
+
+        .comparison-box h4 {
+            color: var(--purple);
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .comparison-box p {
+            font-size: 0.9rem;
+            color: var(--gray-700);
+        }
+
+        .callout {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 1rem;
+            border-radius: 6px;
+            margin: 1rem 0;
+            font-style: italic;
+            color: var(--gray-700);
+        }
+
+        .analogy {
+            background: #dbeafe;
+            border-left: 4px solid #3b82f6;
+            padding: 1rem;
+            border-radius: 6px;
+            margin: 1rem 0;
+            color: var(--gray-700);
+        }
+
+        svg {
+            max-width: 100%;
+            margin: 1rem 0;
+        }
+
+        .self-test {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .self-test h2 {
+            color: var(--purple-dark);
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        .question {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .question:last-child {
+            border-bottom: none;
+        }
+
+        .question-header {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 0.75rem;
+            cursor: pointer;
+        }
+
+        .question-number {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 32px;
+            height: 32px;
+            background: var(--purple-light);
+            color: var(--purple);
+            border-radius: 50%;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .question-text {
+            flex: 1;
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+
+        .question-meta {
+            display: inline-block;
+            font-size: 0.8rem;
+            background: var(--purple-light);
+            color: var(--purple);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            margin-top: 0.5rem;
+        }
+
+        .answer {
+            display: none;
+            background: var(--gray-50);
+            padding: 1rem;
+            border-radius: 6px;
+            margin-top: 0.75rem;
+            color: var(--gray-700);
+            line-height: 1.6;
+        }
+
+        .answer.revealed {
+            display: block;
+        }
+
+        .practice-section {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .practice-section h2 {
+            color: var(--purple-dark);
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        .practice-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .practice-link {
+            background: linear-gradient(135deg, var(--purple-light) 0%, white 100%);
+            border: 2px solid var(--purple);
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-decoration: none;
+            color: var(--gray-900);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .practice-link:hover {
+            box-shadow: 0 8px 20px rgba(107, 40, 217, 0.15);
+            transform: translateY(-2px);
+            border-color: var(--purple-dark);
+        }
+
+        .practice-icon {
+            font-size: 2rem;
+        }
+
+        .practice-title {
+            font-weight: 600;
+            color: var(--purple-dark);
+        }
+
+        .practice-desc {
+            font-size: 0.9rem;
+            color: var(--gray-700);
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--gray-700);
+            font-size: 0.9rem;
+            border-top: 1px solid var(--gray-200);
+            margin-top: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .steps-container {
+                grid-template-columns: 1fr;
+            }
+
+            header h1 {
+                font-size: 1.75rem;
+            }
+
+            .comparison-box {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🌌 Astronomy Through the Ages</h1>
+            <p>Week 1: Visual Guide & Learning Path</p>
+            <div class="course-meta">
+                OLES1603: Astronomy: Exploring the Universe | Instructor: Anita Hafner
+            </div>
+        </header>
+
+        <!-- Steps Overview Cards -->
+        <div class="steps-container">
+            <div class="step-card" onclick="scrollToStep(1)">
+                <div class="step-number">1</div>
+                <h3>Looking Up: Why Astronomy Matters</h3>
+                <p>From ancient stargazing to modern gravitational waves — explore why humans have always looked up.</p>
+            </div>
+            <div class="step-card" onclick="scrollToStep(2)">
+                <div class="step-number">2</div>
+                <h3>Nightly Star Motion</h3>
+                <p>Why stars move across the sky and how their paths depend on where you stand on Earth.</p>
+            </div>
+            <div class="step-card" onclick="scrollToStep(3)">
+                <div class="step-number">3</div>
+                <h3>Seasonal Cycles and the Sun</h3>
+                <p>How the Sun's position creates seasons and why ancient cultures used it for calendars.</p>
+            </div>
+            <div class="step-card" onclick="scrollToStep(4)">
+                <div class="step-number">4</div>
+                <h3>Cultural Astronomy: The Emu in the Sky</h3>
+                <p>Indigenous Australian astronomy — connecting celestial patterns to ground animal behavior.</p>
+            </div>
+            <div class="step-card" onclick="scrollToStep(5)">
+                <div class="step-number">5</div>
+                <h3>The Milky Way Across Cultures</h3>
+                <p>How different civilizations read different stories from the same sky.</p>
+            </div>
+            <div class="step-card" onclick="scrollToStep(6)">
+                <div class="step-number">6</div>
+                <h3>From Aristotle to Ptolemy</h3>
+                <p>The geocentric model that dominated Western astronomy for 1000+ years.</p>
+            </div>
+            <div class="step-card" onclick="scrollToStep(7)">
+                <div class="step-number">7</div>
+                <h3>The Revolution: Galileo and Kepler</h3>
+                <p>Telescopes, ellipses, and the shift from dogma to observation.</p>
+            </div>
+            <div class="step-card" onclick="scrollToStep(8)">
+                <div class="step-number">8</div>
+                <h3>Newton Unifies Gravity</h3>
+                <p>One force explains falling apples and orbiting planets.</p>
+            </div>
+            <div class="step-card" onclick="scrollToStep(9)">
+                <div class="step-number">9</div>
+                <h3>Einstein and Modern Astronomy</h3>
+                <p>Spacetime, gravitational waves, and testing relativity today.</p>
+            </div>
+            <div class="step-card" onclick="scrollToStep(10)">
+                <div class="step-number">10</div>
+                <h3>Modern Applications & What's Ahead</h3>
+                <p>Dark matter, cosmic microwave background, and next steps in Week 2.</p>
+            </div>
+        </div>
+
+        <!-- Detailed Steps -->
+        <div class="steps-list" id="detailed-steps">
+            <h2>📚 Detailed Learning Path</h2>
+
+            <!-- Step 1 -->
+            <div class="step-detail active" data-step="1">
+                <div class="step-number">1</div>
+                <h3>Looking Up: Why Astronomy Matters</h3>
+                <ul>
+                    <li><strong>Ancient Wonder:</strong> From the beginning, humans have looked up and wondered about the cosmos.</li>
+                    <li><strong>Light Pollution:</strong> Ancient people had no electric light — the night sky was "absolutely alive with stars"</li>
+                    <li><strong>Survival Necessity:</strong> Astronomy was essential for survival: navigation across oceans, predicting agricultural seasons, marking calendars</li>
+                    <li><strong>Modern Astronomy:</strong> Today we probe the Big Bang's afterglow (cosmic microwave background), detect gravitational waves, and hunt for dark matter and dark energy</li>
+                    <li><strong>Course Leader:</strong> Anita Hafner, radio astronomer specializing in high mass star formation</li>
+                </ul>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="step-detail" data-step="2">
+                <div class="step-number">2</div>
+                <h3>Nightly Star Motion</h3>
+                <ul>
+                    <li><strong>Why Stars Move:</strong> Stars move across the sky due to Earth's rotation (not the stars moving)</li>
+                    <li><strong>Path Varies by Latitude:</strong>
+                        <ul style="margin-top: 0.5rem; margin-left: 1.5rem;">
+                            <li><strong>At the Equator:</strong> Stars rise in the east and set in the west in near-vertical paths</li>
+                            <li><strong>At Middle Latitudes (Sydney):</strong> Stars move at angles across the sky</li>
+                            <li><strong>At the Poles:</strong> Stars circle the pole star in continuous paths, never rising or setting</li>
+                        </ul>
+                    </li>
+                    <li><strong>Limited View:</strong> From any single location, you can only see roughly half of all stars in the sky</li>
+                </ul>
+                <svg viewBox="0 0 400 300" style="max-width: 100%; border: 1px solid var(--gray-200); border-radius: 6px; padding: 1rem;">
+                    <!-- Diagram showing star paths at different latitudes -->
+                    <text x="200" y="20" text-anchor="middle" font-weight="bold" fill="var(--purple-dark)">Star Motion at Different Latitudes</text>
+
+                    <!-- Equator -->
+                    <g>
+                        <text x="50" y="90" font-size="12" font-weight="bold" fill="var(--purple)">Equator</text>
+                        <ellipse cx="50" cy="120" rx="30" ry="50" fill="none" stroke="var(--purple)" stroke-width="2" stroke-dasharray="5,5"/>
+                        <text x="50" y="180" text-anchor="middle" font-size="10">Vertical</text>
+                    </g>
+
+                    <!-- Middle Latitude -->
+                    <g>
+                        <text x="200" y="90" font-size="12" font-weight="bold" fill="var(--purple)">Middle Latitude</text>
+                        <ellipse cx="200" cy="120" rx="35" ry="45" fill="none" stroke="var(--purple)" stroke-width="2" stroke-dasharray="5,5" transform="rotate(-30 200 120)"/>
+                        <text x="200" y="180" text-anchor="middle" font-size="10">At an Angle</text>
+                    </g>
+
+                    <!-- Pole -->
+                    <g>
+                        <text x="350" y="90" font-size="12" font-weight="bold" fill="var(--purple)">Pole</text>
+                        <circle cx="350" cy="120" r="40" fill="none" stroke="var(--purple)" stroke-width="2" stroke-dasharray="5,5"/>
+                        <text x="350" y="180" text-anchor="middle" font-size="10">Circular</text>
+                    </g>
+                </svg>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="step-detail" data-step="3">
+                <div class="step-number">3</div>
+                <h3>Seasonal Cycles and the Sun</h3>
+                <ul>
+                    <li><strong>Changing Position:</strong> The Sun's position in the sky changes throughout the year</li>
+                    <li><strong>Key Dates (Southern Hemisphere):</strong>
+                        <ul style="margin-top: 0.5rem; margin-left: 1.5rem;">
+                            <li><strong>March 20 & September 23 (Equinoxes):</strong> Sun rises due east and sets due west; day and night are equal length</li>
+                            <li><strong>June 20 (Winter Solstice):</strong> Sun reaches lowest point in sky; shortest day</li>
+                            <li><strong>December 21 (Summer Solstice):</strong> Sun reaches highest point in sky; longest day</li>
+                        </ul>
+                    </li>
+                    <li><strong>Ancient Importance:</strong> These cycles were crucial for ancient calendars and agriculture — farmers needed to know when to plant and harvest</li>
+                    <li><strong>Constellations as Markers:</strong> Constellations were used as seasonal calendars to track these crucial times</li>
+                </ul>
+            </div>
+
+            <!-- Step 4 -->
+            <div class="step-detail" data-step="4">
+                <div class="step-number">4</div>
+                <h3>Cultural Astronomy: The Emu in the Sky</h3>
+                <ul>
+                    <li><strong>Indigenous Australian Astronomy:</strong> Among the oldest astronomical traditions in the world, spanning tens of thousands of years</li>
+                    <li><strong>The Emu Constellation:</strong> Dark patches in the Milky Way form the shape of an emu
+                        <ul style="margin-top: 0.5rem; margin-left: 1.5rem;">
+                            <li><strong>April-May:</strong> The emu appears "running" (females laying eggs, males chasing) — this is the right time to harvest emu eggs</li>
+                            <li><strong>June-July:</strong> The emu appears "laying down" (incubating eggs) — stop harvesting; eggs must not be disturbed</li>
+                        </ul>
+                    </li>
+                    <li><strong>Connected to Ground Life:</strong> Celestial observations were directly tied to ground animal behavior for survival and resource management</li>
+                </ul>
+                <div class="comparison-box">
+                    <div>
+                        <h4>📍 Observing the Sky</h4>
+                        <p>Reading stellar positions, phases, and patterns in the dark patches of the Milky Way</p>
+                    </div>
+                    <div>
+                        <h4>🦘 Reading the Land</h4>
+                        <p>Understanding ground animal behavior — breeding cycles, migration, feeding patterns — for hunting and gathering</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 5 -->
+            <div class="step-detail" data-step="5">
+                <div class="step-number">5</div>
+                <h3>The Milky Way Across Cultures</h3>
+                <ul>
+                    <li><strong>Greek Mythology:</strong> Spilled milk from the goddess Hera nursing Heracles</li>
+                    <li><strong>Inca Cosmology:</strong> A sacred river flowing across the sky; animals come to drink from it</li>
+                    <li><strong>Aboriginal Tradition:</strong> The emu's body, head, and neck visible in the dark patches of cosmic dust</li>
+                    <li><strong>Bahari Region (East African):</strong> A woman throwing burning embers into the sky creates the Milky Way</li>
+                    <li><strong>Same Sky, Different Stories:</strong> Each culture read different meaning from the same celestial object based on their mythology, values, and environment</li>
+                    <li><strong>Key Insight:</strong> Astronomy is deeply cultural, not just scientific — how we interpret the universe depends on our worldview</li>
+                </ul>
+            </div>
+
+            <!-- Step 6 -->
+            <div class="step-detail" data-step="6">
+                <div class="step-number">6</div>
+                <h3>From Aristotle to Ptolemy</h3>
+                <ul>
+                    <li><strong>Aristotle (4th century BCE):</strong> Proposed the geocentric model — Earth at the center of the universe, with all heavenly bodies orbiting around it</li>
+                    <li><strong>Ptolemy (2nd century CE):</strong> Developed an elaborate mathematical system to support geocentrism using epicycles (circles on circles) to explain planetary motion</li>
+                    <li><strong>Mathematical Precision:</strong> Ptolemy's model was mathematically precise but extremely complex — required 80+ circles to fit observations</li>
+                    <li><strong>Historical Dominance:</strong> This geocentric framework dominated Western astronomy for over 1000 years</li>
+                    <li><strong>Knowledge Preservation:</strong> Islamic scholars preserved and advanced this knowledge during the medieval period, keeping astronomy alive in the Islamic world</li>
+                </ul>
+            </div>
+
+            <!-- Step 7 -->
+            <div class="step-detail" data-step="7">
+                <div class="step-number">7</div>
+                <h3>The Revolution: Galileo and Kepler</h3>
+                <ul>
+                    <li><strong>Galileo Galilei (1564–1642):</strong>
+                        <ul style="margin-top: 0.5rem; margin-left: 1.5rem;">
+                            <li>First to use telescope for astronomical observations</li>
+                            <li>Observed moons of Jupiter and phases of Venus — evidence against geocentric model</li>
+                            <li>Persecuted by the Church for challenging Earth-centered doctrine</li>
+                            <li>Couldn't publish freely until near his death</li>
+                        </ul>
+                    </li>
+                    <li><strong>Johannes Kepler (1571–1630):</strong>
+                        <ul style="margin-top: 0.5rem; margin-left: 1.5rem;">
+                            <li>Discovered that planets orbit in ellipses, not perfect circles</li>
+                            <li>Formulated three laws of planetary motion — still used today</li>
+                            <li>Small change but exactly right</li>
+                        </ul>
+                    </li>
+                </ul>
+                <div class="callout">
+                    "Kepler's shift from circles to ellipses is a perfect example of how small corrections matter enormously in science"
+                </div>
+            </div>
+
+            <!-- Step 8 -->
+            <div class="step-detail" data-step="8">
+                <div class="step-number">8</div>
+                <h3>Newton Unifies Gravity</h3>
+                <ul>
+                    <li><strong>Newton's Insight:</strong> The force holding an apple to the ground is the SAME force holding planets in orbit</li>
+                    <li><strong>Unification:</strong> One law of gravitation explains everything from falling objects to planetary motion</li>
+                    <li><strong>Revolutionary:</strong> Previously, heavenly bodies were thought to follow different rules than terrestrial objects. Newton proved they follow the same physics</li>
+                    <li><strong>Mathematical Power:</strong> Newton's law of universal gravitation could precisely predict planetary positions and orbits</li>
+                </ul>
+                <div class="analogy">
+                    <strong>Analogy:</strong> It's as if someone proved that rain falling from clouds and ocean waves crashing on shore are caused by the same underlying force.
+                </div>
+            </div>
+
+            <!-- Step 9 -->
+            <div class="step-detail" data-step="9">
+                <div class="step-number">9</div>
+                <h3>Einstein and Modern Astronomy</h3>
+                <ul>
+                    <li><strong>Spacetime Unification:</strong> Einstein unified space and time into a single continuum called spacetime</li>
+                    <li><strong>Redefining Gravity:</strong> Einstein's General Relativity showed gravity is not a force pulling objects together, but rather the curvature of spacetime caused by mass — objects follow curved paths through spacetime</li>
+                    <li><strong>Predictions Tested Today:</strong>
+                        <ul style="margin-top: 0.5rem; margin-left: 1.5rem;">
+                            <li>Gravitational waves detected by LIGO (2015)</li>
+                            <li>Black holes photographed (2019)</li>
+                            <li>Mercury's orbit precession matches Einstein's prediction perfectly</li>
+                        </ul>
+                    </li>
+                    <li><strong>Modern Astronomy:</strong> Cosmic microwave background observations, pulsar measurements, and dark matter/energy studies all built on Einstein's framework</li>
+                </ul>
+            </div>
+
+            <!-- Step 10 -->
+            <div class="step-detail" data-step="10">
+                <div class="step-number">10</div>
+                <h3>Modern Applications & What's Ahead</h3>
+                <ul>
+                    <li><strong>Cosmic Microwave Background (CMB):</strong> Investigating the afterglow of the Big Bang — the universe's oldest light</li>
+                    <li><strong>Gravitational Wave Detection:</strong> Testing Einstein's relativity by detecting ripples in spacetime from colliding neutron stars and black holes</li>
+                    <li><strong>Pulsar Precision:</strong> Using highly precise pulsar measurements to test gravity theories and search for gravitational waves</li>
+                    <li><strong>Dark Matter and Dark Energy:</strong> Understanding the mysterious substances that make up 95% of the universe</li>
+                    <li><strong>Week 2 Preview:</strong> Next week we cover what you can observe without a telescope — constellations, naked-eye planets, and how to navigate by the stars</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Self-Test Section -->
+        <div class="self-test">
+            <h2>✓ Self-Test: Check Your Understanding</h2>
+            <p style="margin-bottom: 1.5rem; color: var(--gray-700);">Click each question to reveal the answer. Bloom's taxonomy level indicated for each question.</p>
+
+            <div class="question">
+                <div class="question-header" onclick="toggleAnswer(this)">
+                    <div class="question-number">1</div>
+                    <div class="question-text">Who proposed the geocentric model of the universe?</div>
+                </div>
+                <div class="question-meta">Remembering</div>
+                <div class="answer">
+                    <strong>Answer:</strong> Aristotle proposed the geocentric model (Earth at center). Ptolemy developed the elaborate mathematical system using epicycles to support it over 1000 years later.
+                </div>
+            </div>
+
+            <div class="question">
+                <div class="question-header" onclick="toggleAnswer(this)">
+                    <div class="question-number">2</div>
+                    <div class="question-text">Why could ancient people see far more stars than we can today?</div>
+                </div>
+                <div class="question-meta">Understanding</div>
+                <div class="answer">
+                    <strong>Answer:</strong> No electric lighting meant no light pollution. The night sky was much darker, making thousands more stars visible. Modern cities' artificial light drowns out fainter stars.
+                </div>
+            </div>
+
+            <div class="question">
+                <div class="question-header" onclick="toggleAnswer(this)">
+                    <div class="question-number">3</div>
+                    <div class="question-text">What key discovery did Kepler make about planetary orbits?</div>
+                </div>
+                <div class="question-meta">Remembering</div>
+                <div class="answer">
+                    <strong>Answer:</strong> Kepler discovered that planets orbit in ellipses, not perfect circles. He formulated three laws of planetary motion that are still used today.
+                </div>
+            </div>
+
+            <div class="question">
+                <div class="question-header" onclick="toggleAnswer(this)">
+                    <div class="question-number">4</div>
+                    <div class="question-text">How did Indigenous Australians use the Emu in the Sky as a practical tool?</div>
+                </div>
+                <div class="question-meta">Understanding</div>
+                <div class="answer">
+                    <strong>Answer:</strong> The emu's position indicated emu breeding cycles. When it appeared "running" (April-May), it was time to harvest emu eggs. When "laying down" (June-July), eggs were developing and shouldn't be collected.
+                </div>
+            </div>
+
+            <div class="question">
+                <div class="question-header" onclick="toggleAnswer(this)">
+                    <div class="question-number">5</div>
+                    <div class="question-text">Why was Newton's unification of terrestrial and celestial gravity so revolutionary?</div>
+                </div>
+                <div class="question-meta">Analysing</div>
+                <div class="answer">
+                    <strong>Answer:</strong> Previously, heavenly bodies were thought to follow different laws than Earth. Newton showed one force (gravity) explains both falling apples and orbiting planets — unifying physics across the universe.
+                </div>
+            </div>
+
+            <div class="question">
+                <div class="question-header" onclick="toggleAnswer(this)">
+                    <div class="question-number">6</div>
+                    <div class="question-text">Why was Galileo persecuted for his astronomical observations?</div>
+                </div>
+                <div class="question-meta">Understanding</div>
+                <div class="answer">
+                    <strong>Answer:</strong> His telescopic observations (moons of Jupiter, phases of Venus) supported the heliocentric model, contradicting Church doctrine that placed Earth at the center of the universe.
+                </div>
+            </div>
+
+            <div class="question">
+                <div class="question-header" onclick="toggleAnswer(this)">
+                    <div class="question-number">7</div>
+                    <div class="question-text">Name three different cultural interpretations of the Milky Way.</div>
+                </div>
+                <div class="question-meta">Remembering</div>
+                <div class="answer">
+                    <strong>Answer:</strong> Any three of: <br>
+                    • Greek: spilled milk from Hera <br>
+                    • Inca: sacred river with animals drinking from it <br>
+                    • Indigenous Australian: emu shape in dark patches <br>
+                    • Bahari (East African): burning embers thrown into sky
+                </div>
+            </div>
+
+            <div class="question">
+                <div class="question-header" onclick="toggleAnswer(this)">
+                    <div class="question-number">8</div>
+                    <div class="question-text">How does the example of different cultural interpretations illustrate that astronomy is "cultural, not just scientific"?</div>
+                </div>
+                <div class="question-meta">Applying</div>
+                <div class="answer">
+                    <strong>Answer:</strong> Different cultures looking at the same sky saw completely different things based on their mythology, survival needs, and worldview. This shows that how we interpret the universe depends on cultural context, not just objective observation.
+                </div>
+            </div>
+
+            <div class="question">
+                <div class="question-header" onclick="toggleAnswer(this)">
+                    <div class="question-number">9</div>
+                    <div class="question-text">What did Einstein's theory change about our understanding of gravity?</div>
+                </div>
+                <div class="question-meta">Understanding</div>
+                <div class="answer">
+                    <strong>Answer:</strong> Einstein showed gravity is not a force pulling objects together, but the curvature of spacetime caused by mass. Objects follow curved paths through spacetime rather than being "pulled" by a force.
+                </div>
+            </div>
+
+            <div class="question">
+                <div class="question-header" onclick="toggleAnswer(this)">
+                    <div class="question-number">10</div>
+                    <div class="question-text">Trace the progression from Aristotle to Einstein. What pattern do you notice in how scientific understanding advances?</div>
+                </div>
+                <div class="question-meta">Analysing</div>
+                <div class="answer">
+                    <strong>Answer:</strong> Aristotle → Ptolemy refined it → Kepler corrected orbits → Newton unified forces → Einstein refined gravity. Each advance built on and corrected previous work. Science progresses through incremental corrections and occasional revolutionary unifications, not by starting from scratch.
+                </div>
+            </div>
+        </div>
+
+        <!-- Practice Links Section -->
+        <div class="practice-section">
+            <h2>🎯 Practice & Exploration Tools</h2>
+            <div class="practice-links">
+                <div class="practice-link" onclick="openPracticeLab('concepts', 1)">
+                    <div class="practice-icon">🔭</div>
+                    <div class="practice-title">Astronomy Concept Lab</div>
+                    <div class="practice-desc">Key terms flashcards and concept quiz for Week 1</div>
+                </div>
+                <div class="practice-link" onclick="openPracticeLab('sort', 1)">
+                    <div class="practice-icon">🌌</div>
+                    <div class="practice-title">Cultural Astronomy Sort</div>
+                    <div class="practice-desc">Match cultural interpretations to their civilizations</div>
+                </div>
+                <div class="practice-link" onclick="openPracticeLab('timeline', 1)">
+                    <div class="practice-icon">📅</div>
+                    <div class="practice-title">History of Astronomy Timeline</div>
+                    <div class="practice-desc">Place key astronomers and discoveries in order</div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>OLES1603 — Astronomy: Exploring the Universe | Visual Guide for Week 1</p>
+            <p style="margin-top: 0.5rem;">Created for guided self-study. All content based on course materials.</p>
+        </footer>
+    </div>
+
+    <script>
+        const totalSteps = 10;
+
+        function scrollToStep(stepNumber) {
+            // Hide all steps
+            document.querySelectorAll('.step-detail').forEach(step => {
+                step.classList.remove('active');
+            });
+
+            // Show selected step
+            const selectedStep = document.querySelector(`[data-step="${stepNumber}"]`);
+            if (selectedStep) {
+                selectedStep.classList.add('active');
+                selectedStep.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        function toggleAnswer(element) {
+            const answer = element.parentElement.querySelector('.answer');
+            answer.classList.toggle('revealed');
+        }
+
+        function openPracticeLab(labType, week) {
+            // Check if parent window exists (for embedded usage)
+            if (window.parent && window.parent.openPracticeLabTool) {
+                window.parent.openPracticeLabTool(labType, week);
+            } else {
+                // Fallback: alert user
+                alert(`Practice Lab: ${labType} (Week ${week})\n\nThis would open in your learning platform.`);
+            }
+        }
+
+        // Initialize first step as active on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            scrollToStep(1);
+        });
+    </script>
+</body>
+</html>

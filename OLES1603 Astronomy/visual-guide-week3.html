@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OLES1603 Week 3: How We Know What We Know - Visual Guide</title>
+    <style>
+        :root {
+            --purple: #8b5cf6;
+            --purple-light: #f5f3ff;
+            --purple-dark: #6d28d9;
+            --gray-100: #f9fafb;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-700: #374151;
+            --gray-900: #111827;
+            --green: #10b981;
+            --blue: #3b82f6;
+            --red: #ef4444;
+            --amber: #f59e0b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--gray-900);
+            background-color: var(--gray-100);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--purple-dark) 0%, var(--purple) 100%);
+            color: white;
+            padding: 40px 30px;
+            border-radius: 10px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 25px rgba(107, 40, 217, 0.2);
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.1em;
+            opacity: 0.95;
+        }
+
+        .course-meta {
+            font-size: 0.9em;
+            opacity: 0.85;
+            margin-top: 10px;
+        }
+
+        .steps-container {
+            display: grid;
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        .step {
+            background: white;
+            border-left: 6px solid var(--purple);
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        .step:hover {
+            box-shadow: 0 8px 20px rgba(139, 92, 246, 0.15);
+        }
+
+        .step-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            gap: 15px;
+        }
+
+        .step-number {
+            background: linear-gradient(135deg, var(--purple-dark), var(--purple));
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.3em;
+            flex-shrink: 0;
+        }
+
+        .step-title {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: var(--purple-dark);
+        }
+
+        .step-content {
+            display: grid;
+            gap: 15px;
+        }
+
+        .step-content p {
+            color: var(--gray-700);
+            line-height: 1.7;
+        }
+
+        .step-content ul {
+            list-style: none;
+            padding-left: 20px;
+        }
+
+        .step-content li {
+            margin-bottom: 12px;
+            padding-left: 20px;
+            position: relative;
+            color: var(--gray-700);
+            line-height: 1.7;
+        }
+
+        .step-content li:before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: var(--purple);
+            font-weight: bold;
+        }
+
+        .comparison-box {
+            background: var(--purple-light);
+            border: 2px solid var(--purple);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .comparison-item {
+            padding: 0 15px;
+        }
+
+        .comparison-item h4 {
+            color: var(--purple-dark);
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .comparison-item ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .comparison-item li {
+            padding-left: 20px;
+            position: relative;
+            margin-bottom: 8px;
+            font-size: 0.95em;
+            color: var(--gray-700);
+        }
+
+        .comparison-item li:before {
+            content: "◆";
+            position: absolute;
+            left: 0;
+            color: var(--purple);
+            font-size: 0.8em;
+        }
+
+        .callout {
+            background: #fff3cd;
+            border-left: 5px solid var(--amber);
+            border-radius: 6px;
+            padding: 20px;
+            margin: 20px 0;
+            font-style: italic;
+            color: var(--gray-900);
+            line-height: 1.8;
+        }
+
+        .callout strong {
+            color: var(--gray-900);
+            font-weight: 700;
+        }
+
+        .diagram {
+            background: var(--purple-light);
+            border: 2px dashed var(--purple);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+            color: var(--gray-700);
+            font-size: 0.95em;
+            line-height: 1.8;
+        }
+
+        .section-break {
+            margin: 50px 0;
+            padding: 30px;
+            background: linear-gradient(135deg, var(--purple-light) 0%, white 100%);
+            border-radius: 8px;
+            text-align: center;
+            border: 2px solid var(--purple);
+        }
+
+        .section-break h2 {
+            color: var(--purple-dark);
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .self-test {
+            background: white;
+            border: 2px solid var(--green);
+            border-radius: 8px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .self-test h2 {
+            color: var(--green);
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        .question {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: var(--gray-100);
+            border-radius: 6px;
+        }
+
+        .question-header {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            align-items: start;
+        }
+
+        .question-number {
+            background: var(--green);
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .question-text {
+            font-weight: 600;
+            color: var(--gray-900);
+            flex-grow: 1;
+        }
+
+        .bloom-tag {
+            display: inline-block;
+            background: var(--blue);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .answer {
+            margin-top: 12px;
+            padding: 12px 15px;
+            background: white;
+            border-left: 3px solid var(--green);
+            border-radius: 4px;
+            color: var(--gray-700);
+            line-height: 1.7;
+        }
+
+        .practice-section {
+            background: white;
+            border: 2px solid var(--purple);
+            border-radius: 8px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .practice-section h2 {
+            color: var(--purple-dark);
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        .practice-links {
+            display: grid;
+            gap: 15px;
+        }
+
+        .practice-link {
+            background: var(--purple-light);
+            border: 2px solid var(--purple);
+            border-radius: 6px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+        }
+
+        .practice-link:hover {
+            background: var(--purple);
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .practice-link:hover .practice-title {
+            color: white;
+        }
+
+        .practice-link:hover .practice-desc {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .practice-icon {
+            font-size: 1.5em;
+            margin-right: 10px;
+        }
+
+        .practice-title {
+            font-weight: 700;
+            font-size: 1.1em;
+            color: var(--purple-dark);
+            margin-bottom: 5px;
+            transition: color 0.3s ease;
+        }
+
+        .practice-desc {
+            font-size: 0.95em;
+            color: var(--gray-700);
+            margin-left: 24px;
+            transition: color 0.3s ease;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: var(--gray-700);
+            border-top: 2px solid var(--gray-200);
+            margin-top: 50px;
+            font-size: 0.95em;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8em;
+            }
+
+            .step {
+                padding: 20px;
+            }
+
+            .step-title {
+                font-size: 1.2em;
+            }
+
+            .comparison-box {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔭 OLES1603: Astronomy</h1>
+            <p>Week 3: How We Know What We Know</p>
+            <p class="course-meta">Exploring the Universe | Semester 1, 2026 | University of Sydney</p>
+        </header>
+
+        <div class="steps-container">
+            <!-- Step 1: Observation vs Theory -->
+            <div class="step">
+                <div class="step-header">
+                    <div class="step-number">1</div>
+                    <h2 class="step-title">Observation vs Theory</h2>
+                </div>
+                <div class="step-content">
+                    <p>Astronomy operates on two complementary branches:</p>
+                    <ul>
+                        <li><strong>Observational Astronomy:</strong> Gathering data about the universe using telescopes, spectroscopy, and other detection methods</li>
+                        <li><strong>Theoretical Astronomy:</strong> Explaining the data collected through physics and mathematics</li>
+                    </ul>
+                    <p>The two branches work in a cycle:</p>
+                    <ul>
+                        <li>Observations reveal something unexpected → Theorists develop explanations</li>
+                        <li>Theorists make predictions → Observers search for evidence</li>
+                    </ul>
+                    <p><strong>Publishing:</strong> Both observational and theoretical results appear in peer-reviewed journals (MNRAS, Nature, ApJ). The arXiv platform provides open-access preprints, bypassing journal paywalls and accelerating knowledge sharing.</p>
+                </div>
+            </div>
+
+            <!-- Step 2: The Electromagnetic Spectrum -->
+            <div class="step">
+                <div class="step-header">
+                    <div class="step-number">2</div>
+                    <h2 class="step-title">The Electromagnetic Spectrum</h2>
+                </div>
+                <div class="step-content">
+                    <p>Visible light is only a tiny fraction of all electromagnetic radiation. The full spectrum ranges from low-energy to high-energy:</p>
+                    <div class="diagram">
+                        Radio → Microwave → Infrared → <strong>Visible</strong> → Ultraviolet → X-ray → Gamma
+                    </div>
+                    <p>Key principles:</p>
+                    <ul>
+                        <li><strong>Higher frequency = Higher energy</strong> (Gamma rays are most energetic; radio waves least)</li>
+                        <li>Different telescopes detect different parts of the spectrum</li>
+                        <li>The same celestial object looks completely different at different wavelengths</li>
+                        <li>Radio observations might reveal a quiet source; X-ray observations of the same object might show extreme violence</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Step 3: Key Telescopes -->
+            <div class="step">
+                <div class="step-header">
+                    <div class="step-number">3</div>
+                    <h2 class="step-title">Key Telescopes</h2>
+                </div>
+                <div class="step-content">
+                    <p>Different telescopes reveal different aspects of the universe:</p>
+                    <ul>
+                        <li><strong>Parkes Radio Telescope:</strong> Australian icon, still active today. Detects low-frequency radio emissions from distant galaxies, pulsars, and nebulae</li>
+                        <li><strong>James Webb Space Telescope (JWST):</strong> The newest observatory, observing in infrared and visible wavelengths. Can see the most distant galaxies</li>
+                        <li><strong>Chandra X-ray Telescope:</strong> Detects high-energy phenomena: black hole accretion, supernova remnants, hot galaxy clusters</li>
+                        <li><strong>Square Kilometre Array (SKA):</strong> Ambitious international radio project with Australian participation. Will revolutionize radio astronomy</li>
+                    </ul>
+                    <div class="comparison-box">
+                        <div class="comparison-item">
+                            <h4>Radio Telescopes</h4>
+                            <ul>
+                                <li>Detect long-wavelength radiation</li>
+                                <li>See through dust clouds</li>
+                                <li>Reveal cool gas and dust</li>
+                                <li>Detect pulsars and jets from black holes</li>
+                            </ul>
+                        </div>
+                        <div class="comparison-item">
+                            <h4>Optical Telescopes</h4>
+                            <ul>
+                                <li>What our eyes naturally see</li>
+                                <li>Excellent for stellar detail</li>
+                                <li>Blocked by dust in some regions</li>
+                                <li>Reveal star colors, spectra, and planetary features</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 4: Parallax -->
+            <div class="step">
+                <div class="step-header">
+                    <div class="step-number">4</div>
+                    <h2 class="step-title">Parallax: Measuring Distance</h2>
+                </div>
+                <div class="step-content">
+                    <p><strong>Parallax is the apparent shift in position caused by a change in observer position.</strong></p>
+                    <p>Simple demonstration: Close one eye, then the other. Your finger appears to shift against the background. That shift is parallax.</p>
+                    <p>For stars, astronomers use Earth's orbit as the baseline:</p>
+                    <ul>
+                        <li>Observe a nearby star in January (Earth at one side of orbit)</li>
+                        <li>Observe the same star in July (Earth at opposite side, ~300 million km away)</li>
+                        <li>Measure the angular shift against distant background stars</li>
+                        <li>Use trigonometry to calculate distance</li>
+                    </ul>
+                    <p><strong>Friedrich Bessel (1838):</strong> Made the first successful parallax measurement of a star (61 Cygni), proving stars are at vast distances.</p>
+                    <p><strong>Limitation:</strong> Parallax only works for relatively nearby stars. The parallax angle becomes too tiny to measure at large distances, so astronomers developed other methods.</p>
+                    <div class="diagram">
+                        <strong>Parallax Diagram:</strong><br>
+                        Earth (January) — 6-month gap — Earth (July)<br>
+                        Both positions measure the angle to a nearby star against a distant background.<br>
+                        Larger angle = closer star; smaller angle = more distant star
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 5: Henrietta Leavitt and Cepheid Variables -->
+            <div class="step">
+                <div class="step-header">
+                    <div class="step-number">5</div>
+                    <h2 class="step-title">Henrietta Leavitt and the Cepheid Variables</h2>
+                </div>
+                <div class="step-content">
+                    <p><strong>Cepheid variables</strong> are pulsating stars that regularly change brightness in a predictable pattern.</p>
+                    <p><strong>Henrietta Leavitt (1912):</strong> Discovered the period-luminosity relationship—a profound breakthrough.</p>
+                    <ul>
+                        <li>The period of pulsation directly correlates with the star's intrinsic brightness</li>
+                        <li>If you measure how fast a Cepheid pulses, you can calculate its true luminosity</li>
+                        <li>Compare the calculated luminosity to how bright it appears from Earth → determine distance</li>
+                    </ul>
+                    <p>This was revolutionary because it provided a "standard candle"—a way to measure distances to Cepheids anywhere in the universe.</p>
+                    <div class="callout">
+                        <strong>Leavitt's discovery is the foundation of modern distance measurement in astronomy.</strong> Her work enabled Hubble to measure the distance to Andromeda and prove the existence of other galaxies. Yet Leavitt was dismissed by contemporaries because she was female. She never received a PhD—women were not permitted to earn doctorates from Harvard Observatory at that time. Had she lived longer or been born in a different era, her work would almost certainly have earned a Nobel Prize.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 6: Hubble's Revolution -->
+            <div class="step">
+                <div class="step-header">
+                    <div class="step-number">6</div>
+                    <h2 class="step-title">Hubble's Revolution</h2>
+                </div>
+                <div class="step-content">
+                    <p><strong>Edwin Hubble (1924):</strong> Applied Leavitt's Cepheid method to what was then called the "Andromeda nebula."</p>
+                    <ul>
+                        <li>Found Cepheid variables in Andromeda</li>
+                        <li>Used the period-luminosity relationship to calculate their distances</li>
+                        <li>Result: Andromeda was 153 quadrillion kilometers away</li>
+                        <li><strong>This was far outside our galaxy!</strong></li>
+                    </ul>
+                    <p>The implications were staggering: Andromeda is not a nebula within the Milky Way—it's a separate galaxy!</p>
+                    <p><strong>Further discoveries:</strong> Hubble found that farther galaxies move away faster (Hubble's Law), providing direct evidence that the universe is expanding. This observation led directly to the Big Bang theory of cosmic origin.</p>
+                    <p>The Hubble Space Telescope, launched in 1990, was named in his honor.</p>
+                </div>
+            </div>
+
+            <!-- Step 7: Spectroscopy -->
+            <div class="step">
+                <div class="step-header">
+                    <div class="step-number">7</div>
+                    <h2 class="step-title">Spectroscopy: Reading Starlight</h2>
+                </div>
+                <div class="step-content">
+                    <p><strong>Why do stars glow?</strong> Stars glow because they are extremely hot. Heat causes atoms to emit light (not because of burning—there's no oxygen in stars to combust with).</p>
+                    <p><strong>What we observe:</strong></p>
+                    <ul>
+                        <li><strong>Continuous spectrum:</strong> A hot object emits all wavelengths of visible light, creating a rainbow</li>
+                        <li><strong>Absorption lines:</strong> Cooler gas in front of the hot star absorbs specific wavelengths, creating dark lines in the spectrum</li>
+                    </ul>
+                    <p><strong>The key insight:</strong> Each chemical element absorbs a unique pattern of wavelengths—like a fingerprint.</p>
+                    <ul>
+                        <li>Hydrogen has one distinctive pattern</li>
+                        <li>Helium has a different pattern</li>
+                        <li>Iron, oxygen, carbon, etc., each have unique patterns</li>
+                    </ul>
+                    <p>By examining the dark absorption lines in a star's spectrum, astronomers can identify which elements are present and even estimate their abundance. All without leaving Earth!</p>
+                </div>
+            </div>
+
+            <!-- Step 8: Cecilia Payne -->
+            <div class="step">
+                <div class="step-header">
+                    <div class="step-number">8</div>
+                    <h2 class="step-title">Cecilia Payne: The Greatest PhD Thesis</h2>
+                </div>
+                <div class="step-content">
+                    <p><strong>Cecilia Payne (1925):</strong> Determined that the Sun is primarily hydrogen and helium.</p>
+                    <p>Her method:</p>
+                    <ul>
+                        <li>Compared absorption lines in the solar spectrum to laboratory spectra of known elements</li>
+                        <li>Analyzed the thickness and intensity of absorption lines to calculate element abundances</li>
+                        <li>Found hydrogen comprises ~99% of the Sun by number of atoms</li>
+                    </ul>
+                    <p><strong>The problem:</strong> Her findings contradicted existing astronomical wisdom. She was initially told her work "must be nonsense" because it disagreed with published results.</p>
+                    <p><strong>The reality:</strong> Payne was absolutely correct. Her spectroscopic calculations used the most sophisticated physics of the era, and her abundances match what we know today.</p>
+                    <div class="callout">
+                        <strong>Some call Payne's 1925 PhD thesis "the greatest PhD thesis ever written."</strong> Her discovery that the Sun is primarily hydrogen revolutionized stellar physics. Like Leavitt, she faced gender discrimination and never received a Nobel Prize, despite work that fundamentally changed astronomy.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 9: The Interstellar Medium -->
+            <div class="step">
+                <div class="step-header">
+                    <div class="step-number">9</div>
+                    <h2 class="step-title">The Interstellar Medium</h2>
+                </div>
+                <div class="step-content">
+                    <p><strong>The universe between stars is not empty—it contains gas and dust.</strong></p>
+                    <p><strong>Johannes Franz Hartmann (1904):</strong> Discovered the interstellar medium while studying a spectroscopic binary star system.</p>
+                    <ul>
+                        <li>Observed that most absorption lines shifted back and forth with the binary stars' motion</li>
+                        <li>But one absorption line stayed stationary—it wasn't moving with the stars</li>
+                        <li>Realization: gas floating between Earth and the binary system was absorbing that wavelength</li>
+                        <li>This gas was outside the binary—it was the interstellar medium</li>
+                    </ul>
+                    <p><strong>Later discoveries:</strong></p>
+                    <ul>
+                        <li><strong>Hendrik van der Hulst (1945):</strong> Predicted that neutral hydrogen would emit radiation at a specific wavelength (21 cm)</li>
+                        <li><strong>Harold Ewan (1951):</strong> A PhD student who detected this 21-cm radiation, confirming vast clouds of interstellar hydrogen throughout the galaxy</li>
+                    </ul>
+                    <p>The interstellar medium is now known to contain dust that forms new stars, and gas that fuels star formation across the galaxy.</p>
+                </div>
+            </div>
+
+            <!-- Step 10: Stellar Remnants -->
+            <div class="step">
+                <div class="step-header">
+                    <div class="step-number">10</div>
+                    <h2 class="step-title">Stellar Remnants: White Dwarfs and Neutron Stars</h2>
+                </div>
+                <div class="step-content">
+                    <p><strong>When massive stars die, they leave behind extreme objects:</strong></p>
+                    <ul>
+                        <li><strong>White Dwarfs:</strong> The dead core of a Sun-like star, compressed to Earth's size. Incredibly dense—a teaspoon of white dwarf material weighs 5 tons</li>
+                        <li><strong>Neutron Stars:</strong> Even more extreme. A teaspoon of neutron star material weighs as much as a mountain</li>
+                    </ul>
+                    <p><strong>Subrahmanyan Chandrasekhar (1930):</strong> Famously calculated this result on a ship traveling to England. He showed that white dwarfs have a maximum mass (the Chandrasekhar limit). Above this mass, the star cannot support itself as a white dwarf and must collapse further into a neutron star.</p>
+                    <p><strong>Jocelyn Bell (1967):</strong> A PhD student who discovered the first pulsar—a rapidly rotating neutron star that emits a beam of radiation like a lighthouse.</p>
+                    <ul>
+                        <li>The signal was so regular (every 1.337 seconds) that Bell initially thought it might be an alien transmission</li>
+                        <li>She nicknamed it "LGM-1" (Little Green Men)</li>
+                        <li>Later recognized as a natural phenomenon—a pulsar</li>
+                    </ul>
+                    <div class="callout">
+                        <strong>A curious note on credit:</strong> The radio telescope that detected the pulsar was called the Interplanetary Scintillation Array. When the pulsar discovery was published, Jocelyn Bell's supervisor's name appeared first on the paper, and he won the Nobel Prize. Bell, the actual discoverer, did not receive the prize. This is one of astronomy's most controversial omissions.
+                    </div>
+                    <p><strong>Fun fact:</strong> The album cover for Joy Division's "Unknown Pleasures" (1979) displays an actual image of a pulsar signal—a visualization of electromagnetic waves from a neutron star.</p>
+                </div>
+            </div>
+
+            <!-- Step 11: Black Holes -->
+            <div class="step">
+                <div class="step-header">
+                    <div class="step-number">11</div>
+                    <h2 class="step-title">Black Holes: From Theory to Image</h2>
+                </div>
+                <div class="step-content">
+                    <p><strong>The concept of black holes evolved over centuries:</strong></p>
+                    <ul>
+                        <li><strong>John Michell (1700s):</strong> Speculated about "dark stars" with an escape velocity greater than the speed of light (no light could escape)</li>
+                        <li><strong>Karl Schwarzschild (1916):</strong> Calculated the critical radius (now called the Schwarzschild radius) at which an object becomes a black hole</li>
+                        <li><strong>Oppenheimer & Snyder (1939):</strong> Showed mathematically that a massive neutron star must collapse to form a black hole</li>
+                    </ul>
+                    <p><strong>Observational evidence:</strong></p>
+                    <ul>
+                        <li><strong>Cygnus X-1 (1970s):</strong> The first likely black hole candidate—an X-ray bright object orbiting a visible star</li>
+                        <li>Stephen Hawking famously bet against Cygnus X-1 being a black hole—and lost!</li>
+                    </ul>
+                    <p><strong>Fun fact:</strong> Stephen Hawking once held a time-traveler party on June 28, 2009. He sent invitations the day after the party—so nobody could attend. He was testing whether time travel is possible. (Spoiler: nobody showed up.)</p>
+                    <p><strong>Event Horizon Telescope (2019):</strong> The first image of a black hole was captured by coordinating radio telescopes across the globe. The "doughnut" shape is actually the accretion disc—matter swirling around the black hole—and light from behind the black hole bent by extreme spacetime curvature. The dark center is the event horizon itself.</p>
+                    <div class="callout">
+                        <strong>Public reaction to the first black hole image:</strong> Astronomers were ecstatic—seeing a black hole's silhouette directly confirmed decades of theory. The general public response: "It's just a doughnut." Both reactions are valid!
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 12: The Distance Ladder -->
+            <div class="step">
+                <div class="step-header">
+                    <div class="step-number">12</div>
+                    <h2 class="step-title">The Distance Ladder: Putting It All Together</h2>
+                </div>
+                <div class="step-content">
+                    <p><strong>Astronomers measure distances using a hierarchy of techniques, each calibrated by the previous one:</strong></p>
+                    <ul>
+                        <li><strong>Nearby stars (Parallax):</strong> Direct geometric measurement using Earth's orbit as a baseline. Works for stars within ~300 light-years</li>
+                        <li><strong>Medium distances (Cepheid Variables):</strong> Use Leavitt's period-luminosity relationship. Cepheids can be seen at much greater distances. Their distances calibrate the parallax scale</li>
+                        <li><strong>Very far galaxies (Hubble's Law):</strong> Measure recession velocity from redshift. The relationship between distance and velocity (Hubble's Law) is calibrated using Cepheid distances</li>
+                    </ul>
+                    <p>This "cosmic distance ladder" connects our understanding of the universe:</p>
+                    <div class="diagram">
+                        <strong>The Cosmic Distance Ladder:</strong><br><br>
+                        Parallax (Bessel, 1838)<br>
+                        ↓ calibrates ↓<br>
+                        Cepheid Variables (Leavitt, 1912)<br>
+                        ↓ calibrates ↓<br>
+                        Hubble's Law (Hubble, 1924)<br>
+                        ↓ reveals ↓<br>
+                        Expanding Universe → Big Bang Theory
+                    </div>
+                    <p><strong>Next week:</strong> We'll explore how this expanding universe led to the Big Bang theory and what we know about the universe's first moments.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Self-Test Section -->
+        <div class="section-break">
+            <h2>Self-Test Your Understanding</h2>
+            <p>10 questions spanning Bloom's Taxonomy</p>
+        </div>
+
+        <div class="self-test">
+            <h2>10 Self-Test Questions</h2>
+
+            <div class="question">
+                <div class="question-header">
+                    <div class="question-number">1</div>
+                    <div>
+                        <div class="question-text">Who discovered the period-luminosity relationship in Cepheid variables? <span class="bloom-tag">Remembering</span></div>
+                    </div>
+                </div>
+                <div class="answer">
+                    <strong>Answer:</strong> Henrietta Leavitt (1912). This discovery enabled astronomers to measure distances to Cepheids anywhere in the universe and revolutionized our understanding of cosmic distances.
+                </div>
+            </div>
+
+            <div class="question">
+                <div class="question-header">
+                    <div class="question-number">2</div>
+                    <div>
+                        <div class="question-text">How does parallax work for measuring stellar distances? <span class="bloom-tag">Understanding</span></div>
+                    </div>
+                </div>
+                <div class="answer">
+                    <strong>Answer:</strong> Earth's position changes as it orbits the Sun. By observing a nearby star from two positions (6 months apart), astronomers measure the apparent shift in the star's position against distant background stars. Trigonometry converts this angle into a distance. The larger the shift, the closer the star.
+                </div>
+            </div>
+
+            <div class="question">
+                <div class="question-header">
+                    <div class="question-number">3</div>
+                    <div>
+                        <div class="question-text">What did Edwin Hubble discover about Andromeda? <span class="bloom-tag">Remembering</span></div>
+                    </div>
+                </div>
+                <div class="answer">
+                    <strong>Answer:</strong> Hubble found Cepheid variables in Andromeda and used Leavitt's method to measure their distances. This revealed Andromeda is 153 quadrillion kilometers away—far outside our galaxy. Andromeda is a separate galaxy, proving the universe contains billions of galaxies, not just one.
+                </div>
+            </div>
+
+            <div class="question">
+                <div class="question-header">
+                    <div class="question-number">4</div>
+                    <div>
+                        <div class="question-text">Why were the contributions of Leavitt, Payne, and Bell historically undervalued? <span class="bloom-tag">Analysing</span></div>
+                    </div>
+                </div>
+                <div class="answer">
+                    <strong>Answer:</strong> All three were women working in eras when female scientists faced systematic discrimination. Leavitt was denied a PhD (women not permitted); Payne was told her groundbreaking work "must be nonsense"; Bell's supervisor received the Nobel Prize for work she actually discovered. Gender bias prevented recognition of their revolutionary contributions.
+                </div>
+            </div>
+
+            <div class="question">
+                <div class="question-header">
+                    <div class="question-number">5</div>
+                    <div>
+                        <div class="question-text">How does spectroscopy reveal what stars are made of? <span class="bloom-tag">Understanding</span></div>
+                    </div>
+                </div>
+                <div class="answer">
+                    <strong>Answer:</strong> Each chemical element absorbs a unique pattern of wavelengths (dark absorption lines). Hydrogen, helium, iron, oxygen, and other elements each have distinctive "fingerprints" in the spectrum. By analyzing which absorption lines appear in a star's spectrum, astronomers identify which elements are present and their relative abundances.
+                </div>
+            </div>
+
+            <div class="question">
+                <div class="question-header">
+                    <div class="question-number">6</div>
+                    <div>
+                        <div class="question-text">Explain the "cosmic distance ladder"—how do the three distance methods connect? <span class="bloom-tag">Applying</span></div>
+                    </div>
+                </div>
+                <div class="answer">
+                    <strong>Answer:</strong> Parallax directly measures nearby stars; this calibrates the zero point for Cepheid variables. Cepheid distances extend to nearby galaxies; these calibrate Hubble's Law (recession velocity). Hubble's Law then applies to the most distant galaxies. Each rung calibrates the next: Parallax → Cepheids → Hubble's Law → Cosmic expansion.
+                </div>
+            </div>
+
+            <div class="question">
+                <div class="question-header">
+                    <div class="question-number">7</div>
+                    <div>
+                        <div class="question-text">What is the interstellar medium? <span class="bloom-tag">Remembering</span></div>
+                    </div>
+                </div>
+                <div class="answer">
+                    <strong>Answer:</strong> All the gas and dust that exists between stars. Discovered by Hartmann (1904) through a stationary absorption line that didn't move with binary stars, proving some material was outside the stellar system. Now known to fuel star formation throughout galaxies.
+                </div>
+            </div>
+
+            <div class="question">
+                <div class="question-header">
+                    <div class="question-number">8</div>
+                    <div>
+                        <div class="question-text">Why did Jocelyn Bell initially think she had detected aliens? <span class="bloom-tag">Understanding</span></div>
+                    </div>
+                </div>
+                <div class="answer">
+                    <strong>Answer:</strong> She discovered an extremely regular radio signal that pulsed every 1.337 seconds with mechanical precision. Such regularity seemed artificial—no natural object should be so perfectly periodic. She called it "LGM-1" (Little Green Men). The source was actually a rapidly rotating neutron star (pulsar), now understood to be a natural celestial object.
+                </div>
+            </div>
+
+            <div class="question">
+                <div class="question-header">
+                    <div class="question-number">9</div>
+                    <div>
+                        <div class="question-text">What does the Event Horizon Telescope image actually show? <span class="bloom-tag">Analysing</span></div>
+                    </div>
+                </div>
+                <div class="answer">
+                    <strong>Answer:</strong> The "doughnut" is the accretion disc—matter swirling around the black hole at nearly light speed. Light from gas and dust behind the black hole is bent by extreme spacetime curvature. The dark center is the event horizon—the boundary inside which not even light can escape. It's the first direct image of a black hole's silhouette.
+                </div>
+            </div>
+
+            <div class="question">
+                <div class="question-header">
+                    <div class="question-number">10</div>
+                    <div>
+                        <div class="question-text">Why is Hubble's discovery that farther galaxies move away faster such strong evidence for the Big Bang? <span class="bloom-tag">Evaluating</span></div>
+                    </div>
+                </div>
+                <div class="answer">
+                    <strong>Answer:</strong> If all distant galaxies are moving apart, rewinding cosmic time means everything was once at a single point of infinite density. The exact relationship Hubble found (distance proportional to recession velocity) is precisely what an expanding universe predicts. This observation directly supports the Big Bang theory of cosmic origin.
+                </div>
+            </div>
+        </div>
+
+        <!-- Practice Section -->
+        <div class="practice-section">
+            <h2>Practice Activities</h2>
+            <div class="practice-links">
+                <div class="practice-link" onclick="window.parent.openPracticeLabTool('concepts', 3)">
+                    <div class="practice-title">
+                        <span class="practice-icon">🔭</span>Astronomy Concept Lab
+                    </div>
+                    <div class="practice-desc">Key terms flashcards for telescopes, spectroscopy, and distances</div>
+                </div>
+                <div class="practice-link" onclick="window.parent.openPracticeLabTool('sort', 3)">
+                    <div class="practice-title">
+                        <span class="practice-icon">🌟</span>Scientist Match-Up
+                    </div>
+                    <div class="practice-desc">Match astronomers to their discoveries</div>
+                </div>
+                <div class="practice-link" onclick="window.parent.openPracticeLabTool('concepts', 3)">
+                    <div class="practice-title">
+                        <span class="practice-icon">📏</span>Distance Ladder Quiz
+                    </div>
+                    <div class="practice-desc">Test your understanding of parallax, Cepheids, and Hubble's Law</div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>OLES1603 Visual Guide - Week 3: How We Know What We Know</p>
+            <p>University of Sydney | Semester 1, 2026</p>
+            <p style="margin-top: 15px; font-size: 0.9em; color: var(--gray-600);">totalSteps=12 | Last updated: March 2026</p>
+        </footer>
+    </div>
+
+    <script>
+        // Configuration
+        const totalSteps = 12;
+
+        // Console message
+        console.log(`OLES1603 Week 3 Visual Guide loaded. Total steps: ${totalSteps}`);
+
+        // Track progress
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Visual guide initialized with purple theme');
+        });
+
+        // Provide fallback for practice tools
+        if (typeof window.parent === 'undefined' || !window.parent.openPracticeLabTool) {
+            window.openPracticeLabTool = function(type, week) {
+                alert(`Practice lab (${type}, Week ${week}) would open here in the full application.`);
+            };
+        }
+    </script>
+</body>
+</html>
