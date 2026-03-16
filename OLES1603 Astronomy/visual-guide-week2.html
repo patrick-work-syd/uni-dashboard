@@ -868,5 +868,18 @@
         // Initialize
         updateStep();
     </script>
+<script>
+/* Notify parent dashboard of height changes so iframe can resize (no iframe scrollbar) */
+(function(){
+  function notifyHeight(){
+    if(window.parent!==window){
+      window.parent.postMessage({type:"vgResize",height:document.documentElement.scrollHeight},"*");
+    }
+  }
+  notifyHeight();
+  new MutationObserver(notifyHeight).observe(document.body,{childList:true,subtree:true,attributes:true});
+  window.addEventListener("resize",notifyHeight);
+})();
+</script>
 </body>
 </html>
