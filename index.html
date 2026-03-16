@@ -661,7 +661,30 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 @media (max-width:520px) {
   .sa-panel { width:calc(100vw - 16px); right:8px; bottom:84px; max-height:75vh; }
   .sa-fab { bottom:16px; right:16px; width:50px; height:50px; }
+  .sa-onboarding { bottom:72px; right:12px; max-width:260px; }
 }
+
+/* SA onboarding tooltip */
+.sa-onboarding { position:fixed; bottom:100px; right:24px; z-index:49; background:linear-gradient(135deg,#2563eb,#7c3aed); color:#fff; padding:14px 18px; border-radius:14px; box-shadow:0 8px 32px rgba(37,99,235,0.3); font-size:14px; line-height:1.5; max-width:300px; animation:saOnboardFadeIn 0.6s ease-out; cursor:pointer; }
+.sa-onboarding::after { content:''; position:absolute; bottom:-8px; right:28px; width:16px; height:16px; background:linear-gradient(135deg,#4f46e5,#7c3aed); transform:rotate(45deg); }
+.sa-onboarding strong { display:block; font-size:15px; margin-bottom:4px; }
+.sa-onboarding .sa-ob-dismiss { display:inline-block; margin-top:8px; font-size:12px; opacity:0.8; text-decoration:underline; cursor:pointer; }
+@keyframes saOnboardFadeIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+
+/* SA FAB pulse when errors to review */
+.sa-fab.has-errors { animation:saPulse 2s infinite; }
+.sa-fab .sa-error-badge { position:absolute; top:-4px; right:-4px; background:#ef4444; color:#fff; font-size:11px; font-weight:700; min-width:20px; height:20px; border-radius:10px; display:flex; align-items:center; justify-content:center; padding:0 5px; box-shadow:0 2px 8px rgba(239,68,68,0.4); }
+@keyframes saPulse { 0%,100% { box-shadow:0 4px 16px rgba(37,99,235,0.3); } 50% { box-shadow:0 4px 24px rgba(124,58,237,0.5); } }
+
+/* SA profile stats bar */
+.sa-profile-bar { display:flex; gap:12px; padding:6px 18px; background:#f8fafc; border-bottom:1px solid var(--border); font-size:11px; color:#64748b; }
+.sa-profile-bar span { display:inline-flex; align-items:center; gap:4px; }
+.sa-profile-bar .sa-pb-weak { color:#dc2626; font-weight:600; }
+.sa-profile-bar .sa-pb-strong { color:#16a34a; font-weight:600; }
+
+/* SA contextual nudge after self-test */
+.sa-nudge { margin-top:12px; padding:10px 16px; background:linear-gradient(135deg,#eff6ff,#f0f0ff); border:1px solid #c7d2fe; border-radius:10px; font-size:13px; display:flex; align-items:center; gap:10px; }
+.sa-nudge button { padding:4px 12px; font-size:12px; background:linear-gradient(135deg,#2563eb,#7c3aed); color:#fff; border:none; border-radius:6px; cursor:pointer; font-weight:500; white-space:nowrap; }
 </style>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -762,19 +785,22 @@ document.getElementById('pin-input').focus();
 <!-- Study Assistant Chat -->
 <button class="sa-fab" id="sa-fab" onclick="saToggle()" title="Study Assistant">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+  <span class="sa-error-badge" id="sa-error-badge" style="display:none">0</span>
 </button>
 <div class="sa-panel" id="sa-panel">
   <div class="sa-header">
     <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Study Assistant <span class="sa-context-badge" id="sa-context-badge"></span></h3>
     <div class="sa-header-btns">
+      <button class="sa-header-btn" onclick="saSessionReview()" title="Review your mistakes from this session" style="background:linear-gradient(135deg,#2563eb,#7c3aed);color:#fff;border-color:transparent">Review</button>
       <button class="sa-header-btn" onclick="saClear()" title="New conversation">Clear</button>
       <button class="sa-header-btn" onclick="saSettings()" title="API key settings">Key</button>
       <button class="sa-header-btn" onclick="saToggle()">✕</button>
     </div>
   </div>
   <div id="sa-body">
+    <div class="sa-profile-bar" id="sa-profile-bar"></div>
     <div class="sa-messages" id="sa-messages">
-      <div class="sa-msg sa-msg-ai"><div class="sa-bubble">Hi! I'm your study assistant. Ask me anything about your courses — assessments, concepts, study tips, or exam prep. I'll answer based on your course materials.</div></div>
+      <div class="sa-msg sa-msg-ai"><div class="sa-bubble">Hi! I'm your study tutor. I'll help you understand concepts, work through problems, and push you toward distinction-level work. When you get a practice question wrong, hit <strong>Help me understand</strong> and I'll walk you through it. Use the <strong>Review</strong> button above to get a targeted summary of what you need to work on.</div></div>
     </div>
     <div class="sa-typing" id="sa-typing">Thinking...</div>
     <div class="sa-cost" id="sa-cost"></div>
@@ -787,8 +813,15 @@ document.getElementById('pin-input').focus();
     <p>Enter your Anthropic API key to get started.<br>Get one at <a href="https://console.anthropic.com/settings/keys" target="_blank" style="color:#2563eb">console.anthropic.com</a>.<br>Your key is stored locally in this browser only.</p>
     <input id="sa-key-input" type="password" placeholder="sk-ant-..." />
     <button onclick="saSaveKey()">Save Key</button>
-    <p style="margin-top:12px;font-size:11px">Cost: ~$0.01 per 10 questions using Haiku</p>
+    <p style="margin-top:12px;font-size:11px">Cost: ~$0.02 per question using Sonnet (adaptive tutoring)</p>
   </div>
+</div>
+
+<!-- SA Onboarding Tooltip (shown once for new users) -->
+<div class="sa-onboarding" id="sa-onboarding" style="display:none" onclick="saDismissOnboarding()">
+  <strong>Meet your AI Study Tutor</strong>
+  Click here to open your personal tutor. It adapts to your strengths and weaknesses as you study.
+  <span class="sa-ob-dismiss">Got it</span>
 </div>
 
 <div class="main">
@@ -1596,6 +1629,9 @@ const DASHBOARD_CHANGELOG = [
   { date: '2026-03-16', action: 'fix', target: 'SYNC', detail: 'Fixed sync script UTF-8 BOM issue (em dashes caused PS 5.1 parse error). Fixed $useChrome not passed to Start-Job. Changed schedule from Sun+Wed to daily at 10:00 AM. Deploy script updated to copy all 4 courses visual guides.' },
   { date: '2026-03-16', action: 'add', target: 'STUDY_GUIDES', detail: 'Automated sync: generated draft (outline-based) study guides for Week 4: LNGS1001 (Phonology I: The Phoneme), ANHS2609 (The Fall of Persia: Issus to Gaugamela), OLES1603 (How the Universe Began: Big Bang). All marked as outline in GUIDE_SOURCES \u2014 will be upgraded to transcript-based when Week 4 lecture transcripts become available. No new content collected (Chrome unavailable, no new transcripts in Downloads).' },
   { date: '2026-03-16', action: 'add', target: 'HTML', detail: 'Compliance & Security panel added to Workflow Tracker. COMPLIANCE_LOG + SECURITY_AUDIT constants render audit history, materials validation results, security posture (11 checks). New validate-materials.py and security-audit.py scripts integrated into automated workflow.' },
+  { date: '2026-03-16', action: 'update', target: 'STUDY_ASSISTANT', detail: 'Major SA upgrade: Haiku→Sonnet 4.6 for adaptive tutoring. Rewrote system prompt from Q&A bot to Socratic tutor (course-specific tutoring strategies, distinction coaching, session error tracking). Added saAskAbout() bridge + saHelpButton() for contextual tutoring from any wrong answer. Help buttons wired into: Java code traces, IPA quiz, astronomy quiz, map quiz, study guide self-test (all 4 courses). Session learning tracker (saSessionErrors) feeds patterns to Sonnet. Review button generates targeted practice from session mistakes.' },
+  { date: '2026-03-16', action: 'fix', target: 'WORKFLOW_TRACKER', detail: 'Data integrity audit: corrected practiceTools item counts from array lengths (JPL 99\u219284, IPA 147\u2192138, MAP 15\u219268, ASTRO 75\u219286). Updated detail strings with accurate component counts. Fixed totalQuizQuestions 131\u2192182. Updated weeksCovered 12\u219215 (includes 3 Week 4 drafts). Fixed stale GUIDE_SOURCES and NBML_VALIDATED comments. Updated studyGuides coverage arrays to include Week 4 drafts.' },
+  { date: '2026-03-16', action: 'add', target: 'STUDENT_PROFILE', detail: 'Persistent student learning profile system (localStorage). Tracks errors, correct answers, tool usage, topic confidence across sessions. Profile data injected into Sonnet system prompt for adaptive tutoring. Onboarding tooltip for first-time users. FAB pulse + error badge for unreviewed mistakes. Profile stats bar in SA panel. Contextual nudges after practice tool sessions. Session data saved on page unload. Correct-answer logging in code traces, IPA quiz, astronomy quiz, map quiz, self-test.' },
 ];
 
 const WEEKLY_CONTENT = {
@@ -3682,8 +3718,8 @@ const SYNC_EXPECTED_ITEMS = [
 //   'notebooklm' — Best: built from NotebookLM queries + transcript (green check)
 //   'transcript' — Good but unvalidated: transcript-based, NOT NotebookLM-validated (amber warning)
 //   'outline'    — Draft: Canvas outline only, needs transcript + NotebookLM (notepad icon)
-// Weeks 1-3 were built before NotebookLM integration (16 Mar 2026), so marked 'transcript' not 'notebooklm'.
-// The sync will upgrade these to 'notebooklm' when re-validated via NotebookLM queries.
+// Weeks 1-3 upgraded to 'notebooklm' (validated 16 Mar 2026). Week 4 drafts marked 'outline'.
+// Sync will upgrade outline→transcript→notebooklm as content becomes available.
 const GUIDE_SOURCES = {
   INFO1113: { 1: 'notebooklm', 2: 'notebooklm', 3: 'notebooklm' },
   LNGS1001: { 1: 'notebooklm', 2: 'notebooklm', 3: 'notebooklm', 4: 'outline' },
@@ -3693,7 +3729,7 @@ const GUIDE_SOURCES = {
 
 // Tracks NotebookLM validation status for visual guides and other content.
 // true = built/validated with NotebookLM queries, false = built without (needs re-validation)
-// Weeks 1-3 visual guides were built before NotebookLM integration — marked false.
+// Weeks 1-3 visual guides validated via NotebookLM 16 Mar 2026.
 const NBML_VALIDATED = {
   visualGuides: {
     INFO1113: { 1: true, 2: true, 3: true },
@@ -3717,25 +3753,25 @@ const NBML_VALIDATED = {
 
 const WORKFLOW_TRACKER = {
   practiceTools: [
-    { id:'jpl', course:'INFO1113', name:'Java Practice Lab', panels:6, items:99, dataWeeks:'1-2', status:'active', next:'Add Week 3 OOP content when taught',
-      detail:'Code Tracing (25), Python\u2192Java Mistakes (20), Challenge Simulator (15 incl. 5 Scanner-based), Syntax Reference (28), Parsons Problems (10), Debug Detective (1). IDs 11-15 added 8 Mar for Coding Challenge prep; IDs 21-25 code traces targeting array/string pitfalls.' },
-    { id:'ipa', course:'LNGS1001', name:'IPA Practice Lab', panels:5, items:147, dataWeeks:'1-3', status:'active', next:'Expand phonology with Wk 4 content',
-      detail:'Consonant Chart (interactive), Vowel Chart (interactive), Transcription Practice (32 words incl. Assignment 1 prep set), Diacritics Drill (aspiration/devoicing/nasalisation), Phonology Analysis (15 minimal pairs + 10 natural classes + 8 phonological rules). Covers HCE conventions for Australian English.' },
-    { id:'map', course:'ANHS2609', name:'Map Quiz + Timeline', panels:2, items:15, dataWeeks:'1-13', status:'active', next:'Assessment 13 Mar \u2014 review after',
-      detail:'Map Quiz: Study Mode (Leaflet.js, labels, tooltips) + Quiz Mode (timed placement). 38 locations across 3 tiers. Timeline: 35 events across 5 eras (Philip II to Alexander\'s death), type filters, expandable cards with cross-references to map locations.' },
-    { id:'astro', course:'OLES1603', name:'Astronomy Concept Lab', panels:3, items:75, dataWeeks:'1-3', status:'active', next:'Add Week 4 Big Bang content',
-      detail:'Key Terms Flashcards (43 terms), Concept Quiz MCQ (25 questions), Sort & Match (5 exercises). Filterable by week (1-3) and category (observational, historical, stellar, phenomena).' }
+    { id:'jpl', course:'INFO1113', name:'Java Practice Lab', panels:6, items:84, dataWeeks:'1-2', status:'active', next:'Add Week 3 OOP content when taught',
+      detail:'Code Tracing (35), Python\u2192Java Mistakes (20), Challenge Simulator (15 incl. 5 Scanner-based), Syntax Reference (7), Parsons Problems (4), Debug Detective (3). IDs 11-15 added 8 Mar for Coding Challenge prep; IDs 21-25 code traces targeting array/string pitfalls.' },
+    { id:'ipa', course:'LNGS1001', name:'IPA Practice Lab', panels:5, items:138, dataWeeks:'1-3', status:'active', next:'Expand phonology with Wk 4 content',
+      detail:'Charts (26 consonants + 13 vowels + 7 diphthongs), Transcription Practice (40 words incl. Assignment 1 prep set), Notation Reference (19), Phonology Analysis (15 minimal pairs + 10 natural classes + 8 rules). Covers HCE conventions for Australian English.' },
+    { id:'map', course:'ANHS2609', name:'Map Quiz + Timeline', panels:2, items:68, dataWeeks:'1-13', status:'active', next:'Assessment 13 Mar \u2014 review after',
+      detail:'Map Quiz: Study Mode (Leaflet.js, labels, tooltips) + Quiz Mode (timed placement). 33 locations across 3 tiers. Timeline: 35 events across 5 eras (Philip II to Alexander\'s death), type filters, expandable cards with cross-references to map locations.' },
+    { id:'astro', course:'OLES1603', name:'Astronomy Concept Lab', panels:3, items:86, dataWeeks:'1-3', status:'active', next:'Add Week 4 Big Bang content',
+      detail:'Key Terms Flashcards (51 terms), Concept Quiz MCQ (30 questions), Sort & Match (5 exercises). Filterable by week (1-3) and category (observational, historical, stellar, phenomena).' }
   ],
   studyGuides: {
     summary: 'Study guides generated from lecture transcripts (primary) and outlines (draft). Each guide has 10 structured fields: title, studyHours, learningObjectives, keyConcepts, keyTerms, keyExamples, mustDo, selfTest (interactive quiz), examRelevance, distinctionTip.',
     coverage: {
-      INFO1113: { complete:[1,2,3], draft:[], pending:[], notes:'Week 3 upgraded 10 Mar from 82KB lecture transcript: toString/Override, inheritance, exceptions/try-catch, file I/O, polymorphism/LSP, UML. Tutorial content (classes, encapsulation, aliasing) integrated.' },
-      LNGS1001: { complete:[1,2,3], draft:[], pending:[], notes:'Week 3 fully upgraded 11 Mar from BOTH transcripts (33KB Mon vowels + 42KB Tue suprasegmentals). Added syllable structure, sonority hierarchy, voice quality (modal/creaky/breathy with cross-linguistic contrasts), stress-timed vs syllable-timed, tone systems taxonomy (register/contour/pitch accent), intonation functions, compound stress, intonation unit boundaries. 19 selfTest, 41 keyTerms, 14 keyExamples, 18 keyConcepts.' },
-      ANHS2609: { complete:[1,2,3], draft:[], pending:[], notes:'Week 3 fully upgraded 10 Mar from 91KB lecture transcript: Philip\u2019s Theban education, Vergina tombs/material culture, 7 military innovations (sarissa specs, cavalry wedge, professionalization, Pezhetairoi, engineering corps, baggage train), Chaeronea tactical detail, Demosthenes arc. 18 selfTest questions, 29 keyTerms, 7 keyExamples, 18 keyConcepts.' },
-      OLES1603: { complete:[1,2,3], draft:[], pending:[], notes:'Week 3 fully rewritten 10 Mar from 43KB lecture transcript: parallax, Cepheids/Leavitt, Hubble, spectroscopy/Payne, interstellar medium, 21-cm emission, stellar remnants (white dwarfs/neutron stars/black holes).' }
+      INFO1113: { complete:[1,2,3], draft:[], pending:[4], notes:'Week 3 upgraded 10 Mar from 82KB lecture transcript: toString/Override, inheritance, exceptions/try-catch, file I/O, polymorphism/LSP, UML. Tutorial content (classes, encapsulation, aliasing) integrated.' },
+      LNGS1001: { complete:[1,2,3], draft:[4], pending:[], notes:'Week 3 fully upgraded 11 Mar from BOTH transcripts (33KB Mon vowels + 42KB Tue suprasegmentals). Week 4 draft from outline 16 Mar (Phonology I: The Phoneme).' },
+      ANHS2609: { complete:[1,2,3], draft:[4], pending:[], notes:'Week 3 fully upgraded 10 Mar from 91KB lecture transcript. Week 4 draft from outline 16 Mar (Fall of Persia: Issus to Gaugamela).' },
+      OLES1603: { complete:[1,2,3], draft:[4], pending:[], notes:'Week 3 fully rewritten 10 Mar from 43KB lecture transcript. Week 4 draft from outline 16 Mar (How the Universe Began: Big Bang).' }
     },
-    totalQuizQuestions: 131,
-    weeksCovered: 12
+    totalQuizQuestions: 182,
+    weeksCovered: 15
   },
   assessmentPrep: [
     { course:'LNGS1001', name:'Assignment 1 - Phonetic transcription', date:'2026-03-13', weight:'10%', status:'complete',
@@ -3818,7 +3854,7 @@ const SECURITY_AUDIT = {
     { id:'S1', name:'Secrets & Credentials', status:'pass', detail:'No hardcoded secrets in dashboard or 12 visual guides' },
     { id:'S2', name:'PIN Authentication', status:'pass', detail:'Hash-based PIN, single session auth point' },
     { id:'S3', name:'External Resources', status:'warn', detail:'unpkg.com loaded (marked-js for chat). Add to allowed list or self-host for pilot' },
-    { id:'S4', name:'XSS / Injection', status:'pass', detail:'No URL→innerHTML paths, no eval(), no document.write(). 68 innerHTML assignments (static data)' },
+    { id:'S4', name:'XSS / Injection', status:'pass', detail:'No URL-to-innerHTML paths, no dangerous JS patterns. 70 innerHTML assignments (static data only)' },
     { id:'S5', name:'Data Exposure', status:'pass', detail:'No emails, phone numbers, student IDs, or grades in source' },
     { id:'S6', name:'API Key Handling', status:'warn', detail:'Anthropic API calls present — verify BYOK pattern active' },
     { id:'S7', name:'Content Security Policy', status:'warn', detail:'No CSP meta tag — add for pilot' },
@@ -4740,7 +4776,30 @@ function quizSelfRate(cardId, rating) {
   if (!rateDiv) return;
   const color = rating === 'got' ? '#16a34a' : '#dc2626';
   const label = rating === 'got' ? '\u2705 Got it' : '\u274C Not yet';
-  rateDiv.innerHTML = `<span class="sg-quiz-rated" style="background:${rating==='got'?'#dcfce7':'#fee2e2'};color:${color}">${label}</span>`;
+  let rateHtml = `<span class="sg-quiz-rated" style="background:${rating==='got'?'#dcfce7':'#fee2e2'};color:${color}">${label}</span>`;
+
+  // Detect course from cardId prefix
+  const course = cardId.startsWith('info') ? 'INFO1113' : cardId.startsWith('lngs') ? 'LNGS1001' : cardId.startsWith('anhs') ? 'ANHS2609' : cardId.startsWith('oles') ? 'OLES1603' : null;
+
+  if (rating === 'got') {
+    // Log correct answer to persistent profile
+    if (course) saLogCorrectToProfile(course, 'Study Guide Self-Test', 'self-test-general');
+  }
+
+  // If "Not yet", add a Help button with the question/answer context
+  if (rating === 'not') {
+    const card = document.getElementById('card-' + cardId);
+    if (card) {
+      const qEl = card.querySelector('.sg-quiz-q');
+      const aEl = card.querySelector('.sg-quiz-a');
+      const question = qEl ? qEl.textContent.trim() : cardId;
+      const answer = aEl ? aEl.textContent.trim().substring(0, 300) : '';
+      const userAnswer = document.getElementById('ta-' + cardId)?.value || '(self-rated: not yet)';
+      rateHtml += ' ' + saHelpButton({ course: course, tool:'Study Guide Self-Test', question: question, studentAnswer: userAnswer, correctAnswer: answer });
+    }
+  }
+
+  rateDiv.innerHTML = rateHtml;
   try {
     const data = JSON.parse(localStorage.getItem('uni-quiz-progress') || '{}');
     if (typeof data[cardId] === 'object') {
@@ -6461,6 +6520,10 @@ function renderJplTraces() {
     const color = traceState === 'correct' ? '#16a34a' : traceState === 'incorrect' ? 'var(--danger)' : 'var(--muted)';
     html += `<span style="font-size:14px;font-weight:700;color:${color}">${icon} ${label}</span>
       <button class="jpl-btn jpl-btn-secondary" onclick="jplRetryTrace()" style="margin-left:auto">Retry</button>`;
+    if (traceState === 'incorrect') {
+      const userInput = document.getElementById('jpl-trace-input')?.value || '';
+      html += saHelpButton({ course:'INFO1113', tool:'Code Trace', question: trace.title + ': ' + escHtml(trace.code).substring(0,200), studentAnswer: userInput || '(incorrect trace)', correctAnswer: trace.answer, context:'This is a Java code trace exercise. The student needs to predict what the program prints.' });
+    }
   }
   html += `</div>`;
 
@@ -6508,6 +6571,8 @@ function jplCheckTrace() {
     inputLines: input.split('\n').length, expectedLines: expected.split('\n').length,
     offByWhitespace: input.replace(/\s/g,'') === expected.replace(/\s/g,'') && !isCorrect,
   });
+  // Log to persistent student profile
+  if (isCorrect) saLogCorrectToProfile('INFO1113', 'Code Trace', 'java-code-tracing');
   jplTraceShownAt = null;
   renderJplTraces();
   renderPracticeLab();
@@ -7507,6 +7572,9 @@ function renderIpaQuiz() {
   }
 
   if (ipaQuizAnswered) {
+    if (q.selected !== q.answer) {
+      html += `<div style="margin-top:8px">${saHelpButton({ course:'LNGS1001', tool:'IPA Quiz', question: q.prompt, studentAnswer: q.selected || '(no answer)', correctAnswer: q.answer, context:'This is an IPA symbol identification exercise. Help the student understand the articulatory features that distinguish these sounds.' })}</div>`;
+    }
     html += `<button class="ipa-btn ipa-btn-primary" onclick="ipaNextQuizQuestion()" style="margin-top:12px;width:100%;justify-content:center">Next Question \u2192</button>`;
   }
 
@@ -7545,6 +7613,8 @@ function ipaCheckQuizAnswer(answer) {
   else { state.quizIncorrect = (state.quizIncorrect||0) + 1; }
   ipaSaveState(state);
   ipaLogEvent('ipa_quiz_answer', { mode: ipaQuizMode, correct: answer === ipaQuizQ.answer, answer, expected: ipaQuizQ.answer });
+  // Log to persistent student profile
+  if (answer === ipaQuizQ.answer) saLogCorrectToProfile('LNGS1001', 'IPA Quiz', 'ipa-identification');
   renderIpaQuiz();
 }
 
@@ -8061,6 +8131,15 @@ function mapRenderQuiz() {
     const pct = Math.round(((correct + close) / total) * 100);
     const cls = pct >= 80 ? 'good' : pct >= 50 ? 'ok' : 'poor';
     html += `<div class="map-score ${cls}" style="flex:1">${correct + close}/${total} correct (${pct}%) &mdash; ${correct} exact, ${close} close match</div>`;
+    // Collect wrong answers for tutor review
+    const wrongLocs = [];
+    mapQuizLocations.forEach((loc, i) => {
+      if (mapCheckSingleAnswer(i) === 'incorrect') wrongLocs.push(loc.name + ' (you said: ' + (mapQuizAnswers[i]||'blank') + ')');
+    });
+    if (wrongLocs.length > 0) {
+      html += saHelpButton({ course:'ANHS2609', tool:'Map Quiz', question: 'Identify these locations on a map of the ancient world', studentAnswer: wrongLocs.join('; '), correctAnswer: wrongLocs.map(w=>w.split(' (')[0]).join(', '), context:'The student is practising for a 3% closed-book map quiz. Give mnemonics or historical context to help remember each missed location.' });
+    }
+    html += saNudgeHtml('ANHS2609');
   }
   html += `</div></div>`;
   el.innerHTML = html;
@@ -8146,6 +8225,8 @@ function mapCheckAllAnswers() {
   mapSaveState(state);
 
   mapLogEvent('map_quiz_check', { correct, close, total, pct, filter: mapQuizFilter });
+  // Log to persistent student profile
+  if (pct >= 80) saLogCorrectToProfile('ANHS2609', 'Map Quiz', 'ancient-geography');
   renderMapPracticeLab();
 }
 
@@ -8454,7 +8535,11 @@ function renderAstroQuiz() {
       </div>`;
     } else {
       const r = state['quiz-rated-'+q.id];
-      html += `<div style="margin-top:10px"><span class="sg-quiz-rated" style="background:${r==='got'?'#dcfce7':'#fee2e2'};color:${r==='got'?'#16a34a':'#dc2626'}">${r==='got'?'\u2705 Got it':'\u274C Not yet'}</span></div>`;
+      html += `<div style="margin-top:10px"><span class="sg-quiz-rated" style="background:${r==='got'?'#dcfce7':'#fee2e2'};color:${r==='got'?'#16a34a':'#dc2626'}">${r==='got'?'\u2705 Got it':'\u274C Not yet'}</span>`;
+      if (r === 'not') {
+        html += ' ' + saHelpButton({ course:'OLES1603', tool:'Astronomy Quiz', question: q.q, studentAnswer: '(self-rated: not yet)', correctAnswer: q.choices[q.correct], context: 'Explanation from course: ' + q.explanation });
+      }
+      html += `</div>`;
     }
     html += `<button class="astro-btn astro-btn-primary" onclick="astroNextQuiz()" style="margin-top:12px;width:100%;justify-content:center">Next Question \u2192</button>`;
   }
@@ -8482,7 +8567,7 @@ function astroRevealQuiz() {
 function astroSelfRate(qId, rating) {
   const state = astroGetState();
   state['quiz-rated-'+qId] = rating;
-  if (rating === 'got') state.quizConfident = (state.quizConfident || 0) + 1;
+  if (rating === 'got') { state.quizConfident = (state.quizConfident || 0) + 1; saLogCorrectToProfile('OLES1603', 'Astronomy Quiz', 'astronomy-concepts'); }
   astroSaveState(state);
   renderAstroQuiz();
 }
@@ -8734,15 +8819,243 @@ function validateDashboardData() {
 // ======================== STUDY ASSISTANT ========================
 
 const SA_STORAGE_KEY = 'uni-claude-key';
-const SA_MODEL = 'claude-haiku-4-5-20251001';
+const SA_MODEL = 'claude-sonnet-4-6-20260218';
 let saMessages = [];
 let saTotalCost = 0;
+
+// ── Session Learning Tracker ──
+// Tracks wrong answers across a study session for targeted review
+let saSessionErrors = []; // {course, tool, question, studentAnswer, correctAnswer, explanation, timestamp}
+let _saSessionStart = Date.now();
+
+// ── Student Learning Profile (persistent across sessions) ──
+const SA_PROFILE_KEY = 'uni-student-profile';
+const SA_ONBOARDING_KEY = 'uni-sa-onboarded';
+
+function saDefaultProfile() {
+  return { version: 1, id: 'default', name: '', created: Date.now(), lastActive: Date.now(),
+    totalSessions: 0, totalQuestions: 0, courses: {}, sessions: [] };
+}
+function saDefaultCourseProfile() {
+  return { errors: [], correctCount: 0, toolUsage: {}, topicsStudied: {}, lastStudied: null };
+}
+function saLoadProfile() {
+  try {
+    const raw = localStorage.getItem(SA_PROFILE_KEY);
+    if (!raw) return saDefaultProfile();
+    const p = JSON.parse(raw);
+    if (p.version !== 1) return saDefaultProfile();
+    return p;
+  } catch { return saDefaultProfile(); }
+}
+function saSaveProfile(profile) {
+  try {
+    profile.lastActive = Date.now();
+    if (profile.sessions.length > 30) profile.sessions = profile.sessions.slice(-30);
+    Object.values(profile.courses).forEach(c => {
+      if (c.errors && c.errors.length > 50) c.errors = c.errors.slice(-50);
+    });
+    localStorage.setItem(SA_PROFILE_KEY, JSON.stringify(profile));
+  } catch(e) { console.warn('[SA] Profile save failed:', e); }
+}
+
+function saExtractTopic(errorData) {
+  const tool = errorData.tool || '';
+  if (tool === 'Code Trace') return 'java-code-tracing';
+  if (tool === 'IPA Quiz') return 'ipa-identification';
+  if (tool === 'Map Quiz') return 'ancient-geography';
+  if (tool === 'Astronomy Quiz') return 'astronomy-concepts';
+  if (tool === 'Study Guide Self-Test') {
+    const q = (errorData.question || '').toLowerCase();
+    if (q.includes('ipa') || q.includes('phonet') || q.includes('consonant') || q.includes('vowel')) return 'phonetics';
+    if (q.includes('phonolog') || q.includes('allophone') || q.includes('minimal pair')) return 'phonology';
+    if (q.includes('java') || q.includes('class') || q.includes('method') || q.includes('object')) return 'java-oop';
+    if (q.includes('variable') || q.includes('loop') || q.includes('array') || q.includes('type')) return 'java-fundamentals';
+    if (q.includes('alexander') || q.includes('philip') || q.includes('macedon')) return 'alexander-history';
+    if (q.includes('source') || q.includes('historiograph')) return 'historical-method';
+    if (q.includes('star') || q.includes('spectral') || q.includes('magnitude')) return 'stellar-astronomy';
+    if (q.includes('parallax') || q.includes('distance') || q.includes('parsec')) return 'astronomical-distance';
+    if (q.includes('telescope') || q.includes('light') || q.includes('electromagnetic')) return 'observational-astronomy';
+    return 'self-test-general';
+  }
+  return tool.toLowerCase().replace(/\s+/g, '-') || 'unknown';
+}
+
+function saLogErrorToProfile(errorData) {
+  const profile = saLoadProfile();
+  const course = errorData.course || 'General';
+  if (!profile.courses[course]) profile.courses[course] = saDefaultCourseProfile();
+  const cp = profile.courses[course];
+  const topic = saExtractTopic(errorData);
+
+  cp.errors.push({ tool: errorData.tool, topic: topic, q: (errorData.question || '').substring(0, 120), ts: Date.now() });
+
+  if (!cp.toolUsage[errorData.tool]) cp.toolUsage[errorData.tool] = { attempts: 0, correct: 0, lastUsed: 0 };
+  cp.toolUsage[errorData.tool].attempts++;
+  cp.toolUsage[errorData.tool].lastUsed = Date.now();
+
+  if (!cp.topicsStudied[topic]) cp.topicsStudied[topic] = { count: 0, lastStudied: 0, correctStreak: 0, errorCount: 0 };
+  cp.topicsStudied[topic].count++;
+  cp.topicsStudied[topic].lastStudied = Date.now();
+  cp.topicsStudied[topic].correctStreak = 0;
+  cp.topicsStudied[topic].errorCount = (cp.topicsStudied[topic].errorCount || 0) + 1;
+
+  cp.lastStudied = Date.now();
+  profile.totalQuestions++;
+  saSaveProfile(profile);
+}
+
+function saLogCorrectToProfile(course, tool, topic) {
+  const profile = saLoadProfile();
+  if (!profile.courses[course]) profile.courses[course] = saDefaultCourseProfile();
+  const cp = profile.courses[course];
+
+  cp.correctCount = (cp.correctCount || 0) + 1;
+  if (!cp.toolUsage[tool]) cp.toolUsage[tool] = { attempts: 0, correct: 0, lastUsed: 0 };
+  cp.toolUsage[tool].attempts++;
+  cp.toolUsage[tool].correct++;
+  cp.toolUsage[tool].lastUsed = Date.now();
+
+  if (!cp.topicsStudied[topic]) cp.topicsStudied[topic] = { count: 0, lastStudied: 0, correctStreak: 0, errorCount: 0 };
+  cp.topicsStudied[topic].lastStudied = Date.now();
+  cp.topicsStudied[topic].correctStreak = (cp.topicsStudied[topic].correctStreak || 0) + 1;
+  cp.topicsStudied[topic].count++;
+
+  cp.lastStudied = Date.now();
+  profile.totalQuestions++;
+  saSaveProfile(profile);
+}
+
+function saAnalyzeProfile(courseCode) {
+  const profile = saLoadProfile();
+  const result = { weakAreas: [], strengths: [], studyDays: 0, totalErrors: 0, totalCorrect: 0, recentSessions: 0 };
+  const twoWeeksAgo = Date.now() - 14 * 24 * 60 * 60 * 1000;
+  const courses = courseCode ? [courseCode] : Object.keys(profile.courses);
+
+  courses.forEach(code => {
+    const cp = profile.courses[code];
+    if (!cp) return;
+
+    // Recent errors by topic
+    const recentErrors = {};
+    (cp.errors || []).filter(e => e.ts > twoWeeksAgo).forEach(e => {
+      recentErrors[e.topic] = (recentErrors[e.topic] || 0) + 1;
+    });
+
+    // Weak areas: 2+ errors in last 2 weeks
+    Object.entries(recentErrors).forEach(([topic, count]) => {
+      if (count >= 2) result.weakAreas.push({ course: code, topic, errors: count });
+    });
+
+    // Strengths: topics with 4+ correct streak
+    Object.entries(cp.topicsStudied || {}).forEach(([topic, data]) => {
+      if ((data.correctStreak || 0) >= 4) result.strengths.push({ course: code, topic, streak: data.correctStreak });
+    });
+
+    result.totalErrors += (cp.errors || []).length;
+    result.totalCorrect += (cp.correctCount || 0);
+  });
+
+  result.weakAreas.sort((a, b) => b.errors - a.errors);
+  result.strengths.sort((a, b) => b.streak - a.streak);
+  result.studyDays = profile.created ? Math.max(1, Math.ceil((Date.now() - profile.created) / (24*60*60*1000))) : 1;
+  result.recentSessions = (profile.sessions || []).filter(s => new Date(s.date) > new Date(Date.now() - 7*24*60*60*1000)).length;
+
+  return result;
+}
+
+function saProfileSummaryForPrompt(courseCode) {
+  const analysis = saAnalyzeProfile(courseCode);
+  if (analysis.totalErrors === 0 && analysis.strengths.length === 0) return '';
+
+  let s = '\n\n<student_profile>\nPersistent learning data (across all study sessions, not just this one):\n';
+  s += 'Study period: ' + analysis.studyDays + ' day(s). Total: ' + analysis.totalCorrect + ' correct, ' + analysis.totalErrors + ' errors logged.\n';
+
+  if (analysis.weakAreas.length > 0) {
+    s += '\nWEAK AREAS (recurring errors in last 2 weeks — prioritize these):\n';
+    analysis.weakAreas.slice(0, 6).forEach(w => { s += '- ' + w.course + ' / ' + w.topic + ': ' + w.errors + ' errors recently\n'; });
+  }
+  if (analysis.strengths.length > 0) {
+    s += '\nSTRENGTHS (consistent correct answers — push to deeper questions):\n';
+    analysis.strengths.slice(0, 5).forEach(st => { s += '- ' + st.course + ' / ' + st.topic + ': ' + st.streak + ' correct in a row\n'; });
+  }
+
+  s += '\nUse this to calibrate difficulty. For weak areas: start with fundamentals, check understanding before advancing. For strengths: challenge with Bloom L3-L4 questions and cross-topic connections.\n';
+  s += '</student_profile>';
+  return s;
+}
+
+// Update the profile stats bar in the SA panel
+function saUpdateProfileBar() {
+  const bar = document.getElementById('sa-profile-bar');
+  if (!bar) return;
+  const analysis = saAnalyzeProfile(saDetectCourse());
+  const profile = saLoadProfile();
+
+  let html = '';
+  if (profile.totalQuestions > 0) {
+    html += '<span>Session: ' + saSessionErrors.length + ' errors</span>';
+    html += '<span>All time: ' + profile.totalQuestions + ' Qs</span>';
+    if (analysis.weakAreas.length > 0) html += '<span class="sa-pb-weak">' + analysis.weakAreas.length + ' weak area' + (analysis.weakAreas.length > 1 ? 's' : '') + '</span>';
+    if (analysis.strengths.length > 0) html += '<span class="sa-pb-strong">' + analysis.strengths.length + ' strength' + (analysis.strengths.length > 1 ? 's' : '') + '</span>';
+  } else {
+    html = '<span>Start practising to build your learning profile</span>';
+  }
+  bar.innerHTML = html;
+}
+
+// Update the FAB error badge
+function saUpdateFabBadge() {
+  const badge = document.getElementById('sa-error-badge');
+  const fab = document.getElementById('sa-fab');
+  if (!badge || !fab) return;
+  const count = saSessionErrors.length;
+  if (count > 0) {
+    badge.textContent = count;
+    badge.style.display = '';
+    fab.classList.add('has-errors');
+  } else {
+    badge.style.display = 'none';
+    fab.classList.remove('has-errors');
+  }
+}
+
+// Onboarding
+function saCheckOnboarding() {
+  if (localStorage.getItem(SA_ONBOARDING_KEY)) return;
+  const el = document.getElementById('sa-onboarding');
+  if (el) el.style.display = '';
+}
+function saDismissOnboarding() {
+  localStorage.setItem(SA_ONBOARDING_KEY, '1');
+  const el = document.getElementById('sa-onboarding');
+  if (el) el.style.display = 'none';
+}
+
+// Session save on page unload
+function saSaveSessionOnUnload() {
+  const profile = saLoadProfile();
+  const duration = Math.round((Date.now() - _saSessionStart) / 60000);
+  if (duration < 1 && saSessionErrors.length === 0) return; // skip trivial visits
+  const coursesUsed = [...new Set(saSessionErrors.map(e => e.course).filter(Boolean))];
+  profile.sessions.push({
+    date: new Date().toISOString().slice(0, 10),
+    duration: duration,
+    courses: coursesUsed,
+    errors: saSessionErrors.length,
+    questionsAsked: saMessages.filter(m => m.role === 'user').length
+  });
+  profile.totalSessions = (profile.totalSessions || 0) + 1;
+  saSaveProfile(profile);
+}
 
 function saToggle() {
   const panel = document.getElementById('sa-panel');
   panel.classList.toggle('open');
   if (panel.classList.contains('open')) {
+    saDismissOnboarding();
     saUpdateContextBadge();
+    saUpdateProfileBar();
     const key = localStorage.getItem(SA_STORAGE_KEY);
     document.getElementById('sa-body').style.display = key ? '' : 'none';
     document.getElementById('sa-setup').style.display = key ? 'none' : '';
@@ -8771,8 +9084,124 @@ function saClear() {
   saTotalCost = 0;
   document.getElementById('sa-cost').textContent = '';
   const el = document.getElementById('sa-messages');
-  el.innerHTML = '<div class="sa-msg sa-msg-ai"><div class="sa-bubble">Hi! I\'m your study assistant. Ask me anything about your courses — assessments, concepts, study tips, or exam prep. I\'ll answer based on your course materials.</div></div>';
+  el.innerHTML = '<div class="sa-msg sa-msg-ai"><div class="sa-bubble">Hi! I\'m your study tutor. I\'ll help you understand concepts, work through problems, and push you toward distinction-level work. When you get a practice question wrong, hit <strong>Help me understand</strong> and I\'ll walk you through it. Use the <strong>Review</strong> button above to get a targeted summary of what you need to work on.</div></div>';
   el.scrollTop = 0;
+}
+
+// ── Bridge: any component can call this to trigger contextual tutoring ──
+// Opens the SA panel with a pre-composed tutoring request about a wrong answer.
+// Also logs the error to the session tracker for pattern analysis.
+function saAskAbout(opts) {
+  // opts: { course, tool, question, studentAnswer, correctAnswer, explanation?, context? }
+  const errorEntry = {
+    course: opts.course || saDetectCourse(),
+    tool: opts.tool || 'unknown',
+    question: opts.question || '',
+    studentAnswer: opts.studentAnswer || '',
+    correctAnswer: opts.correctAnswer || '',
+    explanation: opts.explanation || '',
+    timestamp: Date.now()
+  };
+  saSessionErrors.push(errorEntry);
+
+  // Persist to student learning profile
+  saLogErrorToProfile(errorEntry);
+  saUpdateFabBadge();
+  saUpdateProfileBar();
+
+  // Build a tutoring prompt
+  let msg = `I just got this wrong and need help understanding why.\n\n`;
+  msg += `**Question:** ${opts.question}\n`;
+  msg += `**My answer:** ${opts.studentAnswer}\n`;
+  msg += `**Correct answer:** ${opts.correctAnswer}\n`;
+  if (opts.context) msg += `\n${opts.context}`;
+  msg += `\n\nDon't just tell me the answer — help me understand what I got wrong and why the correct answer makes sense.`;
+
+  // Open the SA panel and inject the message
+  const panel = document.getElementById('sa-panel');
+  if (!panel.classList.contains('open')) saToggle();
+
+  // Check API key
+  const key = localStorage.getItem(SA_STORAGE_KEY);
+  if (!key) { saSettings(); return; }
+
+  // Set the message in the input and send
+  const input = document.getElementById('sa-input');
+  input.value = msg;
+  input.style.height = Math.min(input.scrollHeight, 100) + 'px';
+  saSend();
+}
+
+// Quick help button: generates the HTML for a "Help me understand" button
+// Uses a registry to avoid eval/JSON.parse in onclick handlers
+const _saHelpRegistry = {};
+let _saHelpId = 0;
+function saHelpButton(opts) {
+  const id = '_sah_' + (++_saHelpId);
+  _saHelpRegistry[id] = opts;
+  return `<button onclick="saAskAbout(_saHelpRegistry['${id}'])" style="margin-top:6px;padding:4px 12px;font-size:12px;background:linear-gradient(135deg,#2563eb,#7c3aed);color:#fff;border:none;border-radius:6px;cursor:pointer;font-weight:500;display:inline-flex;align-items:center;gap:4px" title="Get AI tutoring on this question"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Help me understand</button>`;
+}
+
+// Session review: generates a summary of what the student struggled with
+function saSessionReview() {
+  if (saSessionErrors.length === 0) {
+    saAskAbout({
+      course: saDetectCourse(),
+      tool: 'session-review',
+      question: 'I want to review what I studied today',
+      studentAnswer: '(no errors recorded)',
+      correctAnswer: '(general review)',
+      context: 'The student wants a general review. Suggest topics based on the course materials and upcoming assessments.'
+    });
+    return;
+  }
+
+  const courseGroups = {};
+  saSessionErrors.forEach(e => {
+    const c = e.course || 'General';
+    if (!courseGroups[c]) courseGroups[c] = [];
+    courseGroups[c].push(e);
+  });
+
+  let msg = `I've been studying and want to review my weak areas. Here's what I got wrong this session:\n\n`;
+  for (const [course, errors] of Object.entries(courseGroups)) {
+    msg += `**${course}** (${errors.length} errors):\n`;
+    errors.forEach((e, i) => {
+      msg += `${i+1}. [${e.tool}] ${e.question} — I said "${e.studentAnswer}" but it was "${e.correctAnswer}"\n`;
+    });
+    msg += '\n';
+  }
+  // Add persistent profile context
+  const analysis = saAnalyzeProfile();
+  if (analysis.weakAreas.length > 0) {
+    msg += `\n**Recurring weak areas from previous sessions:**\n`;
+    analysis.weakAreas.slice(0, 5).forEach(w => { msg += `- ${w.course} / ${w.topic}: ${w.errors} errors in last 2 weeks\n`; });
+    msg += '\n';
+  }
+  msg += `Based on these errors (both today's and recurring patterns), what patterns do you see? What should I focus on to improve? Generate 3-5 targeted practice questions.`;
+
+  const panel = document.getElementById('sa-panel');
+  if (!panel.classList.contains('open')) saToggle();
+  const key = localStorage.getItem(SA_STORAGE_KEY);
+  if (!key) { saSettings(); return; }
+  document.getElementById('sa-input').value = msg;
+  saSend();
+}
+
+// Contextual nudge: show inline suggestion to use the tutor
+function saNudgeHtml(course, context) {
+  const analysis = saAnalyzeProfile(course);
+  if (saSessionErrors.length === 0 && analysis.weakAreas.length === 0) return '';
+  const errCount = saSessionErrors.filter(e => e.course === course).length;
+  let text = '';
+  if (errCount > 0) {
+    text = errCount + ' mistake' + (errCount > 1 ? 's' : '') + ' this session. ';
+  }
+  if (analysis.weakAreas.length > 0) {
+    text += 'You have recurring gaps in ' + analysis.weakAreas.slice(0,2).map(w => w.topic.replace(/-/g,' ')).join(' and ') + '. ';
+  }
+  if (!text) return '';
+  return `<div class="sa-nudge"><span>${text}</span><button onclick="saSessionReview()">Review with tutor</button></div>`;
 }
 
 function saDetectCourse() {
@@ -8938,22 +9367,51 @@ function saBuildContext(courseCode) {
 
 function saSystemPrompt(courseCode) {
   const courseName = courseCode ? COURSES[courseCode].code + ' ' + COURSES[courseCode].name : 'all courses';
-  return `You are a university study assistant for a first-year student at the University of Sydney (Semester 1, 2026). You are currently helping with ${courseName}.
+
+  // Include session errors for targeted tutoring
+  let errorContext = '';
+  if (saSessionErrors.length > 0) {
+    const relevant = courseCode ? saSessionErrors.filter(e => e.course === courseCode) : saSessionErrors;
+    if (relevant.length > 0) {
+      errorContext = '\n\n<session_errors>\nThe student got these wrong during this study session (most recent first):\n';
+      relevant.slice(-10).reverse().forEach((e, i) => {
+        errorContext += `${i+1}. [${e.tool}] Q: ${e.question}\n   Student answered: ${e.studentAnswer}\n   Correct: ${e.correctAnswer}\n`;
+      });
+      errorContext += 'Use these to identify patterns in their misunderstandings. If you see a recurring gap, address it proactively.\n</session_errors>';
+    }
+  }
+
+  return `You are an adaptive tutor for a first-year University of Sydney student (Semester 1, 2026). You are currently helping with ${courseName}.
+
+YOUR ROLE: You are not a lookup tool. You are a tutor whose job is to build understanding and push this student toward distinction-level work. You adapt your approach based on what the student knows and where they struggle.
+
+TUTORING APPROACH:
+1. When a student gets something wrong, don't just give the answer. Ask what they were thinking. Identify the specific misconception and address it directly.
+2. Use the Socratic method: guide with questions before explaining. "What do you think happens when..." is better than "The answer is..."
+3. For conceptual gaps, start concrete and work toward abstract. Use examples from the lecture materials, then ask the student to apply the same logic to a new case.
+4. When the student is correct, don't just confirm — extend. "Good. Now what happens if we change X?" Push toward deeper understanding.
+5. Track their level. If they're struggling with basics, don't overwhelm with distinction-level nuance. If they're handling fundamentals well, push harder.
+
+COURSE-SPECIFIC TUTORING:
+- INFO1113 (Java): Trace code step-by-step with the student. When they get a code trace wrong, walk through execution line by line. For OOP concepts, use concrete analogies before abstract definitions. Generate new code examples that test the same concept differently.
+- LNGS1001 (Linguistics): For IPA errors, isolate the specific sound confusion (e.g., confusing /ɪ/ with /iː/). For phonology, walk through rules with minimal pairs. Always connect to Australian English examples they can say out loud.
+- ANHS2609 (History): Push beyond narrative ("Alexander did X") toward analysis ("Why did Alexander do X, and what does Source Y tell us about his motivations?"). For essay skills, model how to structure an argument with evidence. Reference specific primary and secondary sources from the materials.
+- OLES1603 (Astronomy): Distinguish observation from theory. For calculation questions, walk through the logic step by step. Use visual/spatial reasoning for concepts like parallax, redshift, spectral types.
+
+GENERATING EXERCISES:
+When the student needs practice, generate fresh questions — don't just repeat the stored self-test bank. Create questions that target the specific gap you've identified. Tag questions by Bloom level (L1: Remember, L2: Understand, L3: Apply, L4: Analyse).
+
+DISTINCTION-LEVEL COACHING:
+For students ready to push higher: ask "What would a marker expect at distinction level here?" Show them how to integrate multiple sources, challenge assumptions, and demonstrate sophisticated understanding rather than surface-level recall.
 
 RULES:
-1. Answer ONLY based on the course materials provided below. Do not use outside knowledge.
-2. If the answer is not in the provided materials, say "That's not covered in my current materials" and suggest checking NotebookLM or the lecture recordings.
-3. Cite specific weeks, lectures, or assessments when answering (e.g. "According to the Week 2 study guide...").
-4. Keep answers concise but thorough. Use bullet points for lists.
-5. For code questions (INFO1113), include code examples using Java syntax.
-6. When asked about assessments, always mention the due date, weight, and any key rules.
-7. If asked to quiz the student, create questions based on the self-test questions and key terms in the materials. Tag questions by Bloom level if available.
-8. Use plain language suitable for a first-year undergraduate.
-9. When asked about dashboard features, refer to the DASHBOARD FEATURES section. Guide the student to the right tab or tool.
-10. When asked about practice exercises, reference specific items from PRACTICE TOOLS and explain how to use the relevant lab.
-11. When mentioning study tasks, refer to the mustDo list for the current week. When mentioning examples, use the keyExamples from lectures.
-12. If asked for study advice, draw on the STUDY TECHNIQUES section and the student's timetable.
-
+- Ground all answers in the course materials below. Cite specific weeks and lectures.
+- If something isn't in the materials, say so and suggest checking the lecture recordings.
+- Keep responses focused. Don't dump everything you know — address what the student needs right now.
+- For assessments, always mention due date, weight, and key rubric criteria.
+- Use plain language suitable for a first-year undergraduate.
+- When relevant, point the student to specific dashboard features (Practice Lab, Visual Guide, etc.).
+${errorContext}${saProfileSummaryForPrompt(courseCode)}
 <course_materials>
 ${saBuildContext(courseCode)}
 </course_materials>`;
@@ -9015,8 +9473,8 @@ async function saSend() {
     const cacheRead = data.usage?.cache_read_input_tokens || 0;
     const cacheCreate = data.usage?.cache_creation_input_tokens || 0;
     const freshInput = inp - cacheRead;
-    // Haiku pricing: $1/M input, $0.10/M cache read, $1.25/M cache write, $5/M output
-    const cost = (freshInput * 1.0 + cacheRead * 0.1 + cacheCreate * 1.25 + outp * 5.0) / 1000000;
+    // Sonnet pricing: $3/M input, $0.30/M cache read, $3.75/M cache write, $15/M output
+    const cost = (freshInput * 3.0 + cacheRead * 0.30 + cacheCreate * 3.75 + outp * 15.0) / 1000000;
     saTotalCost += cost;
 
     // Add to conversation history
@@ -9071,9 +9529,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // ======================== INIT ========================
 
+// Save session data on page unload
+window.addEventListener('beforeunload', saSaveSessionOnUnload);
+
 function init() {
   validateDashboardData();
   cleanOldPrepChecks();
+  saCheckOnboarding();
+  saUpdateFabBadge();
   renderDashboard();
   renderCourseWeeks('info-weeks', 'INFO1113');
   renderCourseAssessments('info-assess', 'INFO1113');
