@@ -1297,8 +1297,14 @@ document.getElementById('pin-input').focus();
     <div class="sync-tool-card" onclick="wftShowPanel('roadmap')">
       <div class="sync-tool-icon">&#128506;</div>
       <div class="sync-tool-title">Roadmap</div>
-      <div class="sync-tool-desc">Enhancements &amp; dashboard health</div>
+      <div class="sync-tool-desc">Enhancements &amp; weekly review</div>
       <div class="sync-tool-stat" id="wft-stat-roadmap"></div>
+    </div>
+    <div class="sync-tool-card" onclick="wftShowPanel('health')">
+      <div class="sync-tool-icon">&#129657;</div>
+      <div class="sync-tool-title">Dashboard Health</div>
+      <div class="sync-tool-desc">Checks, SA context &amp; data integrity</div>
+      <div class="sync-tool-stat" id="wft-stat-health"></div>
     </div>
     <div class="sync-tool-card" onclick="wftShowPanel('compliance')">
       <div class="sync-tool-icon">&#128737;</div>
@@ -1311,6 +1317,7 @@ document.getElementById('pin-input').focus();
   <div class="sync-panel" id="wft-panel-tools"></div>
   <div class="sync-panel" id="wft-panel-assessprep"></div>
   <div class="sync-panel" id="wft-panel-roadmap"></div>
+  <div class="sync-panel" id="wft-panel-health"></div>
   <div class="sync-panel" id="wft-panel-compliance"></div>
 </div>
 
@@ -3763,8 +3770,28 @@ const WORKFLOW_TRACKER = {
     { id:'validation', desc:'Data validation checks passing', status:'done', date:'2026-03-03' },
     { id:'assess-prep-wk3', desc:'Assessment prep guides for Week 3 due dates', status:'done', date:'2026-03-08', note:'Coding Challenge, Map Quiz, Assignment 1 — all have rubric/rules/tips/files' },
     { id:'assess-prep-wk4', desc:'Assessment prep guide for Idea Exploration (Wk4)', status:'done', date:'2026-03-08', note:'OLES1603 10% — rubric/rules/tips/files added' },
-    { id:'practice-lab-links', desc:'Practice Lab buttons in assessment detail modals', status:'done', date:'2026-03-08', note:'All 4 courses link to their respective practice tools from prep guides' }
-  ]
+    { id:'practice-lab-links', desc:'Practice Lab buttons in assessment detail modals', status:'done', date:'2026-03-08', note:'All 4 courses link to their respective practice tools from prep guides' },
+    { id:'sa-context', desc:'Study Assistant context covers all dashboard features', status:'done', date:'2026-03-16', note:'SA now knows: dashboard features, practice tools, keyExamples, mustDo, study techniques, Bloom levels' },
+    { id:'materials-audit', desc:'Materials tab links audited (0 gaps all courses)', status:'done', date:'2026-03-16', note:'validate-materials.py: INFO(0), LNGS(0), ANHS(0), OLES(0)' },
+    { id:'scrollbar-fix', desc:'Visual Guide iframe scrollbar eliminated', status:'done', date:'2026-03-16', note:'postMessage resize + autoResizeVgFrame onload — verified all 4 courses' },
+    { id:'pctdraft-fix', desc:'pctDraft JS error in workflow tracker fixed', status:'done', date:'2026-03-16', note:'Was crashing wftRenderGuides on page load' }
+  ],
+  weeklyReview: {
+    schedule: 'Every Sunday before the weekly sync',
+    lastReview: '2026-03-16',
+    nextReview: '2026-03-23',
+    prompts: [
+      { area: 'Study Effectiveness', question: 'Are the practice tools targeting the right skills? Are students struggling with anything the tools don\'t address?', research: 'Search for latest evidence-based study tool research (retrieval practice, spaced repetition apps, IPA training methods)' },
+      { area: 'Content Quality', question: 'Are study guides accurate and thorough? Do self-test questions cover the right Bloom levels for each assessment type?', research: 'Review latest pedagogical research on question design and cognitive load theory' },
+      { area: 'Missing Features', question: 'What features would most improve learning outcomes right now? What are similar university study platforms doing?', research: 'Look at Anki, Quizlet, Notion student templates, and university LMS plugins for inspiration' },
+      { area: 'Assessment Readiness', question: 'Are upcoming assessments fully prepared for? Are prep guides actionable enough?', research: 'Check rubric alignment — does each prep guide directly address every rubric criterion?' },
+      { area: 'Technical Health', question: 'Are there any broken links, JS errors, or UX friction points? Is the SA giving helpful answers?', research: 'Run validate-materials.py and security-audit.py, test SA with 5 sample questions per course' },
+      { area: 'External Innovation', question: 'What new tools, APIs, or approaches could we adopt? Are we stuck in a bubble?', research: 'Search: "best university study tools 2026", "AI tutoring research", "active learning technology", "programming education tools" — find at least 2 ideas worth evaluating' }
+    ],
+    reviewLog: [
+      { date: '2026-03-16', week: 3, findings: 'Initial setup. SA context expanded. Compliance system added. All 12 study guides NotebookLM-validated. Need to watch for Week 4 content arrivals and build prep guides for upcoming assessments.', actions: 'Expanded SA context, added Dashboard Health panel, created weekly review process' }
+    ]
+  }
 };
 
 // ── Compliance & Security Log (rendered in Workflow Tracker) ──
@@ -5438,6 +5465,8 @@ function renderWorkflowPage() {
   document.getElementById('wft-stat-tools').textContent = totalItems + ' items';
   document.getElementById('wft-stat-assessprep').textContent = apComplete + ' ready, ' + apPending + ' pending';
   document.getElementById('wft-stat-roadmap').textContent = planned + ' planned';
+  var healthDone = WORKFLOW_TRACKER.dashboardChecks.filter(function(c) { return c.status === 'done'; }).length;
+  document.getElementById('wft-stat-health').textContent = healthDone + '/' + WORKFLOW_TRACKER.dashboardChecks.length + ' checks';
   var secFails = SECURITY_AUDIT.summary.fail;
   var secWarns = SECURITY_AUDIT.summary.warn;
   document.getElementById('wft-stat-compliance').textContent = secFails > 0 ? secFails + ' FAIL' : secWarns > 0 ? secWarns + ' warn' : 'All clear';
@@ -5451,7 +5480,7 @@ function wftShowPanel(panel) {
   container.querySelectorAll('.sync-tool-card').forEach(function(c) { c.classList.remove('active'); });
   container.querySelectorAll('.sync-panel').forEach(function(p) { p.classList.remove('active'); });
   var cards = container.querySelectorAll('.sync-tool-card');
-  var panels = { guides:0, tools:1, assessprep:2, roadmap:3, compliance:4 };
+  var panels = { guides:0, tools:1, assessprep:2, roadmap:3, health:4, compliance:5 };
   if (cards[panels[panel]]) cards[panels[panel]].classList.add('active');
   var target = document.getElementById('wft-panel-' + panel);
   if (target) target.classList.add('active');
@@ -5463,6 +5492,7 @@ function wftRenderActivePanel() {
   else if (wftActivePanel === 'tools') wftRenderTools();
   else if (wftActivePanel === 'assessprep') wftRenderAssessPrep();
   else if (wftActivePanel === 'roadmap') wftRenderRoadmap();
+  else if (wftActivePanel === 'health') wftRenderHealth();
   else if (wftActivePanel === 'compliance') wftRenderCompliance();
 }
 
@@ -5652,16 +5682,105 @@ function wftRenderRoadmap() {
   }
   html += '</div>';
 
-  html += '<div class="wft-section-title">Dashboard Health</div>';
+  // Weekly Review Schedule
+  if (WORKFLOW_TRACKER.weeklyReview) {
+    var wr = WORKFLOW_TRACKER.weeklyReview;
+    var nextDate = new Date(wr.nextReview);
+    var isOverdue = TODAY > nextDate;
+    html += '<div class="wft-section-title">Weekly Enhancement Review</div>';
+    html += '<div style="background:' + (isOverdue ? '#fef2f2' : '#f0fdf4') + ';border:1px solid ' + (isOverdue ? '#fecaca' : '#bbf7d0') + ';border-radius:8px;padding:16px;margin-bottom:16px">';
+    html += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">';
+    html += '<span style="font-weight:600;font-size:14px">' + (isOverdue ? '&#9888;&#65039; Review Overdue' : '&#128197; Next Review') + '</span>';
+    html += '<span style="font-size:13px;font-weight:600;color:' + (isOverdue ? '#dc2626' : '#166534') + '">' + fmtDate(wr.nextReview) + '</span>';
+    html += '</div>';
+    html += '<div style="font-size:12px;color:var(--muted);margin-bottom:12px">Schedule: ' + wr.schedule + ' | Last: ' + fmtDate(wr.lastReview) + '</div>';
+    html += '<div style="font-size:13px;font-weight:600;margin-bottom:8px">Review Prompts (run through each):</div>';
+    for (var i = 0; i < wr.prompts.length; i++) {
+      var p = wr.prompts[i];
+      html += '<div style="padding:10px;margin-bottom:6px;background:var(--card);border:1px solid var(--border);border-radius:6px">';
+      html += '<div style="font-size:13px;font-weight:600;color:var(--accent)">' + p.area + '</div>';
+      html += '<div style="font-size:12px;margin-top:4px">' + p.question + '</div>';
+      html += '<div style="font-size:11px;color:var(--muted);margin-top:4px;font-style:italic">&#128269; ' + p.research + '</div>';
+      html += '</div>';
+    }
+    html += '</div>';
+
+    // Review log
+    if (wr.reviewLog && wr.reviewLog.length > 0) {
+      html += '<div style="font-size:13px;font-weight:600;margin-bottom:8px">Review History</div>';
+      for (var i = wr.reviewLog.length - 1; i >= 0; i--) {
+        var log = wr.reviewLog[i];
+        html += '<div style="padding:10px;background:var(--card);border:1px solid var(--border);border-radius:6px;margin-bottom:6px">';
+        html += '<div style="display:flex;justify-content:space-between;font-size:12px"><span style="font-weight:600">' + fmtDate(log.date) + ' (Week ' + log.week + ')</span></div>';
+        html += '<div style="font-size:12px;margin-top:4px">' + log.findings + '</div>';
+        html += '<div style="font-size:11px;color:var(--muted);margin-top:4px"><strong>Actions:</strong> ' + log.actions + '</div>';
+        html += '</div>';
+      }
+    }
+  }
+
+  el.innerHTML = html;
+}
+
+function wftRenderHealth() {
+  var el = document.getElementById('wft-panel-health');
+  var html = '';
+
+  // Dashboard health checks
+  html += '<div class="wft-section-title">Health Checks</div>';
   html += '<div style="background:var(--card);border:1px solid var(--border);border-radius:8px;overflow:hidden">';
+  var doneCount = 0;
   for (var i = 0; i < WORKFLOW_TRACKER.dashboardChecks.length; i++) {
     var check = WORKFLOW_TRACKER.dashboardChecks[i];
+    if (check.status === 'done') doneCount++;
     html += '<div class="wft-check-item ' + check.status + '">' +
       '<span style="font-size:14px">' + (check.status === 'done' ? '&#9989;' : '&#9203;') + '</span>' +
       '<span style="flex:1">' + check.desc + '</span>' +
       (check.date ? '<span style="font-size:11px;color:var(--muted)">' + fmtDate(check.date) + '</span>' : '') +
       (check.note ? '<span style="font-size:11px;color:var(--muted);font-style:italic">' + check.note + '</span>' : '') +
       '</div>';
+  }
+  html += '</div>';
+  html += '<div style="font-size:12px;color:var(--muted);margin-top:8px">' + doneCount + '/' + WORKFLOW_TRACKER.dashboardChecks.length + ' checks passing</div>';
+
+  // Study Assistant context summary
+  html += '<div class="wft-section-title">Study Assistant Context</div>';
+  html += '<div style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:16px">';
+  html += '<div style="font-size:13px;margin-bottom:8px">The SA builds course-aware context from these data sources:</div>';
+  var saChecks = [
+    { name: 'Dashboard features guide', status: true },
+    { name: 'Assessments (dates, weights, rubrics, rules, tips, files)', status: true },
+    { name: 'Study guides (objectives, concepts, examples, terms, mustDo, selfTest)', status: true },
+    { name: 'Weekly content summaries', status: true },
+    { name: 'Practice tool inventories (items, counts, samples)', status: true },
+    { name: 'Study techniques (5 evidence-based methods with actions)', status: true },
+    { name: 'Course info & timetable', status: true },
+    { name: 'Current date & semester week', status: true }
+  ];
+  for (var i = 0; i < saChecks.length; i++) {
+    html += '<div style="display:flex;align-items:center;gap:8px;padding:4px 0;font-size:12px">';
+    html += '<span>' + (saChecks[i].status ? '&#9989;' : '&#10060;') + '</span>';
+    html += '<span>' + saChecks[i].name + '</span></div>';
+  }
+  html += '<div style="font-size:11px;color:var(--muted);margin-top:10px;padding-top:8px;border-top:1px solid var(--border)">System prompt rules: 12 (grounding, citations, Bloom tagging, feature guidance, practice tools, mustDo, study advice)</div>';
+  html += '</div>';
+
+  // Data integrity quick stats
+  html += '<div class="wft-section-title">Data Integrity</div>';
+  html += '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">';
+  var totalQuiz = 0;
+  Object.values(STUDY_GUIDES).forEach(function(gs) { Object.values(gs).forEach(function(g) { if (g.selfTest) totalQuiz += g.selfTest.length; }); });
+  var totalTools = WORKFLOW_TRACKER.practiceTools.reduce(function(s,t) { return s + t.items; }, 0);
+  var totalAssess = ASSESSMENTS.length;
+  var stats = [
+    { label: 'Quiz Questions', val: totalQuiz },
+    { label: 'Practice Items', val: totalTools },
+    { label: 'Assessments Tracked', val: totalAssess }
+  ];
+  for (var i = 0; i < stats.length; i++) {
+    html += '<div style="text-align:center;padding:12px;background:var(--card);border:1px solid var(--border);border-radius:8px">';
+    html += '<div style="font-size:24px;font-weight:700;color:var(--accent)">' + stats[i].val + '</div>';
+    html += '<div style="font-size:11px;color:var(--muted)">' + stats[i].label + '</div></div>';
   }
   html += '</div>';
 
