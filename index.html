@@ -1672,6 +1672,7 @@ const DASHBOARD_CHANGELOG = [
   { date: '2026-03-16', action: 'fix', target: 'WORKFLOW_TRACKER', detail: 'Data integrity audit: corrected practiceTools item counts from array lengths (JPL 99\u219284, IPA 147\u2192138, MAP 15\u219268, ASTRO 75\u219286). Updated detail strings with accurate component counts. Fixed totalQuizQuestions 131\u2192182. Updated weeksCovered 12\u219215 (includes 3 Week 4 drafts). Fixed stale GUIDE_SOURCES and NBML_VALIDATED comments. Updated studyGuides coverage arrays to include Week 4 drafts.' },
   { date: '2026-03-16', action: 'add', target: 'STUDENT_PROFILE', detail: 'Persistent student learning profile system (localStorage). Tracks errors, correct answers, tool usage, topic confidence across sessions. Profile data injected into Sonnet system prompt for adaptive tutoring. Onboarding tooltip for first-time users. FAB pulse + error badge for unreviewed mistakes. Profile stats bar in SA panel. Contextual nudges after practice tool sessions. Session data saved on page unload. Correct-answer logging in code traces, IPA quiz, astronomy quiz, map quiz, self-test.' },
   { date: '2026-03-16', action: 'add', target: 'SA_EXERCISES', detail: 'Exercise saving system: Save button on every SA response parses exercises (numbered bold Q/A) into persistent exercise bank (SA_EXERCISES_KEY). Saved exercises view with per-course grouping, re-practise flow, delete. Follow-up button for deeper drill. Interaction logging (SA_INTERACTIONS_KEY, last 300) tracks type, topic, exercise count, response length. Tutoring analytics panel (Stats): overview, interaction types, most-studied topics, per-course engagement, optimization insights. Analytics-informed system prompt (tutoring_analytics block) feeds aggregate data back to Sonnet to optimize exercise format and feedback style. System prompt updated with exercise formatting directive for parse-ability.' },
+  { date: '2026-03-16', action: 'fix', target: 'SYNC', detail: 'Rewrote AI Integration > Study Assistant section in Sync & Updates. Was describing SA as a simple Q&A lookup tool; now fully documents: adaptive Socratic tutoring, error tracking from practice tools, exercise generation with Bloom levels, persistent learning profile, course-specific strategies (code tracing, IPA isolation, source analysis, calculation walkthrough), exercise saving, tutoring analytics. Added ai-docs dashboard check to ensure docs stay current when SA features change.' },
 ];
 
 const WEEKLY_CONTENT = {
@@ -3848,6 +3849,7 @@ const WORKFLOW_TRACKER = {
     { id:'assess-prep-wk4', desc:'Assessment prep guide for Idea Exploration (Wk4)', status:'done', date:'2026-03-08', note:'OLES1603 10% — rubric/rules/tips/files added' },
     { id:'practice-lab-links', desc:'Practice Lab buttons in assessment detail modals', status:'done', date:'2026-03-08', note:'All 4 courses link to their respective practice tools from prep guides' },
     { id:'sa-context', desc:'Study Assistant context covers all dashboard features', status:'done', date:'2026-03-16', note:'SA now knows: dashboard features, practice tools, keyExamples, mustDo, study techniques, Bloom levels' },
+    { id:'ai-docs', desc:'AI Integration docs match actual SA capabilities', status:'done', date:'2026-03-16', note:'Sync>AI Integration panel fully rewritten: adaptive tutoring, error tracking, exercise gen, learning profile, course strategies, analytics. Must be updated when SA features change.' },
     { id:'materials-audit', desc:'Materials tab links audited (0 gaps all courses)', status:'done', date:'2026-03-16', note:'validate-materials.py: INFO(0), LNGS(0), ANHS(0), OLES(0)' },
     { id:'scrollbar-fix', desc:'Visual Guide iframe scrollbar eliminated', status:'done', date:'2026-03-16', note:'postMessage resize + autoResizeVgFrame onload — verified all 4 courses' },
     { id:'pctdraft-fix', desc:'pctDraft JS error in workflow tracker fixed', status:'done', date:'2026-03-16', note:'Was crashing wftRenderGuides on page load' }
@@ -5402,9 +5404,9 @@ function syncRenderAI() {
   html += '<td><strong>' + totalSources + ' sources</strong> across 4 notebooks \u2014 every lecture transcript, reading, slide deck, and tutorial uploaded to date</td>';
   html += '<td>Deep content questions, essay research, cross-week synthesis, audio revision</td></tr>';
   html += '<tr><td><strong>Study Assistant</strong><br><span style="font-size:11px;color:var(--muted)">Claude Haiku, ~$0.001/Q</span></td>';
-  html += '<td>Chat widget (bottom-right corner) on every dashboard page. Answers questions using this dashboard\'s data.</td>';
-  html += '<td>Dashboard data only \u2014 study guides, assessment details, key terms, timetable</td>';
-  html += '<td>Quick recall, assessment planning, "what\'s due?", "what are the key terms from Week 3?"</td></tr>';
+  html += '<td>Adaptive AI tutor (bottom-right corner). Tracks errors from practice exercises, builds a learning profile, generates targeted exercises, coaches toward distinction. Uses Socratic method and course-specific tutoring strategies.</td>';
+  html += '<td>Study guides + assessments + practice tool inventories + study techniques + your error history &amp; learning profile</td>';
+  html += '<td>Error coaching, exercise generation, assessment prep, distinction coaching, quick recall. For deep content research, use NotebookLM.</td></tr>';
   html += '</tbody></table>';
   html += '</div>';
 
@@ -5459,37 +5461,54 @@ function syncRenderAI() {
   html += '</tbody></table>';
   html += '</div>';
 
-  // Section 4: Study Assistant
+  // Section 4: Study Assistant — Adaptive AI Tutor
   html += '<div class="meth-section">';
-  html += '<h3>&#128172; Study Assistant \u2014 Dashboard Chat Widget</h3>';
-  html += '<p>The floating chat button in the bottom-right corner connects to Claude Haiku 4.5. It detects which course page you\'re on and builds a context package from the dashboard\'s data structures.</p>';
+  html += '<h3>&#128172; Study Assistant \u2014 Adaptive AI Tutor</h3>';
+  html += '<p>The floating chat button (bottom-right corner) is a <strong>full adaptive tutor</strong> powered by Claude Haiku 4.5. It goes far beyond simple Q&amp;A \u2014 it tracks your mistakes, identifies weak areas, generates targeted exercises, and adapts its teaching style to your level.</p>';
 
-  html += '<h4 style="margin-top:14px;font-size:14px;color:var(--info)">How It Works</h4>';
-  html += '<div class="sync-callout">';
-  html += '<ol style="margin:4px 0 0 16px">';
-  html += '<li>You type a question</li>';
-  html += '<li>Dashboard detects your active course page</li>';
-  html += '<li>Builds context from: study guides, assessment details (rubrics, rules, tips), key terms, timetable</li>';
-  html += '<li>Sends to Claude API with instruction: <em>"Answer ONLY from the provided materials. Cite specific weeks/lectures. If the answer isn\'t in the materials, say so."</em></li>';
-  html += '<li>Response displayed with token count + cost</li>';
-  html += '</ol></div>';
-
-  html += '<h4 style="margin-top:14px;font-size:14px;color:var(--info)">What It Knows vs What It Doesn\'t</h4>';
-  html += '<table class="meth-source-table"><thead><tr><th>Data Source</th><th>Available?</th><th>Detail Level</th></tr></thead><tbody>';
-  html += '<tr><td>Study Guides (objectives, concepts, terms, self-test)</td><td style="color:#22c55e">&#9989; Yes</td><td>Full content</td></tr>';
-  html += '<tr><td>Assessment details (dates, weights, rubrics, rules, tips)</td><td style="color:#22c55e">&#9989; Yes</td><td>Full content</td></tr>';
-  html += '<tr><td>Weekly timetable</td><td style="color:#22c55e">&#9989; Yes</td><td>All class times</td></tr>';
-  html += '<tr><td>Full lecture transcripts</td><td style="color:#ef4444">&#10060; No</td><td>Too large for context window</td></tr>';
-  html += '<tr><td>Full readings / PDFs</td><td style="color:#ef4444">&#10060; No</td><td>Too large for context window</td></tr>';
-  html += '<tr><td>Practice Lab questions</td><td style="color:#ef4444">&#10060; No</td><td>Separate system</td></tr>';
-  html += '<tr><td>NotebookLM sources</td><td style="color:#ef4444">&#10060; No</td><td>Not connected</td></tr>';
+  html += '<h4 style="margin-top:14px;font-size:14px;color:var(--info)">Core Capabilities</h4>';
+  html += '<table class="meth-source-table"><thead><tr><th>Feature</th><th>How It Works</th></tr></thead><tbody>';
+  html += '<tr><td><strong>Course-Aware Context</strong></td><td>Detects which course page you\'re on and loads only that course\'s study guides, assessments, practice tool inventories, key examples, and weekly tasks as context</td></tr>';
+  html += '<tr><td><strong>Adaptive Tutoring</strong></td><td>Uses the Socratic method \u2014 asks what you were thinking before giving answers. Adjusts difficulty based on your level: struggling students get concrete examples first, strong students get pushed toward distinction-level analysis</td></tr>';
+  html += '<tr><td><strong>Error Tracking</strong></td><td>When you get practice exercises wrong anywhere on the dashboard, the error is automatically logged. The tutor sees your recent mistakes and addresses patterns in your misunderstandings</td></tr>';
+  html += '<tr><td><strong>Exercise Generation</strong></td><td>Generates fresh practice questions targeting your specific gaps, tagged by Bloom level (L1\u2013L4). Uses numbered bold format so you can save exercises for later review</td></tr>';
+  html += '<tr><td><strong>Exercise Saving</strong></td><td>Exercises generated by the tutor can be saved and revisited. The system tracks what you\'ve saved and what you\'ve re-practised</td></tr>';
+  html += '<tr><td><strong>Learning Profile</strong></td><td>Persistent profile (stored in your browser) tracks your performance across sessions \u2014 weak areas, strengths, study patterns, and error history</td></tr>';
+  html += '<tr><td><strong>Tutoring Analytics</strong></td><td>After enough interactions, the system analyses usage patterns (help-after-error vs concept questions, save rates, most-tutored topics) and optimises its approach accordingly</td></tr>';
   html += '</tbody></table>';
 
-  html += '<div class="sync-callout" style="margin-top:12px">';
-  html += '<strong>Bottom line:</strong> The Study Assistant is best for <strong>quick recall and orientation</strong> \u2014 "What\'s due this week?", "What are the key terms from Week 2?", "What\'s the rubric for the short essay?" For deep content questions, essay research, or cross-week synthesis, use <strong>NotebookLM directly</strong> \u2014 it has access to all the full source documents.';
-  html += '</div>';
+  html += '<h4 style="margin-top:14px;font-size:14px;color:var(--info)">Course-Specific Tutoring Strategies</h4>';
+  html += '<table class="meth-source-table"><thead><tr><th>Course</th><th>Tutoring Approach</th></tr></thead><tbody>';
+  html += '<tr><td><strong>INFO1113</strong> Java</td><td>Step-by-step code tracing. When you get a trace wrong, walks through execution line by line. OOP concepts explained with concrete analogies before abstract definitions. Generates new code examples testing the same concept differently.</td></tr>';
+  html += '<tr><td><strong>LNGS1001</strong> Linguistics</td><td>For IPA errors, isolates the specific sound confusion. For phonology, walks through rules with minimal pairs. Connects to Australian English examples you can say out loud.</td></tr>';
+  html += '<tr><td><strong>ANHS2609</strong> History</td><td>Pushes beyond narrative toward analysis: why did Alexander do X and what does Source Y tell us? Models how to structure arguments with evidence. References specific primary and secondary sources.</td></tr>';
+  html += '<tr><td><strong>OLES1603</strong> Astronomy</td><td>Distinguishes observation from theory. Walks through calculations step by step. Uses visual/spatial reasoning for parallax, redshift, spectral types.</td></tr>';
+  html += '</tbody></table>';
 
-  html += '<p style="margin-top:12px;font-size:12px;color:var(--muted)"><strong>Cost:</strong> ~$0.001 per question with prompt caching. Model: Claude Haiku 4.5. API key stored locally in your browser (entered once).</p>';
+  html += '<h4 style="margin-top:14px;font-size:14px;color:var(--info)">What Data It Has Access To</h4>';
+  html += '<table class="meth-source-table"><thead><tr><th>Data Source</th><th>Available?</th><th>Detail Level</th></tr></thead><tbody>';
+  html += '<tr><td>Study Guides (objectives, concepts, terms, examples, self-test)</td><td style="color:#22c55e">&#9989; Yes</td><td>Full content incl. keyExamples and mustDo tasks</td></tr>';
+  html += '<tr><td>Assessment details (dates, weights, rubrics, rules, tips)</td><td style="color:#22c55e">&#9989; Yes</td><td>Full content</td></tr>';
+  html += '<tr><td>Practice tool inventories (items, titles, sample content)</td><td style="color:#22c55e">&#9989; Yes</td><td>Array lengths + sample items per course</td></tr>';
+  html += '<tr><td>Study techniques (active recall, spaced repetition, etc.)</td><td style="color:#22c55e">&#9989; Yes</td><td>Title, tip, and action for each</td></tr>';
+  html += '<tr><td>Dashboard features guide</td><td style="color:#22c55e">&#9989; Yes</td><td>What each tab/tool does</td></tr>';
+  html += '<tr><td>Weekly timetable + current week/date</td><td style="color:#22c55e">&#9989; Yes</td><td>All class times</td></tr>';
+  html += '<tr><td>Your learning profile + session errors</td><td style="color:#22c55e">&#9989; Yes</td><td>Weak areas, error history, strengths</td></tr>';
+  html += '<tr><td>Full lecture transcripts / readings / PDFs</td><td style="color:#ef4444">&#10060; No</td><td>Too large \u2014 use NotebookLM for these</td></tr>';
+  html += '</tbody></table>';
+
+  html += '<h4 style="margin-top:14px;font-size:14px;color:var(--info)">How to Get the Most Out of It</h4>';
+  html += '<div class="sync-callout">';
+  html += '<ul style="margin:4px 0 0 16px;list-style:disc">';
+  html += '<li><strong>After getting a practice question wrong</strong> \u2014 the error badge on the chat button shows your count. Open the chat and it will already know what you got wrong and target your gaps</li>';
+  html += '<li><strong>Ask for exercises</strong> \u2014 "Give me 5 practice questions on Week 3 inheritance" \u2014 it generates fresh questions tagged by Bloom level that you can save</li>';
+  html += '<li><strong>Assessment prep</strong> \u2014 "What are the rubric criteria for the short essay?" or "Help me plan my essay on the mutiny at Opis" \u2014 it has full rubric, rules, and tips</li>';
+  html += '<li><strong>Quick recall</strong> \u2014 "What\'s due this week?", "What are the key terms from Week 2?", "What did we cover in the phonetics lectures?"</li>';
+  html += '<li><strong>Distinction coaching</strong> \u2014 "How do I get a distinction on this?" \u2014 it will push you beyond surface-level recall toward sophisticated analysis</li>';
+  html += '<li><strong>For deep research</strong> \u2014 use NotebookLM directly, which has access to all full source documents</li>';
+  html += '</ul></div>';
+
+  html += '<p style="margin-top:12px;font-size:12px;color:var(--muted)"><strong>Cost:</strong> ~$0.001 per question with prompt caching. Model: Claude Haiku 4.5. API key stored locally in your browser (entered once). All learning data stays in your browser\'s localStorage.</p>';
   html += '</div>';
 
   // Section 5: The full pipeline
@@ -5504,7 +5523,8 @@ function syncRenderAI() {
   html += '&nbsp;&nbsp;&nbsp;&nbsp;\u2193<br>';
   html += '<strong style="color:var(--info)">Dashboard</strong> (serves content to you)<br>';
   html += '&nbsp;&nbsp;&nbsp;&nbsp;\u251c\u2500\u2500 Study guides, self-test, practice labs (interactive)<br>';
-  html += '&nbsp;&nbsp;&nbsp;&nbsp;\u2514\u2500\u2500 <strong style="color:var(--info)">Study Assistant</strong> chat (quick Q&amp;A from dashboard data)<br>';
+  html += '&nbsp;&nbsp;&nbsp;&nbsp;\u251c\u2500\u2500 Error tracking feeds into \u2193<br>';
+  html += '&nbsp;&nbsp;&nbsp;&nbsp;\u2514\u2500\u2500 <strong style="color:var(--info)">Study Assistant</strong> adaptive tutor (exercises, error coaching, learning profile)<br>';
   html += '<br>';
   html += '<span style="color:var(--muted)">You can also use NotebookLM directly for deep questions,</span><br>';
   html += '<span style="color:var(--muted)">audio overviews, and exploratory research.</span>';
