@@ -824,6 +824,7 @@ document.getElementById('pin-input').focus();
       <button class="sa-header-btn" onclick="saSessionReview()" title="Review your mistakes from this session" style="background:linear-gradient(135deg,#2563eb,#7c3aed);color:#fff;border-color:transparent">Review</button>
       <button class="sa-header-btn" onclick="saShowSaved()" title="View saved exercises and insights">Saved</button>
       <button class="sa-header-btn" onclick="saShowAnalytics()" title="Tutoring analytics overview">Stats</button>
+      <button class="sa-header-btn" onclick="saShowTips()" title="How to use the tutor">?</button>
       <button class="sa-header-btn" onclick="saClear()" title="New conversation">Clear</button>
       <button class="sa-header-btn" onclick="saSettings()" title="API key settings">Key</button>
       <button class="sa-header-btn" onclick="saToggle()">✕</button>
@@ -1673,6 +1674,8 @@ const DASHBOARD_CHANGELOG = [
   { date: '2026-03-16', action: 'add', target: 'STUDENT_PROFILE', detail: 'Persistent student learning profile system (localStorage). Tracks errors, correct answers, tool usage, topic confidence across sessions. Profile data injected into Sonnet system prompt for adaptive tutoring. Onboarding tooltip for first-time users. FAB pulse + error badge for unreviewed mistakes. Profile stats bar in SA panel. Contextual nudges after practice tool sessions. Session data saved on page unload. Correct-answer logging in code traces, IPA quiz, astronomy quiz, map quiz, self-test.' },
   { date: '2026-03-16', action: 'add', target: 'SA_EXERCISES', detail: 'Exercise saving system: Save button on every SA response parses exercises (numbered bold Q/A) into persistent exercise bank (SA_EXERCISES_KEY). Saved exercises view with per-course grouping, re-practise flow, delete. Follow-up button for deeper drill. Interaction logging (SA_INTERACTIONS_KEY, last 300) tracks type, topic, exercise count, response length. Tutoring analytics panel (Stats): overview, interaction types, most-studied topics, per-course engagement, optimization insights. Analytics-informed system prompt (tutoring_analytics block) feeds aggregate data back to Sonnet to optimize exercise format and feedback style. System prompt updated with exercise formatting directive for parse-ability.' },
   { date: '2026-03-16', action: 'fix', target: 'SYNC', detail: 'Rewrote AI Integration > Study Assistant section in Sync & Updates. Was describing SA as a simple Q&A lookup tool; now fully documents: adaptive Socratic tutoring, error tracking from practice tools, exercise generation with Bloom levels, persistent learning profile, course-specific strategies (code tracing, IPA isolation, source analysis, calculation walkthrough), exercise saving, tutoring analytics. Added ai-docs dashboard check to ensure docs stay current when SA features change.' },
+  { date: '2026-03-16', action: 'add', target: 'STUDY_ASSISTANT', detail: 'Tips overlay (? button in SA header): course-aware example prompts that auto-fill the input on click, "Best way to start" guidance, button legend explaining Review/Saved/Stats/Clear. Auto-detects active course to show relevant example questions (Java code tracing, IPA transcription, source analysis, astronomy concepts).' },
+  { date: '2026-03-16', action: 'add', target: 'PRACTICE_LABS', detail: 'Week-based tool filtering for all 4 courses. Each gets "Filter by week" buttons in course theme colour. INFO1113: JPL_TOOL_WEEKS hides tool cards not relevant to selected week (Wk1=3 tools, Wk2=5, Wk3=6). LNGS1001: IPA_TOOL_WEEKS hides phonology Wks 1-2, transcription/quiz Wk1. ANHS2609: mapWeekFilter shows locations for exact week (Wks 1-3 only, quiz scope). OLES1603: astroWeekFilter + ASTRO_SORT_WEEKS syncs terms/quiz/sorts; internal term filter shows categories only when top-level week set.' },
 ];
 
 const WEEKLY_CONTENT = {
@@ -3896,7 +3899,7 @@ const SECURITY_AUDIT = {
     { id:'S1', name:'Secrets & Credentials', status:'pass', detail:'No hardcoded secrets in dashboard or 12 visual guides' },
     { id:'S2', name:'PIN Authentication', status:'pass', detail:'Hash-based PIN, single session auth point' },
     { id:'S3', name:'External Resources', status:'warn', detail:'unpkg.com loaded (marked-js for chat). Add to allowed list or self-host for pilot' },
-    { id:'S4', name:'XSS / Injection', status:'pass', detail:'No URL-to-innerHTML paths, no dangerous JS patterns. 74 innerHTML assignments (static data only)' },
+    { id:'S4', name:'XSS / Injection', status:'pass', detail:'No URL-to-innerHTML paths, no dangerous JS patterns. 79 innerHTML assignments (static data only)' },
     { id:'S5', name:'Data Exposure', status:'pass', detail:'No emails, phone numbers, student IDs, or grades in source' },
     { id:'S6', name:'API Key Handling', status:'warn', detail:'Anthropic API calls present — verify BYOK pattern active' },
     { id:'S7', name:'Content Security Policy', status:'warn', detail:'No CSP meta tag — add for pilot' },
@@ -6099,6 +6102,12 @@ function getCarriedOverItems(currentWeekNum) {
 
 let jplActivePanel = null;
 let jplWeekFilter = 0; // 0=all, 1=week1, 2=week2, 3=week3
+// Which tools are relevant per week (tools not listed are hidden when filtering)
+// Week 1: basics (traces, syntax ref, mistakes), Week 2: adds parsons, Week 3: adds challenges + debug (exam prep)
+const JPL_TOOL_WEEKS = {
+  traces: [1,2,3], syntax: [1,2,3], mistakes: [1,2,3],
+  parsons: [2,3], debug: [2,3], challenges: [3]
+};
 let jplTraceIdx = 0;
 let jplTimerInterval = null;
 let jplTimerSeconds = 2400; // 40 minutes
@@ -6327,42 +6336,42 @@ function renderPracticeLab() {
       <button class="jpl-filter-btn ${jplWeekFilter===3?'active':''}" onclick="jplFilterWeek(3)" style="padding:4px 12px;border-radius:6px;border:1px solid var(--border);background:${jplWeekFilter===3?'var(--info)':'#fff'};color:${jplWeekFilter===3?'#fff':'inherit'};font-size:11px;font-weight:600;cursor:pointer">Week 3</button>
     </div>
     <div class="jpl-tools">
-      <div class="jpl-tool-card ${jplActivePanel==='traces'?'active':''}" onclick="jplShowPanel('traces')">
+      ${!jplWeekFilter || JPL_TOOL_WEEKS.traces.includes(jplWeekFilter) ? `<div class="jpl-tool-card ${jplActivePanel==='traces'?'active':''}" onclick="jplShowPanel('traces')">
         <div class="jpl-tool-icon">\uD83D\uDD0D</div>
         <div class="jpl-tool-title">Code Tracing Trainer</div>
         <div class="jpl-tool-desc">Predict the output of Java code. Build your mental model.</div>
         <div class="jpl-tool-stat">${traceDone}/${filteredTraces.length} traced</div>
-      </div>
-      <div class="jpl-tool-card ${jplActivePanel==='mistakes'?'active':''}" onclick="jplShowPanel('mistakes')">
+      </div>` : ''}
+      ${!jplWeekFilter || JPL_TOOL_WEEKS.mistakes.includes(jplWeekFilter) ? `<div class="jpl-tool-card ${jplActivePanel==='mistakes'?'active':''}" onclick="jplShowPanel('mistakes')">
         <div class="jpl-tool-icon">\u26A0\uFE0F</div>
         <div class="jpl-tool-title">Python \u2192 Java Mistakes</div>
         <div class="jpl-tool-desc">20 common traps when switching from Python.</div>
         <div class="jpl-tool-stat">${mistakeDone}/${JPL_MISTAKES.length} reviewed</div>
-      </div>
-      <div class="jpl-tool-card ${jplActivePanel==='challenges'?'active':''}" onclick="jplShowPanel('challenges')">
+      </div>` : ''}
+      ${!jplWeekFilter || JPL_TOOL_WEEKS.challenges.includes(jplWeekFilter) ? `<div class="jpl-tool-card ${jplActivePanel==='challenges'?'active':''}" onclick="jplShowPanel('challenges')">
         <div class="jpl-tool-icon">\u23F1\uFE0F</div>
         <div class="jpl-tool-title">Coding Challenge Simulator</div>
         <div class="jpl-tool-desc">Timed practice under exam conditions.</div>
         <div class="jpl-tool-stat">${challengeDone}/${JPL_CHALLENGES.length} attempted</div>
-      </div>
-      <div class="jpl-tool-card ${jplActivePanel==='syntax'?'active':''}" onclick="jplShowPanel('syntax')">
+      </div>` : ''}
+      ${!jplWeekFilter || JPL_TOOL_WEEKS.syntax.includes(jplWeekFilter) ? `<div class="jpl-tool-card ${jplActivePanel==='syntax'?'active':''}" onclick="jplShowPanel('syntax')">
         <div class="jpl-tool-icon">\uD83D\uDCD6</div>
         <div class="jpl-tool-title">Python \u2192 Java Reference</div>
         <div class="jpl-tool-desc">Side-by-side syntax comparison table.</div>
         <div class="jpl-tool-stat">${JPL_SYNTAX.length} entries</div>
-      </div>
-      <div class="jpl-tool-card ${jplActivePanel==='parsons'?'active':''}" onclick="jplShowPanel('parsons')">
+      </div>` : ''}
+      ${!jplWeekFilter || JPL_TOOL_WEEKS.parsons.includes(jplWeekFilter) ? `<div class="jpl-tool-card ${jplActivePanel==='parsons'?'active':''}" onclick="jplShowPanel('parsons')">
         <div class="jpl-tool-icon">\uD83E\uDDE9</div>
         <div class="jpl-tool-title">Parsons Problems</div>
         <div class="jpl-tool-desc">Arrange scrambled code lines in correct order.</div>
         <div class="jpl-tool-stat">${parsonsDone}/${filteredParsons.length} solved</div>
-      </div>
-      <div class="jpl-tool-card ${jplActivePanel==='debug'?'active':''}" onclick="jplShowPanel('debug')">
+      </div>` : ''}
+      ${!jplWeekFilter || JPL_TOOL_WEEKS.debug.includes(jplWeekFilter) ? `<div class="jpl-tool-card ${jplActivePanel==='debug'?'active':''}" onclick="jplShowPanel('debug')">
         <div class="jpl-tool-icon">\uD83D\uDD75\uFE0F</div>
         <div class="jpl-tool-title">Debug Detective</div>
         <div class="jpl-tool-desc">Find bugs in code using guided investigation steps.</div>
         <div class="jpl-tool-stat">${debugDone}/${filteredDebug.length} solved</div>
-      </div>
+      </div>` : ''}
     </div>
   </div>
   <div class="jpl-panel ${jplActivePanel==='traces'?'active':''}" id="jpl-traces"></div>
@@ -6384,6 +6393,10 @@ function renderPracticeLab() {
 
 function jplFilterWeek(w) {
   jplWeekFilter = w;
+  // Close active panel if its tool isn't available in the selected week
+  if (jplActivePanel && w && JPL_TOOL_WEEKS[jplActivePanel] && !JPL_TOOL_WEEKS[jplActivePanel].includes(w)) {
+    jplActivePanel = null;
+  }
   renderPracticeLab();
 }
 
@@ -7169,6 +7182,15 @@ function ipaSaveLog(l) { localStorage.setItem('uni-ipa-log', JSON.stringify(l));
 function ipaLogEvent(type, data={}) { const l = ipaGetLog(); l.events.push({type, ts:Date.now(), ...data}); ipaSaveLog(l); }
 
 let ipaActivePanel = null;
+let ipaWeekFilter = 0; // 0=all, 1=week1, 2=week2, 3=week3
+// Which tools are relevant per week (Week 1: intro/reference only, Week 2: consonants, Week 3: vowels + full transcription)
+const IPA_TOOL_WEEKS = {
+  charts: [1,2,3], // reference tool, always useful
+  transcription: [2,3], // consonant transcription from week 2
+  reference: [1,2,3], // notation reference, always useful
+  quiz: [2,3], // need symbol knowledge from week 2
+  phonology: [3] // phonology concepts introduced week 3
+};
 let ipaTransIdx = 0;
 let ipaTransSet = 'all';
 let ipaSelectedSymbol = null;
@@ -7205,37 +7227,44 @@ function renderIpaPracticeLab() {
         <p style="margin:0"><strong>Key HCE differences from RP/GA:</strong> STRUT = [\u0250] not [\u028C], GOOSE = [\u0289\u02D0] not [u\u02D0], PRICE = [\u0251e] not [a\u026A], non-rhotic (no post-vocalic /\u0279/).</p>
       </div>
     </details>
+    <div style="display:flex;gap:8px;margin-bottom:14px;align-items:center">
+      <span style="font-size:12px;font-weight:600;color:var(--muted)">Filter by week:</span>
+      <button onclick="ipaFilterWeek(0)" style="padding:4px 12px;border-radius:6px;border:1px solid var(--border);background:${ipaWeekFilter===0?'var(--lngs)':'#fff'};color:${ipaWeekFilter===0?'#fff':'inherit'};font-size:11px;font-weight:600;cursor:pointer">All</button>
+      <button onclick="ipaFilterWeek(1)" style="padding:4px 12px;border-radius:6px;border:1px solid var(--border);background:${ipaWeekFilter===1?'var(--lngs)':'#fff'};color:${ipaWeekFilter===1?'#fff':'inherit'};font-size:11px;font-weight:600;cursor:pointer">Week 1</button>
+      <button onclick="ipaFilterWeek(2)" style="padding:4px 12px;border-radius:6px;border:1px solid var(--border);background:${ipaWeekFilter===2?'var(--lngs)':'#fff'};color:${ipaWeekFilter===2?'#fff':'inherit'};font-size:11px;font-weight:600;cursor:pointer">Week 2</button>
+      <button onclick="ipaFilterWeek(3)" style="padding:4px 12px;border-radius:6px;border:1px solid var(--border);background:${ipaWeekFilter===3?'var(--lngs)':'#fff'};color:${ipaWeekFilter===3?'#fff':'inherit'};font-size:11px;font-weight:600;cursor:pointer">Week 3</button>
+    </div>
     <div class="ipa-tools">
-      <div class="ipa-tool-card ${ipaActivePanel==='charts'?'active':''}" onclick="ipaShowPanel('charts')">
+      ${!ipaWeekFilter || IPA_TOOL_WEEKS.charts.includes(ipaWeekFilter) ? `<div class="ipa-tool-card ${ipaActivePanel==='charts'?'active':''}" onclick="ipaShowPanel('charts')">
         <div class="ipa-tool-icon">\uD83D\uDDFA\uFE0F</div>
         <div class="ipa-tool-title">AusEng IPA Charts</div>
         <div class="ipa-tool-desc">Consonant & vowel charts with HCE conventions.</div>
         <div class="ipa-tool-stat">${IPA_AUS_CONSONANTS.length + IPA_AUS_VOWELS.length + IPA_AUS_DIPHTHONGS.length} symbols</div>
-      </div>
-      <div class="ipa-tool-card ${ipaActivePanel==='transcription'?'active':''}" onclick="ipaShowPanel('transcription')">
+      </div>` : ''}
+      ${!ipaWeekFilter || IPA_TOOL_WEEKS.transcription.includes(ipaWeekFilter) ? `<div class="ipa-tool-card ${ipaActivePanel==='transcription'?'active':''}" onclick="ipaShowPanel('transcription')">
         <div class="ipa-tool-icon">\u270D\uFE0F</div>
         <div class="ipa-tool-title">Word Transcription Trainer</div>
         <div class="ipa-tool-desc">Transcribe words using the IPA keyboard. Includes Week 3 tutorial words.</div>
         <div class="ipa-tool-stat">${transCorrect}/${IPA_TRANSCRIPTION_WORDS.length} correct</div>
-      </div>
-      <div class="ipa-tool-card ${ipaActivePanel==='reference'?'active':''}" onclick="ipaShowPanel('reference')">
+      </div>` : ''}
+      ${!ipaWeekFilter || IPA_TOOL_WEEKS.reference.includes(ipaWeekFilter) ? `<div class="ipa-tool-card ${ipaActivePanel==='reference'?'active':''}" onclick="ipaShowPanel('reference')">
         <div class="ipa-tool-icon">\uD83D\uDCD6</div>
         <div class="ipa-tool-title">Notation & Conventions</div>
         <div class="ipa-tool-desc">Brackets, stress marks, rule notation, HCE diacritics.</div>
         <div class="ipa-tool-stat">${IPA_NOTATION_REFERENCE.length} entries</div>
-      </div>
-      <div class="ipa-tool-card ${ipaActivePanel==='quiz'?'active':''}" onclick="ipaShowPanel('quiz')">
+      </div>` : ''}
+      ${!ipaWeekFilter || IPA_TOOL_WEEKS.quiz.includes(ipaWeekFilter) ? `<div class="ipa-tool-card ${ipaActivePanel==='quiz'?'active':''}" onclick="ipaShowPanel('quiz')">
         <div class="ipa-tool-icon">\u2753</div>
         <div class="ipa-tool-title">IPA Quiz</div>
         <div class="ipa-tool-desc">Test your symbol recognition and feature knowledge.</div>
         <div class="ipa-tool-stat">${quizTotal > 0 ? Math.round((state.quizCorrect||0)/quizTotal*100)+'% accuracy ('+quizTotal+' Qs)' : 'Not started'}</div>
-      </div>
-      <div class="ipa-tool-card ${ipaActivePanel==='phonology'?'active':''}" onclick="ipaShowPanel('phonology')" style="grid-column:span 2">
+      </div>` : ''}
+      ${!ipaWeekFilter || IPA_TOOL_WEEKS.phonology.includes(ipaWeekFilter) ? `<div class="ipa-tool-card ${ipaActivePanel==='phonology'?'active':''}" onclick="ipaShowPanel('phonology')" style="grid-column:span 2">
         <div class="ipa-tool-icon">\uD83E\uDDE0</div>
         <div class="ipa-tool-title">Phonology Analysis</div>
         <div class="ipa-tool-desc">Minimal pairs, natural classes, and phonological rules. Builds from Wk 3 phonetics into Wk 4 phonology.</div>
         <div class="ipa-tool-stat">${IPA_PHONOLOGY.minimalPairs.length + IPA_PHONOLOGY.naturalClasses.length + IPA_PHONOLOGY.rules.length} exercises</div>
-      </div>
+      </div>` : ''}
     </div>
   </div>
   <div class="ipa-panel ${ipaActivePanel==='charts'?'active':''}" id="ipa-charts"></div>
@@ -7255,6 +7284,15 @@ function renderIpaPracticeLab() {
 function ipaShowPanel(panel) {
   ipaActivePanel = ipaActivePanel === panel ? null : panel;
   if (ipaActivePanel) ipaLogEvent('ipa_panel_open', { panel });
+  renderIpaPracticeLab();
+}
+
+function ipaFilterWeek(w) {
+  ipaWeekFilter = w;
+  // Close active panel if its tool isn't available in the selected week
+  if (ipaActivePanel && w && IPA_TOOL_WEEKS[ipaActivePanel] && !IPA_TOOL_WEEKS[ipaActivePanel].includes(w)) {
+    ipaActivePanel = null;
+  }
   renderIpaPracticeLab();
 }
 
@@ -7902,6 +7940,7 @@ function phonRuleNav(dir) {
 // ======================== MAP QUIZ TRAINER ========================
 
 let mapActivePanel = null;
+let mapWeekFilter = 0; // 0=all, 1,2,3 — filters locations shown in study/quiz
 let mapSelectedLocation = null;
 let mapShowRoute = true;
 let mapShowRegions = false;
@@ -7932,17 +7971,25 @@ function renderMapPracticeLab() {
   const state = mapGetState();
   const quizzesTaken = state.quizzesTaken || 0;
   const bestScore = state.bestScore !== undefined ? state.bestScore : '-';
-  const locationsStudied = Object.keys(state).filter(k => k.startsWith('studied-')).length;
+  const filteredMapLocs = mapWeekFilter ? MAP_LOCATIONS.filter(l => l.week === mapWeekFilter) : MAP_LOCATIONS;
+  const locationsStudied = Object.keys(state).filter(k => k.startsWith('studied-') && (!mapWeekFilter || filteredMapLocs.some(l => k === 'studied-'+l.id))).length;
 
   let html = `<div class="card">
     <div class="card-title" style="font-size:18px">Map Quiz Trainer</div>
     <p style="font-size:13px;color:var(--muted);margin-bottom:12px">Prepare for the <strong>Map Quiz EFT</strong> (3%, Week 3 tutorial, 13 Mar). 10-minute closed-book quiz: fill in ~10 place names on a blank map covering Weeks 1-3.</p>
+    <div style="display:flex;gap:8px;margin-bottom:14px;align-items:center">
+      <span style="font-size:12px;font-weight:600;color:var(--muted)">Filter by week:</span>
+      <button onclick="mapFilterWeek(0)" style="padding:4px 12px;border-radius:6px;border:1px solid var(--border);background:${mapWeekFilter===0?'var(--anhs)':'#fff'};color:${mapWeekFilter===0?'#fff':'inherit'};font-size:11px;font-weight:600;cursor:pointer">All</button>
+      <button onclick="mapFilterWeek(1)" style="padding:4px 12px;border-radius:6px;border:1px solid var(--border);background:${mapWeekFilter===1?'var(--anhs)':'#fff'};color:${mapWeekFilter===1?'#fff':'inherit'};font-size:11px;font-weight:600;cursor:pointer">Week 1</button>
+      <button onclick="mapFilterWeek(2)" style="padding:4px 12px;border-radius:6px;border:1px solid var(--border);background:${mapWeekFilter===2?'var(--anhs)':'#fff'};color:${mapWeekFilter===2?'#fff':'inherit'};font-size:11px;font-weight:600;cursor:pointer">Week 2</button>
+      <button onclick="mapFilterWeek(3)" style="padding:4px 12px;border-radius:6px;border:1px solid var(--border);background:${mapWeekFilter===3?'var(--anhs)':'#fff'};color:${mapWeekFilter===3?'#fff':'inherit'};font-size:11px;font-weight:600;cursor:pointer">Week 3</button>
+    </div>
     <div class="map-tools">
       <div class="map-tool-card ${mapActivePanel==='study'?'active':''}" onclick="mapShowPanel('study')">
         <div class="map-tool-icon">\uD83D\uDDFA\uFE0F</div>
         <div class="map-tool-title">Study Mode</div>
         <div class="map-tool-desc">Explore the map with labels, routes, and location details.</div>
-        <div class="map-tool-stat">${locationsStudied}/${MAP_LOCATIONS.length} studied</div>
+        <div class="map-tool-stat">${locationsStudied}/${filteredMapLocs.length} studied</div>
       </div>
       <div class="map-tool-card ${mapActivePanel==='quiz'?'active':''}" onclick="mapShowPanel('quiz')">
         <div class="map-tool-icon">\u270D\uFE0F</div>
@@ -7964,6 +8011,12 @@ function mapShowPanel(panel) {
   mapActivePanel = mapActivePanel === panel ? null : panel;
   if (mapActivePanel) mapLogEvent('map_panel_open', { panel });
   mapSelectedLocation = null;
+  mapDestroyLeaflet();
+  renderMapPracticeLab();
+}
+
+function mapFilterWeek(w) {
+  mapWeekFilter = w;
   mapDestroyLeaflet();
   renderMapPracticeLab();
 }
@@ -7996,22 +8049,23 @@ function mapCreateLeaflet(containerId, noLabels) {
 function mapRenderStudy() {
   const el = document.getElementById('map-study');
   if (!el) return;
+  const filteredLocs = mapWeekFilter ? MAP_LOCATIONS.filter(l => l.week === mapWeekFilter) : MAP_LOCATIONS;
 
   el.innerHTML = `<div class="card">
     <div class="map-controls">
       <button class="map-btn map-btn-secondary${mapShowRoute?' active':''}" onclick="mapToggleRoute()">Campaign Route</button>
       <button class="map-btn map-btn-secondary${mapShowRegions?' active':''}" onclick="mapToggleRegions()">Region Labels</button>
-      <span style="font-size:11px;color:var(--muted);margin-left:auto">Click any marker for details</span>
+      <span style="font-size:11px;color:var(--muted);margin-left:auto">${mapWeekFilter ? filteredLocs.length + ' Week ' + mapWeekFilter + ' locations' : 'All ' + MAP_LOCATIONS.length + ' locations'} — click any marker for details</span>
     </div>
     <div id="map-study-leaflet" class="map-leaflet"></div>
     <div id="map-study-detail"></div>
     <div style="margin-top:12px">
       <details style="font-size:12px;color:var(--muted)">
-        <summary style="cursor:pointer;font-weight:600;color:var(--text)">All locations by quiz priority</summary>
+        <summary style="cursor:pointer;font-weight:600;color:var(--text)">Locations by quiz priority</summary>
         <div style="margin-top:8px">
-          <p style="margin-bottom:6px"><strong>Tier 1 (almost certain):</strong> ${MAP_LOCATIONS.filter(l=>l.quizPriority===1).map(l=>l.name).join(', ')}</p>
-          <p style="margin-bottom:6px"><strong>Tier 2 (likely):</strong> ${MAP_LOCATIONS.filter(l=>l.quizPriority===2).map(l=>l.name).join(', ')}</p>
-          <p><strong>Tier 3 (later weeks):</strong> ${MAP_LOCATIONS.filter(l=>l.quizPriority===3).map(l=>l.name).join(', ')}</p>
+          <p style="margin-bottom:6px"><strong>Tier 1 (almost certain):</strong> ${filteredLocs.filter(l=>l.quizPriority===1).map(l=>l.name).join(', ')}</p>
+          <p style="margin-bottom:6px"><strong>Tier 2 (likely):</strong> ${filteredLocs.filter(l=>l.quizPriority===2).map(l=>l.name).join(', ')}</p>
+          <p><strong>Tier 3 (later weeks):</strong> ${filteredLocs.filter(l=>l.quizPriority===3).map(l=>l.name).join(', ')}</p>
         </div>
       </details>
     </div>
@@ -8020,7 +8074,7 @@ function mapRenderStudy() {
   const map = mapCreateLeaflet('map-study-leaflet', false);
   mapMarkerLayer = L.layerGroup().addTo(map);
 
-  MAP_LOCATIONS.forEach(loc => {
+  filteredLocs.forEach(loc => {
     const color = loc.type==='battle'?'#ef4444':loc.type==='oracle'?'#8b5cf6':loc.type==='capital'?'#b45309':'#f59e0b';
     const sel = mapSelectedLocation === loc.id;
     const marker = L.circleMarker([loc.lat, loc.lon], {
@@ -8225,6 +8279,9 @@ function mapRenderQuiz() {
 
 function mapGenerateQuizSilent() {
   let pool = MAP_LOCATIONS;
+  // Apply top-level week filter first
+  if (mapWeekFilter) pool = pool.filter(l => l.week === mapWeekFilter);
+  // Then apply quiz-specific filter
   if (mapQuizFilter === 'wk13') pool = pool.filter(l => l.week <= 3);
   else if (mapQuizFilter === 't1') pool = pool.filter(l => l.quizPriority === 1);
   const count = mapQuizCount === 0 ? pool.length : Math.min(mapQuizCount, pool.length);
@@ -8411,6 +8468,7 @@ function astroGetState() { try { return JSON.parse(localStorage.getItem('uni-ast
 function astroSaveState(s) { localStorage.setItem('uni-astro-state', JSON.stringify(s)); }
 
 let astroActivePanel = 'terms';
+let astroWeekFilter = 0; // 0=all, 1,2,3,4 — top-level week filter for astronomy
 let astroTermIdx = 0;
 let astroTermFilter = 'all';
 let astroQuizIdx = 0;
@@ -8418,8 +8476,20 @@ let astroQuizAnswered = false;
 let astroSortChecked = {};
 let astroMatchState = {};
 
+// Map sorts to weeks (sorts don't have week tags in their data)
+const ASTRO_SORT_WEEKS = { 1:3, 2:1, 3:2, 4:2, 5:3 };
+
 function astroShowPanel(panel) {
   astroActivePanel = panel;
+  renderAstroPracticeLab();
+}
+
+function astroFilterWeek(w) {
+  astroWeekFilter = w;
+  // Sync term filter with top-level week filter
+  if (w) astroTermFilter = String(w);
+  else astroTermFilter = 'all';
+  astroTermIdx = 0;
   renderAstroPracticeLab();
 }
 
@@ -8428,35 +8498,44 @@ function renderAstroPracticeLab() {
   if (!el) return;
   const state = astroGetState();
 
-  const knownCount = ASTRO_TERMS.filter(t => state['term-'+t.id] === 'known').length;
-  const learningCount = ASTRO_TERMS.filter(t => state['term-'+t.id] === 'learning').length;
+  const filteredTerms = astroWeekFilter ? ASTRO_TERMS.filter(t => t.week === astroWeekFilter) : ASTRO_TERMS;
+  const filteredQuiz = astroWeekFilter ? ASTRO_QUIZ.filter(q => q.week === astroWeekFilter) : ASTRO_QUIZ;
+  const filteredSorts = astroWeekFilter ? ASTRO_SORTS.filter(s => ASTRO_SORT_WEEKS[s.id] === astroWeekFilter) : ASTRO_SORTS;
+  const knownCount = filteredTerms.filter(t => state['term-'+t.id] === 'known').length;
+  const learningCount = filteredTerms.filter(t => state['term-'+t.id] === 'learning').length;
   const quizCorrect = state.quizCorrect || 0;
   const quizTotal = state.quizTotal || 0;
-  const sortsComplete = ASTRO_SORTS.filter(s => state['sort-'+s.id] === true).length;
+  const sortsComplete = filteredSorts.filter(s => state['sort-'+s.id] === true).length;
+  const astroWeeks = [...new Set(ASTRO_TERMS.map(t => t.week))].sort((a,b) => a-b);
 
   let html = `<div class="card">
     <div class="card-title" style="font-size:18px">Astronomy Concept Lab</div>
     <div style="font-size:13px;color:var(--muted);margin-bottom:16px">
       <p style="margin:0 0 8px"><strong>Start with the Study Guide tab</strong> \u2014 read the week\u2019s key concepts and terms first. The Practice Lab reinforces what you learn there.</p>
     </div>
+    <div style="display:flex;gap:8px;margin-bottom:14px;align-items:center">
+      <span style="font-size:12px;font-weight:600;color:var(--muted)">Filter by week:</span>
+      <button onclick="astroFilterWeek(0)" style="padding:4px 12px;border-radius:6px;border:1px solid var(--border);background:${astroWeekFilter===0?'var(--oles)':'#fff'};color:${astroWeekFilter===0?'#fff':'inherit'};font-size:11px;font-weight:600;cursor:pointer">All</button>
+      ${astroWeeks.map(w => `<button onclick="astroFilterWeek(${w})" style="padding:4px 12px;border-radius:6px;border:1px solid var(--border);background:${astroWeekFilter===w?'var(--oles)':'#fff'};color:${astroWeekFilter===w?'#fff':'inherit'};font-size:11px;font-weight:600;cursor:pointer">Week ${w}</button>`).join('')}
+    </div>
     <div class="astro-tools">
       <div class="astro-tool-card ${astroActivePanel==='terms'?'active':''}" onclick="astroShowPanel('terms')">
         <div class="astro-tool-icon">\uD83D\uDCDA</div>
         <div class="astro-tool-title">Key Terms Flashcards</div>
         <div class="astro-tool-desc">Review definitions. Mark as known or still learning.</div>
-        <div class="astro-tool-stat">${knownCount}/${ASTRO_TERMS.length} mastered</div>
+        <div class="astro-tool-stat">${knownCount}/${filteredTerms.length} mastered</div>
       </div>
       <div class="astro-tool-card ${astroActivePanel==='quiz'?'active':''}" onclick="astroShowPanel('quiz')">
         <div class="astro-tool-icon">\u2753</div>
         <div class="astro-tool-title">Concept Quiz</div>
-        <div class="astro-tool-desc">Multiple-choice questions across all weeks.</div>
+        <div class="astro-tool-desc">Multiple-choice questions${astroWeekFilter ? ' for Week '+astroWeekFilter : ' across all weeks'}.</div>
         <div class="astro-tool-stat">${quizTotal > 0 ? Math.round(quizCorrect/quizTotal*100)+'% accuracy ('+quizTotal+' Qs)' : 'Not started'}</div>
       </div>
       <div class="astro-tool-card ${astroActivePanel==='sorts'?'active':''}" onclick="astroShowPanel('sorts')">
         <div class="astro-tool-icon">\uD83D\uDD00</div>
         <div class="astro-tool-title">Sort & Match</div>
         <div class="astro-tool-desc">Order sequences and match terms to definitions.</div>
-        <div class="astro-tool-stat">${sortsComplete}/${ASTRO_SORTS.length} completed</div>
+        <div class="astro-tool-stat">${sortsComplete}/${filteredSorts.length} completed</div>
       </div>
     </div>
   </div>
@@ -8472,35 +8551,55 @@ function renderAstroPracticeLab() {
 
 function renderAstroTerms() {
   const state = astroGetState();
-  let terms = ASTRO_TERMS;
+  // Apply top-level week filter first, then internal filter for category
+  let baseTerms = astroWeekFilter ? ASTRO_TERMS.filter(t => t.week === astroWeekFilter) : ASTRO_TERMS;
+  let terms = baseTerms;
   if (astroTermFilter !== 'all') {
     const wk = parseInt(astroTermFilter);
-    if (!isNaN(wk)) terms = terms.filter(t => t.week === wk);
-    else terms = terms.filter(t => t.category === astroTermFilter);
+    // If top-level week is set, week sub-filter is redundant — only apply category filter
+    if (astroWeekFilter) {
+      if (isNaN(wk)) terms = terms.filter(t => t.category === astroTermFilter);
+      // else: week filter is already applied by top-level, ignore
+    } else {
+      if (!isNaN(wk)) terms = terms.filter(t => t.week === wk);
+      else terms = terms.filter(t => t.category === astroTermFilter);
+    }
   }
   if (terms.length === 0) { document.getElementById('astro-terms').innerHTML = '<div class="card"><p>No terms for this filter.</p></div>'; return; }
   if (astroTermIdx >= terms.length) astroTermIdx = 0;
   const term = terms[astroTermIdx];
   const termState = state['term-'+term.id];
-  const knownCount = ASTRO_TERMS.filter(t => state['term-'+t.id] === 'known').length;
-  const pct = Math.round(knownCount / ASTRO_TERMS.length * 100);
-  const weeks = [...new Set(ASTRO_TERMS.map(t => t.week))].sort();
-  const cats = [...new Set(ASTRO_TERMS.map(t => t.category))].sort();
+  const knownCount = baseTerms.filter(t => state['term-'+t.id] === 'known').length;
+  const pct = Math.round(knownCount / baseTerms.length * 100);
+  const cats = [...new Set(baseTerms.map(t => t.category))].sort();
 
   let html = `<div class="card">
-    <div class="astro-filter">
-      <button class="astro-filter-btn ${astroTermFilter==='all'?'active':''}" onclick="astroFilterTerms('all')">All (${ASTRO_TERMS.length})</button>`;
-  weeks.forEach(w => {
-    const c = ASTRO_TERMS.filter(t => t.week === w).length;
-    html += `<button class="astro-filter-btn ${astroTermFilter===String(w)?'active':''}" onclick="astroFilterTerms('${w}')">Week ${w} (${c})</button>`;
-  });
-  cats.forEach(cat => {
-    const c = ASTRO_TERMS.filter(t => t.category === cat).length;
-    html += `<button class="astro-filter-btn ${astroTermFilter===cat?'active':''}" onclick="astroFilterTerms('${cat}')">${cat.charAt(0).toUpperCase()+cat.slice(1)} (${c})</button>`;
-  });
+    <div class="astro-filter">`;
+  if (astroWeekFilter) {
+    // Top-level week is set — show category sub-filters only
+    html += `<button class="astro-filter-btn ${astroTermFilter==='all'||(!isNaN(parseInt(astroTermFilter)))?'active':''}" onclick="astroFilterTerms('all')">All (${baseTerms.length})</button>`;
+    if (cats.length > 1) {
+      cats.forEach(cat => {
+        const c = baseTerms.filter(t => t.category === cat).length;
+        html += `<button class="astro-filter-btn ${astroTermFilter===cat?'active':''}" onclick="astroFilterTerms('${cat}')">${cat.charAt(0).toUpperCase()+cat.slice(1)} (${c})</button>`;
+      });
+    }
+  } else {
+    // No top-level week — show All + week buttons + category buttons
+    html += `<button class="astro-filter-btn ${astroTermFilter==='all'?'active':''}" onclick="astroFilterTerms('all')">All (${ASTRO_TERMS.length})</button>`;
+    const weeks = [...new Set(ASTRO_TERMS.map(t => t.week))].sort();
+    weeks.forEach(w => {
+      const c = ASTRO_TERMS.filter(t => t.week === w).length;
+      html += `<button class="astro-filter-btn ${astroTermFilter===String(w)?'active':''}" onclick="astroFilterTerms('${w}')">Week ${w} (${c})</button>`;
+    });
+    cats.forEach(cat => {
+      const c = ASTRO_TERMS.filter(t => t.category === cat).length;
+      html += `<button class="astro-filter-btn ${astroTermFilter===cat?'active':''}" onclick="astroFilterTerms('${cat}')">${cat.charAt(0).toUpperCase()+cat.slice(1)} (${c})</button>`;
+    });
+  }
   html += `</div>
     <div class="astro-progress">
-      <span>\uD83C\uDFAF ${knownCount}/${ASTRO_TERMS.length} mastered</span>
+      <span>\uD83C\uDFAF ${knownCount}/${baseTerms.length} mastered</span>
       <div class="astro-progress-bar"><div class="astro-progress-fill" style="width:${pct}%;${pct===100?'background:#16a34a':''}"></div></div>
       <span>${pct}%</span>
     </div>
@@ -8564,7 +8663,10 @@ function renderAstroQuiz() {
   const state = astroGetState();
   const reviewed = state.quizReviewed || 0;
   const confident = state.quizConfident || 0;
-  const q = ASTRO_QUIZ[astroQuizIdx];
+  const aqFiltered = astroWeekFilter ? ASTRO_QUIZ.filter(q => q.week === astroWeekFilter) : ASTRO_QUIZ;
+  if (aqFiltered.length === 0) { document.getElementById('astro-quiz').innerHTML = '<div class="card"><p>No quiz questions for this week yet.</p></div>'; return; }
+  if (astroQuizIdx >= aqFiltered.length) astroQuizIdx = 0;
+  const q = aqFiltered[astroQuizIdx];
 
   let html = `<div class="card">`;
   if (reviewed > 0) {
@@ -8575,7 +8677,7 @@ function renderAstroQuiz() {
       <button class="astro-btn astro-btn-secondary" style="padding:4px 10px;font-size:11px" onclick="astroResetQuiz()">Reset</button>
     </div>`;
   }
-  html += `<div style="font-size:12px;color:var(--muted);margin-bottom:8px">Question ${astroQuizIdx+1} of ${ASTRO_QUIZ.length} \u2014 Week ${q.week}</div>
+  html += `<div style="font-size:12px;color:var(--muted);margin-bottom:8px">Question ${astroQuizIdx+1} of ${aqFiltered.length} \u2014 Week ${q.week}</div>
     <div style="font-size:15px;font-weight:600;margin-bottom:14px;line-height:1.5">${q.q}</div>`;
 
   if (!astroQuizAnswered) {
@@ -8634,8 +8736,8 @@ function astroSelfRate(qId, rating) {
 
 function astroNextQuiz() {
   astroQuizAnswered = false;
-  const shuffled = Math.floor(Math.random() * ASTRO_QUIZ.length);
-  astroQuizIdx = shuffled;
+  const aqFiltered = astroWeekFilter ? ASTRO_QUIZ.filter(q => q.week === astroWeekFilter) : ASTRO_QUIZ;
+  astroQuizIdx = Math.floor(Math.random() * aqFiltered.length);
   renderAstroQuiz();
 }
 
@@ -8652,8 +8754,10 @@ function astroResetQuiz() {
 
 function renderAstroSorts() {
   const state = astroGetState();
+  const sortsToShow = astroWeekFilter ? ASTRO_SORTS.filter(s => ASTRO_SORT_WEEKS[s.id] === astroWeekFilter) : ASTRO_SORTS;
+  if (sortsToShow.length === 0) { document.getElementById('astro-sorts').innerHTML = '<div class="card"><p>No sort & match exercises for this week yet.</p></div>'; return; }
   let html = '';
-  ASTRO_SORTS.forEach(exercise => {
+  sortsToShow.forEach(exercise => {
     const isDone = state['sort-'+exercise.id] === true;
     html += `<div class="card" style="margin-bottom:16px" id="astro-sort-${exercise.id}">
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
@@ -9416,6 +9520,60 @@ function saParseExercisesFromReply(text) {
     }
   }
   return exercises;
+}
+
+// ── Tips / How-To Overlay ──
+function saShowTips() {
+  const overlay = document.getElementById('sa-overlay');
+  document.getElementById('sa-overlay-title').textContent = 'How to Use the Tutor';
+  const course = saDetectCourse();
+  const courseTips = {
+    INFO1113: [
+      '"Trace this code for me step by step" — paste any Java snippet',
+      '"What\'s the difference between overloading and overriding?"',
+      '"Give me 5 practice questions on Week 3 OOP concepts"',
+      '"Why does my code throw a NullPointerException here?"'
+    ],
+    LNGS1001: [
+      '"What are the articulatory features of /ʃ/?"',
+      '"Give me 10 words to transcribe into IPA"',
+      '"Explain the difference between phonemes and allophones"',
+      '"Quiz me on vowel classification for Week 2"'
+    ],
+    ANHS2609: [
+      '"What were Alexander\'s strategic reasons at Granicus?"',
+      '"Compare Arrian and Diodorus as sources on Issus"',
+      '"Give me practice essay paragraphs on Persian court politics"',
+      '"What locations should I know for the map quiz?"'
+    ],
+    OLES1603: [
+      '"Explain stellar parallax and its limitations"',
+      '"Walk me through the inverse square law with an example"',
+      '"Quiz me on electromagnetic spectrum concepts"',
+      '"How does a reflecting telescope differ from refracting?"'
+    ]
+  };
+  const tips = courseTips[course] || courseTips.INFO1113;
+  let html = '<div style="font-size:13px;line-height:1.7;color:#334155">';
+  html += '<p style="margin:0 0 14px;font-weight:600;color:#1e293b">The tutor adapts to you — the more you use it, the better it gets at targeting your gaps.</p>';
+  html += '<div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:12px 14px;margin-bottom:14px">';
+  html += '<div style="font-weight:600;margin-bottom:6px;color:#166534">Best way to start</div>';
+  html += 'Do practice exercises (self-tests, code traces, quizzes). When you get something wrong, hit <strong>Help me understand</strong> — the tutor already knows what you struggled with.';
+  html += '</div>';
+  html += '<div style="font-weight:600;margin-bottom:8px">Try asking:</div>';
+  tips.forEach(t => { html += '<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:8px 12px;margin-bottom:6px;cursor:pointer" onclick="saCloseOverlay();document.getElementById(\'sa-input\').value=this.innerText;document.getElementById(\'sa-input\').focus()">' + t + '</div>'; });
+  html += '<div style="margin-top:14px;padding-top:12px;border-top:1px solid #e2e8f0">';
+  html += '<div style="font-weight:600;margin-bottom:8px">Buttons explained</div>';
+  html += '<div style="display:grid;grid-template-columns:auto 1fr;gap:4px 10px;font-size:12px">';
+  html += '<span style="font-weight:600;color:#7c3aed">Review</span><span>Summarises your mistakes this session + generates targeted practice</span>';
+  html += '<span style="font-weight:600;color:#334155">Saved</span><span>Your exercise bank — save any tutor response for later</span>';
+  html += '<span style="font-weight:600;color:#334155">Stats</span><span>Study analytics — topics, patterns, optimisation insights</span>';
+  html += '<span style="font-weight:600;color:#334155">Clear</span><span>Start a fresh conversation (profile data is kept)</span>';
+  html += '</div></div>';
+  html += '<p style="margin:14px 0 0;font-size:12px;color:#94a3b8">Tip: The tutor auto-detects which course you\'re studying based on the active tab.</p>';
+  html += '</div>';
+  document.getElementById('sa-overlay-body').innerHTML = html;
+  overlay.style.display = 'flex';
 }
 
 // ── Saved Exercises View ──
