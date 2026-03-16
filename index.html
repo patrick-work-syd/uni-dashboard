@@ -8682,7 +8682,23 @@ function saUpdateContextBadge() {
 }
 
 function saBuildContext(courseCode) {
+  const strip = s => (s||'').replace(/<[^>]+>/g, '');
   let ctx = '';
+
+  // Dashboard features guide
+  ctx += '## DASHBOARD FEATURES\n';
+  ctx += 'This study dashboard has the following features you can ask about:\n';
+  ctx += '- Weekly Content tab: lecture topics, Canvas pages, and what was covered each week\n';
+  ctx += '- Assessments tab: all assignments with due dates, weights, rubrics, rules, and tips\n';
+  ctx += '- Visual Guide tab: interactive HTML study guides for each week with self-test questions (Weeks 1-3)\n';
+  ctx += '- Study Guide tab: comprehensive reference guides with key concepts, terms, examples, and self-test questions\n';
+  ctx += '- Practice Lab tab: interactive exercises specific to each course (see PRACTICE TOOLS below)\n';
+  ctx += '- Materials tab: links to all lecture slides, transcripts, readings, tutorials, and assessment files\n';
+  ctx += '- Calendar page: month view of all assessment due dates across all courses\n';
+  ctx += '- Study Smart section on home page: evidence-based study techniques, weekly hours breakdown, and a preparation checklist\n';
+  ctx += '- Preparation Checklist: weekly mustDo tasks from the study guide with carry-over for uncompleted items\n';
+  if (courseCode === 'ANHS2609') ctx += '- Timeline tab: interactive chronological timeline of events from 382 BCE to 323 BCE\n';
+  ctx += '\n';
 
   // Assessment calendar
   ctx += '## ASSESSMENTS\n';
@@ -8695,6 +8711,7 @@ function saBuildContext(courseCode) {
       if (a.prep.rubric) ctx += '  Rubric: ' + a.prep.rubric.map(r => r.q + ' (' + r.pts + 'pts): ' + r.topic).join('; ') + '\n';
       if (a.prep.rules) ctx += '  Rules: ' + a.prep.rules.join('; ') + '\n';
       if (a.prep.tips) ctx += '  Tips: ' + a.prep.tips.join('; ') + '\n';
+      if (a.prep.files) ctx += '  Files: ' + a.prep.files.map(f => f.name).join('; ') + '\n';
     }
   });
 
@@ -8708,17 +8725,19 @@ function saBuildContext(courseCode) {
       const g = guides[week];
       ctx += `\n### ${code} Week ${week}: ${g.title}\n`;
       ctx += `Study hours: ${g.studyHours}\n`;
-      if (g.learningObjectives) ctx += 'Learning objectives:\n' + g.learningObjectives.map(o => '- ' + o.replace(/<[^>]+>/g, '')).join('\n') + '\n';
-      if (g.keyConcepts) ctx += 'Key concepts:\n' + g.keyConcepts.map(c => '- ' + c.replace(/<[^>]+>/g, '').substring(0, 300)).join('\n') + '\n';
+      if (g.learningObjectives) ctx += 'Learning objectives:\n' + g.learningObjectives.map(o => '- ' + strip(o)).join('\n') + '\n';
+      if (g.keyConcepts) ctx += 'Key concepts:\n' + g.keyConcepts.map(c => '- ' + strip(c).substring(0, 300)).join('\n') + '\n';
+      if (g.keyExamples) ctx += 'Key examples from lectures:\n' + g.keyExamples.map(e => '- ' + strip(e).substring(0, 300)).join('\n') + '\n';
       if (g.keyTerms) {
         ctx += 'Key terms:\n';
         Object.entries(g.keyTerms).forEach(([term, def]) => {
-          ctx += '- ' + term + ': ' + def.replace(/<[^>]+>/g, '').substring(0, 150) + '\n';
+          ctx += '- ' + term + ': ' + strip(def).substring(0, 150) + '\n';
         });
       }
-      if (g.selfTest) ctx += 'Self-test questions:\n' + g.selfTest.map(q => '- Q: ' + (q.q||'').replace(/<[^>]+>/g, '') + ' A: ' + (q.a||'').replace(/<[^>]+>/g, '').substring(0, 200)).join('\n') + '\n';
-      if (g.examRelevance) ctx += 'Exam relevance: ' + g.examRelevance.replace(/<[^>]+>/g, '') + '\n';
-      if (g.distinctionTip) ctx += 'Distinction tip: ' + g.distinctionTip.replace(/<[^>]+>/g, '') + '\n';
+      if (g.mustDo) ctx += 'Must-do tasks this week:\n' + g.mustDo.map(m => '- ' + strip(m)).join('\n') + '\n';
+      if (g.selfTest) ctx += 'Self-test questions:\n' + g.selfTest.map(q => '- Q: ' + strip(q.q) + ' A: ' + strip(q.a).substring(0, 200) + (q.bloom ? ' [Bloom level ' + q.bloom + ']' : '')).join('\n') + '\n';
+      if (g.examRelevance) ctx += 'Exam relevance: ' + strip(g.examRelevance) + '\n';
+      if (g.distinctionTip) ctx += 'Distinction tip: ' + strip(g.distinctionTip) + '\n';
     });
   });
 
@@ -8727,6 +8746,53 @@ function saBuildContext(courseCode) {
     ctx += '\n## WEEKLY CONTENT\n';
     Object.entries(WEEKLY_CONTENT[courseCode]).forEach(([week, items]) => {
       ctx += `Week ${week}: ` + items.map(i => i.title).join(', ') + '\n';
+    });
+  }
+
+  // Practice tools — course-specific
+  ctx += '\n## PRACTICE TOOLS\n';
+  if (!courseCode || courseCode === 'INFO1113') {
+    ctx += '\n### Java Practice Lab (INFO1113)\n';
+    ctx += 'Available tools: Code Traces, Common Mistakes, Coding Challenges, Python-to-Java Syntax Comparison, Parsons Problems, Debug Exercises\n';
+    if (typeof JPL_CODE_TRACES !== 'undefined') ctx += 'Code traces (' + JPL_CODE_TRACES.length + ' exercises): ' + JPL_CODE_TRACES.slice(0, 8).map(t => t.title || t.name || 'trace').join(', ') + '...\n';
+    if (typeof JPL_MISTAKES !== 'undefined') ctx += 'Common mistakes (' + JPL_MISTAKES.length + ' items): ' + JPL_MISTAKES.slice(0, 6).map(m => m.title || m.name || m.mistake).join(', ') + '...\n';
+    if (typeof JPL_CHALLENGES !== 'undefined') ctx += 'Challenges (' + JPL_CHALLENGES.length + ' problems): ' + JPL_CHALLENGES.slice(0, 6).map(c => c.title || c.name).join(', ') + '...\n';
+    if (typeof JPL_SYNTAX !== 'undefined') ctx += 'Syntax cards (' + JPL_SYNTAX.length + ' comparisons): Python vs Java side-by-side for variables, loops, methods, classes, etc.\n';
+    if (typeof JPL_PARSONS !== 'undefined') ctx += 'Parsons problems (' + JPL_PARSONS.length + '): Drag-and-drop code ordering exercises\n';
+    if (typeof JPL_DEBUG_EXERCISES !== 'undefined') {
+      const debugCount = Object.values(JPL_DEBUG_EXERCISES).reduce((s, arr) => s + arr.length, 0);
+      ctx += 'Debug exercises (' + debugCount + '): Find and fix bugs in Java code, grouped by skill category\n';
+    }
+  }
+  if (!courseCode || courseCode === 'LNGS1001') {
+    ctx += '\n### IPA Practice Lab (LNGS1001)\n';
+    ctx += 'Available tools: IPA Charts (consonants + vowels), Transcription Practice, Notation Reference, IPA Quiz, Phonology (minimal pairs, natural classes, rules)\n';
+    if (typeof IPA_AUS_CONSONANTS !== 'undefined') ctx += 'Consonant chart: ' + IPA_AUS_CONSONANTS.length + ' Australian English consonants with place, manner, voicing\n';
+    if (typeof IPA_AUS_VOWELS !== 'undefined') ctx += 'Vowel chart: ' + IPA_AUS_VOWELS.length + ' vowels + ' + (typeof IPA_AUS_DIPHTHONGS !== 'undefined' ? IPA_AUS_DIPHTHONGS.length : 0) + ' diphthongs\n';
+    if (typeof IPA_TRANSCRIPTION_WORDS !== 'undefined') ctx += 'Transcription words (' + IPA_TRANSCRIPTION_WORDS.length + ' words in 4 sets): ' + IPA_TRANSCRIPTION_WORDS.slice(0, 8).map(w => w.word || w.english).join(', ') + '...\n';
+    if (typeof IPA_NOTATION_REFERENCE !== 'undefined') ctx += 'Notation reference: ' + IPA_NOTATION_REFERENCE.length + ' cards covering brackets, diacritics, stress marking, transcription rules\n';
+    if (typeof IPA_PHONOLOGY !== 'undefined') ctx += 'Phonology: minimal pairs, natural classes, phonological rules exercises\n';
+  }
+  if (!courseCode || courseCode === 'ANHS2609') {
+    ctx += '\n### Map Quiz & Timeline (ANHS2609)\n';
+    ctx += 'Available tools: Interactive Map (study mode + timed quiz mode), Alexander\'s Campaign Route, Regional Boundaries, Historical Timeline\n';
+    if (typeof MAP_LOCATIONS !== 'undefined') ctx += 'Map locations (' + MAP_LOCATIONS.length + '): ' + MAP_LOCATIONS.slice(0, 10).map(l => l.name).join(', ') + '...\n';
+    if (typeof ANHS_TIMELINE !== 'undefined') ctx += 'Timeline events (' + ANHS_TIMELINE.length + '): Events from 382 BCE to 323 BCE across ' + (typeof ANHS_TIMELINE_ERAS !== 'undefined' ? ANHS_TIMELINE_ERAS.length : 6) + ' eras\n';
+  }
+  if (!courseCode || courseCode === 'OLES1603') {
+    ctx += '\n### Astronomy Concept Lab (OLES1603)\n';
+    ctx += 'Available tools: Term Flashcards, Multiple-Choice Quiz, Drag-to-Sort Exercises, Matching Exercises\n';
+    if (typeof ASTRO_TERMS !== 'undefined') ctx += 'Flashcard terms (' + ASTRO_TERMS.length + '): ' + ASTRO_TERMS.slice(0, 8).map(t => t.term).join(', ') + '...\n';
+    if (typeof ASTRO_QUIZ !== 'undefined') ctx += 'Quiz questions (' + ASTRO_QUIZ.length + ' multiple-choice with explanations)\n';
+    if (typeof ASTRO_SORTS !== 'undefined') ctx += 'Sort exercises (' + ASTRO_SORTS.length + '): Drag items into correct order (spectral types, orbital mechanics, etc.)\n';
+  }
+
+  // Study techniques
+  ctx += '\n## STUDY TECHNIQUES\n';
+  if (typeof STUDY_TECHNIQUES !== 'undefined') {
+    STUDY_TECHNIQUES.forEach(t => {
+      ctx += '- ' + (t.title || t.name) + ': ' + strip(t.tip || t.desc || '').substring(0, 200) + '\n';
+      if (t.action) ctx += '  Action: ' + strip(t.action) + '\n';
     });
   }
 
@@ -8762,8 +8828,12 @@ RULES:
 4. Keep answers concise but thorough. Use bullet points for lists.
 5. For code questions (INFO1113), include code examples using Java syntax.
 6. When asked about assessments, always mention the due date, weight, and any key rules.
-7. If asked to quiz the student, create questions based on the self-test questions and key terms in the materials.
+7. If asked to quiz the student, create questions based on the self-test questions and key terms in the materials. Tag questions by Bloom level if available.
 8. Use plain language suitable for a first-year undergraduate.
+9. When asked about dashboard features, refer to the DASHBOARD FEATURES section. Guide the student to the right tab or tool.
+10. When asked about practice exercises, reference specific items from PRACTICE TOOLS and explain how to use the relevant lab.
+11. When mentioning study tasks, refer to the mustDo list for the current week. When mentioning examples, use the keyExamples from lectures.
+12. If asked for study advice, draw on the STUDY TECHNIQUES section and the student's timetable.
 
 <course_materials>
 ${saBuildContext(courseCode)}
