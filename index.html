@@ -5458,6 +5458,7 @@ function wftRenderGuides() {
     }
     var complete = nbml;
     var pctComplete = currentWeek > 0 ? Math.round(nbml / currentWeek * 100) : 0;
+    var pctDraft = currentWeek > 0 ? Math.round(drafts / currentWeek * 100) : 0;
     var allComplete = nbml === currentWeek;
     var label = nbml + '/' + currentWeek;
     if (txOnly > 0) label += ' (+' + txOnly + ' needs NbML)';
