@@ -682,6 +682,36 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 .sa-profile-bar .sa-pb-weak { color:#dc2626; font-weight:600; }
 .sa-profile-bar .sa-pb-strong { color:#16a34a; font-weight:600; }
 
+/* SA save & analytics buttons */
+.sa-response-actions { display:flex; gap:6px; margin-top:8px; padding-top:8px; border-top:1px solid #f1f5f9; }
+.sa-response-actions button { padding:3px 10px; font-size:11px; border:1px solid #e2e8f0; background:#f8fafc; color:#64748b; border-radius:5px; cursor:pointer; display:inline-flex; align-items:center; gap:4px; transition:all 0.15s; }
+.sa-response-actions button:hover { background:#eff6ff; border-color:#93c5fd; color:#2563eb; }
+.sa-response-actions button.saved { background:#dcfce7; border-color:#86efac; color:#16a34a; cursor:default; }
+.sa-response-actions button svg { width:12px; height:12px; }
+
+/* SA saved exercises & analytics overlay */
+.sa-overlay { position:absolute; inset:0; background:#fff; z-index:5; display:flex; flex-direction:column; border-radius:16px; overflow:hidden; }
+.sa-overlay-header { padding:14px 18px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+.sa-overlay-header h4 { margin:0; font-size:15px; font-weight:700; }
+.sa-overlay-body { flex:1; overflow-y:auto; padding:16px 18px; }
+.sa-overlay .sa-close-overlay { background:none; border:none; font-size:18px; cursor:pointer; color:#64748b; }
+.sa-saved-item { padding:12px; margin-bottom:10px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; font-size:13px; line-height:1.5; }
+.sa-saved-item .sa-saved-meta { display:flex; gap:8px; margin-bottom:6px; font-size:11px; color:#64748b; }
+.sa-saved-item .sa-saved-meta span { background:#f1f5f9; padding:1px 6px; border-radius:4px; }
+.sa-saved-item .sa-saved-content { white-space:pre-wrap; }
+.sa-saved-item .sa-saved-actions { margin-top:8px; display:flex; gap:6px; }
+.sa-saved-item .sa-saved-actions button { padding:2px 8px; font-size:11px; border:1px solid #e2e8f0; background:#fff; border-radius:4px; cursor:pointer; }
+.sa-saved-item .sa-saved-actions button:hover { background:#fee2e2; border-color:#fca5a5; color:#dc2626; }
+
+/* Analytics cards */
+.sa-analytics-card { padding:14px; margin-bottom:12px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; }
+.sa-analytics-card h5 { margin:0 0 8px; font-size:13px; font-weight:700; color:#334155; }
+.sa-analytics-card .sa-stat { display:flex; justify-content:space-between; padding:4px 0; font-size:13px; border-bottom:1px solid #f1f5f9; }
+.sa-analytics-card .sa-stat:last-child { border-bottom:none; }
+.sa-analytics-card .sa-stat-val { font-weight:600; color:#1e293b; }
+.sa-analytics-bar { height:6px; background:#e2e8f0; border-radius:3px; margin-top:4px; overflow:hidden; }
+.sa-analytics-bar-fill { height:100%; border-radius:3px; transition:width 0.3s; }
+
 /* SA contextual nudge after self-test */
 .sa-nudge { margin-top:12px; padding:10px 16px; background:linear-gradient(135deg,#eff6ff,#f0f0ff); border:1px solid #c7d2fe; border-radius:10px; font-size:13px; display:flex; align-items:center; gap:10px; }
 .sa-nudge button { padding:4px 12px; font-size:12px; background:linear-gradient(135deg,#2563eb,#7c3aed); color:#fff; border:none; border-radius:6px; cursor:pointer; font-weight:500; white-space:nowrap; }
@@ -792,6 +822,8 @@ document.getElementById('pin-input').focus();
     <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Study Assistant <span class="sa-context-badge" id="sa-context-badge"></span></h3>
     <div class="sa-header-btns">
       <button class="sa-header-btn" onclick="saSessionReview()" title="Review your mistakes from this session" style="background:linear-gradient(135deg,#2563eb,#7c3aed);color:#fff;border-color:transparent">Review</button>
+      <button class="sa-header-btn" onclick="saShowSaved()" title="View saved exercises and insights">Saved</button>
+      <button class="sa-header-btn" onclick="saShowAnalytics()" title="Tutoring analytics overview">Stats</button>
       <button class="sa-header-btn" onclick="saClear()" title="New conversation">Clear</button>
       <button class="sa-header-btn" onclick="saSettings()" title="API key settings">Key</button>
       <button class="sa-header-btn" onclick="saToggle()">✕</button>
@@ -808,6 +840,13 @@ document.getElementById('pin-input').focus();
       <textarea id="sa-input" placeholder="Ask about your courses..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();saSend()}"></textarea>
       <button id="sa-send-btn" onclick="saSend()">Send</button>
     </div>
+  </div>
+  <div class="sa-overlay" id="sa-overlay" style="display:none">
+    <div class="sa-overlay-header">
+      <h4 id="sa-overlay-title">Saved</h4>
+      <button class="sa-close-overlay" onclick="saCloseOverlay()">&times;</button>
+    </div>
+    <div class="sa-overlay-body" id="sa-overlay-body"></div>
   </div>
   <div class="sa-setup" id="sa-setup" style="display:none">
     <p>Enter your Anthropic API key to get started.<br>Get one at <a href="https://console.anthropic.com/settings/keys" target="_blank" style="color:#2563eb">console.anthropic.com</a>.<br>Your key is stored locally in this browser only.</p>
@@ -1632,6 +1671,7 @@ const DASHBOARD_CHANGELOG = [
   { date: '2026-03-16', action: 'update', target: 'STUDY_ASSISTANT', detail: 'Major SA upgrade: Haiku→Sonnet 4.6 for adaptive tutoring. Rewrote system prompt from Q&A bot to Socratic tutor (course-specific tutoring strategies, distinction coaching, session error tracking). Added saAskAbout() bridge + saHelpButton() for contextual tutoring from any wrong answer. Help buttons wired into: Java code traces, IPA quiz, astronomy quiz, map quiz, study guide self-test (all 4 courses). Session learning tracker (saSessionErrors) feeds patterns to Sonnet. Review button generates targeted practice from session mistakes.' },
   { date: '2026-03-16', action: 'fix', target: 'WORKFLOW_TRACKER', detail: 'Data integrity audit: corrected practiceTools item counts from array lengths (JPL 99\u219284, IPA 147\u2192138, MAP 15\u219268, ASTRO 75\u219286). Updated detail strings with accurate component counts. Fixed totalQuizQuestions 131\u2192182. Updated weeksCovered 12\u219215 (includes 3 Week 4 drafts). Fixed stale GUIDE_SOURCES and NBML_VALIDATED comments. Updated studyGuides coverage arrays to include Week 4 drafts.' },
   { date: '2026-03-16', action: 'add', target: 'STUDENT_PROFILE', detail: 'Persistent student learning profile system (localStorage). Tracks errors, correct answers, tool usage, topic confidence across sessions. Profile data injected into Sonnet system prompt for adaptive tutoring. Onboarding tooltip for first-time users. FAB pulse + error badge for unreviewed mistakes. Profile stats bar in SA panel. Contextual nudges after practice tool sessions. Session data saved on page unload. Correct-answer logging in code traces, IPA quiz, astronomy quiz, map quiz, self-test.' },
+  { date: '2026-03-16', action: 'add', target: 'SA_EXERCISES', detail: 'Exercise saving system: Save button on every SA response parses exercises (numbered bold Q/A) into persistent exercise bank (SA_EXERCISES_KEY). Saved exercises view with per-course grouping, re-practise flow, delete. Follow-up button for deeper drill. Interaction logging (SA_INTERACTIONS_KEY, last 300) tracks type, topic, exercise count, response length. Tutoring analytics panel (Stats): overview, interaction types, most-studied topics, per-course engagement, optimization insights. Analytics-informed system prompt (tutoring_analytics block) feeds aggregate data back to Sonnet to optimize exercise format and feedback style. System prompt updated with exercise formatting directive for parse-ability.' },
 ];
 
 const WEEKLY_CONTENT = {
@@ -3854,7 +3894,7 @@ const SECURITY_AUDIT = {
     { id:'S1', name:'Secrets & Credentials', status:'pass', detail:'No hardcoded secrets in dashboard or 12 visual guides' },
     { id:'S2', name:'PIN Authentication', status:'pass', detail:'Hash-based PIN, single session auth point' },
     { id:'S3', name:'External Resources', status:'warn', detail:'unpkg.com loaded (marked-js for chat). Add to allowed list or self-host for pilot' },
-    { id:'S4', name:'XSS / Injection', status:'pass', detail:'No URL-to-innerHTML paths, no dangerous JS patterns. 70 innerHTML assignments (static data only)' },
+    { id:'S4', name:'XSS / Injection', status:'pass', detail:'No URL-to-innerHTML paths, no dangerous JS patterns. 74 innerHTML assignments (static data only)' },
     { id:'S5', name:'Data Exposure', status:'pass', detail:'No emails, phone numbers, student IDs, or grades in source' },
     { id:'S6', name:'API Key Handling', status:'warn', detail:'Anthropic API calls present — verify BYOK pattern active' },
     { id:'S7', name:'Content Security Policy', status:'warn', detail:'No CSP meta tag — add for pilot' },
@@ -9189,6 +9229,488 @@ function saSessionReview() {
 }
 
 // Contextual nudge: show inline suggestion to use the tutor
+// ── Exercise Saving & Interaction Logging ──
+const SA_EXERCISES_KEY = 'uni-sa-exercises';
+const SA_INTERACTIONS_KEY = 'uni-sa-interactions';
+
+function saLoadExercises() {
+  try { return JSON.parse(localStorage.getItem(SA_EXERCISES_KEY) || '[]'); } catch { return []; }
+}
+function saSaveExercises(exercises) {
+  try {
+    if (exercises.length > 200) exercises = exercises.slice(-200);
+    localStorage.setItem(SA_EXERCISES_KEY, JSON.stringify(exercises));
+  } catch(e) { console.warn('[SA] Exercise save failed:', e); }
+}
+function saLoadInteractions() {
+  try { return JSON.parse(localStorage.getItem(SA_INTERACTIONS_KEY) || '[]'); } catch { return []; }
+}
+function saSaveInteractions(interactions) {
+  try {
+    if (interactions.length > 300) interactions = interactions.slice(-300);
+    localStorage.setItem(SA_INTERACTIONS_KEY, JSON.stringify(interactions));
+  } catch(e) { console.warn('[SA] Interaction log save failed:', e); }
+}
+
+// Classify the interaction type from the user's message
+function saClassifyInteraction(userMsg, aiReply) {
+  const msg = userMsg.toLowerCase();
+  const reply = aiReply.toLowerCase();
+  let type = 'free-question';
+  if (msg.includes('just got this wrong') || msg.includes('help me understand')) type = 'help-request';
+  else if (msg.includes('review my weak') || msg.includes('session')) type = 'review';
+  else if (msg.includes('practice') || msg.includes('exercise') || msg.includes('quiz me')) type = 'exercise-request';
+  else if (msg.includes('explain') || msg.includes('what is') || msg.includes('how does')) type = 'concept-question';
+
+  // Detect exercises in the response
+  const exerciseCount = (aiReply.match(/^\d+\.\s+\*\*/gm) || []).length
+    || (aiReply.match(/\*\*Q\d/g) || []).length
+    || (aiReply.match(/\*\*Question \d/gi) || []).length;
+  const hasExercises = exerciseCount >= 2 || reply.includes('practice question') || reply.includes('try this');
+
+  return { type, hasExercises, exerciseCount: Math.max(exerciseCount, 0) };
+}
+
+// Log an interaction (condensed — no full message text)
+function saLogInteraction(userMsg, aiReply, course) {
+  const interactions = saLoadInteractions();
+  const classification = saClassifyInteraction(userMsg, aiReply);
+
+  interactions.push({
+    ts: Date.now(),
+    course: course || saDetectCourse() || 'General',
+    type: classification.type,
+    hasExercises: classification.hasExercises,
+    exerciseCount: classification.exerciseCount,
+    userMsgLen: userMsg.length,
+    aiReplyLen: aiReply.length,
+    topic: saExtractTopicFromText(userMsg),
+    sessionErrors: saSessionErrors.length
+  });
+
+  saSaveInteractions(interactions);
+}
+
+function saExtractTopicFromText(text) {
+  const t = text.toLowerCase();
+  if (t.includes('ipa') || t.includes('phonet') || t.includes('consonant') || t.includes('vowel')) return 'phonetics';
+  if (t.includes('phonolog') || t.includes('allophone')) return 'phonology';
+  if (t.includes('java') || t.includes('class') || t.includes('method') || t.includes('object')) return 'java-oop';
+  if (t.includes('variable') || t.includes('loop') || t.includes('array')) return 'java-fundamentals';
+  if (t.includes('alexander') || t.includes('philip') || t.includes('macedon')) return 'alexander-history';
+  if (t.includes('source') || t.includes('historiograph')) return 'historical-method';
+  if (t.includes('star') || t.includes('spectral') || t.includes('parallax')) return 'stellar-astronomy';
+  if (t.includes('telescope') || t.includes('light') || t.includes('big bang')) return 'observational-astronomy';
+  if (t.includes('code trace') || t.includes('output') || t.includes('print')) return 'java-code-tracing';
+  return 'general';
+}
+
+// Save an AI response (or parsed exercises from it)
+let _saResponseRegistry = {};
+let _saResponseId = 0;
+
+function saResponseSaveBtn(reply, course) {
+  const id = '_sar_' + (++_saResponseId);
+  _saResponseRegistry[id] = { reply, course };
+  return `<div class="sa-response-actions">
+    <button id="btn-${id}" onclick="saSaveResponse('${id}')" title="Save exercises or insights from this response">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Save
+    </button>
+    <button onclick="saAskFollowUp('${id}')" title="Ask a follow-up question about this">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Follow up
+    </button>
+  </div>`;
+}
+
+function saSaveResponse(id) {
+  const data = _saResponseRegistry[id];
+  if (!data) return;
+  const exercises = saLoadExercises();
+  const parsed = saParseExercisesFromReply(data.reply);
+
+  if (parsed.length > 0) {
+    parsed.forEach(ex => {
+      exercises.push({
+        id: 'ex_' + Date.now() + '_' + Math.random().toString(36).slice(2,6),
+        course: data.course || saDetectCourse() || 'General',
+        topic: saExtractTopicFromText(ex.question),
+        question: ex.question,
+        answer: ex.answer || '',
+        bloom: ex.bloom || '',
+        source: 'ai-generated',
+        savedAt: Date.now(),
+        timesUsed: 0,
+        effectiveness: null
+      });
+    });
+  } else {
+    // Save the whole response as a note
+    exercises.push({
+      id: 'note_' + Date.now(),
+      course: data.course || saDetectCourse() || 'General',
+      topic: saExtractTopicFromText(data.reply),
+      question: data.reply.substring(0, 500),
+      answer: '',
+      bloom: '',
+      source: 'ai-note',
+      savedAt: Date.now(),
+      timesUsed: 0,
+      effectiveness: null
+    });
+  }
+
+  saSaveExercises(exercises);
+  const btn = document.getElementById('btn-' + id);
+  if (btn) { btn.classList.add('saved'); btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px"><path d="M20 6L9 17l-5-5"/></svg> Saved ' + (parsed.length > 0 ? '(' + parsed.length + ' exercises)' : '(note)'); }
+}
+
+function saAskFollowUp(id) {
+  const data = _saResponseRegistry[id];
+  if (!data) return;
+  const input = document.getElementById('sa-input');
+  if (input) { input.value = 'Can you give me more practice on the concepts from your last response? Generate 3 harder questions.'; input.focus(); }
+}
+
+// Parse exercises from an SA reply
+function saParseExercisesFromReply(text) {
+  const exercises = [];
+  // Pattern 1: numbered questions with bold — "1. **Question text**"
+  const p1 = text.match(/\d+\.\s+\*\*(.+?)\*\*[\s\S]*?(?=\d+\.\s+\*\*|$)/g);
+  if (p1 && p1.length >= 2) {
+    p1.forEach(block => {
+      const qMatch = block.match(/\d+\.\s+\*\*(.+?)\*\*/);
+      const aMatch = block.match(/(?:Answer|A):\s*(.+?)(?:\n|$)/i);
+      const bMatch = block.match(/\[(L\d)\]/);
+      if (qMatch) exercises.push({ question: qMatch[1].trim(), answer: aMatch ? aMatch[1].trim() : '', bloom: bMatch ? bMatch[1] : '' });
+    });
+  }
+  // Pattern 2: "Q:" or "Question:" lines
+  if (exercises.length === 0) {
+    const p2 = text.match(/(?:^|\n)\s*(?:Q\d*|Question\s*\d*)[:.]\s*(.+?)(?=\n\s*(?:Q\d*|Question\s*\d*)[:.]\s*|$)/gs);
+    if (p2 && p2.length >= 2) {
+      p2.forEach(block => {
+        const qMatch = block.match(/(?:Q\d*|Question\s*\d*)[:.]\s*(.+?)(?:\n|$)/i);
+        const aMatch = block.match(/(?:A\d*|Answer\d*)[:.]\s*(.+?)(?:\n|$)/i);
+        if (qMatch) exercises.push({ question: qMatch[1].trim(), answer: aMatch ? aMatch[1].trim() : '', bloom: '' });
+      });
+    }
+  }
+  return exercises;
+}
+
+// ── Saved Exercises View ──
+function saShowSaved() {
+  const overlay = document.getElementById('sa-overlay');
+  document.getElementById('sa-overlay-title').textContent = 'Saved Exercises & Notes';
+  const exercises = saLoadExercises();
+  let html = '';
+
+  if (exercises.length === 0) {
+    html = '<div style="text-align:center;color:#94a3b8;padding:40px 20px;font-size:14px"><p>No saved exercises yet.</p><p style="font-size:13px">When the tutor generates exercises, click <strong>Save</strong> to keep them here for later review.</p></div>';
+  } else {
+    // Group by course
+    const byCourse = {};
+    exercises.forEach(ex => { const c = ex.course || 'General'; if (!byCourse[c]) byCourse[c] = []; byCourse[c].push(ex); });
+
+    html += `<div style="margin-bottom:12px;font-size:13px;color:#64748b">${exercises.length} saved item${exercises.length>1?'s':''}</div>`;
+
+    for (const [course, items] of Object.entries(byCourse)) {
+      const color = COURSES[course]?.color || '#64748b';
+      html += `<div style="margin-bottom:16px"><div style="font-weight:700;font-size:14px;margin-bottom:8px;color:${color}">${COURSES[course]?.name || course} (${items.length})</div>`;
+      items.slice().reverse().forEach(ex => {
+        const date = new Date(ex.savedAt).toLocaleDateString();
+        const typeLabel = ex.source === 'ai-note' ? 'Note' : 'Exercise';
+        html += `<div class="sa-saved-item">
+          <div class="sa-saved-meta">
+            <span>${typeLabel}</span>
+            <span>${ex.topic.replace(/-/g,' ')}</span>
+            ${ex.bloom ? '<span>'+ex.bloom+'</span>' : ''}
+            <span>${date}</span>
+          </div>
+          <div class="sa-saved-content">${saEscape(ex.question)}</div>
+          ${ex.answer ? '<div style="margin-top:6px;font-size:12px;color:#16a34a"><strong>A:</strong> '+saEscape(ex.answer)+'</div>' : ''}
+          <div class="sa-saved-actions">
+            <button onclick="saDeleteSaved('${ex.id}')">Remove</button>
+            <button onclick="saPractiseSaved('${ex.id}')" style="background:#eff6ff;border-color:#93c5fd;color:#2563eb">Practise this</button>
+          </div>
+        </div>`;
+      });
+      html += '</div>';
+    }
+  }
+
+  document.getElementById('sa-overlay-body').innerHTML = html;
+  overlay.style.display = 'flex';
+}
+
+function saDeleteSaved(exId) {
+  let exercises = saLoadExercises();
+  exercises = exercises.filter(e => e.id !== exId);
+  saSaveExercises(exercises);
+  saShowSaved(); // re-render
+}
+
+function saPractiseSaved(exId) {
+  const exercises = saLoadExercises();
+  const ex = exercises.find(e => e.id === exId);
+  if (!ex) return;
+
+  // Mark as used
+  ex.timesUsed = (ex.timesUsed || 0) + 1;
+  saSaveExercises(exercises);
+
+  saCloseOverlay();
+  const input = document.getElementById('sa-input');
+  if (input) {
+    input.value = `I want to practise this saved exercise:\n\n**Question:** ${ex.question}\n\nQuiz me on this — don't show the answer yet. If I get it wrong, help me understand. Then generate 2 similar questions.`;
+    input.focus();
+  }
+}
+
+function saCloseOverlay() {
+  document.getElementById('sa-overlay').style.display = 'none';
+}
+
+// ── Tutoring Analytics (Super Overview) ──
+function saComputeAnalytics() {
+  const interactions = saLoadInteractions();
+  const exercises = saLoadExercises();
+  const profile = saLoadProfile();
+
+  const now = Date.now();
+  const weekAgo = now - 7*24*60*60*1000;
+  const twoWeeksAgo = now - 14*24*60*60*1000;
+  const recentInteractions = interactions.filter(i => i.ts > weekAgo);
+  const allInteractions = interactions;
+
+  // Interaction breakdown
+  const typeCounts = {};
+  allInteractions.forEach(i => { typeCounts[i.type] = (typeCounts[i.type] || 0) + 1; });
+
+  // Topic frequency (what does the student ask about most?)
+  const topicCounts = {};
+  allInteractions.forEach(i => { if (i.topic) topicCounts[i.topic] = (topicCounts[i.topic] || 0) + 1; });
+  const topTopics = Object.entries(topicCounts).sort((a,b) => b[1]-a[1]).slice(0, 8);
+
+  // Exercise generation stats
+  const totalExercisesGenerated = allInteractions.reduce((s, i) => s + (i.exerciseCount || 0), 0);
+  const exerciseInteractions = allInteractions.filter(i => i.hasExercises);
+
+  // Per-course engagement
+  const courseEngagement = {};
+  allInteractions.forEach(i => {
+    const c = i.course || 'General';
+    if (!courseEngagement[c]) courseEngagement[c] = { total: 0, recent: 0, helpRequests: 0, exercises: 0, avgReplyLen: 0, totalReplyLen: 0 };
+    courseEngagement[c].total++;
+    if (i.ts > weekAgo) courseEngagement[c].recent++;
+    if (i.type === 'help-request') courseEngagement[c].helpRequests++;
+    courseEngagement[c].exercises += (i.exerciseCount || 0);
+    courseEngagement[c].totalReplyLen += (i.aiReplyLen || 0);
+  });
+  Object.values(courseEngagement).forEach(c => { c.avgReplyLen = c.total > 0 ? Math.round(c.totalReplyLen / c.total) : 0; });
+
+  // Error resolution: compare profile weak areas now vs 2 weeks of errors
+  const profileAnalysis = saAnalyzeProfile();
+
+  // Effectiveness metrics from saved exercises
+  const savedCount = exercises.length;
+  const practisedCount = exercises.filter(e => (e.timesUsed || 0) > 0).length;
+
+  // Interaction patterns (when does the student study?)
+  const hourCounts = new Array(24).fill(0);
+  allInteractions.forEach(i => { const h = new Date(i.ts).getHours(); hourCounts[h]++; });
+  const peakHour = hourCounts.indexOf(Math.max(...hourCounts));
+
+  return {
+    total: allInteractions.length,
+    recentCount: recentInteractions.length,
+    typeCounts,
+    topTopics,
+    totalExercisesGenerated,
+    exerciseInteractions: exerciseInteractions.length,
+    courseEngagement,
+    profileAnalysis,
+    savedCount,
+    practisedCount,
+    peakHour,
+    hourCounts,
+    avgSessionErrors: allInteractions.length > 0 ? (allInteractions.reduce((s, i) => s + (i.sessionErrors || 0), 0) / allInteractions.length).toFixed(1) : 0
+  };
+}
+
+function saShowAnalytics() {
+  const overlay = document.getElementById('sa-overlay');
+  document.getElementById('sa-overlay-title').textContent = 'Tutoring Analytics';
+  const a = saComputeAnalytics();
+  let html = '';
+
+  if (a.total === 0) {
+    html = '<div style="text-align:center;color:#94a3b8;padding:40px 20px;font-size:14px"><p>No tutoring data yet.</p><p style="font-size:13px">Start using the Study Tutor and analytics will build up here.</p></div>';
+  } else {
+    // Summary card
+    html += `<div class="sa-analytics-card">
+      <h5>Overview</h5>
+      <div class="sa-stat"><span>Total interactions</span><span class="sa-stat-val">${a.total}</span></div>
+      <div class="sa-stat"><span>This week</span><span class="sa-stat-val">${a.recentCount}</span></div>
+      <div class="sa-stat"><span>Exercises generated</span><span class="sa-stat-val">${a.totalExercisesGenerated}</span></div>
+      <div class="sa-stat"><span>Exercises saved</span><span class="sa-stat-val">${a.savedCount} (${a.practisedCount} practised)</span></div>
+      <div class="sa-stat"><span>Peak study hour</span><span class="sa-stat-val">${a.peakHour}:00</span></div>
+      <div class="sa-stat"><span>Avg errors when asking</span><span class="sa-stat-val">${a.avgSessionErrors}</span></div>
+    </div>`;
+
+    // Interaction types
+    html += `<div class="sa-analytics-card"><h5>How You Use the Tutor</h5>`;
+    const typeLabels = { 'help-request':'Help (wrong answers)', 'review':'Session review', 'exercise-request':'Exercise requests', 'concept-question':'Concept questions', 'free-question':'Other questions' };
+    const maxType = Math.max(...Object.values(a.typeCounts), 1);
+    Object.entries(a.typeCounts).sort((x,y) => y[1]-x[1]).forEach(([type, count]) => {
+      const pct = Math.round(count / a.total * 100);
+      html += `<div class="sa-stat"><span>${typeLabels[type] || type}</span><span class="sa-stat-val">${count} (${pct}%)</span></div>
+        <div class="sa-analytics-bar"><div class="sa-analytics-bar-fill" style="width:${Math.round(count/maxType*100)}%;background:#3b82f6"></div></div>`;
+    });
+    html += '</div>';
+
+    // Top topics
+    if (a.topTopics.length > 0) {
+      html += `<div class="sa-analytics-card"><h5>Most-Studied Topics</h5>`;
+      const maxTopic = a.topTopics[0][1];
+      a.topTopics.forEach(([topic, count]) => {
+        const isWeak = a.profileAnalysis.weakAreas.some(w => w.topic === topic);
+        html += `<div class="sa-stat"><span>${topic.replace(/-/g,' ')}${isWeak ? ' <span style="color:#dc2626;font-size:11px">(weak)</span>' : ''}</span><span class="sa-stat-val">${count}</span></div>
+          <div class="sa-analytics-bar"><div class="sa-analytics-bar-fill" style="width:${Math.round(count/maxTopic*100)}%;background:${isWeak?'#ef4444':'#10b981'}"></div></div>`;
+      });
+      html += '</div>';
+    }
+
+    // Per-course
+    html += `<div class="sa-analytics-card"><h5>Per-Course Engagement</h5>`;
+    Object.entries(a.courseEngagement).sort((x,y) => y[1].total-x[1].total).forEach(([code, data]) => {
+      const color = COURSES[code]?.color || '#64748b';
+      const name = COURSES[code]?.name || code;
+      html += `<div style="margin-bottom:10px">
+        <div style="font-weight:600;font-size:13px;color:${color};margin-bottom:4px">${name}</div>
+        <div class="sa-stat"><span>Interactions</span><span class="sa-stat-val">${data.total} (${data.recent} this week)</span></div>
+        <div class="sa-stat"><span>Help requests</span><span class="sa-stat-val">${data.helpRequests}</span></div>
+        <div class="sa-stat"><span>Exercises generated</span><span class="sa-stat-val">${data.exercises}</span></div>
+        <div class="sa-stat"><span>Avg response length</span><span class="sa-stat-val">${data.avgReplyLen} chars</span></div>
+      </div>`;
+    });
+    html += '</div>';
+
+    // Optimization insights
+    html += `<div class="sa-analytics-card" style="background:linear-gradient(135deg,#eff6ff,#f0f0ff);border-color:#c7d2fe">
+      <h5 style="color:#4f46e5">Optimization Insights</h5>
+      <div style="font-size:13px;line-height:1.6;color:#334155">`;
+    const insights = saGenerateInsights(a);
+    insights.forEach(insight => { html += `<div style="margin-bottom:6px">&#8226; ${insight}</div>`; });
+    html += `</div>
+      <button onclick="saRequestOptimization()" style="margin-top:10px;padding:6px 14px;font-size:12px;background:linear-gradient(135deg,#2563eb,#7c3aed);color:#fff;border:none;border-radius:6px;cursor:pointer;font-weight:500">Ask tutor to optimize my study plan</button>
+    </div>`;
+  }
+
+  document.getElementById('sa-overlay-body').innerHTML = html;
+  overlay.style.display = 'flex';
+}
+
+function saGenerateInsights(analytics) {
+  const insights = [];
+  const a = analytics;
+
+  // Topic gaps
+  if (a.profileAnalysis.weakAreas.length > 0) {
+    const tops = a.profileAnalysis.weakAreas.slice(0,3).map(w => w.topic.replace(/-/g,' ')).join(', ');
+    insights.push(`<strong>Focus areas:</strong> ${tops} — these have recurring errors. More targeted exercises needed.`);
+  }
+
+  // Underutilized courses
+  Object.entries(COURSES).forEach(([code, info]) => {
+    if (!a.courseEngagement[code] || a.courseEngagement[code].total < 3) {
+      insights.push(`<strong>${info.name}</strong> has very few tutor interactions. Consider using Help buttons more when practising.`);
+    }
+  });
+
+  // Exercise engagement
+  if (a.savedCount > 0 && a.practisedCount < a.savedCount * 0.3) {
+    insights.push(`You've saved ${a.savedCount} exercises but only practised ${a.practisedCount}. Re-practising saved exercises strengthens retention.`);
+  }
+
+  // Help vs self-study balance
+  const helpPct = ((a.typeCounts['help-request'] || 0) / a.total * 100).toFixed(0);
+  if (helpPct > 70) {
+    insights.push(`${helpPct}% of interactions are "help after wrong answer." Try asking the tutor to pre-teach concepts before attempting exercises.`);
+  } else if (helpPct < 20 && a.total > 10) {
+    insights.push(`Only ${helpPct}% of interactions are help requests — you're studying independently well. Use the tutor for distinction-level challenges.`);
+  }
+
+  // Strengths to leverage
+  if (a.profileAnalysis.strengths.length > 0) {
+    const strongTopics = a.profileAnalysis.strengths.slice(0,2).map(s => s.topic.replace(/-/g,' ')).join(', ');
+    insights.push(`<strong>Strengths:</strong> ${strongTopics} — ready for Bloom L4 (analysis) questions. Ask the tutor to challenge you here.`);
+  }
+
+  if (insights.length === 0) {
+    insights.push('Keep using the tutor and analytics will generate personalized optimization suggestions.');
+  }
+
+  return insights;
+}
+
+function saRequestOptimization() {
+  saCloseOverlay();
+  const a = saComputeAnalytics();
+  let msg = 'Based on my tutoring analytics, help me optimize my study plan:\n\n';
+  msg += `**Stats:** ${a.total} total interactions, ${a.totalExercisesGenerated} exercises generated, ${a.savedCount} saved.\n`;
+  if (a.profileAnalysis.weakAreas.length > 0) {
+    msg += `**Weak areas:** ${a.profileAnalysis.weakAreas.map(w => w.course + '/' + w.topic.replace(/-/g,' ') + ' (' + w.errors + ' errors)').join(', ')}\n`;
+  }
+  if (a.profileAnalysis.strengths.length > 0) {
+    msg += `**Strengths:** ${a.profileAnalysis.strengths.map(s => s.course + '/' + s.topic.replace(/-/g,' ') + ' (' + s.streak + ' streak)').join(', ')}\n`;
+  }
+  const topTypes = Object.entries(a.typeCounts).sort((x,y) => y[1]-x[1]).slice(0,3).map(([t,c]) => t + ':' + c).join(', ');
+  msg += `**Usage pattern:** ${topTypes}\n`;
+  msg += '\nBased on all this, what should I focus on this week? Generate a targeted study plan with specific exercises for my weak areas and extension challenges for my strengths.';
+
+  const input = document.getElementById('sa-input');
+  if (input) { input.value = msg; input.style.height = Math.min(input.scrollHeight + 20, 100) + 'px'; input.focus(); }
+}
+
+// ── Tutoring Insights for System Prompt (feedback loop) ──
+function saTutoringInsightsForPrompt() {
+  const interactions = saLoadInteractions();
+  if (interactions.length < 5) return ''; // not enough data yet
+
+  const a = saComputeAnalytics();
+  let s = '\n\n<tutoring_analytics>\nAggregate data from all tutoring sessions (use to optimize exercise generation and feedback):\n';
+  s += `Total interactions: ${a.total}. Exercises generated: ${a.totalExercisesGenerated}. Exercises saved by student: ${a.savedCount} (${a.practisedCount} re-practised).\n`;
+
+  // What interaction types work
+  const helpPct = Math.round((a.typeCounts['help-request'] || 0) / a.total * 100);
+  const conceptPct = Math.round((a.typeCounts['concept-question'] || 0) / a.total * 100);
+  s += `Interaction breakdown: ${helpPct}% help-after-error, ${conceptPct}% concept questions.\n`;
+
+  // Most-tutored topics
+  if (a.topTopics.length > 0) {
+    s += 'Most-tutored topics: ' + a.topTopics.slice(0,5).map(([t,c]) => t.replace(/-/g,' ') + ' (' + c + 'x)').join(', ') + '\n';
+  }
+
+  // Optimization directives
+  s += '\nOPTIMIZATION DIRECTIVES:\n';
+  if (helpPct > 60) {
+    s += '- Student mostly uses you reactively (after errors). Proactively offer practice questions when explaining concepts.\n';
+  }
+  if (a.savedCount > 0 && a.practisedCount / a.savedCount > 0.5) {
+    s += '- Student re-practises saved exercises frequently. Generate exercises in clear Q/A format for easy saving.\n';
+  } else if (a.savedCount > 5 && a.practisedCount < 2) {
+    s += '- Student saves but rarely re-practises. Encourage them to revisit saved exercises.\n';
+  }
+  if (a.totalExercisesGenerated > 20 && a.savedCount < 5) {
+    s += '- Student rarely saves exercises. Make your best exercises stand out — use numbered bold format and explicitly say "Save these for review."\n';
+  }
+  s += '- Always structure generated exercises with numbered bold questions so they can be parsed and saved.\n';
+  s += '- Tag exercise difficulty: [L1] Remember, [L2] Understand, [L3] Apply, [L4] Analyse.\n';
+  s += '</tutoring_analytics>';
+  return s;
+}
+
 function saNudgeHtml(course, context) {
   const analysis = saAnalyzeProfile(course);
   if (saSessionErrors.length === 0 && analysis.weakAreas.length === 0) return '';
@@ -9400,6 +9922,7 @@ COURSE-SPECIFIC TUTORING:
 
 GENERATING EXERCISES:
 When the student needs practice, generate fresh questions — don't just repeat the stored self-test bank. Create questions that target the specific gap you've identified. Tag questions by Bloom level (L1: Remember, L2: Understand, L3: Apply, L4: Analyse).
+FORMAT for save-ability: Use numbered bold questions so the student can save them. Example: "1. **What is the output of this code?** [L3]". Include answers after each question. The student's dashboard can parse and save exercises in this format for later review.
 
 DISTINCTION-LEVEL COACHING:
 For students ready to push higher: ask "What would a marker expect at distinction level here?" Show them how to integrate multiple sources, challenge assumptions, and demonstrate sophisticated understanding rather than surface-level recall.
@@ -9411,7 +9934,7 @@ RULES:
 - For assessments, always mention due date, weight, and key rubric criteria.
 - Use plain language suitable for a first-year undergraduate.
 - When relevant, point the student to specific dashboard features (Practice Lab, Visual Guide, etc.).
-${errorContext}${saProfileSummaryForPrompt(courseCode)}
+${errorContext}${saProfileSummaryForPrompt(courseCode)}${saTutoringInsightsForPrompt()}
 <course_materials>
 ${saBuildContext(courseCode)}
 </course_materials>`;
@@ -9480,8 +10003,12 @@ async function saSend() {
     // Add to conversation history
     saMessages.push({ role: 'assistant', content: reply });
 
-    // Render reply
-    msgsEl.innerHTML += `<div class="sa-msg sa-msg-ai"><div class="sa-bubble">${saFormatReply(reply)}</div></div>`;
+    // Log interaction for analytics
+    saLogInteraction(text, reply, courseCode);
+
+    // Render reply with save button
+    const saveBtn = saResponseSaveBtn(reply, courseCode);
+    msgsEl.innerHTML += `<div class="sa-msg sa-msg-ai"><div class="sa-bubble">${saFormatReply(reply)}${saveBtn}</div></div>`;
 
     // Show cost
     const cached = cacheRead > 0 ? ` (${Math.round(cacheRead/inp*100)}% cached)` : '';
