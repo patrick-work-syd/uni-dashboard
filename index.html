@@ -1676,6 +1676,9 @@ const DASHBOARD_CHANGELOG = [
   { date: '2026-03-16', action: 'fix', target: 'SYNC', detail: 'Rewrote AI Integration > Study Assistant section in Sync & Updates. Was describing SA as a simple Q&A lookup tool; now fully documents: adaptive Socratic tutoring, error tracking from practice tools, exercise generation with Bloom levels, persistent learning profile, course-specific strategies (code tracing, IPA isolation, source analysis, calculation walkthrough), exercise saving, tutoring analytics. Added ai-docs dashboard check to ensure docs stay current when SA features change.' },
   { date: '2026-03-16', action: 'add', target: 'STUDY_ASSISTANT', detail: 'Tips overlay (? button in SA header): course-aware example prompts that auto-fill the input on click, "Best way to start" guidance, button legend explaining Review/Saved/Stats/Clear. Auto-detects active course to show relevant example questions (Java code tracing, IPA transcription, source analysis, astronomy concepts).' },
   { date: '2026-03-16', action: 'add', target: 'PRACTICE_LABS', detail: 'Week-based tool filtering for all 4 courses. Each gets "Filter by week" buttons in course theme colour. INFO1113: JPL_TOOL_WEEKS hides tool cards not relevant to selected week (Wk1=3 tools, Wk2=5, Wk3=6). LNGS1001: IPA_TOOL_WEEKS hides phonology Wks 1-2, transcription/quiz Wk1. ANHS2609: mapWeekFilter shows locations for exact week (Wks 1-3 only, quiz scope). OLES1603: astroWeekFilter + ASTRO_SORT_WEEKS syncs terms/quiz/sorts; internal term filter shows categories only when top-level week set.' },
+  { date: '2026-03-17', action: 'update', target: 'STUDY_GUIDES', detail: 'Automated sync: enriched Week 4 drafts via NotebookLM MCP queries (no Chrome needed). LNGS1001: added 2 keyTerms (near-minimal pair, formal rule notation), 2 application-level selfTest questions (Language Y allophone analysis, near-minimal pair evidence), expanded distinctionTip with 5 common notation mistakes from notation guide. OLES1603: added Doppler shift keyTerm, 1 application selfTest question linking Doppler/spectroscopy/Hubble. ANHS2609/INFO1113: no Week 4 transcript in NotebookLM yet \u2014 drafts unchanged. All Week 4 guides remain outline quality (transcripts not yet available).' },
+  { date: '2026-03-17', action: 'update', target: 'LAST_SYNC_DATE', detail: 'Automated sync (file-system + NotebookLM MCP). No Chrome. No new transcripts in Downloads. Week 4 lectures in progress (Mon 16 Mar, Tue 17 Mar). Transcripts expected Wed\u2013Thu.' },
+  { date: '2026-03-17', action: 'fix', target: 'STUDY_ASSISTANT', detail: 'Fixed SA_MODEL from invalid claude-sonnet-4-6-20260218 to claude-sonnet-4-6. The dated model ID was rejected by the Anthropic API causing "Error: model" on all SA queries.' },
 ];
 
 const WEEKLY_CONTENT = {
@@ -2296,6 +2299,8 @@ const STUDY_GUIDES = {
         'Free variation': 'When two sounds can appear in the same environment without changing meaning. They may be allophones in free variation (e.g., released vs unreleased final stops in English).',
         'Phonological environment': 'The surrounding sounds that determine which allophone of a phoneme appears. Described using notation like \u201c__V\u201d (before a vowel) or \u201cV__#\u201d (between a vowel and word boundary).',
         'Phonological rule': 'A formal statement of an allophonic pattern: \u201cPhoneme X is realised as [Y] in environment Z.\u201d E.g., /p/ \u2192 [p\u02B0] / #__ (word-initially).',
+        'Near-minimal pair': 'Two words differing in one sound in very similar (but not identical) environments, used as evidence for phonemic contrast when exact minimal pairs are unavailable. E.g., /pik/ \u201cpeek\u201d vs /peg/ \u201cpeg\u201d show /i/ and /e/ contrast.',
+        'Formal rule notation': 'The notation system for writing allophony rules: / / = phoneme, [ ] = allophone, \u2192 = \u201cis realised as\u201d, / = \u201cin the environment of\u201d, _ = position of the phoneme, # = word boundary. Rules must end with an \u201celsewhere\u201d clause for the default realisation.',
       },
       keyExamples: [
         '<strong>English /p/ allophones (from Weeks 3\u20134):</strong> The phoneme /p/ has (at least) two allophones in English: aspirated [p\u02B0] (word-initially, as in \u201cpin\u201d) and unaspirated [p] (after /s/, as in \u201cspin\u201d). Native English speakers perceive both as \u201cthe same sound\u201d and cannot easily hear the difference. But in Hindi, [p\u02B0] and [p] are <strong>separate phonemes</strong> \u2014 they can form minimal pairs. This shows that phonemic categories are language-specific.',
@@ -2319,9 +2324,11 @@ const STUDY_GUIDES = {
         {q:'What is free variation? How does it differ from complementary distribution?', a:'<strong>Free variation</strong>: two sounds can appear in the same environment without changing meaning (e.g., released vs unreleased final stops). <strong>Complementary distribution</strong>: the sounds are restricted to specific, non-overlapping environments. Both indicate allophones, but free variation is unpredictable while complementary distribution is rule-governed.', bloom:2},
         {q:'Write the phonological rule for English vowel nasalization using formal notation.', a:'/V/ \u2192 [\u1E7C] / __[+nasal]. In prose: <strong>vowels become nasalised when they precede a nasal consonant</strong>. Example: \u201cban\u201d /b\u00E6n/ \u2192 [b\u00E6\u0303n]. The tilde diacritic [\u0303] indicates nasalisation. This is a predictable, automatic process.', bloom:3},
         {q:'Why is phonology considered more abstract than phonetics?', a:'<strong>Phonetics</strong> studies the physical properties of speech sounds (articulation, acoustics). <strong>Phonology</strong> studies how sounds are organised in speakers\u2019 minds \u2014 which differences matter for meaning (phonemic) and which are automatic variation (allophonic). Phonology deals with <strong>mental categories</strong>, not physical measurements.', bloom:2},
+        {q:'Given data from Language Y \u2014 [tasa] \u201csun\u201d, [muta] \u201cmoon\u201d, [sudu] \u201cstar\u201d, [kadi] \u201csky\u201d, [rada] \u201ccloud\u201d \u2014 are [t] and [d] separate phonemes or allophones? Write the rule.', a:'They are <strong>allophones of /t/</strong> in complementary distribution. [t] occurs word-initially and after voiceless sounds; [d] occurs <strong>intervocalically</strong> (between vowels). This is <strong>intervocalic voicing</strong> (lenition). Rule: /t/ \u2192 [d] / V__V; \u2192 [t] / elsewhere.', bloom:4},
+        {q:'You suspect [s] and [z] are separate phonemes but can\u2019t find an exact minimal pair in the data. What evidence can you use?', a:'Use <strong>near-minimal pairs</strong> \u2014 words with the target sounds in similar but not identical environments. If [s] and [z] both appear word-initially before the same vowel (e.g., [sika] vs [ziga]) and no conditioning environment explains the alternation, this supports <strong>contrastive distribution</strong>, proving they are separate phonemes /s/ and /z/.', bloom:3},
       ],
       examRelevance: '<strong>Mid-term Quiz (20%) in Week 7 covers Weeks 1\u20135.</strong> Phonology is the bridge from phonetics to morphology and is heavily tested. Understanding phonemes vs allophones, minimal pairs, and complementary distribution is <strong>essential</strong> for the quiz and the <strong>final exam (40%)</strong>. The ability to analyse unfamiliar language data (as practised in the tutorial) is a core skill tested in both assessments. Short Assignment 2 (15%, due Week 5) will also draw on phonological concepts.',
-      distinctionTip: 'For distinction-level work: (1) <strong>Understand the WHY behind allophonic rules,</strong> not just the pattern. Why does aspiration disappear after [s]? Because the voicelessness is already signalled. Why do vowels nasalise before nasals? Because the velum lowers early in anticipation. (2) <strong>Master the formal notation</strong> for phonological rules \u2014 being able to write /X/ \u2192 [Y] / Z accurately impresses in exams. (3) <strong>When analysing tutorial data, explain your reasoning step by step</strong> \u2014 show that you checked for minimal pairs, then checked environments, then stated the rule. (4) <strong>Connect phonology back to phonetics:</strong> the physical basis (Week 3) explains why certain allophonic patterns exist.',
+      distinctionTip: 'For distinction-level work: (1) <strong>Understand the WHY behind allophonic rules,</strong> not just the pattern. Why does aspiration disappear after [s]? Because the voicelessness is already signalled. Why do vowels nasalise before nasals? Because the velum lowers early in anticipation. (2) <strong>Master the formal notation</strong> for phonological rules \u2014 being able to write /X/ \u2192 [Y] / Z accurately impresses in exams. (3) <strong>When analysing tutorial data, explain your reasoning step by step</strong> \u2014 show that you checked for minimal pairs, then checked environments, then stated the rule. (4) <strong>Connect phonology back to phonetics:</strong> the physical basis (Week 3) explains why certain allophonic patterns exist. (5) <strong>Common mistakes to avoid:</strong> confusing [ ] (phones) with / / (phonemes) in notation; forgetting the \u201celsewhere\u201d clause in allophony rules; using capital letters in data/morpheme labels (penalised); assuming two sounds are separate phonemes just because they sound different to an English speaker (they may be conditioned allophones).',
     }
   },
   ANHS2609: {
@@ -2890,6 +2897,7 @@ const STUDY_GUIDES = {
         'Steady State theory': 'A now-rejected model proposing that the universe has always existed in roughly the same state, with new matter continuously created to fill expanding space. Advocated by Fred Hoyle.',
         'Hubble constant (H\u2080)': 'The rate of expansion of the universe, relating recession velocity to distance. Its precise value is still debated.',
         'Cosmic distance ladder': 'The sequence of distance measurement methods (parallax \u2192 Cepheids \u2192 Hubble\u2019s Law) that allows astronomers to measure ever-greater distances.',
+        'Doppler shift': 'The change in frequency/wavelength of waves from a moving source. Approaching objects are blueshifted (higher frequency); receding objects are redshifted (lower frequency). Like a race car sounding higher-pitched approaching and lower-pitched receding. Used to measure galaxy recession velocities via spectral line shifts.',
       },
       keyExamples: [
         '<strong>Hubble\u2019s galaxy measurements:</strong> Hubble used Cepheid variable stars (from Week 3) to measure distances to nearby galaxies, then measured their recession velocities using spectroscopy (redshift). When he plotted velocity against distance, the result was a straight line \u2014 galaxies twice as far away recede twice as fast. This was the first evidence that the universe is expanding.',
@@ -2912,6 +2920,7 @@ const STUDY_GUIDES = {
         {q:'Explain how the cosmic distance ladder works, connecting methods from Weeks 1\u20134.', a:'The cosmic distance ladder uses a chain of methods: (1) <strong>Parallax</strong> measures distances to nearby stars within our galaxy. (2) <strong>Cepheid variables</strong> extend measurement to nearby galaxies (Leavitt\u2019s period\u2013luminosity relationship). (3) <strong>Hubble\u2019s Law</strong> (recession velocity \u2192 distance) extends to the farthest visible galaxies. Each method calibrates the next, allowing measurement across ever-greater scales.', bloom:3},
         {q:'Who coined the term \u201cBig Bang\u201d, and what was ironic about it?', a:'<strong>Fred Hoyle</strong> coined the term on a BBC radio broadcast as a way to <strong>mock the theory he opposed</strong> (he supported the Steady State model). The irony is that the dismissive nickname stuck and became the universally accepted name for the theory that defeated Hoyle\u2019s own model.', bloom:1},
         {q:'How does this week\u2019s content connect to the observation\u2013theory interplay from previous weeks?', a:'Hubble\u2019s observations (galaxy recession) demanded a theoretical explanation (expanding universe). The CMB was <strong>predicted by theory</strong> (Dicke and Peebles) before it was observed by Penzias and Wilson. This exemplifies the Week 3 theme: sometimes observation leads theory, sometimes theory predicts what observers should look for. The Big Bang is the product of <strong>both engines working together</strong>.', bloom:4},
+        {q:'Explain how Doppler shift allows astronomers to measure galaxy recession velocities. What role does spectroscopy play?', a:'When a galaxy moves away from us, its light is <strong>redshifted</strong> \u2014 spectral absorption lines shift to longer (redder) wavelengths. By comparing the <strong>observed positions</strong> of these spectral lines to their known laboratory positions (from Week 3\u2019s spectroscopy), astronomers calculate how fast the galaxy is receding. Hubble combined these Doppler-measured velocities with Cepheid-measured distances to discover his law: v = H\u2080 \u00d7 d.', bloom:3},
       ],
       examRelevance: '<strong>No final exam for OLES1603.</strong> The Idea Exploration (10%) is due <strong>20 March</strong> \u2014 this is your immediate priority. The project (40%) + supporting documentation (20%) = 60% of your total grade. The Big Bang evidence chain (Hubble + CMB) and the cosmic distance ladder provide excellent project topic material. The Nobel Prize discussion and the observation\u2013theory interplay are themes the lecturer repeatedly emphasises.',
       distinctionTip: 'For a strong pass: (1) <strong>Submit the Idea Exploration on time</strong> \u2014 it\u2019s worth 10% and should articulate a clear, focused project idea drawing on Weeks 1\u20134 themes. (2) <strong>Consider the Big Bang evidence chain as a project lens</strong> \u2014 how Hubble\u2019s distance measurements built on Leavitt\u2019s Cepheids, which built on parallax. (3) <strong>Connect this week to the \u201coverlooked scientists\u201d theme</strong> from Week 3 \u2014 Hubble not receiving a Nobel Prize fits the pattern of institutional barriers to recognition. (4) <strong>Think about the readings technically</strong> \u2014 even skimming the original Hubble and Penzias & Wilson papers shows you can engage with primary sources.',
@@ -3650,7 +3659,7 @@ const ASTRO_SORTS = [
 
 // ======================== SYNC TRACKER DATA ========================
 
-const LAST_SYNC_DATE = '2026-03-16T10:00';
+const LAST_SYNC_DATE = '2026-03-17T10:00';
 
 const SYNC_TRACKER = {
   1: {
@@ -3814,7 +3823,7 @@ const WORKFLOW_TRACKER = {
       ANHS2609: { complete:[1,2,3], draft:[4], pending:[], notes:'Week 3 fully upgraded 10 Mar from 91KB lecture transcript. Week 4 draft from outline 16 Mar (Fall of Persia: Issus to Gaugamela).' },
       OLES1603: { complete:[1,2,3], draft:[4], pending:[], notes:'Week 3 fully rewritten 10 Mar from 43KB lecture transcript. Week 4 draft from outline 16 Mar (How the Universe Began: Big Bang).' }
     },
-    totalQuizQuestions: 182,
+    totalQuizQuestions: 185,
     weeksCovered: 15
   },
   assessmentPrep: [
@@ -3889,11 +3898,24 @@ const COMPLIANCE_LOG = [
     materials: { INFO1113: {files:29,linked:21,excluded:9,gaps:0}, LNGS1001: {files:84,linked:54,excluded:16,gaps:0}, ANHS2609: {files:44,linked:38,excluded:7,gaps:0}, OLES1603: {files:27,linked:22,excluded:6,gaps:0} },
     issues: ['CLI reported LNGS1001 PASS with 16 actual gaps','pctDraft JS error in workflow tracker','OLES1603 Week 03 wrong title'],
     fixes: ['Added LNGS1001 Canvas Pages (11 files)','Created validate-materials.py','Created compliance system','pctDraft bug fixed','OLES1603 title corrected']
+  },
+  {
+    date: '2026-03-17',
+    type: 'Automated Sync',
+    agent: 'CLI',
+    commits: [],
+    deployed: false,
+    content: 'Enriched LNGS1001 + OLES1603 Wk4 study guides via NotebookLM MCP (2+1 keyTerms, 2+1 selfTest questions, distinctionTip common mistakes)',
+    infra: 'I1: PASS (LAST_SYNC_DATE updated), I2: PASS (CHANGELOG +2 entries)',
+    finals: 'F1: PASS (0 gaps), F2: PASS (6 pass, 5 warn, 0 fail)',
+    materials: { INFO1113: {files:29,linked:21,excluded:9,gaps:0}, LNGS1001: {files:84,linked:54,excluded:16,gaps:0}, ANHS2609: {files:44,linked:38,excluded:7,gaps:0}, OLES1603: {files:27,linked:22,excluded:6,gaps:0} },
+    issues: ['CHROME_UNAVAILABLE \u2014 no browser tasks','No Wk4 transcripts in Downloads or NotebookLM','OLES1603 + INFO1113 NbML queries failed intermittently (WinError 10054, retried successfully)'],
+    fixes: []
   }
 ];
 
 const SECURITY_AUDIT = {
-  lastRun: '2026-03-16',
+  lastRun: '2026-03-17',
   summary: { pass: 6, warn: 5, fail: 0 },
   checks: [
     { id:'S1', name:'Secrets & Credentials', status:'pass', detail:'No hardcoded secrets in dashboard or 12 visual guides' },
@@ -8983,7 +9005,7 @@ function validateDashboardData() {
 // ======================== STUDY ASSISTANT ========================
 
 const SA_STORAGE_KEY = 'uni-claude-key';
-const SA_MODEL = 'claude-sonnet-4-6-20260218';
+const SA_MODEL = 'claude-sonnet-4-6';
 let saMessages = [];
 let saTotalCost = 0;
 
