@@ -1438,6 +1438,7 @@ const TIMETABLE = [
   { course:'INFO1113', day:1, time:'4-6pm',  type:'lecture',  label:'Lec' },
   { course:'ANHS2609', day:2, time:'12-2pm', type:'lecture',  label:'Lec' },
   { course:'LNGS1001', day:2, time:'1-2pm',  type:'lecture',  label:'Lec2' },
+  { course:'LNGS1001', day:2, time:'4-5pm',  type:'tutorial', label:'Tut' },
   { course:'ANHS2609', day:5, time:'10-11am',type:'tutorial', label:'Tut' },
   { course:'OLES1603', day:5, time:'12-1pm', type:'tutorial', label:'Tut' },
   { course:'INFO1113', day:5, time:'2-4pm',  type:'tutorial', label:'Tut' },
@@ -1560,6 +1561,7 @@ const ASSESSMENTS = [
       ]
     }
   },
+  { date:'2026-03-20', course:'INFO1113', name:'Task 2', weight:'4%', type:'task', desc:'Second weighted online coding task on Ed. Write code from specification. Covers Weeks 1-4 content including arithmetic operations and sorting. Can submit multiple times before deadline (only latest graded). Due 20 Mar 23:59. Released 17 Mar.' },
   { date:'2026-03-20', course:'OLES1603', name:'Astronomy Idea Exploration', weight:'10%', type:'assignment', desc:'Present and explore your astronomy project topic idea (Week 4). Explain what interests you, what questions you want to investigate, and your preliminary research direction. Due 20 Mar 23:59. AI use limited — check Canvas for policy.',
     prep: {
       rubric: [
@@ -1679,6 +1681,10 @@ const DASHBOARD_CHANGELOG = [
   { date: '2026-03-17', action: 'update', target: 'STUDY_GUIDES', detail: 'Automated sync: enriched Week 4 drafts via NotebookLM MCP queries (no Chrome needed). LNGS1001: added 2 keyTerms (near-minimal pair, formal rule notation), 2 application-level selfTest questions (Language Y allophone analysis, near-minimal pair evidence), expanded distinctionTip with 5 common notation mistakes from notation guide. OLES1603: added Doppler shift keyTerm, 1 application selfTest question linking Doppler/spectroscopy/Hubble. ANHS2609/INFO1113: no Week 4 transcript in NotebookLM yet \u2014 drafts unchanged. All Week 4 guides remain outline quality (transcripts not yet available).' },
   { date: '2026-03-17', action: 'update', target: 'LAST_SYNC_DATE', detail: 'Automated sync (file-system + NotebookLM MCP). No Chrome. No new transcripts in Downloads. Week 4 lectures in progress (Mon 16 Mar, Tue 17 Mar). Transcripts expected Wed\u2013Thu.' },
   { date: '2026-03-17', action: 'fix', target: 'STUDY_ASSISTANT', detail: 'Fixed SA_MODEL from invalid claude-sonnet-4-6-20260218 to claude-sonnet-4-6. The dated model ID was rejected by the Anthropic API causing "Error: model" on all SA queries.' },
+  { date: '2026-03-17', action: 'fix', target: 'TIMETABLE', detail: 'Added missing LNGS1001 Tuesday tutorial (4-5pm) to TIMETABLE constant.' },
+  { date: '2026-03-17', action: 'update', target: 'SYNC_TRACKER', detail: 'Browser sync: collected INFO1113 Week 4 lesson (Arithmetic and Sorting, 6 challenges), Tutorial 4 (Collections, 9 exercises), Task 2 announcement (4%, due 20 Mar). LNGS1001 Week 4 slides available on Canvas (2 PPTX). Echo360 recordings available for LNGS Mon + OLES (Mar 16). ANHS/LNGS Tue lectures today. 4 transcripts still pending download.' },
+  { date: '2026-03-17', action: 'update', target: 'SYNC_TRACKER', detail: 'Echo360 transcript sync: Downloaded 3 transcripts via Echo360 native TXT download — INFO1113 W4 (Arithmetic/Sorting, 81KB), LNGS1001 W4 Mon (Phonology/Phonemes, 33KB), OLES1603 W4 (How Universe Began, 48KB). Downloaded 2 LNGS1001 W4 slide decks from Canvas (04a Phonemes 28.7MB, 04b Allophony 16MB). Remaining pending: LNGS1001 W4 Tue transcript + ANHS2609 W4 transcript (both lectures today, recordings not yet available).' },
+  { date: '2026-03-17', action: 'add', target: 'ASSESSMENTS', detail: 'Added INFO1113 Task 2 (4%, due 20 Mar 23:59). Online coding task on Ed. Write code from specification. Multiple submissions allowed.' },
 ];
 
 const WEEKLY_CONTENT = {
@@ -3720,20 +3726,21 @@ const SYNC_TRACKER = {
   4: {
     label: 'Week 4 (16\u201322 Mar)',
     items: [
-      { id:'info-w4-transcript', course:'INFO1113', type:'transcript', desc:'Lecture transcript', status:'pending' },
-      { id:'info-w4-lesson', course:'INFO1113', type:'lesson', desc:'Ed lesson (Week 4)', status:'pending', note:'No Week 4 lesson on Ed yet as of 14 Mar' },
-      { id:'info-w4-tutorial', course:'INFO1113', type:'tutorial', desc:'Tutorial 4', status:'pending' },
-      { id:'lngs-w4-mon-transcript', course:'LNGS1001', type:'transcript', desc:'Monday transcript', status:'pending' },
-      { id:'lngs-w4-tue-transcript', course:'LNGS1001', type:'transcript', desc:'Tuesday transcript', status:'pending' },
-      { id:'lngs-w4-mon-slides', course:'LNGS1001', type:'slides', desc:'Monday slides', status:'pending' },
-      { id:'lngs-w4-tue-slides', course:'LNGS1001', type:'slides', desc:'Tuesday slides', status:'pending' },
+      { id:'info-w4-transcript', course:'INFO1113', type:'transcript', desc:'Lecture transcript', status:'done', file:'Week 04 - Arithmetic and Sorting-transcript.txt', note:'2hr lecture. Topics: access control recap, arithmetic, sorting algorithms. Downloaded 17 Mar via Echo360.' },
+      { id:'info-w4-lesson', course:'INFO1113', type:'lesson', desc:'Ed lesson (Week 4)', status:'done', file:'Week 04 - Arithmetic and Sorting.md', note:'6 challenges: Reverse, Barcode Validation, Statistics, Selection Sort, Triforce, N-force*. Extracted 17 Mar.' },
+      { id:'info-w4-tutorial', course:'INFO1113', type:'tutorial', desc:'Tutorial 4', status:'done', file:'Tutorial 4 - Collections.md', note:'Collections: ArrayList, HashMap, generics, overloading. 9 exercises (5 starred). Extracted 17 Mar.' },
+      { id:'info-w4-task2', course:'INFO1113', type:'task', desc:'Task 2 (4%, due Mar 20)', status:'done', file:'Task 2 Announcement.md', note:'Online coding task. Write code from spec. Multiple submissions allowed. Released 17 Mar, due 20 Mar 23:59.' },
+      { id:'lngs-w4-mon-transcript', course:'LNGS1001', type:'transcript', desc:'Monday transcript', status:'done', file:'Week 04 - Mon - Phonology Phonemes-transcript.txt', note:'Phonemes, categories, distribution, contrastiveness, complementary distribution, minimal pairs. Downloaded 17 Mar via Echo360.' },
+      { id:'lngs-w4-tue-transcript', course:'LNGS1001', type:'transcript', desc:'Tuesday transcript', status:'pending', note:'Lecture today (Tue 1-2pm). Recording will be available later today.' },
+      { id:'lngs-w4-mon-slides', course:'LNGS1001', type:'slides', desc:'Monday slides (PPTX)', status:'done', file:'LNGS1001_2026_04a_Phonology1_Phonemes.pptx', note:'28.7MB. Phonology 1: Phonemes. Downloaded 17 Mar from Canvas.' },
+      { id:'lngs-w4-tue-slides', course:'LNGS1001', type:'slides', desc:'Tuesday slides (PPTX)', status:'done', file:'LNGS1001_2026_04b_Phonology2_Allophony1.pptx', note:'16.0MB. Phonology 2: Allophony. Downloaded 17 Mar from Canvas.' },
       { id:'lngs-w4-page', course:'LNGS1001', type:'page', desc:'Canvas What\'s on', status:'done', file:'Week 04 - Whats on.md', note:'Phonology: phoneme + allophony. Reading: Clark & Yallop 1990.' },
-      { id:'anhs-w4-transcript', course:'ANHS2609', type:'transcript', desc:'Lecture transcript', status:'pending' },
+      { id:'anhs-w4-transcript', course:'ANHS2609', type:'transcript', desc:'Lecture transcript', status:'pending', note:'Lecture today (Tue 12-2pm). Echo360 recording will be available later today.' },
       { id:'anhs-w4-page', course:'ANHS2609', type:'page', desc:'Canvas lecture page', status:'done', file:'Week 04 - The Fall of Persia.md', note:'Alexander\'s campaigns to 331BC. Readings: Arrian Bk 2-3, Bosworth 1993 Ch.2 pp.55-94, Briant 1996. Extracted 16 Mar.' },
       { id:'anhs-w4-tutorial', course:'ANHS2609', type:'tutorial', desc:'Tutorial page', status:'done', file:'Week 04 - Alexander in Egypt.md', note:'Alexander at Siwah oracle. Divine parentage claim. Plutarch + Arrian sources. Extracted 16 Mar.' },
       { id:'lngs-w4-tutorial', course:'LNGS1001', type:'tutorial', desc:'Tutorial content page', status:'done', file:'Tutorial Content - Week 4.md', note:'Allophony problems: Cree, Even, Japanese. Extracted 16 Mar.' },
       { id:'lngs-w4-extras', course:'LNGS1001', type:'page', desc:'Extras page', status:'done', file:'Extras - Week 4.md', note:'Cree language video (Elder Isabel Arcand). Extracted 16 Mar.' },
-      { id:'oles-w4-transcript', course:'OLES1603', type:'transcript', desc:'Lecture transcript', status:'pending' },
+      { id:'oles-w4-transcript', course:'OLES1603', type:'transcript', desc:'Lecture transcript', status:'done', file:'Week 04 - How the Universe Began-transcript.txt', note:'How the Universe Began. Dr Anita Hafner. 55min. Downloaded 17 Mar via Echo360.' },
       { id:'oles-w4-page', course:'OLES1603', type:'page', desc:'Canvas page', status:'done', file:'Week 04 - How the Universe Began.md', note:'Big Bang theory, Hubble expansion, CMB. Extracted 14 Mar.' },
     ]
   }
@@ -5428,7 +5435,7 @@ function syncRenderAI() {
   html += '<td>AI chat grounded in all uploaded course materials. Can also generate audio overviews, quizzes, flashcards, and study guide reports.</td>';
   html += '<td><strong>' + totalSources + ' sources</strong> across 4 notebooks \u2014 every lecture transcript, reading, slide deck, and tutorial uploaded to date</td>';
   html += '<td>Deep content questions, essay research, cross-week synthesis, audio revision</td></tr>';
-  html += '<tr><td><strong>Study Assistant</strong><br><span style="font-size:11px;color:var(--muted)">Claude Haiku, ~$0.001/Q</span></td>';
+  html += '<tr><td><strong>Study Assistant</strong><br><span style="font-size:11px;color:var(--muted)">Claude Sonnet 4.6, ~$0.02/Q</span></td>';
   html += '<td>Adaptive AI tutor (bottom-right corner). Tracks errors from practice exercises, builds a learning profile, generates targeted exercises, coaches toward distinction. Uses Socratic method and course-specific tutoring strategies.</td>';
   html += '<td>Study guides + assessments + practice tool inventories + study techniques + your error history &amp; learning profile</td>';
   html += '<td>Error coaching, exercise generation, assessment prep, distinction coaching, quick recall. For deep content research, use NotebookLM.</td></tr>';
@@ -5489,7 +5496,7 @@ function syncRenderAI() {
   // Section 4: Study Assistant — Adaptive AI Tutor
   html += '<div class="meth-section">';
   html += '<h3>&#128172; Study Assistant \u2014 Adaptive AI Tutor</h3>';
-  html += '<p>The floating chat button (bottom-right corner) is a <strong>full adaptive tutor</strong> powered by Claude Haiku 4.5. It goes far beyond simple Q&amp;A \u2014 it tracks your mistakes, identifies weak areas, generates targeted exercises, and adapts its teaching style to your level.</p>';
+  html += '<p>The floating chat button (bottom-right corner) is a <strong>full adaptive tutor</strong> powered by Claude Sonnet 4.6. It goes far beyond simple Q&amp;A \u2014 it tracks your mistakes, identifies weak areas, generates targeted exercises, and adapts its teaching style to your level.</p>';
 
   html += '<h4 style="margin-top:14px;font-size:14px;color:var(--info)">Core Capabilities</h4>';
   html += '<table class="meth-source-table"><thead><tr><th>Feature</th><th>How It Works</th></tr></thead><tbody>';
@@ -5533,7 +5540,7 @@ function syncRenderAI() {
   html += '<li><strong>For deep research</strong> \u2014 use NotebookLM directly, which has access to all full source documents</li>';
   html += '</ul></div>';
 
-  html += '<p style="margin-top:12px;font-size:12px;color:var(--muted)"><strong>Cost:</strong> ~$0.001 per question with prompt caching. Model: Claude Haiku 4.5. API key stored locally in your browser (entered once). All learning data stays in your browser\'s localStorage.</p>';
+  html += '<p style="margin-top:12px;font-size:12px;color:var(--muted)"><strong>Cost:</strong> ~$0.02 per question with prompt caching. Model: Claude Sonnet 4.6. API key stored locally in your browser (entered once). All learning data stays in your browser\'s localStorage.</p>';
   html += '</div>';
 
   // Section 5: The full pipeline
