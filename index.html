@@ -6,7 +6,7 @@
 <title>Uni 2026 - Study Dashboard</title>
 <style>
 :root {
-  --info: #3b82f6; --lngs: #10b981; --anhs: #f59e0b; --oles: #8b5cf6;
+  --info: #3b82f6; --lngs: #10b981; --anhs: #f59e0b; --oles: #8b5cf6; --review: #0d9488;
   --bg: #f8fafc; --sidebar: #0f172a; --card: #ffffff; --text: #1e293b;
   --muted: #64748b; --border: #e2e8f0; --danger: #ef4444; --warn: #f97316;
 }
@@ -55,6 +55,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 .badge-lngs { background:var(--lngs); }
 .badge-anhs { background:var(--anhs); color:#1e293b; }
 .badge-oles { background:var(--oles); }
+.badge-review { background:var(--review); }
 
 /* Assessment list */
 .assessment-item { display:flex; align-items:center; gap:12px; padding:10px 0; border-bottom:1px solid var(--border); }
@@ -787,6 +788,10 @@ document.getElementById('pin-input').focus();
     <div class="nav-item" onclick="showView('course-oles1603')">
       <span class="nav-dot" style="background:var(--oles)"></span> OLES1603 - Astronomy
     </div>
+    <div class="nav-section">Review</div>
+    <div class="nav-item" onclick="showView('course-info1110')">
+      <span class="nav-dot" style="background:var(--review)"></span> INFO1110 - Python Review
+    </div>
     <div class="nav-section">Tools</div>
     <div class="nav-item" onclick="showView('sync')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
@@ -1312,6 +1317,58 @@ document.getElementById('pin-input').focus();
   </div>
 </div>
 
+<!-- ==================== REVIEW: INFO1110 ==================== -->
+<div class="view" id="view-course-info1110">
+  <div class="course-header" style="background:linear-gradient(135deg,#0f766e,#0d9488)">
+    <div>
+      <h2>INFO1110 - Python Review</h2>
+      <p>Prerequisite Review &middot; Python → Java Bridge &middot; Lessons 1-13</p>
+    </div>
+  </div>
+  <div class="course-meta">
+    <div class="meta-item"><div class="meta-label">Purpose</div>Review advanced Python concepts that transfer to Java (INFO1113)</div>
+    <div class="meta-item"><div class="meta-label">Focus</div>Lessons 9-13 (Advanced) + Foundations Recap (L1-8)</div>
+    <div class="meta-item"><div class="meta-label">Status</div>Self-study review — not an active enrolment</div>
+  </div>
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab(this,'review-visual')">Visual Guides</div>
+    <div class="tab" onclick="switchTab(this,'review-drills')">Practice Drills</div>
+  </div>
+  <div class="tab-content active" id="review-visual"></div>
+  <div class="tab-content" id="review-drills">
+    <div class="card">
+      <div class="card-title">🧪 Advanced Studio — Auto-Graded Practice</div>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:12px">The Advanced Studio has auto-graded coding drills for Lessons 9-13 with instant feedback. Run it locally alongside this dashboard.</p>
+      <div style="background:#f0fdfa;border:1px solid #99f6e4;border-radius:8px;padding:16px;margin-bottom:16px">
+        <p style="font-size:13px;font-weight:600;margin-bottom:8px">How to start:</p>
+        <ol style="font-size:13px;padding-left:20px;line-height:1.8">
+          <li>Open the folder: <code>Study guide for programing exam\Foundational review\INFO1110 Review v3</code></li>
+          <li>Double-click <code>start_all_ADVANCED.cmd</code></li>
+          <li>The tool opens at <a href="http://127.0.0.1:8766/INFO1110_advanced_revision.html" target="_blank">http://127.0.0.1:8766/INFO1110_advanced_revision.html</a></li>
+        </ol>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div style="background:#fff;border:1px solid var(--border);border-radius:8px;padding:14px">
+          <div style="font-weight:600;font-size:13px;margin-bottom:4px">📖 Lesson Content + Drills</div>
+          <p style="font-size:12px;color:var(--muted)">Teaching explanations with worked examples, followed by 5 auto-graded coding drills per lesson</p>
+        </div>
+        <div style="background:#fff;border:1px solid var(--border);border-radius:8px;padding:14px">
+          <div style="font-weight:600;font-size:13px;margin-bottom:4px">🎮 Campaign Mode</div>
+          <p style="font-size:12px;color:var(--muted)">Sequential missions that unlock as you master each concept — build tasks with full auto-grading</p>
+        </div>
+        <div style="background:#fff;border:1px solid var(--border);border-radius:8px;padding:14px">
+          <div style="font-weight:600;font-size:13px;margin-bottom:4px">🔀 Mixed Review</div>
+          <p style="font-size:12px;color:var(--muted)">Randomized drills across multiple lessons, weighted toward areas needing more practice</p>
+        </div>
+        <div style="background:#fff;border:1px solid var(--border);border-radius:8px;padding:14px">
+          <div style="font-weight:600;font-size:13px;margin-bottom:4px">📊 Progress Tracking</div>
+          <p style="font-size:12px;color:var(--muted)">Session summaries, per-lesson completion badges, and feedback on strengths vs areas to review</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- ==================== SYNC ==================== -->
 <div class="view" id="view-sync">
   <h1 class="page-title">Sync &amp; Updates</h1>
@@ -1726,6 +1783,9 @@ const DASHBOARD_CHANGELOG = [
   { date: '2026-03-18', action: 'update', target: 'GUIDE_SOURCES', detail: 'All Week 4 entries upgraded to notebooklm quality: INFO1113 transcript→notebooklm, LNGS1001 transcript→notebooklm, ANHS2609 outline→notebooklm, OLES1603 transcript→notebooklm. NBML_VALIDATED.visualGuides Wk4 set true for INFO1113, LNGS1001, OLES1603.' },
   { date: '2026-03-18', action: 'add', target: 'VISUAL_GUIDES', detail: 'LNGS1001 Week 4 visual guide created (Phonology I: Phonemes & Allophones — 10 steps, green theme). Covers phonemes vs allophones, complementary distribution, minimal pairs, formal rule notation. Self-test + practice lab links.' },
   { date: '2026-03-18', action: 'add', target: 'FILES', detail: 'New files: LNGS1001 Wk4 Tue transcript, ANHS2609 Wk4 transcript, OLES1603 Lec4 slides + 3 Tutorial 4 PDFs, 2 announcements (OLES1603 Idea Exploration, LNGS1001 Venue Change).' },
+  { date: '2026-03-18', action: 'add', target: 'VISUAL_GUIDES', detail: 'ANHS2609 Week 4 visual guide created (The Fall of Persia \u2014 10 steps, orange theme). Covers Granicus, Issus, Tyre, Egypt/Siwah, Alexandria, Gaugamela, Persepolis, Darius III, primary sources. 12 self-test Qs. NBML_VALIDATED set false (needs validation).' },
+  { date: '2026-03-18', action: 'fix', target: 'SYNC_TRACKER', detail: 'Fixed CC5 file path mismatches: OLES1603_Lec1.pdf \u2192 Week 01 - Astronomy Through the Ages.pdf, Week 03 - Stars and Constellations.md \u2192 Week 03 - How We Know What We Know.md. consistency-check.py updated to search nested subdirs.' },
+  { date: '2026-03-18', action: 'update', target: 'CONSISTENCY', detail: 'Full consistency validation: 10/10 PASS, 0 warnings, 0 issues. All 16 study guides + 16 visual guides aligned. All SYNC_TRACKER files verified on disk.' },
 ];
 
 const WEEKLY_CONTENT = {
@@ -4920,6 +4980,46 @@ window.addEventListener('message', function(e) {
     }
   }
 });
+
+/* ── INFO1110 Review Visual Guides ── */
+const INFO1110_REVIEW_GUIDES = [
+  { id:'foundations', label:'Foundations (L1-8)', file:'info1110-review-foundations.html' },
+  { id:'lesson09', label:'L9: Recursion', file:'info1110-review-lesson09.html' },
+  { id:'lesson10', label:'L10: Args & Sets', file:'info1110-review-lesson10.html' },
+  { id:'lesson11', label:'L11: Classes ★', file:'info1110-review-lesson11.html' },
+  { id:'lesson12', label:'L12: Modules', file:'info1110-review-lesson12.html' },
+  { id:'lesson13', label:'L13: Regex & Gen', file:'info1110-review-lesson13.html' },
+];
+
+function renderInfo1110Guides(containerId) {
+  const guides = INFO1110_REVIEW_GUIDES;
+  const color = 'var(--review)';
+  const folder = 'INFO1110 Python Review';
+  const defaultIdx = 3; // L11: Classes — most critical for Java
+  let html = `<div class="vg-container">
+    <div style="padding:14px 18px 10px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+      <span style="font-weight:600;font-size:13px">Select lesson:</span>`;
+  guides.forEach((g, i) => {
+    const isActive = i === defaultIdx;
+    html += `<button class="vg-week-btn ${isActive?'active':''}" onclick="switchInfo1110Guide(this,'${g.id}')" style="padding:6px 14px;border-radius:8px;border:1px solid var(--border);background:${isActive?color:'#fff'};color:${isActive?'#fff':'inherit'};font-size:12px;font-weight:600;cursor:pointer" data-guide="${g.id}" data-color="${color}">${g.label}</button>`;
+  });
+  html += `</div>
+    <iframe id="vg-frame-INFO1110" src="${folder}/${guides[defaultIdx].file}" scrolling="no" style="width:100%;border:none;border-radius:0 0 12px 12px;min-height:700px;overflow:hidden" onload="autoResizeVgFrame(this)"></iframe>
+  </div>`;
+  document.getElementById(containerId).innerHTML = html;
+}
+
+function switchInfo1110Guide(btn, guideId) {
+  const container = btn.closest('.vg-container');
+  container.querySelectorAll('.vg-week-btn').forEach(b => {
+    b.style.background = '#fff'; b.style.color = 'inherit';
+  });
+  btn.style.background = btn.dataset.color;
+  btn.style.color = '#fff';
+  const guide = INFO1110_REVIEW_GUIDES.find(g => g.id === guideId);
+  const frame = document.getElementById('vg-frame-INFO1110');
+  frame.src = 'INFO1110 Python Review/' + guide.file;
+}
 
 const BLOOM_LABELS = {1:'Remember', 2:'Understand', 3:'Apply', 4:'Analyse'};
 
@@ -10542,6 +10642,7 @@ function init() {
   renderVisualGuides('oles-visual', 'OLES1603');
   renderStudyGuide('oles-guide', 'OLES1603');
   renderAstroPracticeLab();
+  renderInfo1110Guides('review-visual');
   renderSyncPage();
   renderWorkflowPage();
   calMonth = TODAY.getMonth();
