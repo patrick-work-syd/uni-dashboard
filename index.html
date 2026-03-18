@@ -10812,7 +10812,7 @@ function saBuildContext(courseCode) {
   if (courseCode && WEEKLY_CONTENT[courseCode]) {
     ctx += '\n## WEEKLY CONTENT\n';
     Object.entries(WEEKLY_CONTENT[courseCode]).forEach(([week, items]) => {
-      ctx += `Week ${week}: ` + items.map(i => i.title).join(', ') + '\n';
+      ctx += `Week ${week}: ` + Object.entries(items).map(([k, v]) => v).join(' | ') + '\n';
     });
   }
 
