@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>INFO1110 Review — Foundations Recap: Lessons 1-8</title>
+<style>
+:root {
+  --teal: #0d9488; --teal-light: #f0fdfa; --teal-dark: #115e59;
+  --blue: #3b82f6; --blue-light: #eff6ff; --blue-dark: #1e40af;
+  --green: #10b981; --green-light: #ecfdf5;
+  --orange: #f59e0b; --orange-light: #fffbeb;
+  --purple: #8b5cf6; --purple-light: #f5f3ff;
+  --red: #ef4444; --red-light: #fef2f2;
+  --gray-50: #f8fafc; --gray-100: #f1f5f9; --gray-200: #e2e8f0;
+  --gray-400: #94a3b8; --gray-600: #475569; --gray-800: #1e293b;
+  --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --mono: 'SF Mono', 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: var(--font); background: var(--gray-50); color: var(--gray-800); line-height: 1.65; }
+
+.header { background: linear-gradient(135deg, var(--teal-dark) 0%, var(--teal) 100%); color: #fff; padding: 32px 0 28px; }
+.header-inner { max-width: 800px; margin: 0 auto; padding: 0 24px; }
+.header-tag { font-size: 12px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; opacity: 0.8; margin-bottom: 8px; }
+.header h1 { font-size: 26px; font-weight: 700; margin-bottom: 4px; }
+.header p { font-size: 14px; opacity: 0.85; }
+.header-reassure { margin-top: 14px; padding: 12px 16px; background: rgba(255,255,255,0.12); border-radius: 10px; font-size: 13px; line-height: 1.5; }
+.header-badge { display: inline-block; background: rgba(255,255,255,0.2); padding: 3px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; letter-spacing: 0.5px; margin-top: 10px; }
+
+.progress-bar { max-width: 800px; margin: 0 auto; padding: 16px 24px 0; }
+.progress-track { background: var(--gray-200); height: 6px; border-radius: 3px; overflow: hidden; }
+.progress-fill { background: var(--green); height: 100%; width: 0%; border-radius: 3px; transition: width 0.5s ease; }
+.progress-label { font-size: 12px; color: var(--gray-400); margin-top: 6px; text-align: right; }
+
+.content { max-width: 800px; margin: 0 auto; padding: 24px; }
+
+.step { background: #fff; border: 1px solid var(--gray-200); border-radius: 16px; margin-bottom: 20px; overflow: hidden; }
+.step-header { display: flex; align-items: center; gap: 12px; padding: 18px 22px; cursor: pointer; user-select: none; }
+.step-header:hover { background: var(--gray-50); }
+.step-num { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; flex-shrink: 0; }
+.step-num.locked { background: var(--gray-200); color: var(--gray-400); }
+.step-num.active { background: var(--teal); color: #fff; }
+.step-num.done { background: var(--green); color: #fff; }
+.step-title { flex: 1; }
+.step-title h3 { font-size: 16px; font-weight: 600; }
+.step-title .step-sub { font-size: 12px; color: var(--gray-400); margin-top: 1px; }
+.step-chevron { font-size: 18px; color: var(--gray-400); transition: transform 0.2s; }
+.step.open .step-chevron { transform: rotate(90deg); }
+.step-body { display: none; padding: 0 22px 22px; }
+.step.open .step-body { display: block; }
+
+.diagram { background: var(--gray-50); border: 1px solid var(--gray-200); border-radius: 12px; padding: 20px; margin: 14px 0; text-align: center; overflow-x: auto; }
+.diagram svg { max-width: 100%; height: auto; }
+
+.prose { font-size: 15px; color: var(--gray-600); margin: 12px 0; }
+.prose strong { color: var(--gray-800); }
+
+.label { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 4px; }
+.label-idea { color: var(--green); } .label-how { color: var(--teal); } .label-trap { color: var(--red); } .label-why { color: var(--purple); } .label-tip { color: var(--orange); } .label-bridge { color: var(--blue); }
+
+pre { background: #1e293b; color: #e2e8f0; padding: 14px 16px; border-radius: 10px; font-family: var(--mono); font-size: 13px; line-height: 1.7; overflow-x: auto; margin: 10px 0; white-space: pre; }
+pre .kw { color: #c084fc; } pre .str { color: #86efac; } pre .cmt { color: #64748b; font-style: italic; }
+pre .type { color: #67e8f9; } pre .num { color: #fbbf24; } pre .fn { color: #7dd3fc; } pre .ann { color: #f472b6; }
+code { font-family: var(--mono); font-size: 0.88em; background: var(--gray-100); padding: 1px 5px; border-radius: 4px; }
+
+.compare { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 14px 0; }
+@media (max-width: 600px) { .compare { grid-template-columns: 1fr; } }
+.cmp-box { border-radius: 10px; padding: 14px; }
+.cmp-box.python { background: var(--orange-light); border: 1px solid #fed7aa; }
+.cmp-box.java { background: var(--blue-light); border: 1px solid #bfdbfe; }
+.cmp-box.before { background: var(--red-light); border: 1px solid #fecaca; }
+.cmp-box.after { background: var(--green-light); border: 1px solid #a7f3d0; }
+.cmp-box h4 { font-size: 12px; font-weight: 700; margin-bottom: 6px; }
+.cmp-box.python h4 { color: #b45309; } .cmp-box.java h4 { color: var(--blue-dark); }
+.cmp-box.before h4 { color: var(--red); } .cmp-box.after h4 { color: #065f46; }
+.cmp-box pre { font-size: 12.5px; padding: 10px; margin: 0; }
+
+.callout { display: flex; gap: 10px; padding: 14px 16px; border-radius: 10px; margin: 14px 0; font-size: 14px; line-height: 1.55; }
+.callout-icon { font-size: 18px; flex-shrink: 0; line-height: 1.5; }
+.callout.tip { background: var(--blue-light); border: 1px solid #bfdbfe; }
+.callout.warn { background: var(--red-light); border: 1px solid #fecaca; }
+.callout.ok { background: var(--green-light); border: 1px solid #a7f3d0; }
+.callout.bridge { background: var(--teal-light); border: 1px solid #99f6e4; }
+
+.analogy { background: var(--purple-light); border: 1px solid #ddd6fe; border-radius: 12px; padding: 16px; margin: 14px 0; }
+.analogy-label { font-size: 11px; font-weight: 700; color: var(--purple); letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 4px; }
+.analogy p { font-size: 14px; color: var(--gray-600); }
+
+.check { background: var(--green-light); border: 1px solid #a7f3d0; border-radius: 12px; padding: 18px; margin: 18px 0; }
+.check-title { font-size: 13px; font-weight: 700; color: var(--green); margin-bottom: 6px; }
+.check-q { font-size: 14px; margin-bottom: 10px; }
+.check textarea { width: 100%; padding: 8px 10px; border: 1px solid #a7f3d0; border-radius: 8px; font-family: var(--font); font-size: 13px; resize: vertical; min-height: 44px; background: #fff; }
+.check textarea:focus { outline: 2px solid var(--green); border-color: transparent; }
+.check-reveal { margin-top: 8px; }
+.check-reveal button { background: var(--green); color: #fff; border: none; padding: 7px 16px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; }
+.check-reveal button:hover { background: #059669; }
+.check-reveal button:disabled { background: var(--gray-400); cursor: not-allowed; }
+.check-answer { display: none; margin-top: 10px; padding: 12px; background: #fff; border-radius: 8px; border: 1px solid #a7f3d0; font-size: 13px; line-height: 1.6; }
+.check-answer.show { display: block; }
+.check-rating { margin-top: 8px; display: flex; gap: 8px; }
+.check-rating button { background: transparent; border: 1px solid #a7f3d0; color: var(--gray-600); padding: 5px 12px; border-radius: 6px; font-size: 12px; cursor: pointer; }
+.check-rating button:hover { background: var(--green-light); }
+.check-rating button.got-it { color: var(--green); border-color: var(--green); }
+.check-rating button.not-yet { color: var(--red); border-color: var(--red); }
+
+.self-test { background: #fff; border: 1px solid var(--gray-200); border-radius: 16px; padding: 28px 22px; margin-bottom: 20px; }
+.self-test-title { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+.self-test-sub { font-size: 13px; color: var(--gray-400); margin-bottom: 22px; }
+.st-q { background: var(--gray-50); border: 1px solid var(--gray-200); border-radius: 12px; padding: 16px; margin-bottom: 14px; }
+.st-q-header { display: flex; gap: 10px; margin-bottom: 8px; font-size: 12px; }
+.st-q-num { font-weight: 700; color: var(--teal); min-width: 32px; }
+.st-q-bloom { color: var(--gray-400); }
+.st-q p { font-size: 14px; margin-bottom: 10px; }
+.st-q textarea { width: 100%; padding: 8px 10px; border: 1px solid var(--gray-200); border-radius: 8px; font-family: var(--font); font-size: 13px; resize: vertical; min-height: 40px; background: #fff; }
+.st-q textarea:focus { outline: 2px solid var(--teal); border-color: transparent; }
+.st-q .check-reveal { margin-top: 6px; }
+.st-q .check-answer { background: var(--green-light); border-color: #a7f3d0; margin-top: 8px; }
+
+.concept-map { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 13px; }
+.concept-map th, .concept-map td { border: 1px solid var(--gray-200); padding: 10px 12px; text-align: left; }
+.concept-map th { background: var(--teal-light); color: var(--teal-dark); font-weight: 700; }
+.concept-map th.py { background: var(--orange-light); color: #b45309; }
+.concept-map th.jv { background: var(--blue-light); color: var(--blue-dark); }
+.concept-map tr:nth-child(even) { background: var(--gray-50); }
+
+.summary-box { border-radius: 12px; padding: 16px; margin: 18px 0; }
+.summary-box.teal { background: var(--teal-light); border: 1px solid #99f6e4; }
+.summary-box h4 { font-size: 13px; font-weight: 700; color: var(--teal-dark); margin-bottom: 6px; }
+.summary-box p { font-size: 13px; color: var(--gray-600); }
+
+.nav-footer { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding-top: 24px; margin-top: 32px; border-top: 1px solid var(--gray-200); }
+.nav-btn { font-size: 13px; padding: 8px 12px; border-radius: 8px; text-decoration: none; transition: all 0.2s; color: var(--teal); border: 1px solid var(--gray-200); }
+.nav-btn:hover { background: var(--teal-light); border-color: var(--teal); }
+.nav-btn.primary { background: var(--teal); color: #fff; border-color: var(--teal); }
+.nav-btn.primary:hover { background: var(--teal-dark); }
+.nav-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="header-tag">INFO1110 Review · Foundations Recap · Python → Java Bridge</div>
+    <h1>Foundations Recap: Lessons 1–8</h1>
+    <p>10 steps · everything from the basics condensed · you passed this — just refresh</p>
+    <div class="header-reassure">
+      <strong>This is a quick refresher, not a deep dive.</strong> You already passed INFO1110 — this guide just reminds you of the core concepts from the foundation material (Lessons 1–8) and shows how each one maps to Java. Skim through each step at your own pace. The goal is familiarity, not mastery. You're using this as a bridge to INFO1113.
+    </div>
+  </div>
+</div>
+
+<div class="progress-bar">
+  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="progress-label"><span id="progressLabel">0 of 10</span> complete</div>
+</div>
+
+<div class="content">
+
+<!-- ============ STEP 1 ============ -->
+<div class="step" id="step-1" data-step="1">
+  <div class="step-header" onclick="toggleStep(1)">
+    <div class="step-num active">1</div>
+    <div class="step-title"><h3>Variables, Types & Expressions</h3><div class="step-sub">Lessons 1–2: Variables as labels, basic types, arithmetic</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">In Python, a <strong>variable</strong> is a label that points to an object in memory. It doesn't declare a type — the type is determined by the object it refers to.</p>
+<pre><span class="cmt"># Variables as labels on objects</span>
+name = <span class="str">"Alice"</span>         <span class="cmt"># points to a string object</span>
+age = 20             <span class="cmt"># points to an integer object</span>
+score = 95.5         <span class="cmt"># points to a float object</span>
+is_student = <span class="kw">True</span>   <span class="cmt"># points to a boolean object</span>
+
+<span class="cmt"># Dynamic typing — same variable can point to different types</span>
+x = 5                <span class="cmt"># integer</span>
+x = <span class="str">"hello"</span>      <span class="cmt"># now it's a string (type changed!)</span>
+
+<span class="cmt"># Arithmetic operators</span>
+result = 10 + 5      <span class="cmt"># 15</span>
+result = 10 - 5      <span class="cmt"># 5</span>
+result = 10 * 5      <span class="cmt"># 50</span>
+result = 10 / 5      <span class="cmt"># 2.0 (always a float in Python 3)</span>
+result = 10 // 5     <span class="cmt"># 2 (integer division)</span>
+result = 10 % 3      <span class="cmt"># 1 (modulo — remainder)</span>
+
+<span class="cmt"># String formatting with f-strings</span>
+message = f<span class="str">"Hello, {name}! You are {age} years old."</span></pre>
+    <div class="compare">
+      <div class="cmp-box python"><h4>Python</h4><pre>x = 5
+x = "hello"  <span class="cmt"># OK — type changes</span></pre></div>
+      <div class="cmp-box java"><h4>Java</h4><pre><span class="type">int</span> x = 5;
+<span class="str">// x = "hello";</span>  <span class="cmt">// ERROR — type mismatch!</span></pre></div>
+    </div>
+    <p class="prose"><strong>Key difference:</strong> Java requires you to <strong>declare the type upfront.</strong> Once <code>x</code> is declared as an <code>int</code>, it can only hold integers. Python is more flexible — the same variable can hold any type.</p>
+    <div class="callout bridge"><div class="callout-icon">🌉</div><div><strong>Java parallel:</strong> In Java, you write <code>int age = 20;</code> or <code>String name = "Alice";</code>. The type comes first, then the variable name. Java's types are <strong>primitive</strong> (int, float, boolean) or <strong>object</strong> (String, ArrayList). String formatting in Java uses <code>System.out.println("Hello, " + name)</code> or <code>String.format()</code>.</div></div>
+    <div class="check" data-check="1">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">What is the main difference between Python's dynamic typing and Java's static typing?</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer"><strong>Python:</strong> Variables have no declared type; the type is determined by the object they point to. The same variable can switch types at runtime. <strong>Java:</strong> Every variable must have a declared type, set when you create the variable. Once declared, it can only hold values of that type. Java's type system is enforced at compile time; Python's is flexible at runtime.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 2 ============ -->
+<div class="step" id="step-2" data-step="2">
+  <div class="step-header" onclick="toggleStep(2)">
+    <div class="step-num locked">2</div>
+    <div class="step-title"><h3>Input/Output & String Operations</h3><div class="step-sub">Lesson 2–3: print(), input(), string methods</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">Python's <code>input()</code> reads user input as a string. <code>print()</code> displays output. Strings have built-in methods like <code>.upper()</code>, <code>.lower()</code>, <code>.strip()</code>, <code>.split()</code>.</p>
+<pre><span class="cmt"># Reading input (always returns a string)</span>
+name = <span class="fn">input</span>(<span class="str">"What is your name? "</span>)
+
+<span class="cmt"># Output</span>
+<span class="fn">print</span>(<span class="str">"Hello, "</span> + name)
+
+<span class="cmt"># String methods</span>
+text = <span class="str">"  Hello World  "</span>
+<span class="fn">print</span>(text.<span class="fn">strip</span>())        <span class="cmt"># "Hello World" (removes whitespace)</span>
+<span class="fn">print</span>(text.<span class="fn">upper</span>())        <span class="cmt"># "  HELLO WORLD  "</span>
+<span class="fn">print</span>(text.<span class="fn">lower</span>())        <span class="cmt"># "  hello world  "</span>
+
+words = <span class="str">"apple,banana,cherry"</span>
+<span class="fn">print</span>(words.<span class="fn">split</span>(<span class="str">","</span>))  <span class="cmt"># ['apple', 'banana', 'cherry']</span></pre>
+    <div class="compare">
+      <div class="cmp-box python"><h4>Python</h4><pre>name = <span class="fn">input</span>(<span class="str">"Name? "</span>)
+<span class="fn">print</span>(name.<span class="fn">upper</span>())</pre></div>
+      <div class="cmp-box java"><h4>Java</h4><pre><span class="type">Scanner</span> sc = <span class="kw">new</span> <span class="type">Scanner</span>(System.in);
+<span class="type">String</span> name = sc.<span class="fn">nextLine</span>();
+System.out.<span class="fn">println</span>(name.<span class="fn">toUpperCase</span>());</pre></div>
+    </div>
+    <p class="prose">String methods in Java are very similar: <code>.toUpperCase()</code>, <code>.toLowerCase()</code>, <code>.trim()</code>, <code>.split()</code>. The main difference is <strong>Java requires explicit imports</strong> for input (Scanner) and uses <code>System.out.println()</code> instead of <code>print()</code>.</p>
+    <div class="callout bridge"><div class="callout-icon">🌉</div><div><strong>Java parallel:</strong> Java uses <code>Scanner</code> for input and <code>System.out.println()</code> for output. String methods exist in Java but with different names (camelCase instead of snake_case). Both languages support string concatenation with <code>+</code>.</div></div>
+    <div class="check" data-check="2">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">What does <code>input()</code> always return in Python, and why would you need to convert it if you want a number?</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer"><code>input()</code> always returns a <strong>string</strong>, even if the user types a number like "42". To convert it to an integer or float, you use <code>int()</code>, <code>float()</code>, etc. For example: <code>age = int(input("Age? "))</code>. This is why you need explicit conversion — Python doesn't assume what type you want.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 3 ============ -->
+<div class="step" id="step-3" data-step="3">
+  <div class="step-header" onclick="toggleStep(3)">
+    <div class="step-num locked">3</div>
+    <div class="step-title"><h3>Conditionals: if/elif/else</h3><div class="step-sub">Lesson 3: Boolean expressions, comparison, logical operators</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">Conditionals let you run different code based on conditions. Python uses <code>if</code>, <code>elif</code>, <code>else</code>. <strong>Indentation matters!</strong></p>
+<pre><span class="cmt"># Comparison operators</span>
+x = 10
+<span class="fn">print</span>(x == 5)   <span class="cmt"># False (equal)</span>
+<span class="fn">print</span>(x != 5)   <span class="cmt"># True (not equal)</span>
+<span class="fn">print</span>(x &gt; 5)    <span class="cmt"># True (greater than)</span>
+<span class="fn">print</span>(x &lt;= 5)   <span class="cmt"># False (less than or equal)</span>
+
+<span class="cmt"># Logical operators: and, or, not</span>
+age = 20
+<span class="fn">print</span>(age &gt;= 18 <span class="kw">and</span> age &lt; 65)  <span class="cmt"># True (both conditions true)</span>
+<span class="fn">print</span>(age &lt; 13 <span class="kw">or</span> age &gt;= 65)   <span class="cmt"># False (neither true)</span>
+<span class="fn">print</span>(<span class="kw">not</span> (age &gt; 30))          <span class="cmt"># True (negation)</span>
+
+<span class="cmt"># if/elif/else chains</span>
+score = 85
+<span class="kw">if</span> score &gt;= 90:
+    <span class="fn">print</span>(<span class="str">"A"</span>)
+<span class="kw">elif</span> score &gt;= 80:
+    <span class="fn">print</span>(<span class="str">"B"</span>)
+<span class="kw">elif</span> score &gt;= 70:
+    <span class="fn">print</span>(<span class="str">"C"</span>)
+<span class="kw">else</span>:
+    <span class="fn">print</span>(<span class="str">"F"</span>)</pre>
+    <div class="compare">
+      <div class="cmp-box python"><h4>Python</h4><pre><span class="kw">if</span> x &gt; 5:
+    <span class="fn">print</span>(<span class="str">"big"</span>)
+<span class="kw">else</span>:
+    <span class="fn">print</span>(<span class="str">"small"</span>)</pre></div>
+      <div class="cmp-box java"><h4>Java</h4><pre><span class="kw">if</span> (x &gt; 5) {
+    System.out.<span class="fn">println</span>(<span class="str">"big"</span>);
+} <span class="kw">else</span> {
+    System.out.<span class="fn">println</span>(<span class="str">"small"</span>);
+}</pre></div>
+    </div>
+    <p class="prose">Logic is identical. Syntax differences: Java uses braces <code>{}</code> instead of indentation. Logical operators: Java uses <code>&&</code> (and), <code>||</code> (or), <code>!</code> (not).</p>
+    <div class="callout bridge"><div class="callout-icon">🌉</div><div><strong>Java parallel:</strong> Java requires parentheses around conditions: <code>if (x &gt; 5)</code> not <code>if x &gt; 5</code>. Braces define code blocks instead of indentation. Operators: <code>==</code>, <code>!=</code>, <code>&gt;</code>, <code>&lt;</code> work the same. But use <code>&&</code>, <code>||</code>, <code>!</code> instead of <code>and</code>, <code>or</code>, <code>not</code>.</div></div>
+    <div class="check" data-check="3">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">What is the order of evaluation for <code>a or b and c</code>? Which operator runs first?</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer"><code>and</code> has higher precedence than <code>or</code>, so the expression evaluates as <code>a or (b and c)</code>. This is the same in Java: <code>||</code> has lower precedence than <code>&&</code>. Parentheses make this explicit: <code>a || (b && c)</code>.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 4 ============ -->
+<div class="step" id="step-4" data-step="4">
+  <div class="step-header" onclick="toggleStep(4)">
+    <div class="step-num locked">4</div>
+    <div class="step-title"><h3>Loops: for and while</h3><div class="step-sub">Lesson 4: Iteration, break, continue, loop tracing</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose"><code>for</code> loops iterate over sequences. <code>while</code> loops run while a condition is true. Both support <code>break</code> (exit loop) and <code>continue</code> (skip to next iteration).</p>
+<pre><span class="cmt"># for loop — iterate over items</span>
+<span class="kw">for</span> item <span class="kw">in</span> [<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>]:
+    <span class="fn">print</span>(item)
+
+<span class="cmt"># for loop with range</span>
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">5</span>):  <span class="cmt"># 0, 1, 2, 3, 4</span>
+    <span class="fn">print</span>(i)
+
+<span class="cmt"># while loop</span>
+count = <span class="num">0</span>
+<span class="kw">while</span> count &lt; <span class="num">5</span>:
+    <span class="fn">print</span>(count)
+    count += <span class="num">1</span>
+
+<span class="cmt"># break and continue</span>
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">10</span>):
+    <span class="kw">if</span> i == <span class="num">3</span>:
+        <span class="kw">continue</span>  <span class="cmt"># skip 3, go to next iteration</span>
+    <span class="kw">if</span> i == <span class="num">7</span>:
+        <span class="kw">break</span>     <span class="cmt"># exit loop entirely</span>
+    <span class="fn">print</span>(i)</pre>
+    <div class="compare">
+      <div class="cmp-box python"><h4>Python</h4><pre><span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">3</span>):
+    <span class="fn">print</span>(i)</pre></div>
+      <div class="cmp-box java"><h4>Java</h4><pre><span class="kw">for</span> (<span class="type">int</span> i = <span class="num">0</span>; i &lt; <span class="num">3</span>; i++) {
+    System.out.<span class="fn">println</span>(i);
+}</pre></div>
+    </div>
+    <p class="prose">Java's <code>for</code> loop syntax is different. It declares the counter variable, sets the condition, and specifies how to increment. But <code>while</code> loops are identical in both languages.</p>
+    <div class="callout bridge"><div class="callout-icon">🌉</div><div><strong>Java parallel:</strong> Java has two main loop styles. (1) Traditional: <code>for (int i = 0; i &lt; 10; i++)</code> — declare, condition, increment. (2) Enhanced: <code>for (int item : list)</code> — iterate over items (same as Python's <code>for item in list</code>). Both <code>break</code> and <code>continue</code> work identically.</div></div>
+    <div class="check" data-check="4">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">What would Java code that iterates over a list look like? (The enhanced for loop version.)</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer"><code>for (String item : list) {<br>&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(item);<br>}</code><br>This is Java's enhanced for loop (also called for-each). The syntax is <code>for (Type variable : collection)</code> — very similar to Python's <code>for item in list</code>.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 5 ============ -->
+<div class="step" id="step-5" data-step="5">
+  <div class="step-header" onclick="toggleStep(5)">
+    <div class="step-num locked">5</div>
+    <div class="step-title"><h3>Lists & Tuples</h3><div class="step-sub">Lesson 5: Creating, indexing, slicing, methods</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">Lists are <strong>mutable</strong> (changeable) sequences. Tuples are <strong>immutable</strong> (fixed). Both support indexing and slicing.</p>
+<pre><span class="cmt"># Creating lists</span>
+numbers = [<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>, <span class="num">4</span>]
+names = [<span class="str">"Alice"</span>, <span class="str">"Bob"</span>, <span class="str">"Charlie"</span>]
+mixed = [<span class="num">1</span>, <span class="str">"hello"</span>, <span class="num">3.14</span>]  <span class="cmt"># lists can mix types</span>
+
+<span class="cmt"># Indexing and slicing</span>
+<span class="fn">print</span>(numbers[<span class="num">0</span>])      <span class="cmt"># 1 (first element, 0-indexed)</span>
+<span class="fn">print</span>(numbers[<span class="num">-1</span>])     <span class="cmt"># 4 (last element)</span>
+<span class="fn">print</span>(numbers[<span class="num">1</span>:<span class="num">3</span>])    <span class="cmt"># [2, 3] (slice: index 1 up to but not including 3)</span>
+
+<span class="cmt"># List methods (mutating)</span>
+numbers.<span class="fn">append</span>(<span class="num">5</span>)         <span class="cmt"># add to end</span>
+numbers.<span class="fn">insert</span>(<span class="num">0</span>, <span class="num">0</span>)      <span class="cmt"># insert at index 0</span>
+numbers.<span class="fn">remove</span>(<span class="num">3</span>)        <span class="cmt"># remove first occurrence of 3</span>
+numbers.<span class="fn">pop</span>()            <span class="cmt"># remove and return last element</span>
+numbers.<span class="fn">sort</span>()           <span class="cmt"># sort in-place</span>
+
+<span class="cmt"># Tuples — immutable</span>
+colors = (<span class="str">"red"</span>, <span class="str">"green"</span>, <span class="str">"blue"</span>)
+<span class="fn">print</span>(colors[<span class="num">1</span>])    <span class="cmt"># "green"</span>
+<span class="cmt"># colors[0] = "yellow"  # ERROR — cannot modify tuple</span></pre>
+    <div class="compare">
+      <div class="cmp-box python"><h4>Python</h4><pre>numbers = [<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>]
+numbers.<span class="fn">append</span>(<span class="num">4</span>)
+<span class="fn">print</span>(numbers)  <span class="cmt"># [1, 2, 3, 4]</span></pre></div>
+      <div class="cmp-box java"><h4>Java</h4><pre><span class="type">ArrayList</span>&lt;<span class="type">Integer</span>&gt; numbers =
+    <span class="kw">new</span> <span class="type">ArrayList</span>&lt;&gt;();
+numbers.<span class="fn">add</span>(<span class="num">1</span>);
+numbers.<span class="fn">add</span>(<span class="num">2</span>);
+<span class="cmt">// Indexing: numbers.get(0)</span></pre></div>
+    </div>
+    <p class="prose">Java uses <code>ArrayList&lt;T&gt;</code> for dynamic lists (similar to Python lists). Methods are similar: <code>.add()</code>, <code>.get()</code>, <code>.remove()</code>. Java also has fixed-size <code>int[]</code> arrays.</p>
+    <div class="callout bridge"><div class="callout-icon">🌉</div><div><strong>Java parallel:</strong> Java's <code>ArrayList</code> is like Python's list. Methods: <code>.add()</code> (append), <code>.get(index)</code> (access by index), <code>.remove()</code>, <code>.set(index, value)</code> (update). Java also has <strong>arrays</strong> <code>int[]</code> which are fixed-size and faster. Java has no direct equivalent to tuples, but sometimes people use <code>final</code> to indicate immutability.</div></div>
+    <div class="check" data-check="5">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">What is the key difference between a list and a tuple? When would you use a tuple?</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer"><strong>Lists are mutable</strong> — you can change, add, or remove elements. <strong>Tuples are immutable</strong> — once created, they cannot change. Use tuples when you want to ensure data doesn't get accidentally modified, or as dictionary keys (since tuples are hashable but lists are not). Use lists when you need flexibility.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 6 ============ -->
+<div class="step" id="step-6" data-step="6">
+  <div class="step-header" onclick="toggleStep(6)">
+    <div class="step-num locked">6</div>
+    <div class="step-title"><h3>Dictionaries</h3><div class="step-sub">Lesson 6: Key-value pairs, access, iteration</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">Dictionaries are unordered collections of key-value pairs. Access values by key. Keys are typically strings or numbers.</p>
+<pre><span class="cmt"># Creating dictionaries</span>
+person = {
+    <span class="str">"name"</span>: <span class="str">"Alice"</span>,
+    <span class="str">"age"</span>: <span class="num">25</span>,
+    <span class="str">"city"</span>: <span class="str">"Sydney"</span>
+}
+
+<span class="cmt"># Accessing values</span>
+<span class="fn">print</span>(person[<span class="str">"name"</span>])      <span class="cmt"># "Alice"</span>
+<span class="fn">print</span>(person.<span class="fn">get</span>(<span class="str">"age"</span>))  <span class="cmt"># 25 (safer, returns None if missing)</span>
+
+<span class="cmt"># Modifying</span>
+person[<span class="str">"age"</span>] = <span class="num">26</span>         <span class="cmt"># update</span>
+person[<span class="str">"email"</span>] = <span class="str">"alice@example.com"</span>  <span class="cmt"># add new key</span>
+<span class="kw">del</span> person[<span class="str">"city"</span>]        <span class="cmt"># remove key</span>
+
+<span class="cmt"># Iterating</span>
+<span class="kw">for</span> key <span class="kw">in</span> person:
+    <span class="fn">print</span>(key, <span class="str">"→"</span>, person[key])
+
+<span class="kw">for</span> key, value <span class="kw">in</span> person.<span class="fn">items</span>():
+    <span class="fn">print</span>(key, <span class="str">"→"</span>, value)
+
+<span class="cmt"># Check membership</span>
+<span class="fn">print</span>(<span class="str">"name"</span> <span class="kw">in</span> person)  <span class="cmt"># True</span></pre>
+    <div class="compare">
+      <div class="cmp-box python"><h4>Python</h4><pre>d = {<span class="str">"x"</span>: <span class="num">1</span>, <span class="str">"y"</span>: <span class="num">2</span>}
+d[<span class="str">"z"</span>] = <span class="num">3</span>
+<span class="fn">print</span>(d.<span class="fn">get</span>(<span class="str">"w"</span>))  <span class="cmt"># None</span></pre></div>
+      <div class="cmp-box java"><h4>Java</h4><pre><span class="type">HashMap</span>&lt;<span class="type">String</span>, <span class="type">Integer</span>&gt; d =
+    <span class="kw">new</span> <span class="type">HashMap</span>&lt;&gt;();
+d.<span class="fn">put</span>(<span class="str">"x"</span>, <span class="num">1</span>);
+d.<span class="fn">get</span>(<span class="str">"w"</span>);  <span class="cmt">// null (if missing)</span></pre></div>
+    </div>
+    <p class="prose">Java's <code>HashMap&lt;K,V&gt;</code> is the equivalent. Methods: <code>.put(key, value)</code> (add/update), <code>.get(key)</code>, <code>.remove(key)</code>, <code>.containsKey(key)</code>.</p>
+    <div class="callout bridge"><div class="callout-icon">🌉</div><div><strong>Java parallel:</strong> Java's <code>HashMap</code> requires you to specify key and value types: <code>HashMap&lt;String, Integer&gt;</code>. Key methods: <code>.put(k, v)</code> (insert/update), <code>.get(k)</code>, <code>.remove(k)</code>, <code>.keySet()</code>, <code>.values()</code>, <code>.entrySet()</code>. Iteration uses <code>for (String key : map.keySet())</code> or <code>for (Map.Entry&lt;K,V&gt; e : map.entrySet())</code>.</div></div>
+    <div class="check" data-check="6">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">What is the difference between <code>d[key]</code> and <code>d.get(key)</code> in Python?</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer"><code>d[key]</code> raises a <code>KeyError</code> if the key doesn't exist. <code>d.get(key)</code> returns <code>None</code> if the key is missing (or a default value if you specify one: <code>d.get(key, default)</code>). Use <code>.get()</code> when you're unsure if the key exists.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 7 ============ -->
+<div class="step" id="step-7" data-step="7">
+  <div class="step-header" onclick="toggleStep(7)">
+    <div class="step-num locked">7</div>
+    <div class="step-title"><h3>Functions</h3><div class="step-sub">Lesson 7: Defining, parameters, return values, scope</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">Functions are reusable blocks of code. They take parameters (inputs) and return values (outputs). They help organize code.</p>
+<pre><span class="cmt"># Defining a function</span>
+<span class="kw">def</span> <span class="fn">greet</span>(name):
+    <span class="kw">return</span> f<span class="str">"Hello, {name}!"</span>
+
+<span class="cmt"># Calling it</span>
+message = <span class="fn">greet</span>(<span class="str">"Alice"</span>)  <span class="cmt"># "Hello, Alice!"</span>
+
+<span class="cmt"># Multiple parameters and return values</span>
+<span class="kw">def</span> <span class="fn">add</span>(a, b):
+    <span class="kw">return</span> a + b
+
+<span class="kw">def</span> <span class="fn">divide_with_remainder</span>(a, b):
+    <span class="kw">return</span> a // b, a % b  <span class="cmt"># return tuple</span>
+
+quotient, remainder = <span class="fn">divide_with_remainder</span>(<span class="num">17</span>, <span class="num">5</span>)
+
+<span class="cmt"># Default parameters</span>
+<span class="kw">def</span> <span class="fn">power</span>(base, exp=<span class="num">2</span>):
+    <span class="kw">return</span> base ** exp
+
+<span class="fn">print</span>(<span class="fn">power</span>(<span class="num">3</span>))      <span class="cmt"># 9 (uses default exp=2)</span>
+<span class="fn">print</span>(<span class="fn">power</span>(<span class="num">3</span>, <span class="num">3</span>))    <span class="cmt"># 27 (exp=3)</span>
+
+<span class="cmt"># Scope: local vs global</span>
+x = <span class="num">10</span>  <span class="cmt"># global variable</span>
+
+<span class="kw">def</span> <span class="fn">func</span>():
+    x = <span class="num">5</span>   <span class="cmt"># local variable (different from global x)</span>
+    <span class="fn">print</span>(x)  <span class="cmt"># 5</span>
+
+<span class="fn">func</span>()
+<span class="fn">print</span>(x)  <span class="cmt"># 10 (global x unchanged)</span></pre>
+    <div class="compare">
+      <div class="cmp-box python"><h4>Python</h4><pre><span class="kw">def</span> <span class="fn">add</span>(a, b):
+    <span class="kw">return</span> a + b
+
+result = <span class="fn">add</span>(<span class="num">3</span>, <span class="num">5</span>)</pre></div>
+      <div class="cmp-box java"><h4>Java</h4><pre><span class="kw">public</span> <span class="kw">static</span> <span class="type">int</span> <span class="fn">add</span>(<span class="type">int</span> a, <span class="type">int</span> b) {
+    <span class="kw">return</span> a + b;
+}
+
+<span class="type">int</span> result = <span class="fn">add</span>(<span class="num">3</span>, <span class="num">5</span>);</pre></div>
+    </div>
+    <p class="prose">Java functions are called <strong>methods</strong> (always part of a class). You must declare parameter types and return type. <code>public static</code> means the method is accessible from anywhere and doesn't need an object instance.</p>
+    <div class="callout bridge"><div class="callout-icon">🌉</div><div><strong>Java parallel:</strong> Java syntax: <code>public static ReturnType methodName(ParamType param1, ParamType param2) { return ...; }</code>. All types are required upfront. Java also has <strong>method overloading</strong> — you can have multiple methods with the same name but different parameter types. Scope in Java: variables declared inside a method are local to that method (same as Python).</div></div>
+    <div class="check" data-check="7">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">What happens if you modify a local variable inside a function — does it affect the global variable with the same name?</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer"><strong>No.</strong> When you assign to a variable inside a function, Python creates a <strong>local variable</strong> by default. This shadows (hides) any global variable with the same name, but doesn't modify it. To modify a global variable inside a function, use the <code>global</code> keyword. (Though this is generally bad practice — it's better to pass values as parameters and return results.)</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 8 ============ -->
+<div class="step" id="step-8" data-step="8">
+  <div class="step-header" onclick="toggleStep(8)">
+    <div class="step-num locked">8</div>
+    <div class="step-title"><h3>File I/O</h3><div class="step-sub">Lesson 8: Reading, writing, the 'with' statement</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">Files let you persist data. Use <code>open()</code> to read or write. The <code>with</code> statement ensures files close safely.</p>
+<pre><span class="cmt"># Reading a file</span>
+<span class="kw">with</span> <span class="fn">open</span>(<span class="str">"data.txt"</span>, <span class="str">"r"</span>) <span class="kw">as</span> f:
+    content = f.<span class="fn">read</span>()      <span class="cmt"># read entire file</span>
+    <span class="cmt"># or: lines = f.readlines()  # read as list of lines</span>
+
+<span class="cmt"># Writing to a file</span>
+<span class="kw">with</span> <span class="fn">open</span>(<span class="str">"output.txt"</span>, <span class="str">"w"</span>) <span class="kw">as</span> f:
+    f.<span class="fn">write</span>(<span class="str">"Hello, world!"</span>)
+
+<span class="cmt"># Appending (add to end)</span>
+<span class="kw">with</span> <span class="fn">open</span>(<span class="str">"log.txt"</span>, <span class="str">"a"</span>) <span class="kw">as</span> f:
+    f.<span class="fn">write</span>(<span class="str">"New log entry\n"</span>)
+
+<span class="cmt"># Iterating over lines</span>
+<span class="kw">with</span> <span class="fn">open</span>(<span class="str">"data.txt"</span>) <span class="kw">as</span> f:
+    <span class="kw">for</span> line <span class="kw">in</span> f:
+        <span class="fn">print</span>(line.<span class="fn">strip</span>())  <span class="cmt"># remove newline</span></pre>
+    <div class="compare">
+      <div class="cmp-box python"><h4>Python</h4><pre><span class="kw">with</span> <span class="fn">open</span>(<span class="str">"file.txt"</span>, <span class="str">"r"</span>) <span class="kw">as</span> f:
+    data = f.<span class="fn">read</span>()</pre></div>
+      <div class="cmp-box java"><h4>Java</h4><pre><span class="kw">try</span> (<span class="type">Scanner</span> f =
+    <span class="kw">new</span> <span class="type">Scanner</span>(<span class="kw">new</span> <span class="type">File</span>(<span class="str">"file.txt"</span>))) {
+    <span class="type">String</span> line;
+    <span class="kw">while</span> (f.<span class="fn">hasNextLine</span>()) {
+        line = f.<span class="fn">nextLine</span>();
+    }
+}</pre></div>
+    </div>
+    <p class="prose">Java's try-with-resources statement (Java 7+) is similar to Python's <code>with</code>. It automatically closes the resource when done. Reading requires <code>Scanner</code> or <code>BufferedReader</code>; writing uses <code>PrintWriter</code>.</p>
+    <div class="callout bridge"><div class="callout-icon">🌉</div><div><strong>Java parallel:</strong> Java uses <code>try-with-resources</code>: <code>try (Resource r = new Resource(...)) { ... }</code>. For reading text: <code>Scanner</code> (simple) or <code>BufferedReader</code> (faster). For writing: <code>PrintWriter</code>. Both handle closing automatically, preventing file leaks.</div></div>
+    <div class="check" data-check="8">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">Why is the <code>with</code> statement important for file handling?</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer">The <code>with</code> statement <strong>automatically closes the file</strong> when you're done, even if an error occurs. Without it, you'd have to manually call <code>f.close()</code>, which is easy to forget. An unclosed file can leak resources. Always use <code>with open(...) as f:</code> instead of manually managing file closure.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 9 ============ -->
+<div class="step" id="step-9" data-step="9">
+  <div class="step-header" onclick="toggleStep(9)">
+    <div class="step-num locked">9</div>
+    <div class="step-title"><h3>Error Handling</h3><div class="step-sub">Lesson 8: try/except, common exceptions</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose"><code>try/except</code> blocks catch errors (exceptions) so your program doesn't crash. Python has many built-in exception types.</p>
+<pre><span class="cmt"># Basic try/except</span>
+<span class="kw">try</span>:
+    age = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">"Age: "</span>))
+<span class="kw">except</span> <span class="type">ValueError</span>:
+    <span class="fn">print</span>(<span class="str">"That's not a number!"</span>)
+
+<span class="cmt"># Multiple exceptions</span>
+<span class="kw">try</span>:
+    result = <span class="num">10</span> / x
+    data = <span class="fn">open</span>(<span class="str">"file.txt"</span>)
+<span class="kw">except</span> <span class="type">ZeroDivisionError</span>:
+    <span class="fn">print</span>(<span class="str">"Cannot divide by zero"</span>)
+<span class="kw">except</span> <span class="type">FileNotFoundError</span>:
+    <span class="fn">print</span>(<span class="str">"File not found"</span>)
+<span class="kw">except</span> <span class="type">Exception</span> <span class="kw">as</span> e:
+    <span class="fn">print</span>(f<span class="str">"Unexpected error: {e}"</span>)
+
+<span class="cmt"># else and finally</span>
+<span class="kw">try</span>:
+    num = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">"Enter a number: "</span>))
+<span class="kw">except</span> <span class="type">ValueError</span>:
+    <span class="fn">print</span>(<span class="str">"Invalid input"</span>)
+<span class="kw">else</span>:
+    <span class="fn">print</span>(f<span class="str">"You entered: {num}"</span>)  <span class="cmt"># runs only if no error</span>
+<span class="kw">finally</span>:
+    <span class="fn">print</span>(<span class="str">"Done"</span>)  <span class="cmt"># always runs</span></pre>
+    <div class="compare">
+      <div class="cmp-box python"><h4>Python</h4><pre><span class="kw">try</span>:
+    x = <span class="fn">int</span>(<span class="str">"abc"</span>)
+<span class="kw">except</span> <span class="type">ValueError</span>:
+    <span class="fn">print</span>(<span class="str">"Error"</span>)</pre></div>
+      <div class="cmp-box java"><h4>Java</h4><pre><span class="kw">try</span> {
+    <span class="type">int</span> x = <span class="type">Integer</span>.<span class="fn">parseInt</span>(<span class="str">"abc"</span>);
+} <span class="kw">catch</span> (<span class="type">NumberFormatException</span> e) {
+    System.out.<span class="fn">println</span>(<span class="str">"Error"</span>);
+}</pre></div>
+    </div>
+    <p class="prose">Java also uses <code>try/catch</code>. Key difference: Java distinguishes <strong>checked</strong> exceptions (you must catch them) vs <strong>unchecked</strong> exceptions (you don't have to). Python doesn't enforce this — it's your choice.</p>
+    <div class="callout bridge"><div class="callout-icon">🌉</div><div><strong>Java parallel:</strong> Java's <code>try/catch/finally</code> works like Python's <code>try/except/finally</code>. But Java is stricter: certain exceptions (like <code>IOException</code>) are <em>checked</em> — you must catch them or declare them with <code>throws</code>. Unchecked exceptions (like <code>NumberFormatException</code>) don't require this. Java also has try-with-resources for automatic resource closure.</div></div>
+    <div class="check" data-check="9">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">What is the difference between <code>except ValueError</code> and <code>except Exception</code>?</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer"><code>except ValueError</code> catches only <code>ValueError</code> exceptions (and subclasses). <code>except Exception</code> catches any exception except <code>BaseException</code> (which includes things like <code>KeyboardInterrupt</code>). Be specific: catching everything with <code>except:</code> hides bugs. Use specific exception types when possible.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 10 ============ -->
+<div class="step" id="step-10" data-step="10">
+  <div class="step-header" onclick="toggleStep(10)">
+    <div class="step-num locked">10</div>
+    <div class="step-title"><h3>Foundations → Advanced: Concept Map</h3><div class="step-sub">Everything mapped to Java · Foundations checklist</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">Here's the complete mapping of every foundation concept to its Java equivalent. This is your reference card.</p>
+    <table class="concept-map">
+      <tr><th>Concept</th><th class="py">Python (INFO1110)</th><th class="jv">Java (INFO1113)</th></tr>
+      <tr><td>Variable assignment</td><td class="py">x = 5</td><td class="jv">int x = 5;</td></tr>
+      <tr><td>Dynamic vs Static typing</td><td class="py">x = 5; x = "hello"</td><td class="jv">int x; // type is fixed</td></tr>
+      <tr><td>Print output</td><td class="py">print(x)</td><td class="jv">System.out.println(x);</td></tr>
+      <tr><td>Read input</td><td class="py">input("prompt")</td><td class="jv">Scanner sc = new Scanner(System.in);</td></tr>
+      <tr><td>String methods</td><td class="py">"hello".upper()</td><td class="jv">"hello".toUpperCase()</td></tr>
+      <tr><td>Comparison operators</td><td class="py">x == 5, x != 5, x > 5</td><td class="jv">x == 5 (same syntax)</td></tr>
+      <tr><td>Logical operators</td><td class="py">and, or, not</td><td class="jv">&&, ||, !</td></tr>
+      <tr><td>if/elif/else</td><td class="py">if/elif/else: indented</td><td class="jv">if/else if/else { braces }</td></tr>
+      <tr><td>for loop</td><td class="py">for item in list:</td><td class="jv">for (Type item : list) { }</td></tr>
+      <tr><td>while loop</td><td class="py">while condition:</td><td class="jv">while (condition) { }</td></tr>
+      <tr><td>break/continue</td><td class="py">break, continue</td><td class="jv">break; continue; (same)</td></tr>
+      <tr><td>List creation</td><td class="py">[1, 2, 3]</td><td class="jv">ArrayList&lt;Integer&gt; list = new ArrayList&lt;&gt;();</td></tr>
+      <tr><td>List indexing</td><td class="py">list[0]</td><td class="jv">list.get(0)</td></tr>
+      <tr><td>List add</td><td class="py">list.append(x)</td><td class="jv">list.add(x)</td></tr>
+      <tr><td>Tuple (fixed sequence)</td><td class="py">(1, 2, 3)</td><td class="jv">No direct equivalent; use final arrays</td></tr>
+      <tr><td>Dictionary</td><td class="py">{"key": value}</td><td class="jv">HashMap&lt;String, Type&gt; map = new HashMap&lt;&gt;();</td></tr>
+      <tr><td>Dict get</td><td class="py">d["key"]</td><td class="jv">d.get("key")</td></tr>
+      <tr><td>Function definition</td><td class="py">def func(param):</td><td class="jv">public static Type func(Type param) { }</td></tr>
+      <tr><td>Return value</td><td class="py">return x</td><td class="jv">return x;</td></tr>
+      <tr><td>File read</td><td class="py">with open(f) as f: f.read()</td><td class="jv">try (Scanner f = new Scanner(new File(path))) { }</td></tr>
+      <tr><td>File write</td><td class="py">with open(f, "w") as f: f.write()</td><td class="jv">PrintWriter pw = new PrintWriter(file); pw.println();</td></tr>
+      <tr><td>Exception catching</td><td class="py">try/except ValueError</td><td class="jv">try/catch (NumberFormatException e)</td></tr>
+      <tr><td>Finally block</td><td class="py">finally:</td><td class="jv">finally { }</td></tr>
+    </table>
+    <div class="summary-box teal">
+      <h4>Foundations in one sentence</h4>
+      <p>You mastered <strong>variables, types, control flow (if/while/for), data structures (lists/dicts), functions, file handling, and error handling</strong> — all the essential building blocks for any programming language. These same concepts exist in Java with different syntax, but the logic is identical. If you understand these well, you're ready for advanced programming.</p>
+    </div>
+    <div class="callout ok"><div class="callout-icon">✅</div><div><strong>Foundations checklist for INFO1113:</strong> Do you feel confident with: (1) variables and types? (2) if/elif/else decisions? (3) for and while loops? (4) lists and indexing? (5) dictionaries/key-value pairs? (6) writing functions? (7) file I/O? (8) try/except error handling? If you answered yes to most of these, you're ready. The advanced lessons (9–12) build on this foundation but focus on deeper OOP concepts like classes, inheritance, and design patterns.</div></div>
+    <div class="check" data-check="10">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">Pick one foundation concept and explain how it changes when you move from Python to Java. What stays the same? What's different?</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer">Example: <strong>Lists.</strong> Same: ordered sequences, indexing, iteration, methods for add/remove. Different: Python lists are dynamic and can mix types; Java's ArrayList requires a type parameter (ArrayList&lt;Integer&gt;) and is equally dynamic but type-safe. Syntax: Python uses <code>.append()</code>, Java uses <code>.add()</code>. Indexing: Python <code>list[0]</code>, Java <code>list.get(0)</code>. The concept of "a mutable, ordered collection" is identical — only the syntax and type enforcement differ.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ SELF-TEST ============ -->
+<div class="self-test">
+  <div class="self-test-title">📝 Foundations Self-Test</div>
+  <div class="self-test-sub">10 questions covering Lessons 1–8 with a focus on Python↔Java bridges. Try to answer before revealing.</div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q1</span><span class="st-q-bloom">Remembering</span></div><p>What is the key difference between Python's dynamic typing and Java's static typing?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">Python: a variable can hold any type at any time, and the type is determined at runtime. Java: every variable has a fixed type declared upfront, and the compiler enforces type consistency. Java catches type mismatches at compile time; Python only finds them at runtime.</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q2</span><span class="st-q-bloom">Understanding</span></div><p>Why does <code>input()</code> always return a string in Python, even if the user types a number?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer"><code>input()</code> reads from the keyboard, which is inherently text-based. It returns everything the user types as a string, exactly as typed. If you need a number, you must explicitly convert it using <code>int()</code> or <code>float()</code>.</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q3</span><span class="st-q-bloom">Applying</span></div><p>Write a for loop that prints the numbers 0 through 4.</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer"><code>for i in range(5):<br>&nbsp;&nbsp;&nbsp;&nbsp;print(i)</code><br><code>range(5)</code> generates 0, 1, 2, 3, 4 (stops before 5).</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q4</span><span class="st-q-bloom">Understanding</span></div><p>What is the difference between a list and a tuple in Python?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">Lists are <strong>mutable</strong> — you can change, add, or remove elements after creation. Tuples are <strong>immutable</strong> — once created, they cannot be changed. Use tuples when you want to guarantee data integrity; use lists when you need flexibility.</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q5</span><span class="st-q-bloom">Applying</span></div><p>Write a dictionary that stores student names as keys and grades as values. Then access the grade for "Bob".</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer"><code>grades = {"Alice": 90, "Bob": 85, "Charlie": 95}<br>print(grades["Bob"])  # 85</code><br>Or safer: <code>print(grades.get("Bob", "Not found"))</code></div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q6</span><span class="st-q-bloom">Understanding</span></div><p>What does the <code>with</code> statement do when used with file operations?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">The <code>with</code> statement automatically closes the file when the block exits, even if an error occurs. This prevents file leaks and ensures resources are cleaned up properly. Always use <code>with open()</code> instead of manually managing file closure.</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q7</span><span class="st-q-bloom">Applying (Bridge)</span></div><p>How would you write the Python comparison <code>x > 5 and y < 10</code> in Java?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer"><code>(x > 5) && (y < 10)</code><br>Replace <code>and</code> with <code>&&</code>. Java requires parentheses around the entire condition in if statements, but the operators are similar: <code>&&</code> (and), <code>||</code> (or), <code>!</code> (not).</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q8</span><span class="st-q-bloom">Understanding (Bridge)</span></div><p>In Java, what would be the equivalent of Python's <code>list.append(5)</code> using an ArrayList?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer"><code>ArrayList&lt;Integer&gt; list = new ArrayList&lt;&gt;();<br>list.add(5);</code><br>Java's <code>.add()</code> is the equivalent of Python's <code>.append()</code>. For dictionaries: Python <code>d["key"] = value</code> becomes Java <code>map.put("key", value)</code>.</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q9</span><span class="st-q-bloom">Analysing</span></div><p>If a variable called <code>name</code> is defined globally in Python, and you create a local variable also called <code>name</code> inside a function, what happens to the global <code>name</code>?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">The global <code>name</code> is unaffected. When you assign to a local variable with the same name, Python creates a <strong>new local variable</strong> that shadows (hides) the global one. To modify the global variable from inside a function, use the <code>global</code> keyword. (Though this is generally poor design — prefer passing values as parameters.)</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q10</span><span class="st-q-bloom">Analysing (Bridge)</span></div><p>You have a try/except block in Python. What is the Java equivalent, and are there any important differences?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">Python: <code>try/except/finally</code>. Java: <code>try/catch/finally</code>. Same logic, different keyword (<code>except</code> vs <code>catch</code>). Key difference: Java enforces <strong>checked exceptions</strong> — certain exceptions (like IOException) MUST be caught or declared with <code>throws</code>. Python has no such enforcement; it's optional.</div></div>
+</div>
+
+<div class="nav-footer">
+  <a class="nav-btn" disabled>← Back to Overview</a>
+  <a class="nav-btn primary" href="info1110-review-lesson09.html">Lesson 9: Recursion →</a>
+</div>
+
+</div>
+
+<script>
+const totalSteps=10;let completedSteps=new Set();
+function toggleStep(n){document.getElementById('step-'+n).classList.toggle('open')}
+function enableReveal(ta){const btn=ta.closest('.check,.st-q').querySelector('.check-reveal button');btn.disabled=ta.value.trim().length<5}
+function revealAnswer(btn){const c=btn.closest('.check,.st-q');c.querySelector('.check-answer').classList.add('show');const r=c.querySelector('.check-rating');if(r)r.classList.add('show');btn.style.display='none'}
+function rateCheck(btn,rating){const check=btn.closest('.check'),step=btn.closest('.step'),n=parseInt(step.dataset.step);check.querySelector('.check-rating').querySelectorAll('button').forEach(b=>b.style.opacity='0.4');btn.style.opacity='1';completedSteps.add(n);updateProgress();step.querySelector('.step-num').className='step-num done';const next=document.getElementById('step-'+(n+1));if(next){const nn=next.querySelector('.step-num');if(nn.classList.contains('locked'))nn.className='step-num active'}}
+function updateProgress(){const p=Math.round(completedSteps.size/totalSteps*100);document.getElementById('progressFill').style.width=p+'%';document.getElementById('progressLabel').textContent=completedSteps.size+' of '+totalSteps+' complete'}
+</script>
+<script>
+(function(){
+  function notifyHeight(){
+    if(window.parent!==window){
+      window.parent.postMessage({type:"vgResize",height:document.documentElement.scrollHeight},"*");
+    }
+  }
+  notifyHeight();
+  new MutationObserver(notifyHeight).observe(document.body,{childList:true,subtree:true,attributes:true});
+  window.addEventListener("resize",notifyHeight);
+})();
+</script>
+</body>
+</html>

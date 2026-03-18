@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>INFO1110 Review — Lesson 13: Decorators, Generators & Regular Expressions</title>
+<style>
+:root {
+  --teal: #0d9488; --teal-light: #f0fdfa; --teal-dark: #115e59;
+  --blue: #3b82f6; --blue-light: #eff6ff; --blue-dark: #1e40af;
+  --green: #10b981; --green-light: #ecfdf5;
+  --orange: #f59e0b; --orange-light: #fffbeb;
+  --purple: #8b5cf6; --purple-light: #f5f3ff;
+  --red: #ef4444; --red-light: #fef2f2;
+  --gray-50: #f8fafc; --gray-100: #f1f5f9; --gray-200: #e2e8f0;
+  --gray-400: #94a3b8; --gray-600: #475569; --gray-800: #1e293b;
+  --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --mono: 'SF Mono', 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: var(--font); background: var(--gray-50); color: var(--gray-800); line-height: 1.65; }
+
+.header { background: linear-gradient(135deg, var(--teal-dark) 0%, var(--teal) 100%); color: #fff; padding: 32px 0 28px; }
+.header-inner { max-width: 800px; margin: 0 auto; padding: 0 24px; }
+.header-tag { font-size: 12px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; opacity: 0.8; margin-bottom: 8px; }
+.header h1 { font-size: 26px; font-weight: 700; margin-bottom: 4px; }
+.header p { font-size: 14px; opacity: 0.85; }
+.header-reassure { margin-top: 14px; padding: 12px 16px; background: rgba(255,255,255,0.12); border-radius: 10px; font-size: 13px; line-height: 1.5; }
+.header-badge { display: inline-block; background: rgba(255,255,255,0.2); padding: 3px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; letter-spacing: 0.5px; margin-top: 10px; }
+
+.progress-bar { max-width: 800px; margin: 0 auto; padding: 16px 24px 0; }
+.progress-track { background: var(--gray-200); height: 6px; border-radius: 3px; overflow: hidden; }
+.progress-fill { background: var(--green); height: 100%; width: 0%; border-radius: 3px; transition: width 0.5s ease; }
+.progress-label { font-size: 12px; color: var(--gray-400); margin-top: 6px; text-align: right; }
+
+.content { max-width: 800px; margin: 0 auto; padding: 24px; }
+
+.step { background: #fff; border: 1px solid var(--gray-200); border-radius: 16px; margin-bottom: 20px; overflow: hidden; }
+.step-header { display: flex; align-items: center; gap: 12px; padding: 18px 22px; cursor: pointer; user-select: none; }
+.step-header:hover { background: var(--gray-50); }
+.step-num { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; flex-shrink: 0; }
+.step-num.locked { background: var(--gray-200); color: var(--gray-400); }
+.step-num.active { background: var(--teal); color: #fff; }
+.step-num.done { background: var(--green); color: #fff; }
+.step-title { flex: 1; }
+.step-title h3 { font-size: 16px; font-weight: 600; }
+.step-title .step-sub { font-size: 12px; color: var(--gray-400); margin-top: 1px; }
+.step-chevron { font-size: 18px; color: var(--gray-400); transition: transform 0.2s; }
+.step.open .step-chevron { transform: rotate(90deg); }
+.step-body { display: none; padding: 0 22px 22px; }
+.step.open .step-body { display: block; }
+
+.diagram { background: var(--gray-50); border: 1px solid var(--gray-200); border-radius: 12px; padding: 20px; margin: 14px 0; text-align: center; overflow-x: auto; }
+.diagram svg { max-width: 100%; height: auto; }
+
+.prose { font-size: 15px; color: var(--gray-600); margin: 12px 0; }
+.prose strong { color: var(--gray-800); }
+
+.label { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 4px; }
+.label-idea { color: var(--green); } .label-how { color: var(--teal); } .label-trap { color: var(--red); } .label-why { color: var(--purple); } .label-tip { color: var(--orange); } .label-bridge { color: var(--blue); }
+
+pre { background: #1e293b; color: #e2e8f0; padding: 14px 16px; border-radius: 10px; font-family: var(--mono); font-size: 13px; line-height: 1.7; overflow-x: auto; margin: 10px 0; white-space: pre; }
+pre .kw { color: #c084fc; } pre .str { color: #86efac; } pre .cmt { color: #64748b; font-style: italic; }
+pre .type { color: #67e8f9; } pre .num { color: #fbbf24; } pre .fn { color: #7dd3fc; } pre .ann { color: #f472b6; }
+code { font-family: var(--mono); font-size: 0.88em; background: var(--gray-100); padding: 1px 5px; border-radius: 4px; }
+
+.compare { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 14px 0; }
+@media (max-width: 600px) { .compare { grid-template-columns: 1fr; } }
+.cmp-box { border-radius: 10px; padding: 14px; }
+.cmp-box.python { background: var(--orange-light); border: 1px solid #fed7aa; }
+.cmp-box.java { background: var(--blue-light); border: 1px solid #bfdbfe; }
+.cmp-box.before { background: var(--red-light); border: 1px solid #fecaca; }
+.cmp-box.after { background: var(--green-light); border: 1px solid #a7f3d0; }
+.cmp-box h4 { font-size: 12px; font-weight: 700; margin-bottom: 6px; }
+.cmp-box.python h4 { color: #b45309; } .cmp-box.java h4 { color: var(--blue-dark); }
+.cmp-box.before h4 { color: var(--red); } .cmp-box.after h4 { color: #065f46; }
+.cmp-box pre { font-size: 12.5px; padding: 10px; margin: 0; }
+
+.callout { display: flex; gap: 10px; padding: 14px 16px; border-radius: 10px; margin: 14px 0; font-size: 14px; line-height: 1.55; }
+.callout-icon { font-size: 18px; flex-shrink: 0; line-height: 1.5; }
+.callout.tip { background: var(--blue-light); border: 1px solid #bfdbfe; }
+.callout.warn { background: var(--red-light); border: 1px solid #fecaca; }
+.callout.ok { background: var(--green-light); border: 1px solid #a7f3d0; }
+.callout.bridge { background: var(--teal-light); border: 1px solid #99f6e4; }
+
+.analogy { background: var(--purple-light); border: 1px solid #ddd6fe; border-radius: 12px; padding: 16px; margin: 14px 0; }
+.analogy-label { font-size: 11px; font-weight: 700; color: var(--purple); letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 4px; }
+.analogy p { font-size: 14px; color: var(--gray-600); }
+
+.check { background: var(--green-light); border: 1px solid #a7f3d0; border-radius: 12px; padding: 18px; margin: 18px 0; }
+.check-title { font-size: 13px; font-weight: 700; color: var(--green); margin-bottom: 6px; }
+.check-q { font-size: 14px; margin-bottom: 10px; }
+.check textarea { width: 100%; padding: 8px 10px; border: 1px solid #a7f3d0; border-radius: 8px; font-family: var(--font); font-size: 13px; resize: vertical; min-height: 44px; background: #fff; }
+.check textarea:focus { outline: 2px solid var(--green); border-color: transparent; }
+.check-reveal { margin-top: 8px; }
+.check-reveal button { background: var(--green); color: #fff; border: none; padding: 7px 16px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; }
+.check-reveal button:hover { background: #059669; }
+.check-reveal button:disabled { background: var(--gray-400); cursor: not-allowed; }
+.check-answer { display: none; margin-top: 10px; padding: 12px; background: #fff; border-radius: 8px; border: 1px solid #a7f3d0; font-size: 13px; line-height: 1.6; }
+.check-answer.show { display: block; }
+.check-rating { display: none; margin-top: 8px; gap: 8px; }
+.check-rating.show { display: flex; }
+.check-rating button { padding: 5px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid var(--gray-200); background: #fff; }
+.check-rating .got-it { color: var(--green); border-color: #a7f3d0; }
+.check-rating .not-yet { color: var(--red); border-color: #fecaca; }
+
+.summary-box { padding: 18px; border-radius: 12px; margin: 18px 0; }
+.summary-box.teal { background: var(--teal-light); border: 1px solid #99f6e4; }
+.summary-box.blue { background: var(--blue-light); border: 1px solid #bfdbfe; }
+.summary-box h4 { font-size: 15px; margin-bottom: 6px; color: var(--teal-dark); }
+.summary-box.blue h4 { color: var(--blue-dark); }
+.summary-box p, .summary-box ul { font-size: 14px; color: var(--gray-600); }
+.summary-box ul { margin: 8px 0 0 20px; }
+
+.self-test { background: #fff; border: 2px solid var(--teal); border-radius: 16px; padding: 22px; margin: 28px 0; }
+.self-test-title { font-size: 18px; font-weight: 700; color: var(--teal); margin-bottom: 4px; }
+.self-test-sub { font-size: 13px; color: var(--gray-400); margin-bottom: 16px; }
+.st-q { margin-bottom: 16px; }
+.st-q-header { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.st-q-num { font-size: 12px; font-weight: 700; color: var(--teal); background: var(--teal-light); padding: 2px 8px; border-radius: 4px; }
+.st-q-bloom { font-size: 10px; color: var(--gray-400); }
+.st-q p { font-size: 14px; margin-bottom: 6px; }
+.st-q textarea { width: 100%; padding: 8px 10px; border: 1px solid #99f6e4; border-radius: 8px; font-family: var(--font); font-size: 13px; resize: vertical; min-height: 44px; background: #fff; }
+.st-q textarea:focus { outline: 2px solid var(--teal); border-color: transparent; }
+.st-q .check-reveal button { background: var(--teal); }
+.st-q .check-reveal button:hover { background: var(--teal-dark); }
+.st-q .check-reveal button:disabled { background: var(--gray-400); }
+.st-q .check-answer { border-color: #99f6e4; }
+
+.nav-footer { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; border-top: 1px solid var(--gray-200); margin-top: 28px; }
+.nav-btn { display: inline-flex; align-items: center; gap: 6px; padding: 9px 18px; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; border: 1px solid var(--gray-200); background: #fff; color: var(--gray-600); text-decoration: none; }
+.nav-btn:hover { background: var(--gray-100); }
+.nav-btn.primary { background: var(--teal); color: #fff; border-color: var(--teal); }
+.nav-btn.primary:hover { background: var(--teal-dark); }
+
+.bridge-banner { background: linear-gradient(90deg, var(--orange-light), var(--blue-light)); border: 1px solid #bfdbfe; border-radius: 12px; padding: 16px; margin: 14px 0; display: flex; align-items: center; gap: 12px; }
+.bridge-banner-icon { font-size: 28px; flex-shrink: 0; }
+.bridge-banner h4 { font-size: 14px; font-weight: 700; color: var(--blue-dark); margin-bottom: 2px; }
+.bridge-banner p { font-size: 13px; color: var(--gray-600); }
+
+table.concept-map { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 13px; }
+table.concept-map th { background: var(--gray-100); padding: 8px 12px; text-align: left; font-weight: 700; border-bottom: 2px solid var(--gray-200); }
+table.concept-map td { padding: 8px 12px; border-bottom: 1px solid var(--gray-200); }
+table.concept-map .py { color: #b45309; font-weight: 600; }
+table.concept-map .jv { color: var(--blue-dark); font-weight: 600; }
+
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="header-tag">INFO1110 Review · Lesson 13 · Python → Java Bridge</div>
+    <h1>Decorators, Generators & Regular Expressions</h1>
+    <p>10 steps · three powerful Python features · the most "advanced" lesson</p>
+    <div class="header-reassure">
+      These are the most advanced topics in INFO1110. <strong>Decorators</strong> and <strong>generators</strong> are Python-specific patterns — the concepts (wrapping, lazy evaluation) appear in Java differently. <strong>Regular expressions</strong> are universal — the same patterns work in both Python and Java. Don't worry if these feel complex at first; they're rarely used in a student's first Java program, but understanding them now gives you a huge advantage. Will, you've already seen these work in Python — this lesson just maps them to Java concepts you'll encounter in INFO1113 and beyond.
+    </div>
+    <div class="header-badge">Most Advanced Topic in INFO1110</div>
+  </div>
+</div>
+
+<div class="progress-bar">
+  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="progress-label" id="progressLabel">0 of 10 complete</div>
+</div>
+
+<div class="content">
+
+<!-- ============ STEP 1 ============ -->
+<div class="step open" id="step-1" data-step="1">
+  <div class="step-header" onclick="toggleStep(1)">
+    <div class="step-num active">1</div>
+    <div class="step-title"><h3>What Are Decorators?</h3><div class="step-sub">A function that wraps another function to add behaviour without changing the original</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">A <strong>decorator</strong> is a function that takes another function as input, wraps it with additional behaviour, and returns the wrapper. You don't modify the original function — you layer new functionality on top of it.</p>
+    <div class="analogy">
+      <div class="analogy-label">Real-World Analogy</div>
+      <p>Think of a decorator like a coffee shop adding a layer of foam to a cappuccino. The coffee is still there unchanged, but now it has new behaviour (the foam). You can serve the same coffee with foam, chocolate, or cinnamon — different decorations, same underlying beverage.</p>
+    </div>
+    <p class="prose">In the lecture, you saw the <strong>Bottle web framework</strong> example:</p>
+<pre><span class="kw">@route</span>(<span class="str">'/hello'</span>)
+<span class="kw">def</span> <span class="fn">hello</span>():
+    <span class="kw">return</span> <span class="str">"Hello, World!"</span></pre>
+    <p class="prose">The <code>@route</code> decorator is not Python syntax — it's syntactic sugar for <code>hello = route('/hello')(hello)</code>. The decorator <strong>intercepts</strong> the function before it's assigned to the name <code>hello</code>, wraps it, and returns a new version that the web framework can manage.</p>
+    <div class="bridge-banner">
+      <div class="bridge-banner-icon">🌉</div>
+      <div>
+        <h4>Java Bridge</h4>
+        <p>Java has <code>@annotations</code> (like <code>@Override</code>, <code>@Deprecated</code>) that look syntactically similar, but they're <strong>metadata</strong>, not function wrappers. The closest Java pattern is the <strong>Decorator design pattern</strong> — a class that wraps another class and adds behaviour. We'll see this in Step 3.</p>
+      </div>
+    </div>
+    <div class="check" data-check="1">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">What does a decorator <em>actually</em> do? Does it modify the original function?</div>
+      <textarea placeholder="Type your answer first…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer">A decorator wraps the original function and returns a <strong>new function</strong>. The original function is unchanged. The wrapper function is what gets called instead. When you use the <code>@</code> syntax, Python automatically reassigns the name to the wrapper, but the original function object still exists.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 2 ============ -->
+<div class="step" id="step-2" data-step="2">
+  <div class="step-header" onclick="toggleStep(2)">
+    <div class="step-num locked">2</div>
+    <div class="step-title"><h3>How Decorators Work</h3><div class="step-sub">The wrapper pattern: outer function, inner wrapper, return the wrapper</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">Let's trace through the <code>@do_it</code> example from the lecture step by step.</p>
+<pre><span class="kw">def</span> <span class="fn">do_it</span>(func):                    <span class="cmt"># Decorator: takes a function</span>
+    <span class="kw">def</span> <span class="fn">wrapper</span>(*args, **kwargs):  <span class="cmt"># Inner function: wrapper</span>
+        print(<span class="str">"Before"</span>)
+        result = func(*args, **kwargs)  <span class="cmt"># Call original function</span>
+        print(<span class="str">"After"</span>)
+        <span class="kw">return</span> result
+    <span class="kw">return</span> wrapper                   <span class="cmt"># Return the wrapper</span>
+
+<span class="kw">@do_it</span>
+<span class="kw">def</span> <span class="fn">say_hello</span>(name):
+    print(f<span class="str">"Hello, {name}"</span>)
+
+say_hello(<span class="str">"Alice"</span>)
+<span class="cmt"># Output:</span>
+<span class="cmt"># Before</span>
+<span class="cmt"># Hello, Alice</span>
+<span class="cmt"># After</span></pre>
+    <p class="prose"><span class="label label-how">Step by step:</span></p>
+    <ul style="margin: 8px 0 12px 24px; color: var(--gray-600); font-size: 15px;">
+      <li><code>do_it</code> takes the original function as a parameter</li>
+      <li>Inside, we define <code>wrapper</code> — a new function that calls the original function with <code>*args, **kwargs</code> (any number of arguments)</li>
+      <li><code>wrapper</code> adds behaviour <strong>before</strong> and <strong>after</strong> the original function runs</li>
+      <li><code>do_it</code> returns the <code>wrapper</code> function, not the original</li>
+      <li>When you call <code>say_hello("Alice")</code>, you're actually calling <code>wrapper("Alice")</code></li>
+    </ul>
+    <div class="callout tip"><div class="callout-icon">💡</div><div><strong>Universal wrapping with *args and **kwargs:</strong> The wrapper uses <code>*args</code> (positional arguments) and <code>**kwargs</code> (keyword arguments) so it can wrap <em>any</em> function, regardless of what parameters it takes. This is why decorators are so powerful — they work with any function.</div></div>
+    <div class="bridge-banner">
+      <div class="bridge-banner-icon">🌉</div>
+      <div>
+        <h4>Java Bridge</h4>
+        <p>Java doesn't have function decorators (functions aren't first-class values), but the <strong>Decorator design pattern</strong> does the same thing with <em>classes</em>. A wrapper class implements the same interface as the original class and adds behaviour. It's less elegant but accomplishes the same goal.</p>
+      </div>
+    </div>
+    <div class="check" data-check="2">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">Why does the wrapper use <code>*args, **kwargs</code> instead of specific parameters like <code>name</code>?</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer">Because the decorator should work with <em>any</em> function, not just ones with a <code>name</code> parameter. <code>*args, **kwargs</code> capture whatever arguments the original function receives, so one decorator can wrap functions with different signatures.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 3 ============ -->
+<div class="step" id="step-3" data-step="3">
+  <div class="step-header" onclick="toggleStep(3)">
+    <div class="step-num locked">3</div>
+    <div class="step-title"><h3>Writing Your Own Decorator</h3><div class="step-sub">Build a @timer decorator that measures execution time</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">Let's build a practical example: a decorator that measures how long a function takes to run.</p>
+<pre><span class="kw">import</span> time
+
+<span class="kw">def</span> <span class="fn">timer</span>(func):
+    <span class="kw">def</span> <span class="fn">wrapper</span>(*args, **kwargs):
+        start = time.time()
+        result = func(*args, **kwargs)
+        elapsed = time.time() - start
+        print(f<span class="str">"{func.__name__} took {elapsed:.4f} seconds"</span>)
+        <span class="kw">return</span> result
+    <span class="kw">return</span> wrapper
+
+<span class="kw">@timer</span>
+<span class="kw">def</span> <span class="fn">slow_function</span>():
+    time.sleep(<span class="num">2</span>)
+    <span class="kw">return</span> <span class="str">"Done"</span>
+
+slow_function()
+<span class="cmt"># Output: slow_function took 2.0023 seconds</span></pre>
+    <p class="prose"><span class="label label-idea">Key insight:</span> The decorator captures the original function in the closure (the wrapper function remembers <code>func</code> even after <code>timer</code> returns). Each time you call <code>slow_function()</code>, you're calling <code>wrapper()</code>, which records the timing.</p>
+    <div class="callout ok"><div class="callout-icon">✅</div><div><strong>Real-world use:</strong> Decorators like <code>@timer</code> are used in production code to log function calls, measure performance, check authentication, validate input, and more. The Bottle web framework uses <code>@route</code> to register HTTP endpoints without you writing repetitive setup code.</div></div>
+    <div class="check" data-check="3">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">If you remove the <code>@timer</code> decorator from <code>slow_function</code>, does the function still work the same way?</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer"><strong>Yes, completely.</strong> Decorators add behaviour without changing the function's core operation. Without <code>@timer</code>, <code>slow_function</code> still runs and returns <code>"Done"</code> — you just don't get the timing output. That's the power of decorators: you can layer them on and off without touching the original code.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 4 ============ -->
+<div class="step" id="step-4" data-step="4">
+  <div class="step-header" onclick="toggleStep(4)">
+    <div class="step-num locked">4</div>
+    <div class="step-title"><h3>What Are Generators?</h3><div class="step-sub">Functions that yield values one at a time instead of returning all at once</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">A <strong>generator</strong> is a function that uses <code>yield</code> instead of <code>return</code>. It doesn't compute all values at once — it pauses and resumes, producing one value at a time.</p>
+    <div class="analogy">
+      <div class="analogy-label">Real-World Analogy</div>
+      <p>A generator is like a bakery that makes donuts one at a time as customers order them, instead of baking all 1000 donuts before opening the shop. Each time a customer asks for a donut, the baker makes one, hands it over, pauses, and waits for the next request.</p>
+    </div>
+    <p class="prose">From the lecture:</p>
+<pre><span class="kw">def</span> <span class="fn">countdown</span>(n):
+    <span class="kw">while</span> n > <span class="num">0</span>:
+        <span class="kw">yield</span> n          <span class="cmt"># Pause and produce a value</span>
+        n -= <span class="num">1</span>
+
+<span class="kw">for</span> num <span class="kw">in</span> countdown(<span class="num">3</span>):
+    print(num)
+<span class="cmt"># Output:</span>
+<span class="cmt"># 3</span>
+<span class="cmt"># 2</span>
+<span class="cmt"># 1</span></pre>
+    <p class="prose">Each time <code>yield</code> runs, the function pauses. When you ask for the next value, it resumes from where it left off, executes the next iteration, and pauses again at the next <code>yield</code>.</p>
+    <div class="bridge-banner">
+      <div class="bridge-banner-icon">🌉</div>
+      <div>
+        <h4>Java Bridge</h4>
+        <p>Java doesn't have generators, but the <strong>Iterator interface</strong> with <code>hasNext()</code> and <code>next()</code> methods does the same thing — lazily producing one value at a time. Java 8+ <strong>Streams</strong> are conceptually similar: lazy evaluation, processing one element at a time.</p>
+      </div>
+    </div>
+    <div class="check" data-check="4">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">What's the key difference between <code>return</code> and <code>yield</code>? Why would you use a generator instead of building a list?</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer"><code>return</code> exits the function and gives back a value (once). <code>yield</code> pauses the function and gives back a value, then resumes later. A generator is more <strong>memory-efficient</strong> than a list because it doesn't store all values at once — it computes each one on demand. For huge datasets, generators are critical.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 5 ============ -->
+<div class="step" id="step-5" data-step="5">
+  <div class="step-header" onclick="toggleStep(5)">
+    <div class="step-num locked">5</div>
+    <div class="step-title"><h3>How Generators Work</h3><div class="step-sub">Generator objects, __next__(), StopIteration, and the resume pattern</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">When you call a generator function, you don't get a value — you get a <strong>generator object</strong>. Each call to <code>next()</code> on the generator runs the function until the next <code>yield</code>, pauses there, and returns the yielded value.</p>
+<pre><span class="kw">def</span> <span class="fn">countdown</span>(n):
+    <span class="kw">while</span> n > <span class="num">0</span>:
+        <span class="kw">yield</span> n
+        n -= <span class="num">1</span>
+
+gen = countdown(<span class="num">3</span>)                <span class="cmt"># Create generator object (nothing runs yet)</span>
+print(next(gen))              <span class="cmt"># Runs until first yield: prints 3</span>
+print(next(gen))              <span class="cmt"># Resumes after yield, runs loop again: prints 2</span>
+print(next(gen))              <span class="cmt"># Resumes again: prints 1</span>
+print(next(gen))              <span class="cmt"># Loop ends, raises StopIteration</span></pre>
+    <p class="prose">The <code>for</code> loop automatically handles this: it calls <code>next()</code> repeatedly until <code>StopIteration</code> is raised.</p>
+    <div class="callout tip"><div class="callout-icon">💡</div><div><strong>Generator pipelines:</strong> Generators can feed each other. One generator yields values, the next one consumes them and yields transformed values. This creates elegant, memory-efficient data processing pipelines — a common pattern in data science and large-scale text processing.</div></div>
+    <div class="bridge-banner">
+      <div class="bridge-banner-icon">🌉</div>
+      <div>
+        <h4>Java Bridge</h4>
+        <p>In Java, you'd implement <code>Iterator&lt;Integer&gt;</code> with <code>hasNext()</code> and <code>next()</code>. The generator object is equivalent to an Iterator. <code>StopIteration</code> is equivalent to <code>hasNext()</code> returning <code>false</code>.</p>
+      </div>
+    </div>
+    <div class="check" data-check="5">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">If you call <code>countdown(5)</code> but never call <code>next()</code> on the result, does the generator function run at all?</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer"><strong>No.</strong> Calling the generator function just creates the generator object — the function body doesn't run until you call <code>next()</code> on it. This is why generators are so efficient: they don't do any work until you ask for a value.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 6 ============ -->
+<div class="step" id="step-6" data-step="6">
+  <div class="step-header" onclick="toggleStep(6)">
+    <div class="step-num locked">6</div>
+    <div class="step-title"><h3>Generator Expressions</h3><div class="step-sub">Lazy list comprehensions: compute values on demand, not all at once</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">You can write a generator in one line using a generator expression — like a list comprehension but with parentheses instead of square brackets. Values are computed lazily (on demand), not all upfront.</p>
+<pre><span class="cmt"># List comprehension — creates entire list in memory</span>
+squares_list = [x*x <span class="kw">for</span> x <span class="kw">in</span> range(<span class="num">1000000</span>)]
+
+<span class="cmt"># Generator expression — lazy: computes one value at a time</span>
+squares_gen = (x*x <span class="kw">for</span> x <span class="kw">in</span> range(<span class="num">1000000</span>))
+
+<span class="kw">for</span> sq <span class="kw">in</span> squares_gen:
+    <span class="kw">if</span> sq > <span class="num">100</span>:
+        <span class="kw">break</span>        <span class="cmt"># Only computed a few values — huge memory savings</span></pre>
+    <p class="prose"><strong>Difference:</strong> The list comprehension creates all 1,000,000 squares immediately and stores them. The generator expression only computes each square when you ask for it, and stops when you break out of the loop. For large datasets, generators save massive amounts of memory.</p>
+    <div class="bridge-banner">
+      <div class="bridge-banner-icon">🌉</div>
+      <div>
+        <h4>Java Bridge</h4>
+        <p>Java Streams (introduced in Java 8) have the same lazy-evaluation property: <code>list.stream().filter(x -> x > 0).map(x -> x * x)</code> doesn't compute all values upfront. Like generators, they're efficient for large datasets.</p>
+      </div>
+    </div>
+    <div class="check" data-check="6">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">When would you use a generator expression over a list comprehension?</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer">When you have a <strong>large dataset</strong> and you might not process all of it. Generators are more memory-efficient because they compute values on demand. If you need the entire result upfront, a list comprehension is fine (and slightly faster). If you're iterating once and might stop early, a generator expression is better.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 7 ============ -->
+<div class="step" id="step-7" data-step="7">
+  <div class="step-header" onclick="toggleStep(7)">
+    <div class="step-num locked">7</div>
+    <div class="step-title"><h3>Regular Expressions: The Basics</h3><div class="step-sub">Pattern matching for text: wildcards, character classes, anchors, quantifiers</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose"><strong>Regular expressions (regex)</strong> are patterns that describe sets of strings. They're used to find, match, and validate text. Python's <code>re</code> module provides regex support.</p>
+<pre><span class="kw">import</span> re
+
+<span class="cmt"># Find all words starting with 'a'</span>
+text = <span class="str">"apple, apricot, banana"</span>
+pattern = <span class="str">r"a\w+"</span>              <span class="cmt"># regex pattern: 'a' followed by word chars</span>
+matches = re.findall(pattern, text)
+print(matches)  <span class="cmt"># ['apple', 'apricot']</span></pre>
+    <p class="prose"><span class="label label-how">Basic patterns:</span></p>
+    <ul style="margin: 8px 0 12px 24px; color: var(--gray-600); font-size: 15px;">
+      <li><code>.</code> — Matches any single character (except newline)</li>
+      <li><code>[abc]</code> — Matches any one character inside the brackets</li>
+      <li><code>^</code> — Start of string anchor</li>
+      <li><code>$</code> — End of string anchor</li>
+      <li><code>*</code> — Zero or more of the previous character</li>
+      <li><code>+</code> — One or more of the previous character</li>
+      <li><code>?</code> — Zero or one of the previous character</li>
+    </ul>
+    <div class="callout tip"><div class="callout-icon">💡</div><div><strong>Literal text just matches itself:</strong> The pattern <code>"hello"</code> matches the word "hello" anywhere in the string. Special characters like <code>.</code>, <code>*</code>, <code>+</code> have special meaning — if you want to match them literally, escape with <code>\</code>.</div></div>
+    <div class="bridge-banner">
+      <div class="bridge-banner-icon">🌉</div>
+      <div>
+        <h4>Java Bridge</h4>
+        <p>Java has <code>java.util.regex</code> with the same regex language. <code>Pattern.compile("a\\w+").matcher(text).find()</code> — note the double backslash because Java strings also escape backslashes. The patterns themselves are identical.</p>
+      </div>
+    </div>
+    <div class="check" data-check="7">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">What does the pattern <code>a+</code> match? What about <code>a*</code>? How are they different?</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer"><code>a+</code> matches one or more 'a's: "a", "aa", "aaa" all match, but an empty string doesn't. <code>a*</code> matches zero or more 'a's: "a", "aa", and even an empty string match. The difference: <code>+</code> requires at least one, <code>*</code> allows zero.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 8 ============ -->
+<div class="step" id="step-8" data-step="8">
+  <div class="step-header" onclick="toggleStep(8)">
+    <div class="step-num locked">8</div>
+    <div class="step-title"><h3>Regular Expressions: Extended Features</h3><div class="step-sub">Shorthand classes, repetition, capture groups, and named groups</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">Regular expressions get more powerful with shorthand classes and grouping.</p>
+<pre><span class="cmt"># Shorthand character classes</span>
+<span class="str">r"\d"</span>     <span class="cmt"># Any digit (0-9)</span>
+<span class="str">r"\w"</span>     <span class="cmt"># Any word character (a-z, A-Z, 0-9, _)</span>
+<span class="str">r"\s"</span>     <span class="cmt"># Any whitespace (space, tab, newline)</span>
+<span class="str">r"\D"</span>     <span class="cmt"># NOT a digit</span>
+
+<span class="cmt"># Repetition with {m,n}</span>
+<span class="str">r"a{2,4}"</span>   <span class="cmt"># 2 to 4 'a's</span>
+<span class="str">r"a{3}"</span>     <span class="cmt"># Exactly 3 'a's</span>
+
+<span class="cmt"># Capture groups with ()</span>
+pattern = <span class="str">r"(\w+)@(\w+\.\w+)"</span>   <span class="cmt"># Email: username and domain</span>
+match = re.search(pattern, <span class="str">"contact me at alice@example.com"</span>)
+<span class="kw">if</span> match:
+    print(match.group(<span class="num">0</span>))   <span class="cmt"># Full match: alice@example.com</span>
+    print(match.group(<span class="num">1</span>))   <span class="cmt"># Group 1: alice</span>
+    print(match.group(<span class="num">2</span>))   <span class="cmt"># Group 2: example.com</span></pre>
+    <p class="prose"><span class="label label-idea">Capture groups:</span> Parentheses create groups that you can extract individually. <code>group(0)</code> is the entire match, <code>group(1)</code> is the first group, etc.</p>
+    <div class="bridge-banner">
+      <div class="bridge-banner-icon">🌉</div>
+      <div>
+        <h4>Java Bridge</h4>
+        <p>Java uses the same shorthand classes and grouping syntax. Key difference: remember double backslashes in Java strings. <code>Pattern.compile("\\d+").matcher(text).find()</code> instead of <code>re.search(r"\d+", text)</code>.</p>
+      </div>
+    </div>
+    <div class="check" data-check="8">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">Write a regex pattern to match a 5-digit ZIP code (e.g., "12345"). Then extract the digits using a capture group.</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer">Pattern: <code>r"(\d{5})"</code>. To extract: <code>match = re.search(r"(\d{5})", text); zip_code = match.group(1)</code>. The <code>\d{5}</code> matches exactly 5 digits, and the parentheses create a capture group so you can extract it.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 9 ============ -->
+<div class="step" id="step-9" data-step="9">
+  <div class="step-header" onclick="toggleStep(9)">
+    <div class="step-num locked">9</div>
+    <div class="step-title"><h3>Using Regex in Python</h3><div class="step-sub">re.search(), re.findall(), re.split() — and practical parsing examples</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">Python's <code>re</code> module provides several functions for working with patterns.</p>
+<pre><span class="kw">import</span> re
+
+text = <span class="str">"Email: alice@example.com, Phone: 555-1234"</span>
+
+<span class="cmt"># re.search() — Find first match</span>
+match = re.search(<span class="str">r"(\w+)@(\w+\.\w+)"</span>, text)
+<span class="kw">if</span> match:
+    print(match.group(<span class="num">1</span>))  <span class="cmt"># alice</span>
+
+<span class="cmt"># re.findall() — Find all matches</span>
+digits = re.findall(<span class="str">r"\d+"</span>, text)
+print(digits)  <span class="cmt"># ['555', '1234']</span>
+
+<span class="cmt"># re.split() — Split by pattern</span>
+parts = re.split(<span class="str">r",\s*"</span>, text)  <span class="cmt"># Split on comma + optional spaces</span>
+print(parts)   <span class="cmt"># ['Email: alice@example.com', 'Phone: 555-1234']</span></pre>
+    <p class="prose"><span class="label label-tip">Practical example:</span> Parse a log file to extract user IDs and timestamps:</p>
+<pre><span class="cmt"># Log: "User 42 logged in at 2024-01-15 10:30:45"</span>
+pattern = <span class="str">r"User (\d+) .* at (\d{4}-\d{2}-\d{2})"</span>
+matches = re.findall(pattern, log_line)
+user_id, date = matches[<span class="num">0</span>]  <span class="cmt"># ('42', '2024-01-15')</span></pre>
+    <div class="bridge-banner">
+      <div class="bridge-banner-icon">🌉</div>
+      <div>
+        <h4>Java Bridge</h4>
+        <p>Side-by-side: Python <code>re.search()</code> vs Java <code>Pattern.compile().matcher().find()</code>. The patterns are identical — the API is slightly different, but the goal is the same.</p>
+      </div>
+    </div>
+    <div class="compare">
+      <div class="cmp-box python"><h4>Python</h4>
+<pre>match = re.search(
+  <span class="str">r"(\d+)-(\d+)"</span>,
+  <span class="str">"score: 42-58"</span>
+)
+<span class="kw">if</span> match:
+  print(match.group(<span class="num">1</span>))
+  <span class="cmt"># 42</span></pre>
+      </div>
+      <div class="cmp-box java"><h4>Java</h4>
+<pre><span class="type">Pattern</span> p = <span class="type">Pattern</span>
+  .compile(<span class="str">"(\\d+)-(\\d+)"</span>);
+<span class="type">Matcher</span> m = p
+  .matcher(<span class="str">"score: 42-58"</span>);
+<span class="kw">if</span> (m.find()) {
+  System.out.println(m.group(<span class="num">1</span>));
+  <span class="cmt">// 42</span>
+}</pre>
+      </div>
+    </div>
+    <div class="check" data-check="9">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">How would you find <em>all</em> email addresses in a large text file? Which re function would you use?</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer">Use <code>re.findall(r"(\w+)@(\w+\.\w+)", text)</code>. <code>findall()</code> returns a list of all matches (or all captured groups if you have parentheses). <code>search()</code> only finds the first match, so <code>findall()</code> is the right choice here.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 10 ============ -->
+<div class="step" id="step-10" data-step="10">
+  <div class="step-header" onclick="toggleStep(10)">
+    <div class="step-num locked">10</div>
+    <div class="step-title"><h3>Python → Java Concept Map</h3><div class="step-sub">How Lesson 13's advanced Python concepts translate to Java</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">Here's how each major concept from this lesson maps to Java:</p>
+    <table class="concept-map">
+      <tr><th>Concept</th><th class="py">Python</th><th class="jv">Java</th></tr>
+      <tr><td><strong>Decorators</strong></td><td class="py">@decorator syntax; wraps functions</td><td class="jv">@annotations (metadata); Decorator design pattern (class-based)</td></tr>
+      <tr><td><strong>Lazy function wrapping</strong></td><td class="py">Decorator returns wrapper function with closure</td><td class="jv">Wrapper class stores original; calls it in overridden method</td></tr>
+      <tr><td><strong>Universal wrapping</strong></td><td class="py">*args, **kwargs capture any arguments</td><td class="jv">Generics and varargs (Object... args) or reflection</td></tr>
+      <tr><td><strong>Generators</strong></td><td class="py">yield; pauses and resumes; lazy evaluation</td><td class="jv">Iterator interface (hasNext/next); Java 8+ Streams</td></tr>
+      <tr><td><strong>Generator objects</strong></td><td class="py">Calling generator function returns generator object</td><td class="jv">Implements Iterator&lt;T&gt;; or Stream&lt;T&gt;</td></tr>
+      <tr><td><strong>StopIteration</strong></td><td class="py">Raised when generator exhausted</td><td class="jv">hasNext() returns false; or stream terminates</td></tr>
+      <tr><td><strong>Lazy evaluation</strong></td><td class="py">Generator expressions (x for x in ...)</td><td class="jv">Stream pipelines; .map(), .filter() don't execute until terminal operation</td></tr>
+      <tr><td><strong>Regular expressions</strong></td><td class="py">re module; same regex syntax</td><td class="jv">java.util.regex; same regex syntax; double backslash in strings</td></tr>
+      <tr><td><strong>Pattern matching</strong></td><td class="py">re.search(), re.findall(), re.split()</td><td class="jv">Pattern.compile().matcher().find/findAll/replaceAll</td></tr>
+      <tr><td><strong>Capture groups</strong></td><td class="py">() in pattern; match.group(1), match.group(2)</td><td class="jv">() in pattern; m.group(1), m.group(2)</td></tr>
+    </table>
+    <div class="summary-box teal">
+      <h4>Lesson 13 in one sentence</h4>
+      <p><strong>Decorators</strong> wrap functions to add behaviour; <strong>generators</strong> lazily produce values one at a time, saving memory; and <strong>regular expressions</strong> pattern-match text universally across Python, Java, and nearly every programming language. Decorators and generators are Python-specific patterns, but the underlying concepts (wrapping, lazy evaluation) appear in Java as design patterns and Streams. Regex is identical across languages.</p>
+    </div>
+    <div class="callout ok"><div class="callout-icon">✅</div><div><strong>Why this matters for INFO1113:</strong> You probably won't write decorators or generators in Java — they're rarely used in undergraduate coursework. But understanding these advanced Python concepts gives you a deep grasp of functional programming, lazy evaluation, and design patterns that will make learning Java design patterns (like Decorator, Iterator, Strategy) feel natural. Regex, however, you <em>will</em> use in Java for parsing and validation.</div></div>
+    <div class="check" data-check="10">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">Name two concepts from Lesson 13 that have direct equivalents in Java, and one that's Python-specific. For each, explain the closest Java analog or why it doesn't exist.</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer"><strong>Direct equivalents:</strong> (1) Generators → Iterator/Streams (lazy evaluation of sequences). (2) Regular expressions → java.util.regex (same patterns, same concepts). <strong>Python-specific:</strong> Decorators — functions aren't first-class in Java the same way, so @decorators don't exist. Java uses the Decorator design pattern (wrapping classes, not functions) and @annotations (metadata, not wrapping).</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ SELF-TEST ============ -->
+<div class="self-test">
+  <div class="self-test-title">📝 Lesson 13 Self-Test</div>
+  <div class="self-test-sub">12 questions covering decorators, generators, regex, and the Python→Java bridge. Try to answer before revealing.</div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q1</span><span class="st-q-bloom">Remembering</span></div><p>What does the @decorator syntax do? Rewrite <code>@do_it</code><code>\ndef hello(): ...</code> without using the @ symbol.</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer"><code>@do_it</code> is syntactic sugar. The equivalent without @ is: <code>def hello(): ...; hello = do_it(hello)</code>. The decorator function takes the original function, wraps it, and reassigns the name to the wrapper.</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q2</span><span class="st-q-bloom">Understanding</span></div><p>Why do decorators use *args and **kwargs? What would happen if you hardcoded specific parameters like <code>def wrapper(name):</code>?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer"><code>*args, **kwargs</code> let the decorator wrap <em>any</em> function, regardless of what parameters it takes. If you hardcoded <code>def wrapper(name):</code>, the decorator would only work with functions that take a <code>name</code> parameter. For other functions, you'd get a TypeError.</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q3</span><span class="st-q-bloom">Applying</span></div><p>Write a @log_calls decorator that prints "<code>Calling function_name</code>" before each function call. Use *args, **kwargs to make it universal.</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer"><code>def log_calls(func):<br>&nbsp;&nbsp;def wrapper(*args, **kwargs):<br>&nbsp;&nbsp;&nbsp;&nbsp;print(f"Calling {func.__name__}")<br>&nbsp;&nbsp;&nbsp;&nbsp;return func(*args, **kwargs)<br>&nbsp;&nbsp;return wrapper</code></div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q4</span><span class="st-q-bloom">Remembering</span></div><p>What is the difference between <code>return</code> and <code>yield</code>? Which one pauses the function?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer"><code>return</code> exits the function permanently and gives back a value. <code>yield</code> pauses the function, gives back a value, and resumes from that point when you ask for the next value. <code>yield</code> is used in generators.</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q5</span><span class="st-q-bloom">Understanding</span></div><p>When you write <code>gen = countdown(5)</code>, what is the type of <code>gen</code>? Does the function body run immediately?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer"><code>gen</code> is a <strong>generator object</strong> (not an integer). The function body does <strong>not</strong> run until you call <code>next(gen)</code>. Creating a generator is lazy — it sets up the generator object but doesn't execute any code.</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q6</span><span class="st-q-bloom">Applying</span></div><p>Write a generator function <code>infinite_count()</code> that yields 1, 2, 3, 4, ... forever. (Hint: use a <code>while</code> loop.)</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer"><code>def infinite_count():<br>&nbsp;&nbsp;n = 1<br>&nbsp;&nbsp;while True:<br>&nbsp;&nbsp;&nbsp;&nbsp;yield n<br>&nbsp;&nbsp;&nbsp;&nbsp;n += 1</code><br>Each call to <code>next()</code> increments and yields the next number. It only stops when you break out of the loop or close the generator.</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q7</span><span class="st-q-bloom">Understanding</span></div><p>When is a generator expression more memory-efficient than a list comprehension? Give an example where you'd use a generator expression.</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">A generator expression computes values on demand; a list comprehension creates the entire list upfront. Example: reading a million-line log file and finding errors. With <code>gen = (line for line in logfile if 'ERROR' in line)</code>, you only process and store one matching line at a time. With a list comprehension, you'd build a huge list in memory first.</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q8</span><span class="st-q-bloom">Remembering</span></div><p>What do the regex patterns <code>\d</code>, <code>\w</code>, and <code>\s</code> match? Write one-character example for each.</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer"><code>\d</code> = digit: "5". <code>\w</code> = word character (letter, digit, underscore): "A" or "_". <code>\s</code> = whitespace (space, tab, newline): " " (a space character).</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q9</span><span class="st-q-bloom">Applying</span></div><p>Write a regex pattern to match a phone number like "555-1234" (3 digits, hyphen, 4 digits). Then show the code to extract it from a string.</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">Pattern: <code>r"(\d{3})-(\d{4})"</code>. Code:<br><code>match = re.search(r"(\d{3})-(\d{4})", text)<br>if match:<br>&nbsp;&nbsp;area = match.group(1)  # "555"<br>&nbsp;&nbsp;number = match.group(2)  # "1234"</code></div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q10</span><span class="st-q-bloom">Analysing (Bridge)</span></div><p>How does a Python decorator compare to a Java @annotation? Why doesn't Java have function decorators?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">A Python decorator wraps a function to change its behaviour. A Java @annotation is metadata (tags) attached to code but doesn't wrap or change behaviour — it's just information for the compiler or runtime. Java doesn't have function decorators because functions aren't first-class values like in Python. The closest Java pattern is the Decorator design pattern (wrapping classes).</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q11</span><span class="st-q-bloom">Understanding (Bridge)</span></div><p>How would you write the Python generator countdown(3) as a Java Iterator? What methods would you need to implement?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">Implement <code>Iterator&lt;Integer&gt;</code>:<br><code>public class Countdown implements Iterator&lt;Integer&gt; {<br>&nbsp;&nbsp;private int n;<br>&nbsp;&nbsp;public Countdown(int start) { this.n = start; }<br>&nbsp;&nbsp;public boolean hasNext() { return n > 0; }<br>&nbsp;&nbsp;public Integer next() { return n--; }</code><br>The <code>hasNext()</code> method replaces the generator's implicit <code>StopIteration</code> check.</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q12</span><span class="st-q-bloom">Analysing (Bridge)</span></div><p>Compare Python's <code>re.findall(r"\d+", text)</code> and Java's <code>Pattern.compile("\\d+").matcher(text).find()</code>. What's different about the syntax, and why?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">Both do the same thing, but: (1) Python uses raw strings (<code>r"..."</code>); Java uses regular strings with double backslashes (<code>"..."</code>) because backslash is an escape character in Java strings. (2) Python <code>re.findall()</code> is a function; Java builds a Pattern object, then a Matcher. (3) <code>findall()</code> returns a list of all matches; <code>find()</code> finds one and you call it repeatedly. The regex patterns themselves are identical.</div></div>
+</div>
+
+<div class="nav-footer">
+  <a class="nav-btn" href="info1110-review-lesson12.html">← Lesson 12: Modules & Comprehensions</a>
+  <div style="color: var(--gray-400); font-size: 13px;">Back to Overview</div>
+</div>
+
+</div>
+
+<script>
+const totalSteps=10;let completedSteps=new Set();
+function toggleStep(n){document.getElementById('step-'+n).classList.toggle('open')}
+function enableReveal(ta){const btn=ta.closest('.check,.st-q').querySelector('.check-reveal button');btn.disabled=ta.value.trim().length<5}
+function revealAnswer(btn){const c=btn.closest('.check,.st-q');c.querySelector('.check-answer').classList.add('show');const r=c.querySelector('.check-rating');if(r)r.classList.add('show');btn.style.display='none'}
+function rateCheck(btn,rating){const check=btn.closest('.check'),step=btn.closest('.step'),n=parseInt(step.dataset.step);check.querySelector('.check-rating').querySelectorAll('button').forEach(b=>b.style.opacity='0.4');btn.style.opacity='1';completedSteps.add(n);updateProgress();step.querySelector('.step-num').className='step-num done';const next=document.getElementById('step-'+(n+1));if(next){const nn=next.querySelector('.step-num');if(nn.classList.contains('locked'))nn.className='step-num active'}}
+function updateProgress(){const p=Math.round(completedSteps.size/totalSteps*100);document.getElementById('progressFill').style.width=p+'%';document.getElementById('progressLabel').textContent=completedSteps.size+' of '+totalSteps+' complete'}
+</script>
+<script>
+(function(){
+  function notifyHeight(){
+    if(window.parent!==window){
+      window.parent.postMessage({type:"vgResize",height:document.documentElement.scrollHeight},"*");
+    }
+  }
+  notifyHeight();
+  new MutationObserver(notifyHeight).observe(document.body,{childList:true,subtree:true,attributes:true});
+  window.addEventListener("resize",notifyHeight);
+})();
+</script>
+</body>
+</html>

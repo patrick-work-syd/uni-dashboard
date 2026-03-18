@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>INFO1110 Review — Lesson 10: Function Arguments, Parameters & Sets</title>
+<style>
+:root {
+  --teal: #0d9488; --teal-light: #f0fdfa; --teal-dark: #115e59;
+  --blue: #3b82f6; --blue-light: #eff6ff; --blue-dark: #1e40af;
+  --green: #10b981; --green-light: #ecfdf5;
+  --orange: #f59e0b; --orange-light: #fffbeb;
+  --purple: #8b5cf6; --purple-light: #f5f3ff;
+  --red: #ef4444; --red-light: #fef2f2;
+  --gray-50: #f8fafc; --gray-100: #f1f5f9; --gray-200: #e2e8f0;
+  --gray-400: #94a3b8; --gray-600: #475569; --gray-800: #1e293b;
+  --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --mono: 'SF Mono', 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: var(--font); background: var(--gray-50); color: var(--gray-800); line-height: 1.65; }
+
+.header { background: linear-gradient(135deg, var(--teal-dark) 0%, var(--teal) 100%); color: #fff; padding: 32px 0 28px; }
+.header-inner { max-width: 800px; margin: 0 auto; padding: 0 24px; }
+.header-tag { font-size: 12px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; opacity: 0.8; margin-bottom: 8px; }
+.header h1 { font-size: 26px; font-weight: 700; margin-bottom: 4px; }
+.header p { font-size: 14px; opacity: 0.85; }
+.header-reassure { margin-top: 14px; padding: 12px 16px; background: rgba(255,255,255,0.12); border-radius: 10px; font-size: 13px; line-height: 1.5; }
+.header-badge { display: inline-block; background: rgba(255,255,255,0.2); padding: 3px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; letter-spacing: 0.5px; margin-top: 10px; }
+
+.progress-bar { max-width: 800px; margin: 0 auto; padding: 16px 24px 0; }
+.progress-track { background: var(--gray-200); height: 6px; border-radius: 3px; overflow: hidden; }
+.progress-fill { background: var(--green); height: 100%; width: 0%; border-radius: 3px; transition: width 0.5s ease; }
+.progress-label { font-size: 12px; color: var(--gray-400); margin-top: 6px; text-align: right; }
+
+.content { max-width: 800px; margin: 0 auto; padding: 24px; }
+
+.step { background: #fff; border: 1px solid var(--gray-200); border-radius: 16px; margin-bottom: 20px; overflow: hidden; }
+.step-header { display: flex; align-items: center; gap: 12px; padding: 18px 22px; cursor: pointer; user-select: none; }
+.step-header:hover { background: var(--gray-50); }
+.step-num { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; flex-shrink: 0; }
+.step-num.locked { background: var(--gray-200); color: var(--gray-400); }
+.step-num.active { background: var(--teal); color: #fff; }
+.step-num.done { background: var(--green); color: #fff; }
+.step-title { flex: 1; }
+.step-title h3 { font-size: 16px; font-weight: 600; }
+.step-title .step-sub { font-size: 12px; color: var(--gray-400); margin-top: 1px; }
+.step-chevron { font-size: 18px; color: var(--gray-400); transition: transform 0.2s; }
+.step.open .step-chevron { transform: rotate(90deg); }
+.step-body { display: none; padding: 0 22px 22px; }
+.step.open .step-body { display: block; }
+
+.diagram { background: var(--gray-50); border: 1px solid var(--gray-200); border-radius: 12px; padding: 20px; margin: 14px 0; text-align: center; overflow-x: auto; }
+.diagram svg { max-width: 100%; height: auto; }
+
+.prose { font-size: 15px; color: var(--gray-600); margin: 12px 0; }
+.prose strong { color: var(--gray-800); }
+
+.label { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 4px; }
+.label-idea { color: var(--green); } .label-how { color: var(--teal); } .label-trap { color: var(--red); } .label-why { color: var(--purple); } .label-tip { color: var(--orange); } .label-bridge { color: var(--blue); }
+
+pre { background: #1e293b; color: #e2e8f0; padding: 14px 16px; border-radius: 10px; font-family: var(--mono); font-size: 13px; line-height: 1.7; overflow-x: auto; margin: 10px 0; white-space: pre; }
+pre .kw { color: #c084fc; } pre .str { color: #86efac; } pre .cmt { color: #64748b; font-style: italic; }
+pre .type { color: #67e8f9; } pre .num { color: #fbbf24; } pre .fn { color: #7dd3fc; } pre .ann { color: #f472b6; }
+code { font-family: var(--mono); font-size: 0.88em; background: var(--gray-100); padding: 1px 5px; border-radius: 4px; }
+
+.compare { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 14px 0; }
+@media (max-width: 600px) { .compare { grid-template-columns: 1fr; } }
+.cmp-box { border-radius: 10px; padding: 14px; }
+.cmp-box.python { background: var(--orange-light); border: 1px solid #fed7aa; }
+.cmp-box.java { background: var(--blue-light); border: 1px solid #bfdbfe; }
+.cmp-box.before { background: var(--red-light); border: 1px solid #fecaca; }
+.cmp-box.after { background: var(--green-light); border: 1px solid #a7f3d0; }
+.cmp-box h4 { font-size: 12px; font-weight: 700; margin-bottom: 6px; }
+.cmp-box.python h4 { color: #b45309; } .cmp-box.java h4 { color: var(--blue-dark); }
+.cmp-box.before h4 { color: var(--red); } .cmp-box.after h4 { color: #065f46; }
+.cmp-box pre { font-size: 12.5px; padding: 10px; margin: 0; }
+
+.callout { display: flex; gap: 10px; padding: 14px 16px; border-radius: 10px; margin: 14px 0; font-size: 14px; line-height: 1.55; }
+.callout-icon { font-size: 18px; flex-shrink: 0; line-height: 1.5; }
+.callout.tip { background: var(--blue-light); border: 1px solid #bfdbfe; }
+.callout.warn { background: var(--red-light); border: 1px solid #fecaca; }
+.callout.ok { background: var(--green-light); border: 1px solid #a7f3d0; }
+.callout.bridge { background: var(--teal-light); border: 1px solid #99f6e4; }
+
+.analogy { background: var(--purple-light); border: 1px solid #ddd6fe; border-radius: 12px; padding: 16px; margin: 14px 0; }
+.analogy-label { font-size: 11px; font-weight: 700; color: var(--purple); letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 4px; }
+.analogy p { font-size: 14px; color: var(--gray-600); }
+
+.check { background: var(--green-light); border: 1px solid #a7f3d0; border-radius: 12px; padding: 18px; margin: 18px 0; }
+.check-title { font-size: 13px; font-weight: 700; color: var(--green); margin-bottom: 6px; }
+.check-q { font-size: 14px; margin-bottom: 10px; }
+.check textarea { width: 100%; padding: 8px 10px; border: 1px solid #a7f3d0; border-radius: 8px; font-family: var(--font); font-size: 13px; resize: vertical; min-height: 44px; background: #fff; }
+.check textarea:focus { outline: 2px solid var(--green); border-color: transparent; }
+.check-reveal { margin-top: 8px; }
+.check-reveal button { background: var(--green); color: #fff; border: none; padding: 7px 16px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; }
+.check-reveal button:hover { background: #059669; }
+.check-reveal button:disabled { background: var(--gray-400); cursor: not-allowed; }
+.check-answer { display: none; margin-top: 10px; padding: 12px; background: #fff; border-radius: 8px; border: 1px solid #a7f3d0; font-size: 13px; line-height: 1.6; }
+.check-answer.show { display: block; }
+.check-rating { display: none; margin-top: 8px; gap: 8px; }
+.check-rating.show { display: flex; }
+.check-rating button { padding: 5px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid var(--gray-200); background: #fff; }
+.check-rating .got-it { color: var(--green); border-color: #a7f3d0; }
+.check-rating .not-yet { color: var(--red); border-color: #fecaca; }
+
+.summary-box { padding: 18px; border-radius: 12px; margin: 18px 0; }
+.summary-box.teal { background: var(--teal-light); border: 1px solid #99f6e4; }
+.summary-box.blue { background: var(--blue-light); border: 1px solid #bfdbfe; }
+.summary-box h4 { font-size: 15px; margin-bottom: 6px; color: var(--teal-dark); }
+.summary-box.blue h4 { color: var(--blue-dark); }
+.summary-box p, .summary-box ul { font-size: 14px; color: var(--gray-600); }
+.summary-box ul { margin: 8px 0 0 20px; }
+
+.self-test { background: #fff; border: 2px solid var(--teal); border-radius: 16px; padding: 22px; margin: 28px 0; }
+.self-test-title { font-size: 18px; font-weight: 700; color: var(--teal); margin-bottom: 4px; }
+.self-test-sub { font-size: 13px; color: var(--gray-400); margin-bottom: 16px; }
+.st-q { margin-bottom: 16px; }
+.st-q-header { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.st-q-num { font-size: 12px; font-weight: 700; color: var(--teal); background: var(--teal-light); padding: 2px 8px; border-radius: 4px; }
+.st-q-bloom { font-size: 10px; color: var(--gray-400); }
+.st-q p { font-size: 14px; margin-bottom: 6px; }
+.st-q textarea { width: 100%; padding: 8px 10px; border: 1px solid #99f6e4; border-radius: 8px; font-family: var(--font); font-size: 13px; resize: vertical; min-height: 44px; background: #fff; }
+.st-q textarea:focus { outline: 2px solid var(--teal); border-color: transparent; }
+.st-q .check-reveal button { background: var(--teal); }
+.st-q .check-reveal button:hover { background: var(--teal-dark); }
+.st-q .check-reveal button:disabled { background: var(--gray-400); }
+.st-q .check-answer { border-color: #99f6e4; }
+
+.nav-footer { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; border-top: 1px solid var(--gray-200); margin-top: 28px; }
+.nav-btn { display: inline-flex; align-items: center; gap: 6px; padding: 9px 18px; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; border: 1px solid var(--gray-200); background: #fff; color: var(--gray-600); text-decoration: none; }
+.nav-btn:hover { background: var(--gray-100); }
+.nav-btn.primary { background: var(--teal); color: #fff; border-color: var(--teal); }
+.nav-btn.primary:hover { background: var(--teal-dark); }
+
+.bridge-banner { background: linear-gradient(90deg, var(--orange-light), var(--blue-light)); border: 1px solid #bfdbfe; border-radius: 12px; padding: 16px; margin: 14px 0; display: flex; align-items: center; gap: 12px; }
+.bridge-banner-icon { font-size: 28px; flex-shrink: 0; }
+.bridge-banner h4 { font-size: 14px; font-weight: 700; color: var(--blue-dark); margin-bottom: 2px; }
+.bridge-banner p { font-size: 13px; color: var(--gray-600); }
+
+table.concept-map { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 13px; }
+table.concept-map th { background: var(--gray-100); padding: 8px 12px; text-align: left; font-weight: 700; border-bottom: 2px solid var(--gray-200); }
+table.concept-map td { padding: 8px 12px; border-bottom: 1px solid var(--gray-200); }
+table.concept-map .py { color: #b45309; font-weight: 600; }
+table.concept-map .jv { color: var(--blue-dark); font-weight: 600; }
+
+.venn { background: #fff; border: 1px solid var(--gray-200); border-radius: 12px; padding: 16px; margin: 14px 0; text-align: center; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="header-tag">INFO1110 Review · Lesson 10 · Python → Java Bridge</div>
+    <h1>Function Arguments, Parameters & Sets</h1>
+    <p>10 steps · how Python handles function flexibility · and a new data structure</p>
+    <div class="header-reassure">
+      This lesson covers Python's powerful function flexibility — default values, variable arguments (*args and **kwargs), and keyword arguments. These are things Java doesn't have; Java uses strict parameter lists and method overloading instead. We'll also explore <strong>sets</strong> — a data structure that Java has too (as HashSet). Understanding the Python versions will make Java's approach make sense.
+    </div>
+    <div class="header-badge">BRIDGES TO INFO1113 WEEKS 2-3</div>
+  </div>
+</div>
+
+<div class="progress-bar">
+  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="progress-label" id="progressLabel">0 of 10 complete</div>
+</div>
+
+<div class="content">
+
+<!-- ============ STEP 1 ============ -->
+<div class="step open" id="step-1" data-step="1">
+  <div class="step-header" onclick="toggleStep(1)">
+    <div class="step-num active">1</div>
+    <div class="step-title"><h3>Arguments vs Parameters — The Terminology</h3><div class="step-sub">Why the distinction matters, even though people use them interchangeably</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">Most people use "arguments" and "parameters" to mean the same thing. But they're technically different, and understanding the distinction makes function signatures clearer.</p>
+    <div class="analogy">
+      <div class="analogy-label">Mental Model</div>
+      <p><strong>Parameters</strong> are the placeholders defined in the function signature. <strong>Arguments</strong> are the actual values you pass when you call the function.</p>
+    </div>
+    <p class="prose">In this example:</p>
+    <pre>
+<span class="kw">def</span> <span class="fn">greet</span>(name, greeting=<span class="str">"Hello"</span>):  <span class="cmt"># 'name' and 'greeting' are PARAMETERS</span>
+    <span class="kw">return</span> <span class="str">f"</span>{greeting}, {name}<span class="str">!"</span>
+
+greet(<span class="str">"Alice"</span>, <span class="str">"Hi"</span>)           <span class="cmt"># "Alice" and "Hi" are ARGUMENTS</span>
+    </pre>
+    <ul style="margin: 12px 0 12px 24px; color: var(--gray-600); font-size: 15px;">
+      <li><strong>Parameters</strong> (definition): <code>name</code>, <code>greeting</code></li>
+      <li><strong>Arguments</strong> (function call): <code>"Alice"</code>, <code>"Hi"</code></li>
+    </ul>
+    <div class="callout ok"><div class="callout-icon">✅</div><div>In practice, almost everyone says "arguments" and "parameters" interchangeably. But during this lesson, we'll use the precise terms to be clear about function design.</div></div>
+    <div class="check" data-check="1">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">In the function <code>def add(a, b): return a + b</code>, which are the parameters and which are the arguments when you call <code>add(3, 5)</code>?</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer"><strong>Parameters:</strong> <code>a</code> and <code>b</code> (defined in the function signature). <strong>Arguments:</strong> <code>3</code> and <code>5</code> (the values you pass when you call the function).</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 2 ============ -->
+<div class="step" id="step-2" data-step="2">
+  <div class="step-header" onclick="toggleStep(2)">
+    <div class="step-num locked">2</div>
+    <div class="step-title"><h3>Positional Arguments — The Basics</h3><div class="step-sub">Standard left-to-right matching</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">Positional arguments are the simplest and most common. You pass values in the order they appear in the function definition, and Python matches them left-to-right.</p>
+    <pre>
+<span class="kw">def</span> <span class="fn">subtract</span>(a, b):
+    <span class="kw">return</span> a - b
+
+subtract(<span class="num">10</span>, <span class="num">3</span>)     <span class="cmt"># a=10, b=3 → returns 7</span>
+subtract(<span class="num">3</span>, <span class="num">10</span>)     <span class="cmt"># a=3, b=10 → returns -7 (order matters!)</span>
+    </pre>
+    <div class="callout warn"><div class="callout-icon">⚠️</div><div><strong>Order matters!</strong> In positional arguments, the position determines which parameter gets which value. Swap the arguments and you get a different result.</div></div>
+    <div class="bridge-banner">
+      <div class="bridge-banner-icon">🌉</div>
+      <div>
+        <h4>Java parallel</h4>
+        <p>Java also supports positional arguments only. There are no keyword arguments or default values in Java. You match arguments left-to-right, just like Python. But Java requires type declarations: <code>int subtract(int a, int b) { return a - b; }</code></p>
+      </div>
+    </div>
+    <div class="check" data-check="2">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">What would <code>subtract("hello", "world")</code> do? What error would you get?</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer">It would raise a <code>TypeError</code> because you can't subtract strings (unless the function was designed differently). The arguments are positional — Python just tries to match them left-to-right and execute the function. If the types don't work, you get an error at runtime.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 3 ============ -->
+<div class="step" id="step-3" data-step="3">
+  <div class="step-header" onclick="toggleStep(3)">
+    <div class="step-num locked">3</div>
+    <div class="step-title"><h3>Default Values & Keyword Arguments</h3><div class="step-sub">Parameters with defaults, and calling by name instead of position</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">Python lets you define default values for parameters. When you call the function, you can either pass a value (override the default) or omit it (use the default). You can also pass arguments by name (keyword argument).</p>
+    <pre>
+<span class="kw">def</span> <span class="fn">greet</span>(name, greeting=<span class="str">"Hello"</span>, punctuation=<span class="str">"!"</span>):
+    <span class="kw">return</span> <span class="str">f"</span>{greeting}, {name}{punctuation}<span class="str">"</span>
+
+greet(<span class="str">"Alice"</span>)                                  <span class="cmt"># Uses defaults: "Hello, Alice!"</span>
+greet(<span class="str">"Bob"</span>, <span class="str">"Hi"</span>)                            <span class="cmt"># Override first default: "Hi, Bob!"</span>
+greet(<span class="str">"Carol"</span>, punctuation=<span class="str">"?"</span>)          <span class="cmt"># Keyword arg, skip greeting: "Hello, Carol?"</span>
+greet(greeting=<span class="str">"Hey"</span>, name=<span class="str">"Dave"</span>)        <span class="cmt"># All keywords, any order: "Hey, Dave!"</span>
+    </pre>
+    <p class="prose"><strong>Keyword arguments</strong> let you pass arguments by name, and they can be in any order. This is powerful because you can skip defaults you don't care about.</p>
+    <div class="callout tip"><div class="callout-icon">💡</div><div><strong>Rule:</strong> Parameters with defaults must come <em>after</em> parameters without defaults. You can't have a required parameter after an optional one.</div></div>
+    <div class="bridge-banner">
+      <div class="bridge-banner-icon">🌉</div>
+      <div>
+        <h4>Java parallel: Method Overloading</h4>
+        <p>Java has NO keyword arguments or default parameter values. Instead, Java uses <strong>method overloading</strong> — you define multiple methods with the same name but different parameter lists. <code>public void greet(String name) { }</code> and <code>public void greet(String name, String greeting) { }</code> are two different methods. You can't reorder arguments; you must pass them positionally.</p>
+      </div>
+    </div>
+    <div class="check" data-check="3">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">What's the advantage of keyword arguments over positional arguments?</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer">Keyword arguments let you specify which parameter you're passing a value to, without needing to pass all parameters. You can skip defaults you don't need, and you can pass them in any order. This makes code more readable: <code>greet(punctuation="?", name="Carol")</code> is clearer than <code>greet("Carol", "Hello", "?")</code>.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 4 ============ -->
+<div class="step" id="step-4" data-step="4">
+  <div class="step-header" onclick="toggleStep(4)">
+    <div class="step-num locked">4</div>
+    <div class="step-title"><h3>*args — Variable Positional Arguments</h3><div class="step-sub">Accepting any number of positional arguments as a tuple</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">Sometimes you want a function to accept <em>any</em> number of positional arguments. Use <code>*args</code> (the name "args" is just convention; it's the asterisk that matters). Python collects all extra positional arguments into a tuple.</p>
+    <pre>
+<span class="kw">def</span> <span class="fn">sum_all</span>(*args):
+    total = <span class="num">0</span>
+    <span class="kw">for</span> num <span class="kw">in</span> args:
+        total += num
+    <span class="kw">return</span> total
+
+sum_all(<span class="num">1</span>)              <span class="cmt"># args=(1,) → 1</span>
+sum_all(<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>)        <span class="cmt"># args=(1,2,3) → 6</span>
+sum_all(<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>, <span class="num">4</span>, <span class="num">5</span>) <span class="cmt"># args=(1,2,3,4,5) → 15</span>
+    </pre>
+    <p class="prose"><code>args</code> is a tuple inside the function, so you can iterate over it, index it, check its length — just like any tuple.</p>
+    <div class="diagram">
+      <svg viewBox="0 0 600 180" xmlns="http://www.w3.org/2000/svg" style="max-width:550px">
+        <style>svg text{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;}</style>
+        <rect x="20" y="20" width="560" height="50" rx="8" fill="#eff6ff" stroke="#3b82f6" stroke-width="2"/>
+        <text x="300" y="50" text-anchor="middle" font-size="13" font-weight="700" fill="#1e40af">sum_all(1, 2, 3, 4, 5)</text>
+        <text x="300" y="68" text-anchor="middle" font-size="11" fill="#3b82f6">↓ Python converts to tuple ↓</text>
+        <path d="M 300 70 L 300 100" stroke="#3b82f6" stroke-width="2" marker-end="url(#arrowblue)"/>
+        <rect x="80" y="105" width="440" height="45" rx="8" fill="#f0fdfa" stroke="#0d9488" stroke-width="2"/>
+        <text x="300" y="130" text-anchor="middle" font-size="12" font-weight="700" fill="#0d9488">args = (1, 2, 3, 4, 5)</text>
+        <text x="300" y="145" text-anchor="middle" font-size="10" fill="#475569">a tuple inside the function</text>
+        <defs><marker id="arrowblue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#3b82f6"/></marker></defs>
+      </svg>
+    </div>
+    <div class="bridge-banner">
+      <div class="bridge-banner-icon">🌉</div>
+      <div>
+        <h4>Java parallel: Varargs</h4>
+        <p>Java has <strong>varargs</strong> (variable arguments): <code>public int sumAll(int... nums)</code>. The <code>...</code> is like Python's <code>*</code>. Inside the method, <code>nums</code> is an array, not a tuple. The concept is identical: accept any number of arguments of one type.</p>
+      </div>
+    </div>
+    <div class="check" data-check="4">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">If you call <code>sum_all()</code> with no arguments, what does <code>args</code> equal?</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer"><code>args</code> becomes an empty tuple: <code>()</code>. Your function still runs — the loop just doesn't iterate, so the total stays 0 and the function returns 0.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 5 ============ -->
+<div class="step" id="step-5" data-step="5">
+  <div class="step-header" onclick="toggleStep(5)">
+    <div class="step-num locked">5</div>
+    <div class="step-title"><h3>**kwargs — Variable Keyword Arguments</h3><div class="step-sub">Accepting any number of keyword arguments as a dictionary</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">Use <code>**kwargs</code> (convention; it's the double asterisk that matters) to accept any keyword arguments. Python collects them into a dictionary.</p>
+    <pre>
+<span class="kw">def</span> <span class="fn">print_info</span>(**kwargs):
+    <span class="kw">for</span> key, value <span class="kw">in</span> kwargs.items():
+        print(<span class="str">f"</span>{key} = {value}<span class="str">"</span>)
+
+print_info(name=<span class="str">"Alice"</span>, age=<span class="num">25</span>, city=<span class="str">"Sydney"</span>)
+<span class="cmt"># Output:</span>
+<span class="cmt"># name = Alice</span>
+<span class="cmt"># age = 25</span>
+<span class="cmt"># city = Sydney</span>
+    </pre>
+    <p class="prose"><code>kwargs</code> is a dictionary inside the function, so you can access keys like <code>kwargs["name"]</code> or iterate with <code>.items()</code>.</p>
+    <div class="callout tip"><div class="callout-icon">💡</div><div>You can combine <code>*args</code> and <code>**kwargs</code> in one function: <code>def flex_func(required, *args, **kwargs):</code>. The order matters: positional first, then *args, then **kwargs.</div></div>
+    <div class="callout warn"><div class="callout-icon">⚠️</div><div><strong>Java has no direct equivalent.</strong> To pass arbitrary keyword arguments in Java, you'd use a <code>Map&lt;String, Object&gt;</code> or builder pattern. There's no syntactic sugar like Python's <code>**kwargs</code>.</div></div>
+    <div class="check" data-check="5">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">What's the difference between <code>*args</code> and <code>**kwargs</code>?</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer"><code>*args</code> collects positional arguments into a tuple. <code>**kwargs</code> collects keyword arguments into a dictionary. With *args, you get an ordered list. With **kwargs, you get key-value pairs so you can look up values by name.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 6 ============ -->
+<div class="step" id="step-6" data-step="6">
+  <div class="step-header" onclick="toggleStep(6)">
+    <div class="step-num locked">6</div>
+    <div class="step-title"><h3>The __name__ Guard & __main__</h3><div class="step-sub">Running as a script vs. importing as a module</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">When Python runs a file, it sets a special variable called <code>__name__</code>. If you run the file directly, <code>__name__</code> is <code>"__main__"</code>. If you import it as a module, <code>__name__</code> is the module name. This lets you write code that only runs when the file is executed directly.</p>
+    <pre>
+<span class="kw">def</span> <span class="fn">say_hello</span>():
+    print(<span class="str">"Hello!"</span>)
+
+<span class="kw">if</span> __name__ == <span class="str">"__main__"</span>:
+    say_hello()  <span class="cmt"># Only runs if you execute this file directly</span>
+    <span class="cmt"># Doesn't run if another file imports this one</span>
+    </pre>
+    <p class="prose">This guard pattern is standard in Python. It lets you write functions for import, but also include test code that runs when you test the file directly.</p>
+    <div class="analogy">
+      <div class="analogy-label">Why This Matters</div>
+      <p>Imagine you have a file <code>math_utils.py</code> with a <code>add()</code> function. You want to import it in another file and use <code>add()</code>. But you also want to run <code>math_utils.py</code> directly to test it. The guard lets you do both: the test code runs when you execute the file, but stays quiet when it's imported.</p>
+    </div>
+    <div class="bridge-banner">
+      <div class="bridge-banner-icon">🌉</div>
+      <div>
+        <h4>Java parallel: main() method</h4>
+        <p>Java requires every program to have a <code>public static void main(String[] args)</code> method. This is where execution starts. In a way, Java forces every file to have explicit entry points. There's no "import mode" that skips <code>main()</code> — if you import a Java class, you're using its methods, not executing <code>main()</code>.</p>
+      </div>
+    </div>
+    <div class="check" data-check="6">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">What would happen if you put <code>say_hello()</code> outside the <code>if __name__ == "__main__":</code> guard?</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer">The function would run every time the file is executed <em>or</em> imported. If another file does <code>import math_utils</code>, it would trigger the hello message immediately. That's usually not what you want — you only want test code to run in test mode, not every time someone imports your module.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 7 ============ -->
+<div class="step" id="step-7" data-step="7">
+  <div class="step-header" onclick="toggleStep(7)">
+    <div class="step-num locked">7</div>
+    <div class="step-title"><h3>The `with` Statement — Context Managers</h3><div class="step-sub">Safe resource handling with automatic cleanup</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">The <code>with</code> statement is Python's way of guaranteeing cleanup. When you open a file or acquire a resource, <code>with</code> ensures it's closed/released even if an error happens.</p>
+    <pre>
+<span class="cmt"># Without with (bad — may leak the file)</span>
+f = <span class="fn">open</span>(<span class="str">"data.txt"</span>)
+data = f.read()
+f.close()  <span class="cmt"># If an error happens before this, file stays open!</span>
+
+<span class="cmt"># With with (good — always closes)</span>
+<span class="kw">with</span> <span class="fn">open</span>(<span class="str">"data.txt"</span>) <span class="kw">as</span> f:
+    data = f.read()  <span class="cmt"># File auto-closes when this block ends, even on error</span>
+    </pre>
+    <p class="prose">The <code>as</code> clause assigns the file object to a variable you can use inside the block. When the block ends (normally or via exception), Python calls cleanup automatically.</p>
+    <div class="bridge-banner">
+      <div class="bridge-banner-icon">🌉</div>
+      <div>
+        <h4>Java parallel: try-with-resources</h4>
+        <p>Java 7+ has try-with-resources: <code>try (Scanner s = new Scanner(file)) { // use s }</code>. Same concept — automatic cleanup. The syntax is different, but the goal is identical: ensure resources are cleaned up.</p>
+      </div>
+    </div>
+    <div class="check" data-check="7">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">Why is <code>with open(...) as f:</code> better than opening and closing manually?</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer">If an error occurs inside the block, the manual approach might skip the <code>close()</code> call, leaving the file open and wasting resources. <code>with</code> guarantees cleanup regardless of exceptions. It's more reliable and less error-prone.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 8 ============ -->
+<div class="step" id="step-8" data-step="8">
+  <div class="step-header" onclick="toggleStep(8)">
+    <div class="step-num locked">8</div>
+    <div class="step-title"><h3>Sets — Unordered Collections of Unique Elements</h3><div class="step-sub">A data structure that automatically removes duplicates</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">A set is like a list, but with two key differences: (1) unordered, and (2) no duplicates. Define a set with curly braces: <code>{1, 2, 3}</code>.</p>
+    <pre>
+my_list = [<span class="num">1</span>, <span class="num">2</span>, <span class="num">2</span>, <span class="num">3</span>, <span class="num">3</span>, <span class="num">3</span>]  <span class="cmt"># List with duplicates</span>
+my_set = {<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>}          <span class="cmt"># Set: no duplicates</span>
+
+print(my_set)           <span class="cmt"># {1, 2, 3} (order may vary)</span>
+
+<span class="cmt"># Convert list to set to remove duplicates</span>
+no_dupes = set(my_list)  <span class="cmt"># {1, 2, 3}</span>
+
+<span class="num">2</span> <span class="kw">in</span> my_set             <span class="cmt"># True (O(1) lookup, very fast)</span>
+my_set.add(<span class="num">4</span>)         <span class="cmt"># {1, 2, 3, 4}</span>
+my_set.remove(<span class="num">2</span>)     <span class="cmt"># {1, 3, 4}</span>
+    </pre>
+    <p class="prose"><strong>Key advantage:</strong> Checking if a value is in a set is <em>very</em> fast (O(1)), whereas checking a list is slow (O(n)).</p>
+    <div class="bridge-banner">
+      <div class="bridge-banner-icon">🌉</div>
+      <div>
+        <h4>Java parallel: HashSet</h4>
+        <p>Java's <code>HashSet&lt;T&gt;</code> is equivalent to Python's set. Same properties: unordered, no duplicates, fast lookup. Methods have different names: <code>.add()</code>, <code>.remove()</code>, <code>.contains()</code> instead of Python's methods.</p>
+      </div>
+    </div>
+    <div class="check" data-check="8">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">You have a list of 10,000 names with many duplicates. How would a set help you find unique names?</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer">Convert the list to a set: <code>unique = set(name_list)</code>. The set automatically removes duplicates, so you instantly have only the unique names. And if you need to check whether a specific name is in the list later, <code>name in unique</code> is much faster than checking a list of 10,000 items.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 9 ============ -->
+<div class="step" id="step-9" data-step="9">
+  <div class="step-header" onclick="toggleStep(9)">
+    <div class="step-num locked">9</div>
+    <div class="step-title"><h3>Set Operations — Union, Intersection, Difference</h3><div class="step-sub">Combining and comparing sets with operators</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">Sets support mathematical operations that make sense: combine them (union), find common elements (intersection), find differences (what's in one but not the other).</p>
+    <pre>
+a = {<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>}
+b = {<span class="num">3</span>, <span class="num">4</span>, <span class="num">5</span>}
+
+a | b         <span class="cmt"># Union: {1, 2, 3, 4, 5}</span>
+a & b         <span class="cmt"># Intersection: {3}</span>
+a - b         <span class="cmt"># Difference: {1, 2} (in a but not b)</span>
+a ^ b         <span class="cmt"># Symmetric difference: {1, 2, 4, 5} (in a or b, but not both)</span>
+    </pre>
+    <div class="diagram">
+      <svg viewBox="0 0 600 200" xmlns="http://www.w3.org/2000/svg" style="max-width:550px">
+        <style>svg text{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;}</style>
+        <!-- Union -->
+        <g>
+          <text x="75" y="20" font-size="12" font-weight="700" fill="#0d9488">Union: a | b</text>
+          <circle cx="50" cy="70" r="25" fill="none" stroke="#f59e0b" stroke-width="2"/>
+          <circle cx="100" cy="70" r="25" fill="none" stroke="#3b82f6" stroke-width="2"/>
+          <text x="50" y="72" text-anchor="middle" font-size="11" fill="#b45309" font-weight="600">1,2</text>
+          <text x="100" y="72" text-anchor="middle" font-size="11" fill="#1e40af" font-weight="600">4,5</text>
+          <text x="75" y="72" text-anchor="middle" font-size="11" fill="#7c2d12" font-weight="600">3</text>
+          <text x="75" y="110" text-anchor="middle" font-size="11" fill="#475569">{1,2,3,4,5}</text>
+        </g>
+        <!-- Intersection -->
+        <g>
+          <text x="225" y="20" font-size="12" font-weight="700" fill="#0d9488">Intersection: a & b</text>
+          <circle cx="200" cy="70" r="25" fill="none" stroke="#f59e0b" stroke-width="2"/>
+          <circle cx="250" cy="70" r="25" fill="none" stroke="#3b82f6" stroke-width="2"/>
+          <text x="200" y="72" text-anchor="middle" font-size="11" fill="#b45309" font-weight="600">1,2</text>
+          <text x="250" y="72" text-anchor="middle" font-size="11" fill="#1e40af" font-weight="600">4,5</text>
+          <polygon points="225,45 235,95" fill="#10b981" opacity="0.3"/>
+          <text x="225" y="72" text-anchor="middle" font-size="11" fill="#065f46" font-weight="700">3</text>
+          <text x="225" y="110" text-anchor="middle" font-size="11" fill="#475569">{3}</text>
+        </g>
+        <!-- Difference -->
+        <g>
+          <text x="425" y="20" font-size="12" font-weight="700" fill="#0d9488">Difference: a - b</text>
+          <circle cx="400" cy="70" r="25" fill="none" stroke="#f59e0b" stroke-width="2"/>
+          <circle cx="450" cy="70" r="25" fill="none" stroke="#3b82f6" stroke-width="2"/>
+          <circle cx="400" cy="70" r="22" fill="#f59e0b" opacity="0.2"/>
+          <text x="400" y="72" text-anchor="middle" font-size="11" fill="#b45309" font-weight="600">1,2</text>
+          <text x="450" y="72" text-anchor="middle" font-size="11" fill="#1e40af" font-weight="600">4,5</text>
+          <text x="425" y="72" text-anchor="middle" font-size="11" fill="#7c2d12" font-weight="600">3</text>
+          <text x="425" y="110" text-anchor="middle" font-size="11" fill="#475569">{1,2}</text>
+        </g>
+      </svg>
+    </div>
+    <p class="prose">These operations are powerful for tasks like: "Find users who visited both pages" (intersection), "Find all unique products from two warehouses" (union), "Find products in warehouse A that aren't in warehouse B" (difference).</p>
+    <div class="callout tip"><div class="callout-icon">💡</div><div>Set operations are fast because sets use hash tables internally. Comparing two sets is O(n), not O(n²). For large datasets, this makes a huge difference.</div></div>
+    <div class="bridge-banner">
+      <div class="bridge-banner-icon">🌉</div>
+      <div>
+        <h4>Java parallel: HashSet operations</h4>
+        <p>Java's <code>HashSet</code> has methods instead of operators: <code>.addAll()</code> (union), <code>.retainAll()</code> (intersection), <code>.removeAll()</code> (difference). Same operations, different syntax.</p>
+      </div>
+    </div>
+    <div class="check" data-check="9">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">What would <code>{1, 2, 3} ^ {2, 3, 4}</code> return? What does symmetric difference mean?</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer"><code>{1, 4}</code>. Symmetric difference is "in one set or the other, but not both." So 1 is only in the first set, 4 is only in the second. But 2 and 3 are in both, so they're excluded. It's like "difference, but both directions."</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 10 ============ -->
+<div class="step" id="step-10" data-step="10">
+  <div class="step-header" onclick="toggleStep(10)">
+    <div class="step-num locked">10</div>
+    <div class="step-title"><h3>Python → Java Concept Map</h3><div class="step-sub">Everything from this lesson mapped to INFO1113</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">Here's your reference card for bridging everything from this lesson to Java:</p>
+    <table class="concept-map">
+      <tr><th>Concept</th><th class="py">Python (INFO1110)</th><th class="jv">Java (INFO1113)</th></tr>
+      <tr><td>Positional args</td><td class="py">def greet(a, b):</td><td class="jv">void greet(int a, int b) { }</td></tr>
+      <tr><td>Default values</td><td class="py">def greet(a, b=5):</td><td class="jv">Use method overloading</td></tr>
+      <tr><td>Keyword args</td><td class="py">func(a=1, b=2)</td><td class="jv">Not available — positional only</td></tr>
+      <tr><td>Variable positional</td><td class="py">def func(*args):</td><td class="jv">void func(int... args) { }</td></tr>
+      <tr><td>Variable keyword</td><td class="py">def func(**kwargs):</td><td class="jv">Use Map&lt;String, Object&gt;</td></tr>
+      <tr><td>Module guard</td><td class="py">if __name__ == "__main__":</td><td class="jv">public static void main(String[] args)</td></tr>
+      <tr><td>Resource cleanup</td><td class="py">with open(...) as f:</td><td class="jv">try (...) { } (try-with-resources)</td></tr>
+      <tr><td>Unordered unique</td><td class="py">my_set = {1, 2, 3}</td><td class="jv">HashSet&lt;Integer&gt; set = ...</td></tr>
+      <tr><td>Union</td><td class="py">a | b</td><td class="jv">set.addAll(b)</td></tr>
+      <tr><td>Intersection</td><td class="py">a & b</td><td class="jv">set.retainAll(b)</td></tr>
+      <tr><td>Difference</td><td class="py">a - b</td><td class="jv">set.removeAll(b)</td></tr>
+    </table>
+    <div class="summary-box teal">
+      <h4>Lesson 10 in one sentence</h4>
+      <p><strong>Python's flexibility</strong> — default values, keyword arguments, *args, **kwargs — lets you write functions that accept many calling patterns. <strong>Java's strictness</strong> requires explicit parameter lists and method overloading. Both have sets (unordered unique elements); both support variable-length arguments. Understanding Python's versions helps you appreciate why Java designed it differently.</p>
+    </div>
+    <div class="callout ok"><div class="callout-icon">✅</div><div><strong>Ready for INFO1113.</strong> When you see a Java method with <code>int[] nums</code> parameter, remember: it's like Python's *args. When Java forces you to pick one method signature, remember: it's because Python's default values and keyword arguments aren't available. And when you use HashSet in Java, you'll recognize it as the same concept as Python's set.</div></div>
+    <div class="check" data-check="10">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">Name two Python function features that don't exist in Java, and explain how Java achieves similar functionality.</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer"><strong>(1) Default parameter values:</strong> Python: <code>def greet(name, greeting="Hi")</code>. Java: Use method overloading — multiple methods with different parameter lists. <strong>(2) Keyword arguments:</strong> Python: <code>func(a=1, b=2, c=3)</code> in any order. Java: No direct equivalent; you pass by position or use a builder pattern/Map for flexibility. Java forces you to decide on exact parameter lists at design time.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ SELF-TEST ============ -->
+<div class="self-test">
+  <div class="self-test-title">📝 Lesson 10 Self-Test</div>
+  <div class="self-test-sub">12 questions covering function arguments, parameters, and sets. Mix of basic recall and Python→Java bridges.</div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q1</span><span class="st-q-bloom">Remembering</span></div><p>What's the difference between a parameter and an argument?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">A <strong>parameter</strong> is the placeholder in the function definition. An <strong>argument</strong> is the actual value you pass when calling the function. Example: in <code>def add(a, b):</code>, <code>a</code> and <code>b</code> are parameters. In <code>add(3, 5)</code>, <code>3</code> and <code>5</code> are arguments.</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q2</span><span class="st-q-bloom">Understanding</span></div><p>Why does order matter in positional arguments?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">Python matches arguments left-to-right with parameters. If you pass <code>subtract(3, 10)</code>, Python assigns 3 to the first parameter and 10 to the second. Swap them and the result is different. Position determines which parameter gets which value.</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q3</span><span class="st-q-bloom">Remembering</span></div><p>What's a default value, and why would you use one?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">A default value is a value a parameter gets if you don't pass an argument. Example: <code>def greet(name, greeting="Hello")</code> — if you call <code>greet("Alice")</code>, greeting defaults to "Hello". Use defaults for optional parameters you don't always need to specify.</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q4</span><span class="st-q-bloom">Applying</span></div><p>Write a function <code>describe_pet(name, animal_type="cat")</code> and call it two ways: with both arguments, and with just the name.</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer"><code>def describe_pet(name, animal_type="cat"):<br>&nbsp;&nbsp;return f"{name} is a {animal_type}"<br><br>describe_pet("Fluffy", "dog")  # Both<br>describe_pet("Whiskers")      # Just name, animal_type defaults to "cat"</code></div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q5</span><span class="st-q-bloom">Understanding</span></div><p>What's the advantage of keyword arguments over positional?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">Keyword arguments let you specify which parameter you're passing to, and in any order. <code>greet(greeting="Hi", name="Bob")</code> is clear about what each value is for, even though the order is reversed. You can skip defaults you don't need.</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q6</span><span class="st-q-bloom">Remembering</span></div><p>What does <code>*args</code> collect, and what data structure is it?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer"><code>*args</code> collects all extra positional arguments into a tuple. Inside the function, <code>args</code> is a tuple, so you can iterate over it, index it, check its length, etc.</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q7</span><span class="st-q-bloom">Applying</span></div><p>Write a function that prints all arguments passed to it using <code>*args</code>.</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer"><code>def print_all(*args):<br>&nbsp;&nbsp;for arg in args:<br>&nbsp;&nbsp;&nbsp;&nbsp;print(arg)</code></div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q8</span><span class="st-q-bloom">Understanding</span></div><p>What does <code>if __name__ == "__main__":</code> do, and when would you use it?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">This guard checks if the file is running directly (not being imported). Code inside only runs when you execute the file directly; it's skipped if another file imports this one. Use it for test code or demo code you want to run during development but not during import.</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q9</span><span class="st-q-bloom">Understanding</span></div><p>How is a set different from a list?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">A list is ordered and allows duplicates. A set is unordered and automatically removes duplicates. Also, checking if an element is in a set is much faster (O(1)) than checking a list (O(n)).</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q10</span><span class="st-q-bloom">Applying (Bridge)</span></div><p>Python has default values; Java doesn't. How would you achieve the same functionality in Java?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">Use <strong>method overloading</strong> — write multiple methods with the same name but different parameter lists. Example: <code>void greet(String name) { greet(name, "Hello"); }</code> and <code>void greet(String name, String greeting) { }</code>. The first method calls the second with a default value.</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q11</span><span class="st-q-bloom">Applying (Bridge)</span></div><p>In Java, you write <code>void sum(int... nums)</code>. What's the Python equivalent?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer"><code>def sum(*nums):</code>. Both accept any number of positional arguments of one type. Java uses <code>...</code> (varargs), Python uses <code>*</code>. Inside the method/function, <code>nums</code> is an array (Java) or tuple (Python), so you can iterate, index, etc.</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q12</span><span class="st-q-bloom">Analysing (Bridge)</span></div><p>Why does Python's flexibility with default values, keyword arguments, and *args make it easier to write than Java?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">Python lets you write one function that handles multiple calling patterns. Java forces you to decide on exact parameter lists upfront and write separate methods for variations. This makes Python code shorter and more flexible, but Java code more explicit and type-safe. Trade-off: Python is easier to write, Java is easier to debug and maintain at scale.</div></div>
+</div>
+
+<div class="nav-footer">
+  <a class="nav-btn" href="info1110-review-lesson09.html">← Lesson 9: Recursion</a>
+  <a class="nav-btn primary" href="info1110-review-lesson11.html">Lesson 11: Classes & Inheritance →</a>
+</div>
+
+</div>
+
+<script>
+const totalSteps=10;let completedSteps=new Set();
+function toggleStep(n){document.getElementById('step-'+n).classList.toggle('open')}
+function enableReveal(ta){const btn=ta.closest('.check,.st-q').querySelector('.check-reveal button');btn.disabled=ta.value.trim().length<5}
+function revealAnswer(btn){const c=btn.closest('.check,.st-q');c.querySelector('.check-answer').classList.add('show');const r=c.querySelector('.check-rating');if(r)r.classList.add('show');btn.style.display='none'}
+function rateCheck(btn,rating){const check=btn.closest('.check'),step=btn.closest('.step'),n=parseInt(step.dataset.step);check.querySelector('.check-rating').querySelectorAll('button').forEach(b=>b.style.opacity='0.4');btn.style.opacity='1';completedSteps.add(n);updateProgress();step.querySelector('.step-num').className='step-num done';const next=document.getElementById('step-'+(n+1));if(next){const nn=next.querySelector('.step-num');if(nn.classList.contains('locked'))nn.className='step-num active'}}
+function updateProgress(){const p=Math.round(completedSteps.size/totalSteps*100);document.getElementById('progressFill').style.width=p+'%';document.getElementById('progressLabel').textContent=completedSteps.size+' of '+totalSteps+' complete'}
+</script>
+<script>
+(function(){
+  function notifyHeight(){
+    if(window.parent!==window){
+      window.parent.postMessage({type:"vgResize",height:document.documentElement.scrollHeight},"*");
+    }
+  }
+  notifyHeight();
+  new MutationObserver(notifyHeight).observe(document.body,{childList:true,subtree:true,attributes:true});
+  window.addEventListener("resize",notifyHeight);
+})();
+</script>
+</body>
+</html>

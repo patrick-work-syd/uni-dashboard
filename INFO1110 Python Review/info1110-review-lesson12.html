@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>INFO1110 Review — Lesson 12: Modules, NumPy & Comprehensions</title>
+<style>
+:root {
+  --teal: #0d9488; --teal-light: #f0fdfa; --teal-dark: #115e59;
+  --blue: #3b82f6; --blue-light: #eff6ff; --blue-dark: #1e40af;
+  --green: #10b981; --green-light: #ecfdf5;
+  --orange: #f59e0b; --orange-light: #fffbeb;
+  --purple: #8b5cf6; --purple-light: #f5f3ff;
+  --red: #ef4444; --red-light: #fef2f2;
+  --gray-50: #f8fafc; --gray-100: #f1f5f9; --gray-200: #e2e8f0;
+  --gray-400: #94a3b8; --gray-600: #475569; --gray-800: #1e293b;
+  --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --mono: 'SF Mono', 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: var(--font); background: var(--gray-50); color: var(--gray-800); line-height: 1.65; }
+
+.header { background: linear-gradient(135deg, var(--teal-dark) 0%, var(--teal) 100%); color: #fff; padding: 32px 0 28px; }
+.header-inner { max-width: 800px; margin: 0 auto; padding: 0 24px; }
+.header-tag { font-size: 12px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; opacity: 0.8; margin-bottom: 8px; }
+.header h1 { font-size: 26px; font-weight: 700; margin-bottom: 4px; }
+.header p { font-size: 14px; opacity: 0.85; }
+.header-reassure { margin-top: 14px; padding: 12px 16px; background: rgba(255,255,255,0.12); border-radius: 10px; font-size: 13px; line-height: 1.5; }
+.header-badge { display: inline-block; background: rgba(255,255,255,0.2); padding: 3px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; letter-spacing: 0.5px; margin-top: 10px; }
+
+.progress-bar { max-width: 800px; margin: 0 auto; padding: 16px 24px 0; }
+.progress-track { background: var(--gray-200); height: 6px; border-radius: 3px; overflow: hidden; }
+.progress-fill { background: var(--green); height: 100%; width: 0%; border-radius: 3px; transition: width 0.5s ease; }
+.progress-label { font-size: 12px; color: var(--gray-400); margin-top: 6px; text-align: right; }
+
+.content { max-width: 800px; margin: 0 auto; padding: 24px; }
+
+.step { background: #fff; border: 1px solid var(--gray-200); border-radius: 16px; margin-bottom: 20px; overflow: hidden; }
+.step-header { display: flex; align-items: center; gap: 12px; padding: 18px 22px; cursor: pointer; user-select: none; }
+.step-header:hover { background: var(--gray-50); }
+.step-num { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; flex-shrink: 0; }
+.step-num.locked { background: var(--gray-200); color: var(--gray-400); }
+.step-num.active { background: var(--teal); color: #fff; }
+.step-num.done { background: var(--green); color: #fff; }
+.step-title { flex: 1; }
+.step-title h3 { font-size: 16px; font-weight: 600; }
+.step-title .step-sub { font-size: 12px; color: var(--gray-400); margin-top: 1px; }
+.step-chevron { font-size: 18px; color: var(--gray-400); transition: transform 0.2s; }
+.step.open .step-chevron { transform: rotate(90deg); }
+.step-body { display: none; padding: 0 22px 22px; }
+.step.open .step-body { display: block; }
+
+.diagram { background: var(--gray-50); border: 1px solid var(--gray-200); border-radius: 12px; padding: 20px; margin: 14px 0; text-align: center; overflow-x: auto; }
+.diagram svg { max-width: 100%; height: auto; }
+
+.prose { font-size: 15px; color: var(--gray-600); margin: 12px 0; }
+.prose strong { color: var(--gray-800); }
+
+.label { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 4px; }
+.label-idea { color: var(--green); } .label-how { color: var(--teal); } .label-trap { color: var(--red); } .label-why { color: var(--purple); } .label-tip { color: var(--orange); } .label-bridge { color: var(--blue); }
+
+pre { background: #1e293b; color: #e2e8f0; padding: 14px 16px; border-radius: 10px; font-family: var(--mono); font-size: 13px; line-height: 1.7; overflow-x: auto; margin: 10px 0; white-space: pre; }
+pre .kw { color: #c084fc; } pre .str { color: #86efac; } pre .cmt { color: #64748b; font-style: italic; }
+pre .type { color: #67e8f9; } pre .num { color: #fbbf24; } pre .fn { color: #7dd3fc; } pre .ann { color: #f472b6; }
+code { font-family: var(--mono); font-size: 0.88em; background: var(--gray-100); padding: 1px 5px; border-radius: 4px; }
+
+.compare { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 14px 0; }
+@media (max-width: 600px) { .compare { grid-template-columns: 1fr; } }
+.cmp-box { border-radius: 10px; padding: 14px; }
+.cmp-box.python { background: var(--orange-light); border: 1px solid #fed7aa; }
+.cmp-box.java { background: var(--blue-light); border: 1px solid #bfdbfe; }
+.cmp-box.before { background: var(--red-light); border: 1px solid #fecaca; }
+.cmp-box.after { background: var(--green-light); border: 1px solid #a7f3d0; }
+.cmp-box h4 { font-size: 12px; font-weight: 700; margin-bottom: 6px; }
+.cmp-box.python h4 { color: #b45309; } .cmp-box.java h4 { color: var(--blue-dark); }
+.cmp-box.before h4 { color: var(--red); } .cmp-box.after h4 { color: #065f46; }
+.cmp-box pre { font-size: 12.5px; padding: 10px; margin: 0; }
+
+.callout { display: flex; gap: 10px; padding: 14px 16px; border-radius: 10px; margin: 14px 0; font-size: 14px; line-height: 1.55; }
+.callout-icon { font-size: 18px; flex-shrink: 0; line-height: 1.5; }
+.callout.tip { background: var(--blue-light); border: 1px solid #bfdbfe; }
+.callout.warn { background: var(--red-light); border: 1px solid #fecaca; }
+.callout.ok { background: var(--green-light); border: 1px solid #a7f3d0; }
+.callout.bridge { background: var(--teal-light); border: 1px solid #99f6e4; }
+
+.analogy { background: var(--purple-light); border: 1px solid #ddd6fe; border-radius: 12px; padding: 16px; margin: 14px 0; }
+.analogy-label { font-size: 11px; font-weight: 700; color: var(--purple); letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 4px; }
+.analogy p { font-size: 14px; color: var(--gray-600); }
+
+.check { background: var(--green-light); border: 1px solid #a7f3d0; border-radius: 12px; padding: 18px; margin: 18px 0; }
+.check-title { font-size: 13px; font-weight: 700; color: var(--green); margin-bottom: 6px; }
+.check-q { font-size: 14px; margin-bottom: 10px; }
+.check textarea { width: 100%; padding: 8px 10px; border: 1px solid #a7f3d0; border-radius: 8px; font-family: var(--font); font-size: 13px; resize: vertical; min-height: 44px; background: #fff; }
+.check textarea:focus { outline: 2px solid var(--green); border-color: transparent; }
+.check-reveal { margin-top: 8px; }
+.check-reveal button { background: var(--green); color: #fff; border: none; padding: 7px 16px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; }
+.check-reveal button:hover { background: #059669; }
+.check-reveal button:disabled { background: var(--gray-400); cursor: not-allowed; }
+.check-answer { display: none; margin-top: 10px; padding: 12px; background: #fff; border-radius: 8px; border: 1px solid #a7f3d0; font-size: 13px; line-height: 1.6; }
+.check-answer.show { display: block; }
+.check-rating { display: none; margin-top: 8px; gap: 8px; }
+.check-rating.show { display: flex; }
+.check-rating button { padding: 5px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid var(--gray-200); background: #fff; }
+.check-rating .got-it { color: var(--green); border-color: #a7f3d0; }
+.check-rating .not-yet { color: var(--red); border-color: #fecaca; }
+
+.summary-box { padding: 18px; border-radius: 12px; margin: 18px 0; }
+.summary-box.teal { background: var(--teal-light); border: 1px solid #99f6e4; }
+.summary-box.blue { background: var(--blue-light); border: 1px solid #bfdbfe; }
+.summary-box h4 { font-size: 15px; margin-bottom: 6px; color: var(--teal-dark); }
+.summary-box.blue h4 { color: var(--blue-dark); }
+.summary-box p, .summary-box ul { font-size: 14px; color: var(--gray-600); }
+.summary-box ul { margin: 8px 0 0 20px; }
+
+.self-test { background: #fff; border: 2px solid var(--teal); border-radius: 16px; padding: 22px; margin: 28px 0; }
+.self-test-title { font-size: 18px; font-weight: 700; color: var(--teal); margin-bottom: 4px; }
+.self-test-sub { font-size: 13px; color: var(--gray-400); margin-bottom: 16px; }
+.st-q { margin-bottom: 16px; }
+.st-q-header { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.st-q-num { font-size: 12px; font-weight: 700; color: var(--teal); background: var(--teal-light); padding: 2px 8px; border-radius: 4px; }
+.st-q-bloom { font-size: 10px; color: var(--gray-400); }
+.st-q p { font-size: 14px; margin-bottom: 6px; }
+.st-q textarea { width: 100%; padding: 8px 10px; border: 1px solid #99f6e4; border-radius: 8px; font-family: var(--font); font-size: 13px; resize: vertical; min-height: 44px; background: #fff; }
+.st-q textarea:focus { outline: 2px solid var(--teal); border-color: transparent; }
+.st-q .check-reveal button { background: var(--teal); }
+.st-q .check-reveal button:hover { background: var(--teal-dark); }
+.st-q .check-reveal button:disabled { background: var(--gray-400); }
+.st-q .check-answer { border-color: #99f6e4; }
+
+.nav-footer { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; border-top: 1px solid var(--gray-200); margin-top: 28px; }
+.nav-btn { display: inline-flex; align-items: center; gap: 6px; padding: 9px 18px; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; border: 1px solid var(--gray-200); background: #fff; color: var(--gray-600); text-decoration: none; }
+.nav-btn:hover { background: var(--gray-100); }
+.nav-btn.primary { background: var(--teal); color: #fff; border-color: var(--teal); }
+.nav-btn.primary:hover { background: var(--teal-dark); }
+
+.bridge-banner { background: linear-gradient(90deg, var(--orange-light), var(--blue-light)); border: 1px solid #bfdbfe; border-radius: 12px; padding: 16px; margin: 14px 0; display: flex; align-items: center; gap: 12px; }
+.bridge-banner-icon { font-size: 28px; flex-shrink: 0; }
+.bridge-banner h4 { font-size: 14px; font-weight: 700; color: var(--blue-dark); margin-bottom: 2px; }
+.bridge-banner p { font-size: 13px; color: var(--gray-600); }
+
+table.concept-map { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 13px; }
+table.concept-map th { background: var(--gray-100); padding: 8px 12px; text-align: left; font-weight: 700; border-bottom: 2px solid var(--gray-200); }
+table.concept-map td { padding: 8px 12px; border-bottom: 1px solid var(--gray-200); }
+table.concept-map .py { color: #b45309; font-weight: 600; }
+table.concept-map .jv { color: var(--blue-dark); font-weight: 600; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="header-tag">INFO1110 Review · Lesson 12 · Python → Java Bridge</div>
+    <h1>Modules, NumPy & Comprehensions</h1>
+    <p>9 steps · organising code and working with data efficiently</p>
+    <div class="header-reassure">
+      This lesson covers how to organize and reuse code through modules and imports, how to do efficient numerical computation with NumPy, and advanced data structures using comprehensions. Java handles imports differently (class-based rather than file-based), doesn't have built-in comprehensions like Python, but the core principle of reusable code is identical. You're learning the building blocks of real software.
+    </div>
+  </div>
+</div>
+
+<div class="progress-bar">
+  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="progress-label" id="progressLabel">0 of 9 complete</div>
+</div>
+
+<div class="content">
+
+<!-- ============ STEP 1 ============ -->
+<div class="step open" id="step-1" data-step="1">
+  <div class="step-header" onclick="toggleStep(1)">
+    <div class="step-num active">1</div>
+    <div class="step-title"><h3>What Are Modules?</h3><div class="step-sub">Reusable code packages — the foundation of software organization</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">A <strong>module</strong> is simply a file (or package of files) containing Python code — functions, classes, variables, and constants — that you can reuse in other programs.</p>
+    <div class="analogy">
+      <div class="analogy-label">Real-World Analogy</div>
+      <p>Think of modules like libraries in real life. A library contains books (functions) that you can borrow (import) without rewriting them yourself. You don't need to own the book; you borrow it when you need it. The Python Standard Library is like a massive library with thousands of pre-written books ready to use.</p>
+    </div>
+    <p class="prose">When you write <code>import sys</code> or <code>import csv</code>, you're borrowing code from a module file. The module <code>sys</code> contains functions and variables about the Python system (command-line arguments, exit codes, platform info). The module <code>csv</code> has functions for reading and writing CSV files.</p>
+    <div class="callout ok"><div class="callout-icon">✅</div><div>Modules are how Python avoids "reinventing the wheel" — you write a function once, put it in a module, and use it everywhere.</div></div>
+    <div class="check" data-check="1">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">Name a task you'd need to do often in a program (e.g., read a file, do math, manipulate dates). What module would you import?</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer">Examples: <strong>File I/O:</strong> <code>import os</code> (file paths), <code>import pathlib</code> (modern file handling). <strong>Math:</strong> <code>import math</code> (sqrt, sin, cos), <code>import statistics</code> (mean, median). <strong>Dates/Times:</strong> <code>import datetime</code>. <strong>Regular expressions:</strong> <code>import re</code>. The pattern is: identify the task, then search for a module that solves it (Google "python module for X").</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 2 ============ -->
+<div class="step" id="step-2" data-step="2">
+  <div class="step-header" onclick="toggleStep(2)">
+    <div class="step-num locked">2</div>
+    <div class="step-title"><h3>Import Patterns: Three Ways to Import</h3><div class="step-sub">import module · from module import func · import module as alias</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">Python gives you three ways to import code. Each is best for different situations.</p>
+    <div class="compare">
+      <div class="cmp-box python">
+        <h4>Pattern 1: Full Module Import</h4>
+        <pre><span class="kw">import</span> math
+result = math.sqrt(<span class="num">16</span>)  <span class="cmt"># Use module.function()</span></pre>
+      </div>
+      <div class="cmp-box python">
+        <h4>Pattern 2: Import Specific Function</h4>
+        <pre><span class="kw">from</span> math <span class="kw">import</span> sqrt
+result = sqrt(<span class="num">16</span>)  <span class="cmt"># Use function() directly</span></pre>
+      </div>
+    </div>
+    <div class="cmp-box python" style="margin-top:10px;">
+      <h4>Pattern 3: Import with Alias</h4>
+      <pre><span class="kw">import</span> pandas <span class="kw">as</span> pd
+df = pd.read_csv(<span class="str">'data.csv'</span>)  <span class="cmt"># Use shortened name</span></pre>
+    </div>
+    <p class="prose"><strong>When to use each:</strong></p>
+    <ul style="margin: 8px 0 12px 24px; color: var(--gray-600); font-size: 15px;">
+      <li><strong>Pattern 1</strong> (full import): Safe, clear, avoids name collisions. Use by default.</li>
+      <li><strong>Pattern 2</strong> (from ... import): When you use one function repeatedly and want less typing. Risky if multiple modules have the same function name.</li>
+      <li><strong>Pattern 3</strong> (as alias): When the module name is long (e.g., <code>numpy as np</code>, <code>pandas as pd</code>). Industry standard for many libraries.</li>
+    </ul>
+    <div class="callout bridge"><div class="callout-icon">🌉</div><div><strong>Java parallel:</strong> Java also uses <code>import</code>, but works at the class level: <code>import java.util.ArrayList;</code> or <code>import java.util.*;</code> (wildcard). Java doesn't have aliases — you use <code>new ArrayList&lt;&gt;()</code> directly. But the philosophy is the same: reuse pre-written code by importing it.</div></div>
+    <div class="check" data-check="2">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">If you want to use the <code>sqrt</code> function from the <code>math</code> module, and you're only using it once or twice, which import pattern is best and why?</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer"><strong>Pattern 1</strong> is safest: <code>import math</code> then <code>math.sqrt(16)</code>. It's clearer where the function comes from (it says "math.sqrt", not just "sqrt"). If another module also has a sqrt, there's no confusion. Pattern 2 is fine for quick scripts, but Pattern 1 is the professional practice.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 3 ============ -->
+<div class="step" id="step-3" data-step="3">
+  <div class="step-header" onclick="toggleStep(3)">
+    <div class="step-num locked">3</div>
+    <div class="step-title"><h3>The Python Standard Library</h3><div class="step-sub">What's available out of the box (and what you'll encounter in INFO1113)</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">Python comes with a massive "standard library" — thousands of pre-written modules. You don't need to install anything; they're part of Python. Here are the ones you'll see most:</p>
+    <ul style="margin: 8px 0 14px 24px; color: var(--gray-600); font-size: 15px; line-height: 1.8;">
+      <li><code>os</code> — Operating system: list files, change directories, get environment variables.</li>
+      <li><code>sys</code> — System info: command-line arguments (<code>sys.argv</code>), exit the program (<code>sys.exit()</code>).</li>
+      <li><code>csv</code> — Read and write CSV files (spreadsheet-like data).</li>
+      <li><code>json</code> — Read and write JSON data (common web format).</li>
+      <li><code>re</code> — Regular expressions: search and manipulate text with patterns.</li>
+      <li><code>datetime</code> — Create and manipulate dates and times.</li>
+      <li><code>math</code> — Math functions: sqrt, sin, cos, pi, etc.</li>
+      <li><code>statistics</code> — Basic stats: mean, median, standard deviation.</li>
+      <li><code>random</code> — Generate random numbers and shuffle lists.</li>
+    </ul>
+    <p class="prose">Beyond the standard library, the <strong>PyPI ecosystem</strong> (Python Package Index) has 500,000+ third-party packages for everything from web scraping to machine learning. You install them with <code>pip install package-name</code>. NumPy (which we'll cover) is a famous third-party package.</p>
+    <div class="callout tip"><div class="callout-icon">💡</div><div><strong>Pro tip:</strong> Before writing code to solve a problem, search "python module for X". Odds are someone's already written it.</div></div>
+    <div class="check" data-check="3">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">You need to read a JSON file and extract data from it. What module would you import?</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer"><code>import json</code>. Then use <code>json.load(file)</code> to read a JSON file or <code>json.loads(string)</code> to parse a JSON string.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 4 ============ -->
+<div class="step" id="step-4" data-step="4">
+  <div class="step-header" onclick="toggleStep(4)">
+    <div class="step-num locked">4</div>
+    <div class="step-title"><h3>Creating Your Own Module</h3><div class="step-sub">Save functions in a file, import them elsewhere. The __name__ == '__main__' guard</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">You can create your own modules. Just write Python code in a <code>.py</code> file and import it.</p>
+    <div class="cmp-box python">
+      <h4>Step 1: Create a module file (math_helpers.py)</h4>
+      <pre><span class="kw">def</span> <span class="fn">add</span>(a, b):
+    <span class="kw">return</span> a + b
+
+<span class="kw">def</span> <span class="fn">multiply</span>(a, b):
+    <span class="kw">return</span> a * b
+
+PI = <span class="num">3.14159</span></pre>
+    </div>
+    <div class="cmp-box python" style="margin-top:10px;">
+      <h4>Step 2: Import and use it (main.py in same folder)</h4>
+      <pre><span class="kw">import</span> math_helpers
+
+result = math_helpers.add(<span class="num">3</span>, <span class="num">5</span>)
+area = math_helpers.PI * <span class="num">10</span> ** <span class="num">2</span></pre>
+    </div>
+    <p class="prose" style="margin-top:14px;"><strong>The __name__ == '__main__' guard:</strong> When you run a Python file directly, Python sets a special variable <code>__name__</code> to <code>'__main__'</code>. When you import the file as a module, <code>__name__</code> is the module's name. This guard lets you have test code that only runs when you run the file directly, not when you import it.</p>
+    <pre><span class="cmt"># math_helpers.py</span>
+<span class="kw">def</span> <span class="fn">add</span>(a, b):
+    <span class="kw">return</span> a + b
+
+<span class="kw">if</span> __name__ == <span class="str">'__main__'</span>:
+    <span class="cmt"># This only runs if you do: python math_helpers.py</span>
+    <span class="cmt"># NOT if you do: import math_helpers from main.py</span>
+    print(add(<span class="num">2</span>, <span class="num">3</span>))  <span class="cmt"># prints 5</span></pre>
+    <div class="callout bridge"><div class="callout-icon">🌉</div><div><strong>Java parallel:</strong> In Java, every <code>.java</code> file IS a class. There's no separate concept of "modules" — each file is one class with a <code>main()</code> method that only runs if you run that class directly. So Java's class-per-file approach is similar to Python's module pattern, just more rigid and mandatory.</div></div>
+    <div class="check" data-check="4">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">You create a file <code>utils.py</code> with a function <code>greet(name)</code>. In another file, how would you import and use it?</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer"><code>import utils</code> then <code>utils.greet("Will")</code>. Or use <code>from utils import greet</code> then <code>greet("Will")</code>.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 5 ============ -->
+<div class="step" id="step-5" data-step="5">
+  <div class="step-header" onclick="toggleStep(5)">
+    <div class="step-num locked">5</div>
+    <div class="step-title"><h3>NumPy: Fast Numerical Computation</h3><div class="step-sub">Why Python lists are slow for math. NumPy arrays are contiguous memory.</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose"><strong>NumPy</strong> (Numerical Python) is a third-party library for scientific computing. It's one of Python's superpowers — it makes math operations on large arrays lightning fast.</p>
+    <p class="prose"><strong>Why is NumPy fast?</strong> A Python list is a collection of <em>pointers</em> to objects scattered around memory. Adding two lists element-by-element is slow because Python has to jump around in memory and unbox each object. A NumPy array stores <em>raw numbers in contiguous memory</em> — like a C-style array. This means the CPU can process it at lightning speed.</p>
+    <div class="compare">
+      <div class="cmp-box python">
+        <h4>Slow: Python lists</h4>
+        <pre>nums = [<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>, <span class="num">4</span>, <span class="num">5</span>]
+result = [x * <span class="num">2</span> <span class="kw">for</span> x <span class="kw">in</span> nums]
+<span class="cmt"># Python loops through each item</span></pre>
+      </div>
+      <div class="cmp-box python">
+        <h4>Fast: NumPy arrays</h4>
+        <pre><span class="kw">import</span> numpy <span class="kw">as</span> np
+nums = np.array([<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>, <span class="num">4</span>, <span class="num">5</span>])
+result = nums * <span class="num">2</span>
+<span class="cmt"># Vectorized: CPU processes all at once</span></pre>
+      </div>
+    </div>
+    <p class="prose" style="margin-top:14px;">NumPy operations are <strong>vectorized</strong> — you write code that operates on entire arrays at once, and NumPy runs it at C speed. For arrays with millions of elements, NumPy is 100× faster than Python loops.</p>
+    <p class="prose">Common NumPy operations:</p>
+    <pre><span class="kw">import</span> numpy <span class="kw">as</span> np
+
+<span class="cmt"># Create arrays</span>
+arr = np.array([<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>])
+zeros = np.zeros(<span class="num">5</span>)  <span class="cmt"># [0. 0. 0. 0. 0.]</span>
+ones = np.ones(<span class="num">3</span>)   <span class="cmt"># [1. 1. 1.]</span>
+range_arr = np.arange(<span class="num">0</span>, <span class="num">10</span>, <span class="num">2</span>)  <span class="cmt"># [0 2 4 6 8]</span>
+
+<span class="cmt"># Math operations (vectorized)</span>
+arr * <span class="num">2</span>     <span class="cmt"># [2 4 6]</span>
+arr + <span class="num">10</span>    <span class="cmt"># [11 12 13]</span>
+arr ** <span class="num">2</span>    <span class="cmt"># [1 4 9]</span>
+
+<span class="cmt"># Aggregation</span>
+arr.sum()     <span class="cmt"># 6</span>
+arr.mean()    <span class="cmt"># 2.0</span>
+arr.max()     <span class="cmt"># 3</span>
+arr.std()     <span class="cmt"># standard deviation</span></pre>
+    <div class="callout bridge"><div class="callout-icon">🌉</div><div><strong>Java parallel:</strong> Java has native arrays (e.g., <code>int[] arr = {1, 2, 3}</code>) that ARE contiguous memory — similar to NumPy's approach. Java also has ArrayList for dynamic sizing. But Java doesn't have vectorized math like NumPy. For scientific computing in Java, you'd either use a loop or import a library.</div></div>
+    <div class="check" data-check="5">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">Create a NumPy array with the numbers 10, 20, 30. Then multiply each element by 5 and print the result.</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer"><code>import numpy as np<br>arr = np.array([10, 20, 30])<br>result = arr * 5<br>print(result)  # [50 100 150]</code></div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 6 ============ -->
+<div class="step" id="step-6" data-step="6">
+  <div class="step-header" onclick="toggleStep(6)">
+    <div class="step-num locked">6</div>
+    <div class="step-title"><h3>The If Expression (Ternary Operator)</h3><div class="step-sub">Inline conditionals for concise code</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">Python has a compact way to write an if-else statement in a single expression: the <strong>if expression</strong> (also called ternary operator).</p>
+    <div class="compare">
+      <div class="cmp-box before">
+        <h4>Verbose: if-else statement</h4>
+        <pre><span class="kw">if</span> score >= <span class="num">50</span>:
+    result = <span class="str">"Pass"</span>
+<span class="kw">else</span>:
+    result = <span class="str">"Fail"</span></pre>
+      </div>
+      <div class="cmp-box after">
+        <h4>Concise: if expression</h4>
+        <pre>result = <span class="str">"Pass"</span> <span class="kw">if</span> score >= <span class="num">50</span> <span class="kw">else</span> <span class="str">"Fail"</span></pre>
+      </div>
+    </div>
+    <p class="prose" style="margin-top:14px;"><strong>Format:</strong> <code>value_if_true if condition else value_if_false</code></p>
+    <p class="prose">The order is a bit backwards compared to English ("Pass if score >= 50 else Fail"), so read it carefully. It's useful for one-liners, but don't overuse it — if the condition is complex, use a regular if-else statement for readability.</p>
+    <p class="prose"><strong>Examples:</strong></p>
+    <pre>age = <span class="num">25</span>
+status = <span class="str">"Adult"</span> <span class="kw">if</span> age >= <span class="num">18</span> <span class="kw">else</span> <span class="str">"Minor"</span>
+<span class="cmt"># status = "Adult"</span>
+
+sign = <span class="str">"positive"</span> <span class="kw">if</span> num > <span class="num">0</span> <span class="kw">else</span> <span class="str">"non-positive"</span>
+
+max_val = a <span class="kw">if</span> a > b <span class="kw">else</span> b
+<span class="cmt"># Could also use: max(a, b)</span></pre>
+    <div class="callout bridge"><div class="callout-icon">🌉</div><div><strong>Java parallel:</strong> Java's ternary operator: <code>condition ? trueVal : falseVal</code>. Same idea, different syntax. Example: <code>String status = (age >= 18) ? "Adult" : "Minor";</code></div></div>
+    <div class="check" data-check="6">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">Write a single line of Python that assigns "Even" to a variable if num is divisible by 2, otherwise "Odd".</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer"><code>parity = "Even" if num % 2 == 0 else "Odd"</code></div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 7 ============ -->
+<div class="step" id="step-7" data-step="7">
+  <div class="step-header" onclick="toggleStep(7)">
+    <div class="step-num locked">7</div>
+    <div class="step-title"><h3>Set Comprehensions</h3><div class="step-sub">Creating sets with a single expression</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">A <strong>set comprehension</strong> is like a list comprehension but creates a set (unique values) instead of a list. Use curly braces <code>{ }</code> instead of square brackets <code>[ ]</code>.</p>
+    <div class="compare">
+      <div class="cmp-box python">
+        <h4>List comprehension (list)</h4>
+        <pre>numbers = [<span class="num">1</span>, <span class="num">2</span>, <span class="num">2</span>, <span class="num">3</span>, <span class="num">3</span>, <span class="num">3</span>]
+squares = [x ** <span class="num">2</span> <span class="kw">for</span> x <span class="kw">in</span> numbers]
+<span class="cmt"># [1, 4, 4, 9, 9, 9]</span></pre>
+      </div>
+      <div class="cmp-box python">
+        <h4>Set comprehension (set)</h4>
+        <pre>numbers = [<span class="num">1</span>, <span class="num">2</span>, <span class="num">2</span>, <span class="num">3</span>, <span class="num">3</span>, <span class="num">3</span>]
+squares = {x ** <span class="num">2</span> <span class="kw">for</span> x <span class="kw">in</span> numbers}
+<span class="cmt"># {1, 4, 9}  ← unique only</span></pre>
+      </div>
+    </div>
+    <p class="prose" style="margin-top:14px;"><strong>Format:</strong> <code>{expression for item in iterable if condition}</code></p>
+    <p class="prose">The difference: a list keeps duplicates and maintains order; a set removes duplicates automatically. Use set comprehensions when you want only unique values.</p>
+    <p class="prose"><strong>Examples:</strong></p>
+    <pre><span class="cmt"># Get unique vowels from a word</span>
+word = <span class="str">"programming"</span>
+vowels = {char <span class="kw">for</span> char <span class="kw">in</span> word <span class="kw">if</span> char <span class="kw">in</span> <span class="str">"aeiou"</span>}
+<span class="cmt"># {'a', 'o', 'i'}</span>
+
+<span class="cmt"># Get unique lengths of words</span>
+words = [<span class="str">"apple"</span>, <span class="str">"cat"</span>, <span class="str">"dog"</span>, <span class="str">"bird"</span>]
+lengths = {<span class="fn">len</span>(w) <span class="kw">for</span> w <span class="kw">in</span> words}
+<span class="cmt"># {3, 4, 5}</span></pre>
+    <div class="check" data-check="7">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">Write a set comprehension to get unique digits from the number 112233 (convert to string first). The result should be {'1', '2', '3'}.</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer"><code>digits = {char for char in "112233"}</code> or <code>{char for char in str(112233)}</code>. Result: <code>{'1', '2', '3'}</code></div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 8 ============ -->
+<div class="step" id="step-8" data-step="8">
+  <div class="step-header" onclick="toggleStep(8)">
+    <div class="step-num locked">8</div>
+    <div class="step-title"><h3>Dictionary Comprehensions</h3><div class="step-sub">Creating dictionaries from data in one line</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">A <strong>dictionary comprehension</strong> builds a dictionary using a single expression. It's the dictionary equivalent of a list comprehension.</p>
+    <div class="cmp-box python">
+      <h4>Without comprehension (verbose)</h4>
+      <pre>products = [<span class="str">"apple"</span>, <span class="str">"banana"</span>, <span class="str">"orange"</span>]
+prices = [<span class="num">1.50</span>, <span class="num">0.75</span>, <span class="num">2.00</span>]
+
+product_dict = {}
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(products)):
+    product_dict[products[i]] = prices[i]</pre>
+    </div>
+    <div class="cmp-box python" style="margin-top:10px;">
+      <h4>With comprehension (concise)</h4>
+      <pre>products = [<span class="str">"apple"</span>, <span class="str">"banana"</span>, <span class="str">"orange"</span>]
+prices = [<span class="num">1.50</span>, <span class="num">0.75</span>, <span class="num">2.00</span>]
+
+product_dict = {p: pr <span class="kw">for</span> p, pr <span class="kw">in</span> <span class="fn">zip</span>(products, prices)}</pre>
+    </div>
+    <p class="prose" style="margin-top:14px;"><strong>Format:</strong> <code>{key: value for item in iterable if condition}</code></p>
+    <p class="prose">The key thing is the <code>key: value</code> syntax. You specify what the key and value should be for each iteration.</p>
+    <p class="prose"><strong>More examples:</strong></p>
+    <pre><span class="cmt"># Build a dict of word → length</span>
+words = [<span class="str">"cat"</span>, <span class="str">"dog"</span>, <span class="str">"elephant"</span>]
+word_lengths = {w: <span class="fn">len</span>(w) <span class="kw">for</span> w <span class="kw">in</span> words}
+<span class="cmt"># {'cat': 3, 'dog': 3, 'elephant': 8}</span>
+
+<span class="cmt"># Build a dict of number → square</span>
+numbers = [<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>, <span class="num">4</span>, <span class="num">5</span>]
+squares = {n: n ** <span class="num">2</span> <span class="kw">for</span> n <span class="kw">in</span> numbers}
+<span class="cmt"># {1: 1, 2: 4, 3: 9, 4: 16, 5: 25}</span>
+
+<span class="cmt"># Filter with condition</span>
+even_squares = {n: n ** <span class="num">2</span> <span class="kw">for</span> n <span class="kw">in</span> numbers <span class="kw">if</span> n % <span class="num">2</span> == <span class="num">0</span>}
+<span class="cmt"># {2: 4, 4: 16}</span></pre>
+    <div class="callout bridge"><div class="callout-icon">🌉</div><div><strong>Java parallel:</strong> Java has no dict comprehensions. You'd use a loop with a HashMap: <code>HashMap&lt;String, Integer&gt; map = new HashMap&lt;&gt;();</code> then loop and put values in. Or in modern Java 8+, use Streams with <code>Collectors.toMap()</code> (which is closer to comprehension style, but more verbose).</div></div>
+    <div class="check" data-check="8">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">Write a dictionary comprehension that maps numbers 1-5 to their word equivalents: 1→"one", 2→"two", etc.</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer"><code>words = ["one", "two", "three", "four", "five"]<br>num_dict = {i: words[i-1] for i in range(1, 6)}<br># {1: 'one', 2: 'two', 3: 'three', 4: 'four', 5: 'five'}</code></div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 9 ============ -->
+<div class="step" id="step-9" data-step="9">
+  <div class="step-header" onclick="toggleStep(9)">
+    <div class="step-num locked">9</div>
+    <div class="step-title"><h3>Python → Java Concept Map: Modules & Data</h3><div class="step-sub">Everything from this lesson mapped to Java equivalents</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">Here's how the concepts from this lesson translate to Java. Some have direct equivalents; others require a different approach.</p>
+    <table class="concept-map">
+      <tr><th>Concept</th><th class="py">Python (INFO1110)</th><th class="jv">Java (INFO1113)</th></tr>
+      <tr><td>Import code from a file</td><td class="py">import module</td><td class="jv">import com.example.ClassName;</td></tr>
+      <tr><td>Wildcard import</td><td class="py">from module import *</td><td class="jv">import java.util.*;</td></tr>
+      <tr><td>Alias (shorten name)</td><td class="py">import numpy as np</td><td class="jv">No alias feature. Use full name or create a static import.</td></tr>
+      <tr><td>Reusable functions</td><td class="py">Functions in a module file</td><td class="jv">Static methods in a class</td></tr>
+      <tr><td>Code organization</td><td class="py">Modules (files)</td><td class="jv">Classes and packages</td></tr>
+      <tr><td>Fast numerical arrays</td><td class="py">NumPy arrays</td><td class="jv">Native arrays (int[], double[]) or libraries like EJML</td></tr>
+      <tr><td>Vectorized math</td><td class="py">arr * 2 (entire array)</td><td class="jv">Must write a loop or use a library</td></tr>
+      <tr><td>Inline conditional</td><td class="py">value_if_true if condition else value_if_false</td><td class="jv">condition ? trueVal : falseVal</td></tr>
+      <tr><td>List comprehension</td><td class="py">[x*2 for x in nums]</td><td class="jv">No comprehension. Use loop or Stream.map()</td></tr>
+      <tr><td>Set</td><td class="py">{1, 2, 3}</td><td class="jv">new HashSet&lt;&gt;() or new TreeSet&lt;&gt;()</td></tr>
+      <tr><td>Dictionary</td><td class="py">{key: value}</td><td class="jv">new HashMap&lt;&gt;() or new TreeMap&lt;&gt;()</td></tr>
+      <tr><td>Unique values from data</td><td class="py">Set comprehension: {x**2 for x in nums}</td><td class="jv">Loop to HashSet, then convert to array</td></tr>
+    </table>
+    <div class="summary-box teal">
+      <h4>Lesson 12 in one sentence</h4>
+      <p><strong>Modules</strong> let you organize and reuse code; <strong>imports</strong> bring that code into your program; <strong>NumPy</strong> gives Python fast numerical computation; and <strong>comprehensions</strong> are syntactic sugar for building lists, sets, and dicts — all of which have equivalents in Java, though Java's approach is more verbose and type-heavy.</p>
+    </div>
+    <div class="callout ok"><div class="callout-icon">✅</div><div><strong>Ready for INFO1113?</strong> You now understand why Python has modules and imports, and you can appreciate why Java organizes code differently (classes and packages are more explicit). You understand NumPy's speed advantage, and you've seen that comprehensions are just syntactic convenience — Java doesn't have them, but you can do the same thing with loops or Streams (less readable, but equivalent).</div></div>
+    <div class="check" data-check="9">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">Name two key differences between how Python and Java organize and reuse code, and one way they're similar.</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer"><strong>Differences:</strong> (1) Python has modules (files); Java has classes and packages (more rigid, one class per file by convention). (2) Python doesn't require type declarations for imports; Java does. <strong>Similar:</strong> Both use <code>import</code> statements to bring external code into your program. The philosophy of code reuse is identical.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ SELF-TEST ============ -->
+<div class="self-test">
+  <div class="self-test-title">📝 Lesson 12 Self-Test</div>
+  <div class="self-test-sub">10 questions covering modules, imports, NumPy, comprehensions, and the Python→Java bridge. Try to answer before revealing.</div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q1</span><span class="st-q-bloom">Remembering</span></div><p>What is a module?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">A file (or package of files) containing reusable Python code — functions, classes, variables. You import a module to use its code without rewriting it.</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q2</span><span class="st-q-bloom">Understanding</span></div><p>What's the difference between <code>import csv</code> and <code>from csv import reader</code>?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer"><code>import csv</code> brings the entire module in; you use <code>csv.reader()</code>. <code>from csv import reader</code> brings just the <code>reader</code> function; you use <code>reader()</code> directly. The second is shorter but can cause name collisions if another module has a function named <code>reader</code>.</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q3</span><span class="st-q-bloom">Remembering</span></div><p>Name three modules from the Python Standard Library and what they're used for.</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">Examples: <code>os</code> (file operations), <code>datetime</code> (dates/times), <code>math</code> (math functions), <code>json</code> (JSON parsing), <code>re</code> (regular expressions), <code>csv</code> (CSV files), <code>random</code> (random numbers).</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q4</span><span class="st-q-bloom">Understanding</span></div><p>What is the <code>if __name__ == '__main__':</code> guard used for?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">It lets you write test or demo code that only runs when you run the file directly (not when the file is imported as a module by another program). When a file is imported, <code>__name__</code> is the module name, not <code>'__main__'</code>.</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q5</span><span class="st-q-bloom">Applying</span></div><p>Why is NumPy fast for numerical operations compared to Python lists?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">Python lists are arrays of <em>pointers</em> scattered in memory. NumPy arrays store <em>raw numbers in contiguous memory</em> (like C arrays). This lets the CPU process them without jumping around, and without the overhead of Python's object system. The result: NumPy is 100× faster for large arrays.</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q6</span><span class="st-q-bloom">Applying</span></div><p>Write a line of code that creates a NumPy array [1, 2, 3, 4, 5], then multiplies every element by 3.</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer"><code>import numpy as np<br>arr = np.array([1, 2, 3, 4, 5])<br>result = arr * 3  # [3, 6, 9, 12, 15]</code></div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q7</span><span class="st-q-bloom">Applying</span></div><p>Write a set comprehension that extracts unique vowels from the string "hello world".</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer"><code>vowels = {char for char in "hello world" if char in "aeiou"}<br># Result: {'e', 'o'}</code></div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q8</span><span class="st-q-bloom">Applying</span></div><p>Write a dictionary comprehension that maps each word to its length: ["cat", "dog", "elephant"] → {"cat": 3, "dog": 3, "elephant": 8}</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer"><code>words = ["cat", "dog", "elephant"]<br>word_dict = {w: len(w) for w in words}<br># {"cat": 3, "dog": 3, "elephant": 8}</code></div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q9</span><span class="st-q-bloom">Analysing (Bridge)</span></div><p>In Java, how would you import a specific class from a package, and how does this compare to Python's <code>from module import function</code>?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">Java: <code>import java.util.ArrayList;</code> (specific class) vs <code>import java.util.*;</code> (wildcard). Python: <code>from collections import Counter</code> is similar to Java's specific import. Both let you use the class/function directly without the package prefix. The main difference: Java imports are at compile time; Python imports are at runtime and can be conditional.</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q10</span><span class="st-q-bloom">Analysing (Bridge)</span></div><p>Name one thing Python's comprehensions make easy that would require a loop in Java.</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">Creating a new collection (list, set, dict) from existing data with filtering/transformation. Example: <code>squares = [x**2 for x in nums if x > 0]</code> in Python is one line. In Java, you'd need a loop: <code>List&lt;Integer&gt; squares = new ArrayList&lt;&gt;(); for (int x : nums) { if (x > 0) squares.add(x * x); }</code> (or use Streams, which is more concise but still more verbose than Python).</div></div>
+</div>
+
+<div class="nav-footer">
+  <a class="nav-btn" href="info1110-review-lesson11.html">← Lesson 11: Classes & Inheritance</a>
+  <a class="nav-btn primary" href="info1110-review-lesson13.html">Lesson 13: Decorators, Generators & Regex →</a>
+</div>
+
+</div>
+
+<script>
+const totalSteps=9;let completedSteps=new Set();
+function toggleStep(n){document.getElementById('step-'+n).classList.toggle('open')}
+function enableReveal(ta){const btn=ta.closest('.check,.st-q').querySelector('.check-reveal button');btn.disabled=ta.value.trim().length<5}
+function revealAnswer(btn){const c=btn.closest('.check,.st-q');c.querySelector('.check-answer').classList.add('show');const r=c.querySelector('.check-rating');if(r)r.classList.add('show');btn.style.display='none'}
+function rateCheck(btn,rating){const check=btn.closest('.check'),step=btn.closest('.step'),n=parseInt(step.dataset.step);check.querySelector('.check-rating').querySelectorAll('button').forEach(b=>b.style.opacity='0.4');btn.style.opacity='1';completedSteps.add(n);updateProgress();step.querySelector('.step-num').className='step-num done';const next=document.getElementById('step-'+(n+1));if(next){const nn=next.querySelector('.step-num');if(nn.classList.contains('locked'))nn.className='step-num active'}}
+function updateProgress(){const p=Math.round(completedSteps.size/totalSteps*100);document.getElementById('progressFill').style.width=p+'%';document.getElementById('progressLabel').textContent=completedSteps.size+' of '+totalSteps+' complete'}
+</script>
+<script>
+(function(){
+  function notifyHeight(){
+    if(window.parent!==window){
+      window.parent.postMessage({type:"vgResize",height:document.documentElement.scrollHeight},"*");
+    }
+  }
+  notifyHeight();
+  new MutationObserver(notifyHeight).observe(document.body,{childList:true,subtree:true,attributes:true});
+  window.addEventListener("resize",notifyHeight);
+})();
+</script>
+</body>
+</html>

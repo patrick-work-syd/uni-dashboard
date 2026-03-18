@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>INFO1110 Review — Lesson 11: Classes & Inheritance</title>
+<style>
+:root {
+  --teal: #0d9488; --teal-light: #f0fdfa; --teal-dark: #115e59;
+  --blue: #3b82f6; --blue-light: #eff6ff; --blue-dark: #1e40af;
+  --green: #10b981; --green-light: #ecfdf5;
+  --orange: #f59e0b; --orange-light: #fffbeb;
+  --purple: #8b5cf6; --purple-light: #f5f3ff;
+  --red: #ef4444; --red-light: #fef2f2;
+  --gray-50: #f8fafc; --gray-100: #f1f5f9; --gray-200: #e2e8f0;
+  --gray-400: #94a3b8; --gray-600: #475569; --gray-800: #1e293b;
+  --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --mono: 'SF Mono', 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: var(--font); background: var(--gray-50); color: var(--gray-800); line-height: 1.65; }
+
+.header { background: linear-gradient(135deg, var(--teal-dark) 0%, var(--teal) 100%); color: #fff; padding: 32px 0 28px; }
+.header-inner { max-width: 800px; margin: 0 auto; padding: 0 24px; }
+.header-tag { font-size: 12px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; opacity: 0.8; margin-bottom: 8px; }
+.header h1 { font-size: 26px; font-weight: 700; margin-bottom: 4px; }
+.header p { font-size: 14px; opacity: 0.85; }
+.header-reassure { margin-top: 14px; padding: 12px 16px; background: rgba(255,255,255,0.12); border-radius: 10px; font-size: 13px; line-height: 1.5; }
+.header-badge { display: inline-block; background: rgba(255,255,255,0.2); padding: 3px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; letter-spacing: 0.5px; margin-top: 10px; }
+
+.progress-bar { max-width: 800px; margin: 0 auto; padding: 16px 24px 0; }
+.progress-track { background: var(--gray-200); height: 6px; border-radius: 3px; overflow: hidden; }
+.progress-fill { background: var(--green); height: 100%; width: 0%; border-radius: 3px; transition: width 0.5s ease; }
+.progress-label { font-size: 12px; color: var(--gray-400); margin-top: 6px; text-align: right; }
+
+.content { max-width: 800px; margin: 0 auto; padding: 24px; }
+
+.step { background: #fff; border: 1px solid var(--gray-200); border-radius: 16px; margin-bottom: 20px; overflow: hidden; }
+.step-header { display: flex; align-items: center; gap: 12px; padding: 18px 22px; cursor: pointer; user-select: none; }
+.step-header:hover { background: var(--gray-50); }
+.step-num { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; flex-shrink: 0; }
+.step-num.locked { background: var(--gray-200); color: var(--gray-400); }
+.step-num.active { background: var(--teal); color: #fff; }
+.step-num.done { background: var(--green); color: #fff; }
+.step-title { flex: 1; }
+.step-title h3 { font-size: 16px; font-weight: 600; }
+.step-title .step-sub { font-size: 12px; color: var(--gray-400); margin-top: 1px; }
+.step-chevron { font-size: 18px; color: var(--gray-400); transition: transform 0.2s; }
+.step.open .step-chevron { transform: rotate(90deg); }
+.step-body { display: none; padding: 0 22px 22px; }
+.step.open .step-body { display: block; }
+
+.diagram { background: var(--gray-50); border: 1px solid var(--gray-200); border-radius: 12px; padding: 20px; margin: 14px 0; text-align: center; overflow-x: auto; }
+.diagram svg { max-width: 100%; height: auto; }
+
+.prose { font-size: 15px; color: var(--gray-600); margin: 12px 0; }
+.prose strong { color: var(--gray-800); }
+
+.label { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 4px; }
+.label-idea { color: var(--green); } .label-how { color: var(--teal); } .label-trap { color: var(--red); } .label-why { color: var(--purple); } .label-tip { color: var(--orange); } .label-bridge { color: var(--blue); }
+
+pre { background: #1e293b; color: #e2e8f0; padding: 14px 16px; border-radius: 10px; font-family: var(--mono); font-size: 13px; line-height: 1.7; overflow-x: auto; margin: 10px 0; white-space: pre; }
+pre .kw { color: #c084fc; } pre .str { color: #86efac; } pre .cmt { color: #64748b; font-style: italic; }
+pre .type { color: #67e8f9; } pre .num { color: #fbbf24; } pre .fn { color: #7dd3fc; } pre .ann { color: #f472b6; }
+code { font-family: var(--mono); font-size: 0.88em; background: var(--gray-100); padding: 1px 5px; border-radius: 4px; }
+
+.compare { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 14px 0; }
+@media (max-width: 600px) { .compare { grid-template-columns: 1fr; } }
+.cmp-box { border-radius: 10px; padding: 14px; }
+.cmp-box.python { background: var(--orange-light); border: 1px solid #fed7aa; }
+.cmp-box.java { background: var(--blue-light); border: 1px solid #bfdbfe; }
+.cmp-box.before { background: var(--red-light); border: 1px solid #fecaca; }
+.cmp-box.after { background: var(--green-light); border: 1px solid #a7f3d0; }
+.cmp-box h4 { font-size: 12px; font-weight: 700; margin-bottom: 6px; }
+.cmp-box.python h4 { color: #b45309; } .cmp-box.java h4 { color: var(--blue-dark); }
+.cmp-box.before h4 { color: var(--red); } .cmp-box.after h4 { color: #065f46; }
+.cmp-box pre { font-size: 12.5px; padding: 10px; margin: 0; }
+
+.callout { display: flex; gap: 10px; padding: 14px 16px; border-radius: 10px; margin: 14px 0; font-size: 14px; line-height: 1.55; }
+.callout-icon { font-size: 18px; flex-shrink: 0; line-height: 1.5; }
+.callout.tip { background: var(--blue-light); border: 1px solid #bfdbfe; }
+.callout.warn { background: var(--red-light); border: 1px solid #fecaca; }
+.callout.ok { background: var(--green-light); border: 1px solid #a7f3d0; }
+.callout.bridge { background: var(--teal-light); border: 1px solid #99f6e4; }
+
+.analogy { background: var(--purple-light); border: 1px solid #ddd6fe; border-radius: 12px; padding: 16px; margin: 14px 0; }
+.analogy-label { font-size: 11px; font-weight: 700; color: var(--purple); letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 4px; }
+.analogy p { font-size: 14px; color: var(--gray-600); }
+
+.check { background: var(--green-light); border: 1px solid #a7f3d0; border-radius: 12px; padding: 18px; margin: 18px 0; }
+.check-title { font-size: 13px; font-weight: 700; color: var(--green); margin-bottom: 6px; }
+.check-q { font-size: 14px; margin-bottom: 10px; }
+.check textarea { width: 100%; padding: 8px 10px; border: 1px solid #a7f3d0; border-radius: 8px; font-family: var(--font); font-size: 13px; resize: vertical; min-height: 44px; background: #fff; }
+.check textarea:focus { outline: 2px solid var(--green); border-color: transparent; }
+.check-reveal { margin-top: 8px; }
+.check-reveal button { background: var(--green); color: #fff; border: none; padding: 7px 16px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; }
+.check-reveal button:hover { background: #059669; }
+.check-reveal button:disabled { background: var(--gray-400); cursor: not-allowed; }
+.check-answer { display: none; margin-top: 10px; padding: 12px; background: #fff; border-radius: 8px; border: 1px solid #a7f3d0; font-size: 13px; line-height: 1.6; }
+.check-answer.show { display: block; }
+.check-rating { display: none; margin-top: 8px; gap: 8px; }
+.check-rating.show { display: flex; }
+.check-rating button { padding: 5px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid var(--gray-200); background: #fff; }
+.check-rating .got-it { color: var(--green); border-color: #a7f3d0; }
+.check-rating .not-yet { color: var(--red); border-color: #fecaca; }
+
+.summary-box { padding: 18px; border-radius: 12px; margin: 18px 0; }
+.summary-box.teal { background: var(--teal-light); border: 1px solid #99f6e4; }
+.summary-box.blue { background: var(--blue-light); border: 1px solid #bfdbfe; }
+.summary-box h4 { font-size: 15px; margin-bottom: 6px; color: var(--teal-dark); }
+.summary-box.blue h4 { color: var(--blue-dark); }
+.summary-box p, .summary-box ul { font-size: 14px; color: var(--gray-600); }
+.summary-box ul { margin: 8px 0 0 20px; }
+
+.self-test { background: #fff; border: 2px solid var(--teal); border-radius: 16px; padding: 22px; margin: 28px 0; }
+.self-test-title { font-size: 18px; font-weight: 700; color: var(--teal); margin-bottom: 4px; }
+.self-test-sub { font-size: 13px; color: var(--gray-400); margin-bottom: 16px; }
+.st-q { margin-bottom: 16px; }
+.st-q-header { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.st-q-num { font-size: 12px; font-weight: 700; color: var(--teal); background: var(--teal-light); padding: 2px 8px; border-radius: 4px; }
+.st-q-bloom { font-size: 10px; color: var(--gray-400); }
+.st-q p { font-size: 14px; margin-bottom: 6px; }
+.st-q textarea { width: 100%; padding: 8px 10px; border: 1px solid #99f6e4; border-radius: 8px; font-family: var(--font); font-size: 13px; resize: vertical; min-height: 44px; background: #fff; }
+.st-q textarea:focus { outline: 2px solid var(--teal); border-color: transparent; }
+.st-q .check-reveal button { background: var(--teal); }
+.st-q .check-reveal button:hover { background: var(--teal-dark); }
+.st-q .check-reveal button:disabled { background: var(--gray-400); }
+.st-q .check-answer { border-color: #99f6e4; }
+
+.nav-footer { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; border-top: 1px solid var(--gray-200); margin-top: 28px; }
+.nav-btn { display: inline-flex; align-items: center; gap: 6px; padding: 9px 18px; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; border: 1px solid var(--gray-200); background: #fff; color: var(--gray-600); text-decoration: none; }
+.nav-btn:hover { background: var(--gray-100); }
+.nav-btn.primary { background: var(--teal); color: #fff; border-color: var(--teal); }
+.nav-btn.primary:hover { background: var(--teal-dark); }
+
+.bridge-banner { background: linear-gradient(90deg, var(--orange-light), var(--blue-light)); border: 1px solid #bfdbfe; border-radius: 12px; padding: 16px; margin: 14px 0; display: flex; align-items: center; gap: 12px; }
+.bridge-banner-icon { font-size: 28px; flex-shrink: 0; }
+.bridge-banner h4 { font-size: 14px; font-weight: 700; color: var(--blue-dark); margin-bottom: 2px; }
+.bridge-banner p { font-size: 13px; color: var(--gray-600); }
+
+table.concept-map { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 13px; }
+table.concept-map th { background: var(--gray-100); padding: 8px 12px; text-align: left; font-weight: 700; border-bottom: 2px solid var(--gray-200); }
+table.concept-map td { padding: 8px 12px; border-bottom: 1px solid var(--gray-200); }
+table.concept-map .py { color: #b45309; font-weight: 600; }
+table.concept-map .jv { color: var(--blue-dark); font-weight: 600; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="header-tag">INFO1110 Review · Lesson 11 · Python → Java Bridge</div>
+    <h1>Classes & Inheritance</h1>
+    <p>10 steps · the single most important lesson for Java · take your time</p>
+    <div class="header-reassure">
+      This is the foundation of everything in INFO1113. Java is 100% object-oriented — every piece of code lives inside a class. This lesson covers how Python does classes so you understand the <em>concepts</em>, then shows you exactly how each concept translates to Java. If you only study one lesson, make it this one.
+    </div>
+    <div class="header-badge">CRITICAL FOR INFO1113</div>
+  </div>
+</div>
+
+<div class="progress-bar">
+  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="progress-label" id="progressLabel">0 of 10 complete</div>
+</div>
+
+<div class="content">
+
+<!-- ============ STEP 1 ============ -->
+<div class="step open" id="step-1" data-step="1">
+  <div class="step-header" onclick="toggleStep(1)">
+    <div class="step-num active">1</div>
+    <div class="step-title"><h3>What Is a Class? The Mental Model</h3><div class="step-sub">Blueprint vs. instance — the core idea before any code</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">Before writing code, you need to understand <strong>what a class actually is</strong>. Everything else builds on this one idea.</p>
+    <div class="analogy">
+      <div class="analogy-label">Real-World Analogy</div>
+      <p>A <strong>class</strong> is like an architectural blueprint for a house. The blueprint defines the structure (3 bedrooms, 2 bathrooms, a kitchen) but it's not a house you can live in. An <strong>object</strong> (or instance) is an actual house built from that blueprint. You can build many houses from the same blueprint — each one is independent but has the same structure.</p>
+    </div>
+    <p class="prose">In programming terms:</p>
+    <ul style="margin: 8px 0 12px 24px; color: var(--gray-600); font-size: 15px;">
+      <li><strong>Class</strong> = a template that defines what data (attributes) and actions (methods) an object will have</li>
+      <li><strong>Object / Instance</strong> = a specific copy created from that template, with its own data</li>
+      <li><strong>Instantiation</strong> = the act of creating an object from a class</li>
+    </ul>
+    <div class="diagram">
+      <svg viewBox="0 0 640 200" xmlns="http://www.w3.org/2000/svg" style="max-width:580px">
+        <style>svg text{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;}</style>
+        <rect x="30" y="20" width="160" height="90" rx="10" fill="#f0fdfa" stroke="#0d9488" stroke-width="2.5"/>
+        <text x="110" y="42" text-anchor="middle" font-size="13" font-weight="700" fill="#0d9488">Class: Person</text>
+        <text x="110" y="62" text-anchor="middle" font-size="11" fill="#475569">name, weight, height</text>
+        <text x="110" y="78" text-anchor="middle" font-size="11" fill="#475569">greet(), bmi()</text>
+        <text x="110" y="100" text-anchor="middle" font-size="10" fill="#94a3b8" font-style="italic">← blueprint</text>
+        <line x1="190" y1="65" x2="260" y2="40" stroke="#0d9488" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+        <line x1="190" y1="65" x2="260" y2="95" stroke="#0d9488" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+        <line x1="190" y1="65" x2="260" y2="150" stroke="#0d9488" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+        <rect x="260" y="12" width="170" height="55" rx="8" fill="#ecfdf5" stroke="#10b981" stroke-width="2"/>
+        <text x="345" y="32" text-anchor="middle" font-size="11" font-weight="700" fill="#10b981">bob</text>
+        <text x="345" y="48" text-anchor="middle" font-size="10" fill="#475569">"Bob", 82, 178</text>
+        <text x="345" y="60" text-anchor="middle" font-size="9" fill="#94a3b8">instance 1</text>
+        <rect x="260" y="72" width="170" height="55" rx="8" fill="#ecfdf5" stroke="#10b981" stroke-width="2"/>
+        <text x="345" y="92" text-anchor="middle" font-size="11" font-weight="700" fill="#10b981">alice</text>
+        <text x="345" y="108" text-anchor="middle" font-size="10" fill="#475569">"Alice", 65, 165</text>
+        <text x="345" y="120" text-anchor="middle" font-size="9" fill="#94a3b8">instance 2</text>
+        <rect x="260" y="132" width="170" height="55" rx="8" fill="#ecfdf5" stroke="#10b981" stroke-width="2"/>
+        <text x="345" y="152" text-anchor="middle" font-size="11" font-weight="700" fill="#10b981">charlie</text>
+        <text x="345" y="168" text-anchor="middle" font-size="10" fill="#475569">"Charlie", 74, 180</text>
+        <text x="345" y="180" text-anchor="middle" font-size="9" fill="#94a3b8">instance 3</text>
+        <defs><marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#0d9488"/></marker></defs>
+      </svg>
+    </div>
+    <p class="prose">The key insight: <strong>one class, many objects</strong>. Each object has the same structure but its own independent data. Changing Bob's weight doesn't affect Alice.</p>
+    <div class="check" data-check="1">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">If you create three Person objects from the same class, and you change one person's name, what happens to the other two?</div>
+      <textarea placeholder="Type your answer first…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer"><strong>Nothing.</strong> Each object is an independent instance with its own copy of the data (attributes). Changing one object's attribute does not affect any other object. They share the same <em>structure</em> (defined by the class) but have <em>separate data</em>.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 2 ============ -->
+<div class="step" id="step-2" data-step="2">
+  <div class="step-header" onclick="toggleStep(2)">
+    <div class="step-num locked">2</div>
+    <div class="step-title"><h3>Defining a Class in Python</h3><div class="step-sub">class, __init__, self, and instance variables</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">In Python, you define a class with the <code>class</code> keyword. The <code>__init__</code> method is the <strong>constructor</strong> — it runs automatically when you create a new object and sets up the initial data.</p>
+<pre><span class="kw">class</span> <span class="type">Person</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, name, weight, height):
+        self.name = name        <span class="cmt"># instance variable</span>
+        self.weight = weight    <span class="cmt"># instance variable</span>
+        self.height = height    <span class="cmt"># instance variable</span>
+
+    <span class="kw">def</span> <span class="fn">greet</span>(self):
+        <span class="kw">return</span> <span class="str">f"Hi, I'm {self.name}"</span>
+
+<span class="cmt"># Create two objects (instances)</span>
+bob = <span class="type">Person</span>(<span class="str">"Bob"</span>, <span class="num">82</span>, <span class="num">178</span>)
+alice = <span class="type">Person</span>(<span class="str">"Alice"</span>, <span class="num">65</span>, <span class="num">165</span>)
+
+print(bob.greet())    <span class="cmt"># Hi, I'm Bob</span>
+print(alice.name)     <span class="cmt"># Alice</span></pre>
+    <p class="prose"><span class="label label-how">Key pieces explained</span></p>
+    <ul style="margin: 8px 0 12px 24px; color: var(--gray-600); font-size: 15px;">
+      <li><code>self</code> = refers to <em>the specific object being created or used</em>. Every method's first parameter is <code>self</code> — Python passes the object automatically.</li>
+      <li><code>self.name = name</code> = stores the parameter <code>name</code> as an attribute <em>inside the object</em>. Without <code>self.</code>, it's just a local variable that disappears.</li>
+      <li><code>__init__</code> = the initialiser (constructor). It doesn't create the object — Python does that. It <em>configures</em> the fresh object with its starting data.</li>
+    </ul>
+    <div class="callout warn"><div class="callout-icon">⚠️</div><div><strong>Common mistake:</strong> forgetting <code>self</code> in method parameters. If you write <code>def greet():</code> instead of <code>def greet(self):</code>, Python will throw <code>TypeError: greet() takes 0 positional arguments but 1 was given</code> because it tries to pass the object as the first argument.</div></div>
+
+    <div class="bridge-banner">
+      <div class="bridge-banner-icon">🌉</div>
+      <div>
+        <h4>Java Bridge</h4>
+        <p>In Java, <code>self</code> becomes <code>this</code> — and it's <em>implicit</em> (you don't write it as a parameter). The constructor is a method with the same name as the class, not <code>__init__</code>.</p>
+      </div>
+    </div>
+    <div class="compare">
+      <div class="cmp-box python"><h4>Python</h4>
+<pre><span class="kw">class</span> <span class="type">Person</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, name):
+        self.name = name
+
+    <span class="kw">def</span> <span class="fn">greet</span>(self):
+        <span class="kw">return</span> <span class="str">f"Hi, {self.name}"</span>
+
+p = <span class="type">Person</span>(<span class="str">"Bob"</span>)</pre>
+      </div>
+      <div class="cmp-box java"><h4>Java</h4>
+<pre><span class="kw">public class</span> <span class="type">Person</span> {
+    <span class="type">String</span> name;
+
+    <span class="kw">public</span> <span class="fn">Person</span>(<span class="type">String</span> name) {
+        <span class="kw">this</span>.name = name;
+    }
+
+    <span class="kw">public</span> <span class="type">String</span> <span class="fn">greet</span>() {
+        <span class="kw">return</span> <span class="str">"Hi, "</span> + name;
+    }
+}
+<span class="type">Person</span> p = <span class="kw">new</span> <span class="type">Person</span>(<span class="str">"Bob"</span>);</pre>
+      </div>
+    </div>
+    <table class="concept-map">
+      <tr><th>Concept</th><th class="py">Python</th><th class="jv">Java</th></tr>
+      <tr><td>Reference to current object</td><td class="py">self (explicit parameter)</td><td class="jv">this (implicit)</td></tr>
+      <tr><td>Constructor</td><td class="py">__init__(self, ...)</td><td class="jv">ClassName(...)</td></tr>
+      <tr><td>Create an object</td><td class="py">Person("Bob")</td><td class="jv">new Person("Bob")</td></tr>
+      <tr><td>Type declarations</td><td class="py">None needed</td><td class="jv">Every variable needs a type</td></tr>
+    </table>
+    <div class="check" data-check="2">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">What does <code>self</code> refer to in <code>self.name = name</code>? Why is it necessary?</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer"><code>self</code> refers to the specific object being constructed. <code>self.name</code> stores the value as an <strong>attribute of the object</strong>, so it persists after <code>__init__</code> finishes. Without <code>self.</code>, <code>name = name</code> would just be a local variable that vanishes when the method ends — the object would have no data.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 3 ============ -->
+<div class="step" id="step-3" data-step="3">
+  <div class="step-header" onclick="toggleStep(3)">
+    <div class="step-num locked">3</div>
+    <div class="step-title"><h3>Instance Variables vs. Class Variables</h3><div class="step-sub">Data that belongs to ONE object vs. data shared by ALL objects</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">There are two types of data a class can hold. Understanding the difference is critical for Java, where this distinction is enforced with the <code>static</code> keyword.</p>
+<pre><span class="kw">class</span> <span class="type">Dog</span>:
+    species = <span class="str">"canine"</span>           <span class="cmt"># CLASS variable — shared by ALL dogs</span>
+
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, name):
+        self.name = name          <span class="cmt"># INSTANCE variable — unique to each dog</span>
+
+rex = <span class="type">Dog</span>(<span class="str">"Rex"</span>)
+milo = <span class="type">Dog</span>(<span class="str">"Milo"</span>)
+
+print(rex.name)       <span class="cmt"># Rex — instance variable, unique to rex</span>
+print(milo.name)      <span class="cmt"># Milo — instance variable, unique to milo</span>
+print(rex.species)    <span class="cmt"># canine — class variable, shared</span>
+print(<span class="type">Dog</span>.species)    <span class="cmt"># canine — can access through the class itself</span></pre>
+    <div class="diagram">
+      <svg viewBox="0 0 640 160" xmlns="http://www.w3.org/2000/svg" style="max-width:560px">
+        <style>svg text{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;}</style>
+        <rect x="200" y="5" width="240" height="35" rx="8" fill="#f0fdfa" stroke="#0d9488" stroke-width="2"/>
+        <text x="320" y="27" text-anchor="middle" font-size="12" font-weight="700" fill="#0d9488">Class variable: species = "canine"</text>
+        <text x="320" y="55" text-anchor="middle" font-size="11" fill="#94a3b8">shared by all instances ↓</text>
+        <rect x="60" y="70" width="200" height="75" rx="8" fill="#ecfdf5" stroke="#10b981" stroke-width="2"/>
+        <text x="160" y="92" text-anchor="middle" font-size="12" font-weight="700" fill="#10b981">rex</text>
+        <text x="160" y="110" text-anchor="middle" font-size="11" fill="#475569">name = "Rex"</text>
+        <text x="160" y="126" text-anchor="middle" font-size="10" fill="#94a3b8">(instance variable)</text>
+        <rect x="380" y="70" width="200" height="75" rx="8" fill="#ecfdf5" stroke="#10b981" stroke-width="2"/>
+        <text x="480" y="92" text-anchor="middle" font-size="12" font-weight="700" fill="#10b981">milo</text>
+        <text x="480" y="110" text-anchor="middle" font-size="11" fill="#475569">name = "Milo"</text>
+        <text x="480" y="126" text-anchor="middle" font-size="10" fill="#94a3b8">(instance variable)</text>
+        <line x1="260" y1="40" x2="160" y2="70" stroke="#0d9488" stroke-width="1" stroke-dasharray="3,3"/>
+        <line x1="380" y1="40" x2="480" y2="70" stroke="#0d9488" stroke-width="1" stroke-dasharray="3,3"/>
+      </svg>
+    </div>
+
+    <div class="bridge-banner">
+      <div class="bridge-banner-icon">🌉</div>
+      <div>
+        <h4>Java Bridge</h4>
+        <p>In Java, class variables use the <code>static</code> keyword. Instance variables don't. This is one of the first things you'll see in INFO1113.</p>
+      </div>
+    </div>
+    <div class="compare">
+      <div class="cmp-box python"><h4>Python</h4>
+<pre><span class="kw">class</span> <span class="type">Dog</span>:
+    species = <span class="str">"canine"</span>  <span class="cmt"># class var</span>
+
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, name):
+        self.name = name  <span class="cmt"># instance</span></pre>
+      </div>
+      <div class="cmp-box java"><h4>Java</h4>
+<pre><span class="kw">public class</span> <span class="type">Dog</span> {
+    <span class="kw">static</span> <span class="type">String</span> species = <span class="str">"canine"</span>;
+    <span class="type">String</span> name;  <span class="cmt">// instance</span>
+
+    <span class="kw">public</span> <span class="fn">Dog</span>(<span class="type">String</span> name) {
+        <span class="kw">this</span>.name = name;
+    }
+}</pre>
+      </div>
+    </div>
+    <div class="callout tip"><div class="callout-icon">💡</div><div><strong>Rule of thumb:</strong> if the data is the same for every object of that type, it's a class/static variable. If the data is different per object (like a name or score), it's an instance variable.</div></div>
+    <div class="check" data-check="3">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">If you write <code>rex.species = "feline"</code>, does <code>milo.species</code> also change?</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer"><strong>No!</strong> This is a Python subtlety. Assigning <code>rex.species = "feline"</code> creates a new <em>instance variable</em> on <code>rex</code> that shadows the class variable. <code>milo.species</code> still reads from the class variable <code>"canine"</code>. To change it for all dogs, use <code>Dog.species = "feline"</code>. In Java, you'd use <code>Dog.species = "feline"</code> (via the class name) to change the static variable.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 4 ============ -->
+<div class="step" id="step-4" data-step="4">
+  <div class="step-header" onclick="toggleStep(4)">
+    <div class="step-num locked">4</div>
+    <div class="step-title"><h3>Methods: Actions Your Objects Can Perform</h3><div class="step-sub">Instance methods, reading from files, and building real programs</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">Methods are functions that live inside a class and operate on the object's data. The professor's lecture walks through a full example: a <code>Person</code> class that reads data from a CSV file and stores each person as an object.</p>
+<pre><span class="kw">class</span> <span class="type">Person</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, name, weight, height):
+        self.name = name
+        self.weight = weight
+        self.height = height
+
+    <span class="kw">def</span> <span class="fn">bmi</span>(self):
+        <span class="cmt"># BMI = weight(kg) / height(m)²</span>
+        height_m = self.height / <span class="num">100</span>
+        <span class="kw">return</span> self.weight / (height_m ** <span class="num">2</span>)
+
+    <span class="kw">def</span> <span class="fn">describe</span>(self):
+        <span class="kw">return</span> <span class="str">f"{self.name}: BMI = {self.bmi():.1f}"</span>
+
+bob = <span class="type">Person</span>(<span class="str">"Bob"</span>, <span class="num">82</span>, <span class="num">178</span>)
+print(bob.describe())  <span class="cmt"># Bob: BMI = 25.9</span></pre>
+    <p class="prose">Notice how <code>describe()</code> calls <code>self.bmi()</code> — methods can call other methods on the same object. This is a key pattern: <strong>objects know how to do things with their own data</strong>.</p>
+    <div class="callout bridge"><div class="callout-icon">🌉</div><div><strong>Java parallel:</strong> In INFO1113, every piece of code lives inside a class. The <code>bmi()</code> method would look like <code>public double bmi() { return weight / Math.pow(height / 100.0, 2); }</code> — same logic, but with types declared and <code>Math.pow</code> instead of <code>**</code>.</div></div>
+    <div class="check" data-check="4">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">In the <code>describe()</code> method, why do we write <code>self.bmi()</code> and not just <code>bmi()</code>?</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer"><code>bmi()</code> is a method that belongs to the object, not a standalone function. <code>self.bmi()</code> tells Python to call the <code>bmi</code> method <em>on this particular object</em>, using this object's weight and height. Without <code>self.</code>, Python would look for a regular function named <code>bmi</code> and throw a <code>NameError</code>.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 5 ============ -->
+<div class="step" id="step-5" data-step="5">
+  <div class="step-header" onclick="toggleStep(5)">
+    <div class="step-num locked">5</div>
+    <div class="step-title"><h3>Special Methods (Magic Methods)</h3><div class="step-sub">__repr__, __eq__, __str__, __lt__ — customising object behaviour</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">Python lets you define <strong>special methods</strong> (also called dunder/magic methods) that control how objects behave with built-in operations like printing, comparing, and sorting.</p>
+<pre><span class="kw">class</span> <span class="type">Point</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, x, y):
+        self.x = x
+        self.y = y
+
+    <span class="kw">def</span> <span class="fn">__repr__</span>(self):
+        <span class="kw">return</span> <span class="str">f"Point({self.x}, {self.y})"</span>
+
+    <span class="kw">def</span> <span class="fn">__eq__</span>(self, other):
+        <span class="kw">return</span> isinstance(other, <span class="type">Point</span>) <span class="kw">and</span> self.x == other.x <span class="kw">and</span> self.y == other.y
+
+    <span class="kw">def</span> <span class="fn">__lt__</span>(self, other):
+        <span class="kw">return</span> (self.x ** <span class="num">2</span> + self.y ** <span class="num">2</span>) < (other.x ** <span class="num">2</span> + other.y ** <span class="num">2</span>)
+
+a = <span class="type">Point</span>(<span class="num">1</span>, <span class="num">2</span>)
+b = <span class="type">Point</span>(<span class="num">1</span>, <span class="num">2</span>)
+print(a)         <span class="cmt"># Point(1, 2)  — __repr__ controls this</span>
+print(a == b)    <span class="cmt"># True         — __eq__ controls this</span>
+print(a < <span class="type">Point</span>(<span class="num">3</span>, <span class="num">4</span>))  <span class="cmt"># True — __lt__ controls this</span></pre>
+    <p class="prose"><span class="label label-how">The most important special methods</span></p>
+    <table class="concept-map">
+      <tr><th>Method</th><th>What it controls</th><th>When it's called</th></tr>
+      <tr><td><code>__init__</code></td><td>Constructor</td><td><code>Person("Bob")</code></td></tr>
+      <tr><td><code>__repr__</code></td><td>String representation</td><td><code>print(obj)</code>, debugger</td></tr>
+      <tr><td><code>__str__</code></td><td>Human-friendly string</td><td><code>str(obj)</code>, <code>print(obj)</code></td></tr>
+      <tr><td><code>__eq__</code></td><td>Equality comparison</td><td><code>a == b</code></td></tr>
+      <tr><td><code>__lt__</code></td><td>Less-than comparison</td><td><code>a < b</code>, <code>sorted()</code></td></tr>
+      <tr><td><code>__len__</code></td><td>Length</td><td><code>len(obj)</code></td></tr>
+    </table>
+
+    <div class="bridge-banner">
+      <div class="bridge-banner-icon">🌉</div>
+      <div>
+        <h4>Java Bridge</h4>
+        <p>Java has the exact same concept but calls them differently. This is a direct 1:1 mapping you'll use constantly in INFO1113.</p>
+      </div>
+    </div>
+    <table class="concept-map">
+      <tr><th>Concept</th><th class="py">Python</th><th class="jv">Java</th></tr>
+      <tr><td>String representation</td><td class="py">__repr__ / __str__</td><td class="jv">toString()</td></tr>
+      <tr><td>Equality</td><td class="py">__eq__</td><td class="jv">equals()</td></tr>
+      <tr><td>Comparison for sorting</td><td class="py">__lt__</td><td class="jv">compareTo() (Comparable)</td></tr>
+      <tr><td>Hash code (for sets/dicts)</td><td class="py">__hash__</td><td class="jv">hashCode()</td></tr>
+    </table>
+    <div class="callout warn"><div class="callout-icon">⚠️</div><div><strong>Java gotcha:</strong> In Java, <code>==</code> compares <em>references</em> (memory addresses), not values. You <em>must</em> use <code>.equals()</code> to compare objects by value. This trips up everyone coming from Python where <code>==</code> calls <code>__eq__</code>.</div></div>
+    <div class="check" data-check="5">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">Without defining <code>__eq__</code>, what does <code>Point(1,2) == Point(1,2)</code> return? Why?</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer"><strong>False.</strong> Without a custom <code>__eq__</code>, Python uses the default behaviour inherited from <code>object</code>, which compares identity (memory addresses) — the same as Java's <code>==</code>. Two separate Point objects at different memory locations are not identical, even if they have the same x and y values.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 6 ============ -->
+<div class="step" id="step-6" data-step="6">
+  <div class="step-header" onclick="toggleStep(6)">
+    <div class="step-num locked">6</div>
+    <div class="step-title"><h3>Private Variables & Encapsulation</h3><div class="step-sub">Controlling access to object data — Python conventions vs. Java enforcement</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose"><strong>Encapsulation</strong> means hiding an object's internal data and only exposing it through controlled methods. This prevents code outside the class from breaking the object's internal state.</p>
+<pre><span class="kw">class</span> <span class="type">BankAccount</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, owner, balance):
+        self.owner = owner
+        self.__balance = balance    <span class="cmt"># __ prefix = "private"</span>
+
+    <span class="kw">def</span> <span class="fn">deposit</span>(self, amount):
+        <span class="kw">if</span> amount > <span class="num">0</span>:
+            self.__balance += amount
+
+    <span class="kw">def</span> <span class="fn">get_balance</span>(self):
+        <span class="kw">return</span> self.__balance
+
+acct = <span class="type">BankAccount</span>(<span class="str">"Bob"</span>, <span class="num">1000</span>)
+print(acct.get_balance())    <span class="cmt"># 1000 — access through method</span>
+print(acct.__balance)        <span class="cmt"># AttributeError! Can't access directly</span></pre>
+    <p class="prose">Python uses <strong>naming conventions</strong> to signal privacy:</p>
+    <ul style="margin: 8px 0 12px 24px; color: var(--gray-600); font-size: 15px;">
+      <li><code>_name</code> (single underscore) = "please don't touch this from outside" — a convention, not enforced</li>
+      <li><code>__name</code> (double underscore) = name-mangled to <code>_ClassName__name</code> — harder to access accidentally</li>
+    </ul>
+
+    <div class="bridge-banner">
+      <div class="bridge-banner-icon">🌉</div>
+      <div>
+        <h4>Java Bridge — This Is ENFORCED in Java</h4>
+        <p>Java doesn't rely on conventions. It has real access modifiers that the compiler enforces. This is one of the biggest differences.</p>
+      </div>
+    </div>
+    <div class="compare">
+      <div class="cmp-box python"><h4>Python (convention)</h4>
+<pre><span class="kw">class</span> <span class="type">BankAccount</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, bal):
+        self.__balance = bal <span class="cmt"># "private"</span>
+
+    <span class="kw">def</span> <span class="fn">get_balance</span>(self):
+        <span class="kw">return</span> self.__balance</pre>
+      </div>
+      <div class="cmp-box java"><h4>Java (enforced)</h4>
+<pre><span class="kw">public class</span> <span class="type">BankAccount</span> {
+    <span class="kw">private</span> <span class="type">double</span> balance;
+
+    <span class="kw">public</span> <span class="type">double</span> <span class="fn">getBalance</span>() {
+        <span class="kw">return</span> balance;
+    }
+}</pre>
+      </div>
+    </div>
+    <table class="concept-map">
+      <tr><th>Access Level</th><th class="py">Python</th><th class="jv">Java</th></tr>
+      <tr><td>Public (anyone)</td><td class="py">self.name (default)</td><td class="jv">public String name;</td></tr>
+      <tr><td>Private (this class only)</td><td class="py">self.__name (convention)</td><td class="jv">private String name; (enforced)</td></tr>
+      <tr><td>Protected (subclasses)</td><td class="py">self._name (convention)</td><td class="jv">protected String name; (enforced)</td></tr>
+    </table>
+    <div class="callout tip"><div class="callout-icon">💡</div><div><strong>Why this matters for Java:</strong> In INFO1113, you'll be expected to make fields <code>private</code> and provide <code>public</code> getter/setter methods. This "getters and setters" pattern comes directly from encapsulation.</div></div>
+    <div class="check" data-check="6">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">Why would you use <code>private</code> fields with public getter methods instead of just making the field public?</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer"><strong>Control and safety.</strong> With a public field, any code can set it to an invalid value (e.g., negative balance). With a private field and a setter method, you can add validation: <code>if (amount > 0) balance += amount;</code>. You control <em>how</em> the data is changed, not just <em>whether</em> it can be changed.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 7 ============ -->
+<div class="step" id="step-7" data-step="7">
+  <div class="step-header" onclick="toggleStep(7)">
+    <div class="step-num locked">7</div>
+    <div class="step-title"><h3>Inheritance: Building on Existing Classes</h3><div class="step-sub">Reuse code by creating specialised versions of a class</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose"><strong>Inheritance</strong> lets you create a new class based on an existing one. The new class (child/subclass) automatically gets all the attributes and methods of the existing class (parent/superclass), and can add or modify them.</p>
+    <div class="analogy">
+      <div class="analogy-label">Real-World Analogy</div>
+      <p>A "Vehicle" is a general concept (has wheels, can move). A "Car" is a specific type of Vehicle (has 4 wheels, has doors). A "Truck" is another type (bigger, has a cargo bed). Car and Truck <em>inherit</em> from Vehicle — they share the common parts but add their own specialisations.</p>
+    </div>
+<pre><span class="kw">class</span> <span class="type">Animal</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, name, sound):
+        self.name = name
+        self.sound = sound
+
+    <span class="kw">def</span> <span class="fn">speak</span>(self):
+        <span class="kw">return</span> <span class="str">f"{self.name} says {self.sound}"</span>
+
+<span class="kw">class</span> <span class="type">Dog</span>(<span class="type">Animal</span>):                  <span class="cmt"># Dog inherits from Animal</span>
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, name, breed):
+        <span class="fn">super</span>().__init__(name, <span class="str">"Woof"</span>)  <span class="cmt"># call parent's __init__</span>
+        self.breed = breed             <span class="cmt"># add new attribute</span>
+
+    <span class="kw">def</span> <span class="fn">fetch</span>(self):                  <span class="cmt"># add new method</span>
+        <span class="kw">return</span> <span class="str">f"{self.name} fetches the ball!"</span>
+
+rex = <span class="type">Dog</span>(<span class="str">"Rex"</span>, <span class="str">"Labrador"</span>)
+print(rex.speak())    <span class="cmt"># Rex says Woof  — inherited from Animal</span>
+print(rex.fetch())    <span class="cmt"># Rex fetches the ball!  — Dog's own method</span></pre>
+    <p class="prose"><span class="label label-how">Key mechanics</span></p>
+    <ul style="margin: 8px 0 12px 24px; color: var(--gray-600); font-size: 15px;">
+      <li><code>class Dog(Animal)</code> — parentheses indicate Dog extends Animal</li>
+      <li><code>super().__init__(...)</code> — calls the parent class's constructor to set up inherited attributes</li>
+      <li>Dog <strong>inherits</strong> <code>speak()</code> without rewriting it</li>
+      <li>Dog <strong>adds</strong> <code>fetch()</code> and <code>breed</code> — new behaviour</li>
+    </ul>
+
+    <div class="bridge-banner">
+      <div class="bridge-banner-icon">🌉</div>
+      <div>
+        <h4>Java Bridge</h4>
+        <p>Java uses <code>extends</code> instead of parentheses, and <code>super()</code> works the same way. This is Week 3 material in INFO1113 — you'll use it constantly.</p>
+      </div>
+    </div>
+    <div class="compare">
+      <div class="cmp-box python"><h4>Python</h4>
+<pre><span class="kw">class</span> <span class="type">Dog</span>(<span class="type">Animal</span>):
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, name, breed):
+        <span class="fn">super</span>().__init__(name, <span class="str">"Woof"</span>)
+        self.breed = breed</pre>
+      </div>
+      <div class="cmp-box java"><h4>Java</h4>
+<pre><span class="kw">public class</span> <span class="type">Dog</span> <span class="kw">extends</span> <span class="type">Animal</span> {
+    <span class="type">String</span> breed;
+
+    <span class="kw">public</span> <span class="fn">Dog</span>(<span class="type">String</span> name, <span class="type">String</span> breed) {
+        <span class="kw">super</span>(name, <span class="str">"Woof"</span>);
+        <span class="kw">this</span>.breed = breed;
+    }
+}</pre>
+      </div>
+    </div>
+    <div class="callout warn"><div class="callout-icon">⚠️</div><div><strong>Common mistake:</strong> forgetting to call <code>super().__init__()</code>. If you don't, the parent class's attributes (like <code>name</code> and <code>sound</code>) never get set, and you'll get <code>AttributeError</code> when trying to access them. Same in Java — the compiler will error if the parent constructor needs arguments and you don't call <code>super()</code>.</div></div>
+    <div class="check" data-check="7">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">Can a Dog object call <code>speak()</code> even though Dog doesn't define that method? Why?</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer"><strong>Yes.</strong> Dog <em>inherits</em> <code>speak()</code> from Animal. When Python can't find a method on the Dog class, it looks up the inheritance chain to the parent class (Animal), finds <code>speak()</code> there, and uses it. This is the whole point of inheritance — reuse without rewriting.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 8 ============ -->
+<div class="step" id="step-8" data-step="8">
+  <div class="step-header" onclick="toggleStep(8)">
+    <div class="step-num locked">8</div>
+    <div class="step-title"><h3>Method Overriding & Polymorphism</h3><div class="step-sub">When a child class replaces a parent's method — the foundation of flexible code</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">Sometimes a subclass needs to <strong>change</strong> how an inherited method works. This is called <strong>overriding</strong> — the child provides its own version of the method.</p>
+<pre><span class="kw">class</span> <span class="type">Animal</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, name):
+        self.name = name
+
+    <span class="kw">def</span> <span class="fn">speak</span>(self):
+        <span class="kw">return</span> <span class="str">f"{self.name} makes a sound"</span>
+
+<span class="kw">class</span> <span class="type">Cat</span>(<span class="type">Animal</span>):
+    <span class="kw">def</span> <span class="fn">speak</span>(self):                        <span class="cmt"># OVERRIDES parent's speak</span>
+        <span class="kw">return</span> <span class="str">f"{self.name} says Meow"</span>
+
+<span class="kw">class</span> <span class="type">Dog</span>(<span class="type">Animal</span>):
+    <span class="kw">def</span> <span class="fn">speak</span>(self):                        <span class="cmt"># OVERRIDES parent's speak</span>
+        <span class="kw">return</span> <span class="str">f"{self.name} says Woof"</span>
+
+<span class="cmt"># Polymorphism in action:</span>
+animals = [<span class="type">Cat</span>(<span class="str">"Whiskers"</span>), <span class="type">Dog</span>(<span class="str">"Rex"</span>), <span class="type">Animal</span>(<span class="str">"Mystery"</span>)]
+<span class="kw">for</span> a <span class="kw">in</span> animals:
+    print(a.speak())
+<span class="cmt"># Whiskers says Meow</span>
+<span class="cmt"># Rex says Woof</span>
+<span class="cmt"># Mystery makes a sound</span></pre>
+    <p class="prose"><strong>Polymorphism</strong> = "many forms." The same method call (<code>a.speak()</code>) produces different behaviour depending on the <em>actual type</em> of the object. The code doesn't need to know whether <code>a</code> is a Cat, Dog, or generic Animal — it just calls <code>speak()</code> and the right version runs.</p>
+    <div class="diagram">
+      <svg viewBox="0 0 640 170" xmlns="http://www.w3.org/2000/svg" style="max-width:560px">
+        <style>svg text{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;}</style>
+        <rect x="230" y="10" width="180" height="45" rx="8" fill="#f0fdfa" stroke="#0d9488" stroke-width="2.5"/>
+        <text x="320" y="30" text-anchor="middle" font-size="12" font-weight="700" fill="#0d9488">Animal</text>
+        <text x="320" y="46" text-anchor="middle" font-size="10" fill="#475569">speak() → "makes a sound"</text>
+        <line x1="260" y1="55" x2="150" y2="85" stroke="#0d9488" stroke-width="1.5" marker-end="url(#arr2)"/>
+        <line x1="380" y1="55" x2="490" y2="85" stroke="#0d9488" stroke-width="1.5" marker-end="url(#arr2)"/>
+        <rect x="50" y="85" width="200" height="45" rx="8" fill="#ecfdf5" stroke="#10b981" stroke-width="2"/>
+        <text x="150" y="105" text-anchor="middle" font-size="12" font-weight="700" fill="#10b981">Cat</text>
+        <text x="150" y="121" text-anchor="middle" font-size="10" fill="#475569">speak() → "says Meow" ✎</text>
+        <rect x="390" y="85" width="200" height="45" rx="8" fill="#ecfdf5" stroke="#10b981" stroke-width="2"/>
+        <text x="490" y="105" text-anchor="middle" font-size="12" font-weight="700" fill="#10b981">Dog</text>
+        <text x="490" y="121" text-anchor="middle" font-size="10" fill="#475569">speak() → "says Woof" ✎</text>
+        <text x="320" y="155" text-anchor="middle" font-size="11" fill="#94a3b8">✎ = overrides parent method</text>
+        <defs><marker id="arr2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#0d9488"/></marker></defs>
+      </svg>
+    </div>
+    <div class="callout bridge"><div class="callout-icon">🌉</div><div><strong>Java parallel:</strong> Overriding works identically in Java. The key difference: Java uses the <code>@Override</code> annotation (optional but strongly recommended) to tell the compiler "I intend to override this method." If you misspell the method name, the compiler catches it. Python has no such safety net.</div></div>
+    <div class="check" data-check="8">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">If you have a list of Animal objects and call <code>speak()</code> on each, how does Python know which version of <code>speak()</code> to run?</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer">Python checks the <strong>actual type</strong> of the object at runtime, not the variable type. If the object is a Cat, Python finds Cat's <code>speak()</code> first (since it's closer in the method resolution order). If the object is a plain Animal, Python uses Animal's <code>speak()</code>. This is <strong>dynamic dispatch</strong> — the decision happens at runtime based on the real object.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 9 ============ -->
+<div class="step" id="step-9" data-step="9">
+  <div class="step-header" onclick="toggleStep(9)">
+    <div class="step-num locked">9</div>
+    <div class="step-title"><h3>isinstance() and Type Checking</h3><div class="step-sub">Checking what type an object is — and why it matters</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">With inheritance, an object can be multiple types at once. A Dog is both a Dog <em>and</em> an Animal. Python's <code>isinstance()</code> checks this correctly.</p>
+<pre>rex = <span class="type">Dog</span>(<span class="str">"Rex"</span>, <span class="str">"Labrador"</span>)
+
+print(isinstance(rex, <span class="type">Dog</span>))     <span class="cmt"># True  — rex is a Dog</span>
+print(isinstance(rex, <span class="type">Animal</span>))  <span class="cmt"># True  — rex is ALSO an Animal</span>
+print(isinstance(rex, <span class="type">Cat</span>))     <span class="cmt"># False — rex is not a Cat</span>
+print(<span class="fn">type</span>(rex) == <span class="type">Dog</span>)         <span class="cmt"># True  — exact type is Dog</span>
+print(<span class="fn">type</span>(rex) == <span class="type">Animal</span>)      <span class="cmt"># False — type() checks EXACT type only</span></pre>
+    <p class="prose"><code>isinstance()</code> respects inheritance — it checks the entire chain. <code>type()</code> only checks the exact type. <strong>Always prefer isinstance() for type checking</strong>, especially in <code>__eq__</code> methods.</p>
+    <div class="callout bridge"><div class="callout-icon">🌉</div><div><strong>Java parallel:</strong> Java uses <code>instanceof</code> (one word, no parentheses): <code>if (rex instanceof Animal)</code>. Same concept, slightly different syntax. You'll use this in INFO1113 when checking object types before casting.</div></div>
+    <div class="check" data-check="9">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">Why does <code>isinstance(rex, Animal)</code> return True even though <code>rex</code> was created as a Dog?</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer">Because Dog <em>inherits from</em> Animal. Every Dog <strong>is-a</strong> Animal. <code>isinstance()</code> walks up the inheritance chain: Is rex a Dog? Yes. Is rex an Animal? Dog extends Animal, so yes. This "is-a" relationship is the whole point of inheritance — subclass objects are valid wherever the parent type is expected.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 10 ============ -->
+<div class="step" id="step-10" data-step="10">
+  <div class="step-header" onclick="toggleStep(10)">
+    <div class="step-num locked">10</div>
+    <div class="step-title"><h3>The Complete Picture: Python → Java Concept Map</h3><div class="step-sub">Everything from this lesson mapped to what you'll see in INFO1113</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">Here's the full mapping of every OOP concept from this lesson to its Java equivalent. This is your reference card for bridging between the two languages.</p>
+    <table class="concept-map">
+      <tr><th>Concept</th><th class="py">Python (INFO1110)</th><th class="jv">Java (INFO1113)</th></tr>
+      <tr><td>Define a class</td><td class="py">class Person:</td><td class="jv">public class Person { }</td></tr>
+      <tr><td>Constructor</td><td class="py">def __init__(self, ...):</td><td class="jv">public Person(...) { }</td></tr>
+      <tr><td>Self reference</td><td class="py">self (explicit param)</td><td class="jv">this (implicit)</td></tr>
+      <tr><td>Create object</td><td class="py">p = Person("Bob")</td><td class="jv">Person p = new Person("Bob");</td></tr>
+      <tr><td>Instance variable</td><td class="py">self.name = name</td><td class="jv">this.name = name;</td></tr>
+      <tr><td>Class/static variable</td><td class="py">species = "canine"</td><td class="jv">static String species = "canine";</td></tr>
+      <tr><td>Private field</td><td class="py">self.__balance (convention)</td><td class="jv">private double balance; (enforced)</td></tr>
+      <tr><td>Inheritance</td><td class="py">class Dog(Animal):</td><td class="jv">class Dog extends Animal { }</td></tr>
+      <tr><td>Call parent constructor</td><td class="py">super().__init__(...)</td><td class="jv">super(...);</td></tr>
+      <tr><td>Override a method</td><td class="py">Just redefine it</td><td class="jv">@Override before method</td></tr>
+      <tr><td>String representation</td><td class="py">__repr__ / __str__</td><td class="jv">toString()</td></tr>
+      <tr><td>Equality check</td><td class="py">__eq__ (used by ==)</td><td class="jv">equals() (== checks refs!)</td></tr>
+      <tr><td>Type check</td><td class="py">isinstance(obj, Type)</td><td class="jv">obj instanceof Type</td></tr>
+      <tr><td>Type declarations</td><td class="py">Not required</td><td class="jv">Required everywhere</td></tr>
+    </table>
+    <div class="summary-box teal">
+      <h4>Lesson 11 in one sentence</h4>
+      <p>A <strong>class</strong> is a blueprint; an <strong>object</strong> is a copy built from it; <strong>inheritance</strong> lets you create specialised classes that reuse the parent's code; <strong>overriding</strong> lets children change inherited behaviour; and <strong>encapsulation</strong> hides internal data behind controlled access — and <em>all of this works the same way in Java</em>, just with stricter syntax.</p>
+    </div>
+    <div class="callout ok"><div class="callout-icon">✅</div><div><strong>You're ready for Java OOP.</strong> If you understand classes, constructors, instance vs. class variables, inheritance with super(), overriding, and encapsulation — you have the conceptual foundation for INFO1113 Weeks 2-4. The syntax changes, but the ideas are identical.</div></div>
+    <div class="check" data-check="10">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">Name three things that are <em>conceptually the same</em> in Python and Java OOP, and one thing that is fundamentally different.</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer"><strong>Same:</strong> (1) Classes as blueprints, objects as instances. (2) Inheritance with constructor chaining via super(). (3) Method overriding for polymorphism. <strong>Different:</strong> Java requires explicit type declarations for every variable, parameter, and return type (e.g., <code>String name</code> not just <code>name</code>), and enforces access control (<code>private</code>/<code>public</code>/<code>protected</code>) at compile time rather than relying on naming conventions.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ SELF-TEST ============ -->
+<div class="self-test">
+  <div class="self-test-title">📝 Lesson 11 Self-Test</div>
+  <div class="self-test-sub">12 questions covering classes, inheritance, and the Python→Java bridge. Try to answer before revealing.</div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q1</span><span class="st-q-bloom">Remembering</span></div><p>What is the difference between a class and an object (instance)?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">A <strong>class</strong> is a blueprint/template that defines attributes and methods. An <strong>object</strong> (instance) is a specific copy created from that class, with its own data. You can create many objects from one class.</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q2</span><span class="st-q-bloom">Understanding</span></div><p>Why does every Python method need <code>self</code> as the first parameter? What does <code>self</code> actually refer to?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer"><code>self</code> is a reference to the specific object the method is being called on. It's how the method accesses the object's data. When you call <code>bob.greet()</code>, Python passes <code>bob</code> as the <code>self</code> argument automatically. Without <code>self</code>, the method couldn't access or modify any of the object's attributes.</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q3</span><span class="st-q-bloom">Remembering</span></div><p>What's the difference between <code>self.name</code> (instance variable) and a variable defined at class level (class variable)?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">An <strong>instance variable</strong> (<code>self.name</code>) belongs to one specific object — each object has its own copy. A <strong>class variable</strong> (defined outside <code>__init__</code>) is shared by all instances. In Java, class variables use the <code>static</code> keyword.</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q4</span><span class="st-q-bloom">Applying</span></div><p>Write a Python class <code>Rectangle</code> with width and height, and an <code>area()</code> method that returns width × height.</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer"><code>class Rectangle:<br>&nbsp;&nbsp;def __init__(self, width, height):<br>&nbsp;&nbsp;&nbsp;&nbsp;self.width = width<br>&nbsp;&nbsp;&nbsp;&nbsp;self.height = height<br>&nbsp;&nbsp;def area(self):<br>&nbsp;&nbsp;&nbsp;&nbsp;return self.width * self.height</code></div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q5</span><span class="st-q-bloom">Understanding</span></div><p>Explain what <code>super().__init__(name, "Woof")</code> does inside a Dog class that inherits from Animal.</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">It calls the parent class (Animal)'s constructor, passing <code>name</code> and <code>"Woof"</code> as arguments. This sets up the inherited attributes (<code>self.name</code> and <code>self.sound</code>) that Animal's <code>__init__</code> defines. Without this call, the Dog object would be missing those attributes.</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q6</span><span class="st-q-bloom">Applying</span></div><p>Create a <code>Student</code> class that inherits from <code>Person</code>. Student adds a <code>student_id</code> attribute. Show the <code>__init__</code> method.</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer"><code>class Student(Person):<br>&nbsp;&nbsp;def __init__(self, name, student_id):<br>&nbsp;&nbsp;&nbsp;&nbsp;super().__init__(name)<br>&nbsp;&nbsp;&nbsp;&nbsp;self.student_id = student_id</code></div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q7</span><span class="st-q-bloom">Analysing</span></div><p>Why does <code>isinstance(rex, Animal)</code> return True when rex is a Dog? What principle does this demonstrate?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">Because Dog inherits from Animal, every Dog <strong>is-a</strong> Animal. <code>isinstance()</code> walks up the inheritance chain. This demonstrates the <strong>Liskov Substitution Principle</strong> — anywhere an Animal is expected, a Dog should work. In Java, this is called <strong>substitutability</strong>.</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q8</span><span class="st-q-bloom">Analysing</span></div><p>What happens when you call <code>speak()</code> on a Cat object where Cat overrides Animal's <code>speak()</code>? Which version runs and why?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer"><strong>Cat's version runs.</strong> Python uses <strong>dynamic dispatch</strong> — it checks the actual object's type at runtime. Since the object is a Cat, Python finds Cat's <code>speak()</code> method first (before looking at the parent). This is <strong>polymorphism</strong>: the same method call produces different behaviour based on the actual object type.</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q9</span><span class="st-q-bloom">Applying (Bridge)</span></div><p>Translate this Python class to Java: <code>class Dog: species = "canine"; def __init__(self, name): self.name = name</code></p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer"><code>public class Dog {<br>&nbsp;&nbsp;static String species = "canine";<br>&nbsp;&nbsp;String name;<br>&nbsp;&nbsp;public Dog(String name) {<br>&nbsp;&nbsp;&nbsp;&nbsp;this.name = name;<br>&nbsp;&nbsp;}<br>}</code><br>Key changes: <code>static</code> for class variable, type declarations, <code>this</code> instead of <code>self</code>, constructor named <code>Dog</code> not <code>__init__</code>.</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q10</span><span class="st-q-bloom">Understanding (Bridge)</span></div><p>In Python, <code>==</code> calls <code>__eq__</code>. What does <code>==</code> do in Java? How do you compare object values in Java?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">In Java, <code>==</code> compares <strong>references</strong> (memory addresses), not values. Two objects with identical data still return <code>false</code> with <code>==</code> if they're at different memory locations. To compare values, use <code>.equals()</code> — which is Java's equivalent of Python's <code>__eq__</code>.</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q11</span><span class="st-q-bloom">Understanding (Bridge)</span></div><p>Python's <code>self.__balance</code> uses naming convention for privacy. How does Java enforce privacy differently?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">Java uses <strong>access modifiers</strong> enforced by the compiler: <code>private</code>, <code>protected</code>, <code>public</code>. A <code>private</code> field literally cannot be accessed outside the class — the compiler rejects the code. Python's double underscore is just name-mangling (you can still access it as <code>_ClassName__balance</code>). Java's enforcement is absolute.</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q12</span><span class="st-q-bloom">Analysing (Bridge)</span></div><p>Name two advantages Java's strict type system and access modifiers give you over Python's flexible approach.</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer"><strong>1. Compile-time error detection:</strong> The compiler catches type mismatches and illegal access before the code runs, so bugs are found earlier. <strong>2. Self-documenting code:</strong> Type declarations and access modifiers tell you exactly what type each variable holds and who can access it, making large codebases easier to understand. The trade-off: more verbose code.</div></div>
+</div>
+
+<div class="nav-footer">
+  <a class="nav-btn" href="info1110-review-lesson10.html">← Lesson 10: Args, Kwargs & Sets</a>
+  <a class="nav-btn primary" href="info1110-review-lesson12.html">Lesson 12: Modules & Comprehensions →</a>
+</div>
+
+</div>
+
+<script>
+const totalSteps=10;let completedSteps=new Set();
+function toggleStep(n){document.getElementById('step-'+n).classList.toggle('open')}
+function enableReveal(ta){const btn=ta.closest('.check,.st-q').querySelector('.check-reveal button');btn.disabled=ta.value.trim().length<5}
+function revealAnswer(btn){const c=btn.closest('.check,.st-q');c.querySelector('.check-answer').classList.add('show');const r=c.querySelector('.check-rating');if(r)r.classList.add('show');btn.style.display='none'}
+function rateCheck(btn,rating){const check=btn.closest('.check'),step=btn.closest('.step'),n=parseInt(step.dataset.step);check.querySelector('.check-rating').querySelectorAll('button').forEach(b=>b.style.opacity='0.4');btn.style.opacity='1';completedSteps.add(n);updateProgress();step.querySelector('.step-num').className='step-num done';const next=document.getElementById('step-'+(n+1));if(next){const nn=next.querySelector('.step-num');if(nn.classList.contains('locked'))nn.className='step-num active'}}
+function updateProgress(){const p=Math.round(completedSteps.size/totalSteps*100);document.getElementById('progressFill').style.width=p+'%';document.getElementById('progressLabel').textContent=completedSteps.size+' of '+totalSteps+' complete'}
+</script>
+<script>
+(function(){
+  function notifyHeight(){
+    if(window.parent!==window){
+      window.parent.postMessage({type:"vgResize",height:document.documentElement.scrollHeight},"*");
+    }
+  }
+  notifyHeight();
+  new MutationObserver(notifyHeight).observe(document.body,{childList:true,subtree:true,attributes:true});
+  window.addEventListener("resize",notifyHeight);
+})();
+</script>
+</body>
+</html>

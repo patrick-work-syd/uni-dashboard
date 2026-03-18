@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>INFO1110 Review — Lesson 9: Recursion, Characters & List Comprehensions</title>
+<style>
+:root {
+  --teal: #0d9488; --teal-light: #f0fdfa; --teal-dark: #115e59;
+  --blue: #3b82f6; --blue-light: #eff6ff; --blue-dark: #1e40af;
+  --green: #10b981; --green-light: #ecfdf5;
+  --orange: #f59e0b; --orange-light: #fffbeb;
+  --purple: #8b5cf6; --purple-light: #f5f3ff;
+  --red: #ef4444; --red-light: #fef2f2;
+  --gray-50: #f8fafc; --gray-100: #f1f5f9; --gray-200: #e2e8f0;
+  --gray-400: #94a3b8; --gray-600: #475569; --gray-800: #1e293b;
+  --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --mono: 'SF Mono', 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: var(--font); background: var(--gray-50); color: var(--gray-800); line-height: 1.65; }
+
+.header { background: linear-gradient(135deg, var(--teal-dark) 0%, var(--teal) 100%); color: #fff; padding: 32px 0 28px; }
+.header-inner { max-width: 800px; margin: 0 auto; padding: 0 24px; }
+.header-tag { font-size: 12px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; opacity: 0.8; margin-bottom: 8px; }
+.header h1 { font-size: 26px; font-weight: 700; margin-bottom: 4px; }
+.header p { font-size: 14px; opacity: 0.85; }
+.header-reassure { margin-top: 14px; padding: 12px 16px; background: rgba(255,255,255,0.12); border-radius: 10px; font-size: 13px; line-height: 1.5; }
+.header-badge { display: inline-block; background: rgba(255,255,255,0.2); padding: 3px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; letter-spacing: 0.5px; margin-top: 10px; }
+
+.progress-bar { max-width: 800px; margin: 0 auto; padding: 16px 24px 0; }
+.progress-track { background: var(--gray-200); height: 6px; border-radius: 3px; overflow: hidden; }
+.progress-fill { background: var(--green); height: 100%; width: 0%; border-radius: 3px; transition: width 0.5s ease; }
+.progress-label { font-size: 12px; color: var(--gray-400); margin-top: 6px; text-align: right; }
+
+.content { max-width: 800px; margin: 0 auto; padding: 24px; }
+
+.step { background: #fff; border: 1px solid var(--gray-200); border-radius: 16px; margin-bottom: 20px; overflow: hidden; }
+.step-header { display: flex; align-items: center; gap: 12px; padding: 18px 22px; cursor: pointer; user-select: none; }
+.step-header:hover { background: var(--gray-50); }
+.step-num { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; flex-shrink: 0; }
+.step-num.locked { background: var(--gray-200); color: var(--gray-400); }
+.step-num.active { background: var(--teal); color: #fff; }
+.step-num.done { background: var(--green); color: #fff; }
+.step-title { flex: 1; }
+.step-title h3 { font-size: 16px; font-weight: 600; }
+.step-title .step-sub { font-size: 12px; color: var(--gray-400); margin-top: 1px; }
+.step-chevron { font-size: 18px; color: var(--gray-400); transition: transform 0.2s; }
+.step.open .step-chevron { transform: rotate(90deg); }
+.step-body { display: none; padding: 0 22px 22px; }
+.step.open .step-body { display: block; }
+
+.diagram { background: var(--gray-50); border: 1px solid var(--gray-200); border-radius: 12px; padding: 20px; margin: 14px 0; text-align: center; overflow-x: auto; }
+.diagram svg { max-width: 100%; height: auto; }
+
+.prose { font-size: 15px; color: var(--gray-600); margin: 12px 0; }
+.prose strong { color: var(--gray-800); }
+
+.label { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 4px; }
+.label-idea { color: var(--green); } .label-how { color: var(--teal); } .label-trap { color: var(--red); } .label-why { color: var(--purple); } .label-tip { color: var(--orange); } .label-bridge { color: var(--blue); }
+
+pre { background: #1e293b; color: #e2e8f0; padding: 14px 16px; border-radius: 10px; font-family: var(--mono); font-size: 13px; line-height: 1.7; overflow-x: auto; margin: 10px 0; white-space: pre; }
+pre .kw { color: #c084fc; } pre .str { color: #86efac; } pre .cmt { color: #64748b; font-style: italic; }
+pre .type { color: #67e8f9; } pre .num { color: #fbbf24; } pre .fn { color: #7dd3fc; } pre .ann { color: #f472b6; }
+code { font-family: var(--mono); font-size: 0.88em; background: var(--gray-100); padding: 1px 5px; border-radius: 4px; }
+
+.compare { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 14px 0; }
+@media (max-width: 600px) { .compare { grid-template-columns: 1fr; } }
+.cmp-box { border-radius: 10px; padding: 14px; }
+.cmp-box.python { background: var(--orange-light); border: 1px solid #fed7aa; }
+.cmp-box.java { background: var(--blue-light); border: 1px solid #bfdbfe; }
+.cmp-box.before { background: var(--red-light); border: 1px solid #fecaca; }
+.cmp-box.after { background: var(--green-light); border: 1px solid #a7f3d0; }
+.cmp-box h4 { font-size: 12px; font-weight: 700; margin-bottom: 6px; }
+.cmp-box.python h4 { color: #b45309; } .cmp-box.java h4 { color: var(--blue-dark); }
+.cmp-box.before h4 { color: var(--red); } .cmp-box.after h4 { color: #065f46; }
+.cmp-box pre { font-size: 12.5px; padding: 10px; margin: 0; }
+
+.callout { display: flex; gap: 10px; padding: 14px 16px; border-radius: 10px; margin: 14px 0; font-size: 14px; line-height: 1.55; }
+.callout-icon { font-size: 18px; flex-shrink: 0; line-height: 1.5; }
+.callout.tip { background: var(--blue-light); border: 1px solid #bfdbfe; }
+.callout.warn { background: var(--red-light); border: 1px solid #fecaca; }
+.callout.ok { background: var(--green-light); border: 1px solid #a7f3d0; }
+.callout.bridge { background: var(--teal-light); border: 1px solid #99f6e4; }
+
+.analogy { background: var(--purple-light); border: 1px solid #ddd6fe; border-radius: 12px; padding: 16px; margin: 14px 0; }
+.analogy-label { font-size: 11px; font-weight: 700; color: var(--purple); letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 4px; }
+.analogy p { font-size: 14px; color: var(--gray-600); }
+
+.check { background: var(--green-light); border: 1px solid #a7f3d0; border-radius: 12px; padding: 18px; margin: 18px 0; }
+.check-title { font-size: 13px; font-weight: 700; color: var(--green); margin-bottom: 6px; }
+.check-q { font-size: 14px; margin-bottom: 10px; }
+.check textarea { width: 100%; padding: 8px 10px; border: 1px solid #a7f3d0; border-radius: 8px; font-family: var(--font); font-size: 13px; resize: vertical; min-height: 44px; background: #fff; }
+.check textarea:focus { outline: 2px solid var(--green); border-color: transparent; }
+.check-reveal { margin-top: 8px; }
+.check-reveal button { background: var(--green); color: #fff; border: none; padding: 7px 16px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; }
+.check-reveal button:hover { background: #059669; }
+.check-reveal button:disabled { background: var(--gray-400); cursor: not-allowed; }
+.check-answer { display: none; margin-top: 10px; padding: 12px; background: #fff; border-radius: 8px; border: 1px solid #a7f3d0; font-size: 13px; line-height: 1.6; }
+.check-answer.show { display: block; }
+.check-rating { display: none; margin-top: 8px; gap: 8px; }
+.check-rating.show { display: flex; }
+.check-rating button { padding: 5px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid var(--gray-200); background: #fff; }
+.check-rating .got-it { color: var(--green); border-color: #a7f3d0; }
+.check-rating .not-yet { color: var(--red); border-color: #fecaca; }
+
+.summary-box { padding: 18px; border-radius: 12px; margin: 18px 0; }
+.summary-box.teal { background: var(--teal-light); border: 1px solid #99f6e4; }
+.summary-box.blue { background: var(--blue-light); border: 1px solid #bfdbfe; }
+.summary-box h4 { font-size: 15px; margin-bottom: 6px; color: var(--teal-dark); }
+.summary-box.blue h4 { color: var(--blue-dark); }
+.summary-box p, .summary-box ul { font-size: 14px; color: var(--gray-600); }
+.summary-box ul { margin: 8px 0 0 20px; }
+
+.self-test { background: #fff; border: 2px solid var(--teal); border-radius: 16px; padding: 22px; margin: 28px 0; }
+.self-test-title { font-size: 18px; font-weight: 700; color: var(--teal); margin-bottom: 4px; }
+.self-test-sub { font-size: 13px; color: var(--gray-400); margin-bottom: 16px; }
+.st-q { margin-bottom: 16px; }
+.st-q-header { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.st-q-num { font-size: 12px; font-weight: 700; color: var(--teal); background: var(--teal-light); padding: 2px 8px; border-radius: 4px; }
+.st-q-bloom { font-size: 10px; color: var(--gray-400); }
+.st-q p { font-size: 14px; margin-bottom: 6px; }
+.st-q textarea { width: 100%; padding: 8px 10px; border: 1px solid #99f6e4; border-radius: 8px; font-family: var(--font); font-size: 13px; resize: vertical; min-height: 44px; background: #fff; }
+.st-q textarea:focus { outline: 2px solid var(--teal); border-color: transparent; }
+.st-q .check-reveal button { background: var(--teal); }
+.st-q .check-reveal button:hover { background: var(--teal-dark); }
+.st-q .check-reveal button:disabled { background: var(--gray-400); }
+.st-q .check-answer { border-color: #99f6e4; }
+
+.nav-footer { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; border-top: 1px solid var(--gray-200); margin-top: 28px; }
+.nav-btn { display: inline-flex; align-items: center; gap: 6px; padding: 9px 18px; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; border: 1px solid var(--gray-200); background: #fff; color: var(--gray-600); text-decoration: none; }
+.nav-btn:hover { background: var(--gray-100); }
+.nav-btn.primary { background: var(--teal); color: #fff; border-color: var(--teal); }
+.nav-btn.primary:hover { background: var(--teal-dark); }
+
+.bridge-banner { background: linear-gradient(90deg, var(--orange-light), var(--blue-light)); border: 1px solid #bfdbfe; border-radius: 12px; padding: 16px; margin: 14px 0; display: flex; align-items: center; gap: 12px; }
+.bridge-banner-icon { font-size: 28px; flex-shrink: 0; }
+.bridge-banner h4 { font-size: 14px; font-weight: 700; color: var(--blue-dark); margin-bottom: 2px; }
+.bridge-banner p { font-size: 13px; color: var(--gray-600); }
+
+table.concept-map { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 13px; }
+table.concept-map th { background: var(--gray-100); padding: 8px 12px; text-align: left; font-weight: 700; border-bottom: 2px solid var(--gray-200); }
+table.concept-map td { padding: 8px 12px; border-bottom: 1px solid var(--gray-200); }
+table.concept-map .py { color: #b45309; font-weight: 600; }
+table.concept-map .jv { color: var(--blue-dark); font-weight: 600; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="header-tag">INFO1110 Review · Lesson 9 · Python → Java Bridge</div>
+    <h1>Recursion, Characters & List Comprehensions</h1>
+    <p>10 steps · three distinct topics that all connect · take one at a time</p>
+    <div class="header-reassure">
+      Lesson 9 covers three separate concepts that are all important for INFO1113 in different ways. <strong>Recursion</strong> is critical for data structures — you'll implement trees and linked lists recursively in Java. <strong>Character encoding</strong> (ASCII, Unicode, UTF-8) is everywhere in real programs. <strong>List comprehensions</strong are Python-only syntax, but understanding them teaches you functional thinking that applies to Java Streams. Don't try to master all three at once — work through each step systematically.
+    </div>
+    <div class="header-badge">THREE DISTINCT SKILLS</div>
+  </div>
+</div>
+
+<div class="progress-bar">
+  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="progress-label" id="progressLabel">0 of 10 complete</div>
+</div>
+
+<div class="content">
+
+<!-- ============ STEP 1 ============ -->
+<div class="step open" id="step-1" data-step="1">
+  <div class="step-header" onclick="toggleStep(1)">
+    <div class="step-num active">1</div>
+    <div class="step-title"><h3>What Is Recursion? The Mental Model</h3><div class="step-sub">A function that calls itself — base case and recursive step</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">A <strong>recursive function</strong> is one that calls itself. It sounds like it could loop forever, but every recursive function has two essential parts: a <strong>base case</strong> (the exit) and a <strong>recursive step</strong> (the call back to itself).</p>
+    <div class="analogy">
+      <div class="analogy-label">Real-World Analogy</div>
+      <p>Think of Russian nesting dolls (матрёшка). When you open a doll, you find a smaller doll inside, which contains another smaller doll, and so on, until you reach the tiniest doll that doesn't open. That tiniest doll is your <strong>base case</strong> — it stops the opening. The process of "open the doll, find the smaller one inside" is your <strong>recursive step</strong>.</p>
+    </div>
+    <p class="prose">In code, a simple recursive function looks like:</p>
+<pre><span class="kw">def</span> <span class="fn">countdown</span>(n):
+    <span class="kw">if</span> n == <span class="num">0</span>:              <span class="cmt"># BASE CASE: stop here</span>
+        <span class="kw">return</span> <span class="str">"Blastoff!"</span>
+    <span class="kw">else</span>:
+        print(n)
+        <span class="kw">return</span> <span class="fn">countdown</span>(n - <span class="num">1</span>)  <span class="cmt"># RECURSIVE STEP</span>
+
+countdown(<span class="num">3</span>)
+<span class="cmt"># Prints: 3, 2, 1, then returns "Blastoff!"</span></pre>
+    <p class="prose"><span class="label label-how">What happens</span></p>
+    <ul style="margin: 8px 0 12px 24px; color: var(--gray-600); font-size: 15px;">
+      <li><code>countdown(3)</code> → checks if 3 == 0 (no) → print 3 → call <code>countdown(2)</code></li>
+      <li><code>countdown(2)</code> → checks if 2 == 0 (no) → print 2 → call <code>countdown(1)</code></li>
+      <li><code>countdown(1)</code> → checks if 1 == 0 (no) → print 1 → call <code>countdown(0)</code></li>
+      <li><code>countdown(0)</code> → checks if 0 == 0 (YES) → return "Blastoff!" (BASE CASE REACHED)</li>
+    </ul>
+    <div class="check" data-check="1">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">What are the two essential parts of a recursive function? Why do you need both?</div>
+      <textarea placeholder="Type your answer first…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer"><strong>1. Base case:</strong> the condition where the function stops calling itself and returns. <strong>2. Recursive step:</strong> where the function calls itself with a simpler version of the problem. You need both because without the base case, the function will recurse forever (infinite recursion → stack overflow). Without the recursive step, the function never makes progress toward the base case.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 2 ============ -->
+<div class="step" id="step-2" data-step="2">
+  <div class="step-header" onclick="toggleStep(2)">
+    <div class="step-num locked">2</div>
+    <div class="step-title"><h3>Factorial: Iterative vs. Recursive</h3><div class="step-sub">Side-by-side comparison and step-by-step trace through factorial(4)</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">Let's look at the classic example: computing <strong>factorial</strong> (n! = n × (n-1) × (n-2) × ... × 1). You can do this with a loop or recursively. Both work, but recursion reveals the structure.</p>
+    <div class="compare">
+      <div class="cmp-box before"><h4>Iterative (loop)</h4>
+<pre><span class="kw">def</span> <span class="fn">factorial_loop</span>(n):
+    result = <span class="num">1</span>
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, n + <span class="num">1</span>):
+        result *= i
+    <span class="kw">return</span> result
+
+print(factorial_loop(<span class="num">4</span>))  <span class="cmt"># 24</span></pre>
+      </div>
+      <div class="cmp-box after"><h4>Recursive</h4>
+<pre><span class="kw">def</span> <span class="fn">factorial</span>(n):
+    <span class="kw">if</span> n == <span class="num">0</span> <span class="kw">or</span> n == <span class="num">1</span>:
+        <span class="kw">return</span> <span class="num">1</span>      <span class="cmt"># base case</span>
+    <span class="kw">else</span>:
+        <span class="kw">return</span> n * <span class="fn">factorial</span>(n - <span class="num">1</span>)
+
+print(factorial(<span class="num">4</span>))  <span class="cmt"># 24</span></pre>
+      </div>
+    </div>
+    <p class="prose">Now let's trace <code>factorial(4)</code> step by step:</p>
+    <div class="diagram">
+      <svg viewBox="0 0 640 240" xmlns="http://www.w3.org/2000/svg" style="max-width:580px">
+        <style>svg text{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;}</style>
+        <text x="320" y="20" text-anchor="middle" font-size="13" font-weight="700" fill="#0d9488">factorial(4) call stack</text>
+        <rect x="160" y="35" width="320" height="30" rx="6" fill="#f0fdfa" stroke="#0d9488" stroke-width="1.5"/>
+        <text x="320" y="57" text-anchor="middle" font-size="12" fill="#0d9488">factorial(4) = 4 × factorial(3)</text>
+        <rect x="160" y="75" width="320" height="30" rx="6" fill="#ecfdf5" stroke="#10b981" stroke-width="1.5"/>
+        <text x="320" y="97" text-anchor="middle" font-size="12" fill="#10b981">factorial(3) = 3 × factorial(2)</text>
+        <rect x="160" y="115" width="320" height="30" rx="6" fill="#ecfdf5" stroke="#10b981" stroke-width="1.5"/>
+        <text x="320" y="137" text-anchor="middle" font-size="12" fill="#10b981">factorial(2) = 2 × factorial(1)</text>
+        <rect x="160" y="155" width="320" height="30" rx="6" fill="#ecfdf5" stroke="#10b981" stroke-width="1.5"/>
+        <text x="320" y="177" text-anchor="middle" font-size="12" fill="#10b981">factorial(1) = 1 ← BASE CASE</text>
+        <path d="M320 185 L320 200" stroke="#0d9488" stroke-width="2" marker-end="url(#arr3)"/>
+        <text x="320" y="220" text-anchor="middle" font-size="11" fill="#475569">Return values: 1 → 2 → 6 → 24</text>
+        <defs><marker id="arr3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#0d9488"/></marker></defs>
+      </svg>
+    </div>
+    <p class="prose">The key insight: <code>factorial(4)</code> breaks the problem into a smaller version (<code>factorial(3)</code>), which breaks into an even smaller version, until we hit the base case (factorial(1) = 1). Then we build back up, multiplying: 1 × 2 = 2, 2 × 3 = 6, 6 × 4 = 24.</p>
+    <div class="check" data-check="2">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">Trace factorial(3) — show each recursive call and what value is returned.</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer"><code>factorial(3) = 3 × factorial(2)</code> → <code>factorial(2) = 2 × factorial(1)</code> → <code>factorial(1) = 1 (base case)</code> → returns 1 → returns 2 × 1 = 2 → returns 3 × 2 = 6. Final answer: 6.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 3 ============ -->
+<div class="step" id="step-3" data-step="3">
+  <div class="step-header" onclick="toggleStep(3)">
+    <div class="step-num locked">3</div>
+    <div class="step-title"><h3>The Base Case: Your Exit Strategy</h3><div class="step-sub">Why it's essential — and what happens without it</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose"><strong>Every recursive function MUST have a base case.</strong> Without it, the function will recurse forever — or until the program runs out of memory (stack overflow).</p>
+    <div class="callout warn"><div class="callout-icon">⚠️</div><div><strong>What happens without a base case:</strong> Imagine <code>countdown(n)</code> without the `if n == 0` check. It would call itself infinitely: countdown(3) → countdown(2) → countdown(1) → countdown(0) → countdown(-1) → countdown(-2) → ... Each call adds to the <strong>call stack</strong>, which has limited memory. Eventually: <code>RecursionError: maximum recursion depth exceeded</code>. In Java, it's <code>StackOverflowError</code>.</div></div>
+
+<pre><span class="cmt"># BAD: No base case!</span>
+<span class="kw">def</span> <span class="fn">countdown_broken</span>(n):
+    print(n)
+    <span class="kw">return</span> <span class="fn">countdown_broken</span>(n - <span class="num">1</span>)  <span class="cmt"># infinite! when does it stop?</span>
+
+<span class="cmt"># GOOD: Base case provides the exit</span>
+<span class="kw">def</span> <span class="fn">countdown</span>(n):
+    <span class="kw">if</span> n == <span class="num">0</span>:                    <span class="cmt"># ← BASE CASE: MUST HAVE THIS</span>
+        <span class="kw">return</span>
+    print(n)
+    <span class="kw">return</span> <span class="fn">countdown</span>(n - <span class="num">1</span>)</pre>
+
+    <p class="prose"><span class="label label-how">Designing a base case</span></p>
+    <ul style="margin: 8px 0 12px 24px; color: var(--gray-600); font-size: 15px;">
+      <li>Ask: "When is the problem so small it's trivial?" That's your base case.</li>
+      <li>For factorial: n=1 or n=0 is trivial (answer is 1).</li>
+      <li>For search in a list: empty list or single element is trivial.</li>
+      <li>The base case must be reachable — the recursive step must make progress toward it.</li>
+    </ul>
+
+    <div class="bridge-banner">
+      <div class="bridge-banner-icon">🌉</div>
+      <div>
+        <h4>Java has the same concept</h4>
+        <p>Java has a call stack too. If you write a recursive method without a base case, Java throws <code>StackOverflowError</code> when it runs out of stack memory. The fix is identical: always have a base case.</p>
+      </div>
+    </div>
+
+    <div class="check" data-check="3">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">What's the base case for a recursive function that searches a list? (Hint: when is the search problem trivially solved?)</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer">When the list is empty (the value is not in it) or when you find the value. These are both trivial cases that don't require further recursion — you can immediately return a result. Any other case requires searching a smaller part of the list (recursive step).</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 4 ============ -->
+<div class="step" id="step-4" data-step="4">
+  <div class="step-header" onclick="toggleStep(4)">
+    <div class="step-num locked">4</div>
+    <div class="step-title"><h3>Binary Search (Recursive)</h3><div class="step-sub">The professor's main example — sorting, halving, and elimination</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose"><strong>Binary search</strong> is one of the most important recursive algorithms. It finds a target value in a <strong>sorted</strong> list by repeatedly halving the search space. The lecture walks through this example in detail.</p>
+    <p class="prose">The idea: Check the middle element. If it's the target, done. If the target is smaller, search the left half. If larger, search the right half. Repeat.</p>
+<pre><span class="kw">def</span> <span class="fn">binary_search</span>(lst, target, low, high):
+    <span class="kw">if</span> low > high:
+        <span class="kw">return</span> -<span class="num">1</span>           <span class="cmt"># BASE CASE: not found</span>
+
+    mid = (low + high) // <span class="num">2</span>
+    <span class="kw">if</span> lst[mid] == target:
+        <span class="kw">return</span> mid         <span class="cmt"># BASE CASE: found!</span>
+    <span class="kw">elif</span> lst[mid] < target:
+        <span class="kw">return</span> <span class="fn">binary_search</span>(lst, target, mid + <span class="num">1</span>, high)  <span class="cmt"># search right</span>
+    <span class="kw">else</span>:
+        <span class="kw">return</span> <span class="fn">binary_search</span>(lst, target, low, mid - <span class="num">1</span>)  <span class="cmt"># search left</span>
+
+lst = [<span class="num">1</span>, <span class="num">3</span>, <span class="num">6</span>, <span class="num">7</span>, <span class="num">8</span>, <span class="num">14</span>, <span class="num">22</span>]
+print(binary_search(lst, <span class="num">7</span>, <span class="num">0</span>, <span class="num">6</span>))  <span class="cmt"># 3 (index of 7)</span></pre>
+    <p class="prose"><span class="label label-how">Trace: searching for 7 in [1, 3, 6, 7, 8, 14, 22]</span></p>
+    <div class="diagram">
+      <svg viewBox="0 0 640 200" xmlns="http://www.w3.org/2000/svg" style="max-width:560px">
+        <style>svg text{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;}</style>
+        <text x="320" y="18" text-anchor="middle" font-size="12" font-weight="700" fill="#0d9488">Call 1: search [1,3,6,7,8,14,22]</text>
+        <rect x="40" y="25" width="560" height="22" rx="4" fill="#f0fdfa" stroke="#0d9488" stroke-width="1"/>
+        <text x="100" y="41" font-size="11" fill="#475569">[1] [3] [6]</text>
+        <text x="320" y="41" font-size="11" fill="#0d9488" font-weight="700">[7] ← mid</text>
+        <text x="500" y="41" font-size="11" fill="#475569">[8] [14] [22]</text>
+        <text x="320" y="58" text-anchor="middle" font-size="11" fill="#0d9488">lst[3]=7, target=7 → FOUND! Return 3</text>
+
+        <text x="320" y="85" text-anchor="middle" font-size="12" font-weight="700" fill="#0d9488">If searching for 14:</text>
+        <text x="320" y="102" text-anchor="middle" font-size="11" fill="#475569">mid=7, 7 < 14 → search right half</text>
+        <rect x="280" y="110" width="280" height="20" rx="4" fill="#ecfdf5" stroke="#10b981" stroke-width="1"/>
+        <text x="400" y="125" font-size="11" fill="#10b981">[8] [14] ← now mid [22]</text>
+
+        <text x="320" y="150" text-anchor="middle" font-size="11" fill="#475569">mid=14, 14 == 14 → FOUND!</text>
+
+        <text x="320" y="175" text-anchor="middle" font-size="10" fill="#94a3b8">Each recursive call eliminates half the list</text>
+      </svg>
+    </div>
+    <p class="prose"><strong>Why binary search matters:</strong> For a sorted list of 1 million items, linear search takes up to 1 million comparisons. Binary search takes about 20 (log₂(1,000,000) ≈ 20). This is why it's everywhere in data structures.</p>
+    <div class="bridge-banner">
+      <div class="bridge-banner-icon">🌉</div>
+      <div>
+        <h4>Java: Collections.binarySearch()</h4>
+        <p>In Java, you'll use <code>Collections.binarySearch()</code> (the built-in method). But understanding the algorithm is critical for interviews and for implementing similar searches in trees and other data structures.</p>
+      </div>
+    </div>
+    <div class="check" data-check="4">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">If you're binary searching a sorted list of 64 items, what's the maximum number of comparisons you need?</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer">At most 6 comparisons. Binary search needs log₂(64) = 6 steps. Each step halves the list: 64 → 32 → 16 → 8 → 4 → 2 → 1. Compare that to linear search, which needs up to 64 comparisons.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 5 ============ -->
+<div class="step" id="step-5" data-step="5">
+  <div class="step-header" onclick="toggleStep(5)">
+    <div class="step-num locked">5</div>
+    <div class="step-title"><h3>Characters & Encoding: ASCII, Unicode, UTF-8</h3><div class="step-sub">Why encoding matters — ord(), chr(), and the journey from 7-bit to 32-bit</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">Every character on your screen is stored as a number. Understanding how computers map numbers to characters is fundamental to programming.</p>
+    <p class="prose"><span class="label label-idea">The progression</span></p>
+    <ul style="margin: 8px 0 12px 24px; color: var(--gray-600); font-size: 15px;">
+      <li><strong>ASCII (1963):</strong> 7 bits → 128 characters. Enough for English letters (A-Z, a-z), digits (0-9), and symbols (!@#). No accents, no emojis.</li>
+      <li><strong>Extended ASCII:</strong> 8 bits → 256 characters. Added accented letters (é, ñ) but still European-centric.</li>
+      <li><strong>Unicode (1991):</strong> 32 bits → 1.1+ million characters. Covers every language (Chinese, Arabic, Devanagari), plus emojis, math symbols, and more.</li>
+      <li><strong>UTF-8:</strong> Variable-length encoding. ASCII characters stay 1 byte, others use 2-4 bytes. Saves space. Most common on the web.</li>
+    </ul>
+
+<pre><span class="cmt"># Python: ord() gets the code, chr() goes back</span>
+print(<span class="fn">ord</span>(<span class="str">'A'</span>))        <span class="cmt"># 65</span>
+print(<span class="fn">ord</span>(<span class="str">'a'</span>))        <span class="cmt"># 97</span>
+print(<span class="fn">ord</span>(<span class="str">'€'</span>))        <span class="cmt"># 8364 (Unicode)</span>
+print(<span class="fn">ord</span>(<span class="str">'😀'</span>))       <span class="cmt"># 128512 (emoji)</span>
+
+print(<span class="fn">chr</span>(<span class="num">65</span>))       <span class="cmt"># 'A'</span>
+print(<span class="fn">chr</span>(<span class="num">8364</span>))    <span class="cmt"># '€'</span></pre>
+
+    <div class="bridge-banner">
+      <div class="bridge-banner-icon">🌉</div>
+      <div>
+        <h4>Java uses UTF-16 internally</h4>
+        <p>Java's <code>char</code> type uses UTF-16 (2 bytes per character). You can cast to <code>int</code> to get the Unicode code point: <code>(int)'A'</code> → 65. The concept is identical to Python's <code>ord()</code>/<code>chr()</code>, just with different encoding behind the scenes.</p>
+      </div>
+    </div>
+
+    <div class="compare">
+      <div class="cmp-box python"><h4>Python</h4>
+<pre>print(<span class="fn">ord</span>(<span class="str">'A'</span>))  <span class="cmt"># 65</span>
+print(<span class="fn">chr</span>(<span class="num">65</span>))   <span class="cmt"># 'A'</span>
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">65</span>, <span class="num">91</span>):
+    print(<span class="fn">chr</span>(i), end=<span class="str">''</span>)
+<span class="cmt"># ABCDEFGHIJKLMNOPQRSTUVWXYZ</span></pre>
+      </div>
+      <div class="cmp-box java"><h4>Java</h4>
+<pre><span class="fn">System</span>.out.<span class="fn">println</span>((<span class="type">int</span>)<span class="str">'A'</span>); <span class="cmt">//65</span>
+<span class="fn">System</span>.out.<span class="fn">println</span>((<span class="type">char</span>)<span class="num">65</span>); <span class="cmt">//'A'</span>
+<span class="kw">for</span> (<span class="type">int</span> i = <span class="num">65</span>; i < <span class="num">91</span>; i++) {
+    <span class="fn">System</span>.out.<span class="fn">print</span>((<span class="type">char</span>)i);
+}
+<span class="cmt">// ABCDEFGHIJKLMNOPQRSTUVWXYZ</span></pre>
+      </div>
+    </div>
+
+    <div class="check" data-check="5">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">What does <code>ord('0')</code> return? (Hint: the digit '0', not the number 0.)</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer">48. The character '0' has ASCII code 48. '1' is 49, '2' is 50, etc. The digit characters are codes 48-57. This is why <code>ord('A') - ord('a')</code> always gives 32 (uppercase vs. lowercase offset).</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 6 ============ -->
+<div class="step" id="step-6" data-step="6">
+  <div class="step-header" onclick="toggleStep(6)">
+    <div class="step-num locked">6</div>
+    <div class="step-title"><h3>List Comprehensions: The Python Shorthand</h3><div class="step-sub">Before/after comparison — list comp vs. for loop</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">A <strong>list comprehension</strong> is syntactic sugar for building a list using a for loop and an optional condition. It's a Python-only feature (Java has no equivalent), but it teaches you functional thinking that applies everywhere.</p>
+    <p class="prose"><span class="label label-how">The pattern</span></p>
+    <div class="diagram">
+      <svg viewBox="0 0 640 120" xmlns="http://www.w3.org/2000/svg" style="max-width:560px">
+        <style>svg text{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;}</style>
+        <text x="320" y="20" text-anchor="middle" font-size="13" font-weight="700" fill="#0d9488">[<span style="color:#7dd3fc">expression</span> <span style="color:#c084fc">for</span> <span style="color:#7dd3fc">item</span> <span style="color:#c084fc">in</span> <span style="color:#67e8f9">iterable</span> <span style="color:#c084fc">if</span> <span style="color:#7dd3fc">condition</span>]</text>
+        <line x1="30" y1="40" x2="145" y2="60" stroke="#94a3b8" stroke-width="1" stroke-dasharray="2,2"/>
+        <text x="30" y="75" font-size="12" fill="#0d9488" font-weight="600">expression:</text>
+        <text x="30" y="90" font-size="11" fill="#475569">What to put in the list</text>
+        <line x1="205" y1="40" x2="270" y2="60" stroke="#94a3b8" stroke-width="1" stroke-dasharray="2,2"/>
+        <text x="205" y="75" font-size="12" fill="#0d9488" font-weight="600">for item in iter:</text>
+        <text x="205" y="90" font-size="11" fill="#475569">Loop over elements</text>
+        <line x1="400" y1="40" x2="510" y2="60" stroke="#94a3b8" stroke-width="1" stroke-dasharray="2,2"/>
+        <text x="400" y="75" font-size="12" fill="#0d9488" font-weight="600">if condition:</text>
+        <text x="400" y="90" font-size="11" fill="#475569">Optional filter</text>
+      </svg>
+    </div>
+
+<pre><span class="cmt"># List comp: square all numbers 1 to 5</span>
+squares = [x**<span class="num">2</span> <span class="kw">for</span> x <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, <span class="num">6</span>)]  <span class="cmt"># [1, 4, 9, 16, 25]</span>
+
+<span class="cmt"># Same thing with a for loop (traditional)</span>
+squares = []
+<span class="kw">for</span> x <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, <span class="num">6</span>):
+    squares.append(x**<span class="num">2</span>)  <span class="cmt"># [1, 4, 9, 16, 25]</span>
+
+<span class="cmt"># List comp with a condition: only even numbers</span>
+evens = [x <span class="kw">for</span> x <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, <span class="num">11</span>) <span class="kw">if</span> x % <span class="num">2</span> == <span class="num">0</span>]  <span class="cmt"># [2, 4, 6, 8, 10]</span></pre>
+
+    <div class="compare">
+      <div class="cmp-box before"><h4>Traditional for loop</h4>
+<pre>result = []
+<span class="kw">for</span> word <span class="kw">in</span> words:
+    <span class="kw">if</span> <span class="fn">len</span>(word) > <span class="num">3</span>:
+        result.append(
+            word.upper()
+        )
+<span class="cmt"># 5 lines</span></pre>
+      </div>
+      <div class="cmp-box after"><h4>List comprehension</h4>
+<pre>result = [
+    word.upper()
+    <span class="kw">for</span> word <span class="kw">in</span> words
+    <span class="kw">if</span> <span class="fn">len</span>(word) > <span class="num">3</span>
+]
+<span class="cmt"># 1 line (formatted for readability)</span></pre>
+      </div>
+    </div>
+
+    <div class="callout tip"><div class="callout-icon">💡</div><div><strong>Read it backwards:</strong> "For each word in words, if the word's length > 3, uppercase it and add to the list." The order in the comp (<code>for</code> then <code>if</code>) matches the order you think about the problem.</div></div>
+
+    <div class="bridge-banner">
+      <div class="bridge-banner-icon">🌉</div>
+      <div>
+        <h4>Java: No list comprehensions, but Streams API</h4>
+        <p>Java has <strong>no</strong> list comprehension syntax. You must use for loops. But Java 8+ has the Streams API, which is conceptually similar: <code>words.stream().filter(w → w.length() > 3).map(String::toUpperCase).collect(...)</code>. Understanding comprehensions helps you learn Streams.</p>
+      </div>
+    </div>
+
+    <div class="check" data-check="6">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">Write a list comprehension that creates a list of tuples (letter, code) for A-Z, where code is the ASCII value.</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer"><code>[(chr(i), i) for i in range(65, 91)]</code><br>This creates: <code>[('A', 65), ('B', 66), ..., ('Z', 90)]</code><br>Or if you want the letter first and know the char: <code>[(c, ord(c)) for c in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ']</code></div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 7 ============ -->
+<div class="step" id="step-7" data-step="7">
+  <div class="step-header" onclick="toggleStep(7)">
+    <div class="step-num locked">7</div>
+    <div class="step-title"><h3>Range and Iterables: Lazy Evaluation</h3><div class="step-sub">range(n), range(start, stop, step) — how they work and common traps</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose"><code>range()</code> is a built-in function that generates a sequence of numbers. It's lazy — it doesn't create the whole list in memory; it generates numbers on demand.</p>
+
+<pre><span class="cmt"># range(stop) — 0 to stop-1</span>
+<span class="fn">range</span>(<span class="num">5</span>)          <span class="cmt"># [0, 1, 2, 3, 4]</span>
+
+<span class="cmt"># range(start, stop) — start to stop-1</span>
+<span class="fn">range</span>(<span class="num">1</span>, <span class="num">5</span>)       <span class="cmt"># [1, 2, 3, 4]</span>
+
+<span class="cmt"># range(start, stop, step) — every 'step' values</span>
+<span class="fn">range</span>(<span class="num">0</span>, <span class="num">10</span>, <span class="num">2</span>)    <span class="cmt"># [0, 2, 4, 6, 8]</span>
+<span class="fn">range</span>(<span class="num">10</span>, <span class="num">0</span>, -<span class="num">1</span>)   <span class="cmt"># [10, 9, 8, 7, 6, 5, 4, 3, 2, 1]</span></pre>
+
+    <p class="prose"><span class="label label-trap">Common mistakes with range</span></p>
+    <ul style="margin: 8px 0 12px 24px; color: var(--gray-600); font-size: 15px;">
+      <li><code>range(5)</code> gives 0-4, NOT 1-5. Off-by-one is the #1 range mistake.</li>
+      <li>The stop is <strong>exclusive</strong> — range(1, 5) never includes 5.</li>
+      <li><code>range(5, 1)</code> (empty!) — backwards doesn't work. Use negative step: <code>range(5, 0, -1)</code>.</li>
+    </ul>
+
+    <div class="bridge-banner">
+      <div class="bridge-banner-icon">🌉</div>
+      <div>
+        <h4>Java: Traditional for loop</h4>
+        <p>Java has no <code>range()</code>. You write <code>for(int i = 0; i < 5; i++)</code> for "0 to 4". The condition <code>i < 5</code> is exclusive, just like Python's range. Once you understand this mapping, range/for loops become interchangeable.</p>
+      </div>
+    </div>
+
+    <div class="check" data-check="7">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">What does <code>range(1, 10, 3)</code> produce? And what does <code>range(10, 0, -2)</code> produce?</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer"><code>range(1, 10, 3)</code> produces [1, 4, 7] (start at 1, step by 3, stop before 10). <code>range(10, 0, -2)</code> produces [10, 8, 6, 4, 2] (start at 10, step backwards by 2, stop before 0).</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 8 ============ -->
+<div class="step" id="step-8" data-step="8">
+  <div class="step-header" onclick="toggleStep(8)">
+    <div class="step-num locked">8</div>
+    <div class="step-title"><h3>Combining Concepts: ROT13</h3><div class="step-sub">Using recursion, character encoding, and list comprehensions together</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose"><strong>ROT13</strong> is a simple cipher that shifts each letter by 13 positions in the alphabet. A → N, B → O, ..., Z → M. It's a classic example that uses character encoding and can be implemented with recursion or list comprehensions.</p>
+
+<pre><span class="cmt"># ROT13 with list comprehension</span>
+<span class="kw">def</span> <span class="fn">rot13_listcomp</span>(text):
+    <span class="kw">def</span> <span class="fn">shift_char</span>(c):
+        <span class="kw">if</span> <span class="str">'a'</span> <= c <= <span class="str">'z'</span>:
+            <span class="kw">return</span> <span class="fn">chr</span>((<span class="fn">ord</span>(c) - <span class="fn">ord</span>(<span class="str">'a'</span>) + <span class="num">13</span>) % <span class="num">26</span> + <span class="fn">ord</span>(<span class="str">'a'</span>))
+        <span class="kw">elif</span> <span class="str">'A'</span> <= c <= <span class="str">'Z'</span>:
+            <span class="kw">return</span> <span class="fn">chr</span>((<span class="fn">ord</span>(c) - <span class="fn">ord</span>(<span class="str">'A'</span>) + <span class="num">13</span>) % <span class="num">26</span> + <span class="fn">ord</span>(<span class="str">'A'</span>))
+        <span class="kw">else</span>:
+            <span class="kw">return</span> c  <span class="cmt"># keep non-letters unchanged</span>
+
+    <span class="kw">return</span> <span class="str">''</span>.join([<span class="fn">shift_char</span>(c) <span class="kw">for</span> c <span class="kw">in</span> text])
+
+print(rot13_listcomp(<span class="str">"Hello, World!"</span>))  <span class="cmt"># Uryyb, Jbeyq!</span></pre>
+
+    <p class="prose">Breaking this down:</p>
+    <ul style="margin: 8px 0 12px 24px; color: var(--gray-600); font-size: 15px;">
+      <li><code>ord(c)</code> gets the character code (character encoding).</li>
+      <li><code>(code - ord('a') + 13) % 26</code> shifts by 13 and wraps around (z → m).</li>
+      <li><code>chr(...)</code> converts back to a character.</li>
+      <li>The list comprehension applies this to each character.</li>
+    </ul>
+
+    <p class="prose">You could also write it recursively, or with a loop. The point is: all three concepts come together here.</p>
+
+    <div class="check" data-check="8">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">Why does ROT13 need <code>% 26</code>? What would happen without it?</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer">There are 26 letters in the alphabet. Without <code>% 26</code>, shifting 'z' by 13 would give code 122 + 13 = 135, which is way beyond 'z'. The modulo operator wraps the result back to 0-25. With modulo, 'z' (25 + 13) % 26 = 12, which is 'm'. This is called "modular arithmetic" or "wrapping."</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 9 ============ -->
+<div class="step" id="step-9" data-step="9">
+  <div class="step-header" onclick="toggleStep(9)">
+    <div class="step-num locked">9</div>
+    <div class="step-title"><h3>Common Mistakes & Exam Traps</h3><div class="step-sub">Off-by-one, missing base cases, and confusing range()</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">Every year, exam mistakes cluster around the same issues. Know these, and you'll avoid 90% of common bugs.</p>
+
+    <div class="callout warn"><div class="callout-icon">⚠️</div><div><strong>Trap 1: Missing or wrong base case.</strong> A recursive function without a base case (or with a base case that's never reached) will infinite-loop or crash with StackOverflowError/RecursionError. Always ask: "When does recursion stop?"</div></div>
+
+    <div class="callout warn"><div class="callout-icon">⚠️</div><div><strong>Trap 2: Off-by-one in binary search.</strong> Using <code>mid</code> instead of <code>mid+1</code> or <code>mid-1</code> can cause infinite loops. A common bug: <code>low = mid</code> instead of <code>low = mid + 1</code> means low never advances and you loop forever.</div></div>
+
+    <div class="callout warn"><div class="callout-icon">⚠️</div><div><strong>Trap 3: range(n) is 0 to n-1, not 1 to n.</strong> <code>range(5)</code> is [0,1,2,3,4]. If you need 1-5, use <code>range(1, 6)</code>. Students constantly write <code>range(len(lst))</code> (correct for 0-indexing) but then forget that lists are 0-indexed.</div></div>
+
+    <div class="callout warn"><div class="callout-icon">⚠️</div><div><strong>Trap 4: Confusing range(start, stop, step).</strong> <code>range(10, 5)</code> is empty. To go backwards, use negative step: <code>range(10, 4, -1)</code>.</div></div>
+
+    <div class="callout warn"><div class="callout-icon">⚠️</div><div><strong>Trap 5: List comprehension syntax errors.</strong> Common: forgetting the square brackets <code>[]</code>, putting the <code>if</code> in the wrong place, or using <code>=</code> instead of <code>for</code>.</div></div>
+
+<pre><span class="cmt"># WRONG:</span>
+squares = (x**2 for x in range(5))        <span class="cmt"># parentheses = generator, not list</span>
+evens = [x for x in range(10)] if x % 2  <span class="cmt"># if outside the comp (wrong!)</span>
+bad = [x for x=1 to 5]                    <span class="cmt"># not valid syntax</span>
+
+<span class="cmt"># RIGHT:</span>
+squares = [x**2 for x in range(5)]        <span class="cmt"># list comp</span>
+evens = [x for x in range(10) if x % 2 == 0]  <span class="cmt"># if inside</span></pre>
+
+    <div class="callout ok"><div class="callout-icon">✅</div><div><strong>Exam strategy:</strong> Before writing code, write pseudocode or talk through the algorithm. For recursion, explicitly write "Base case: ... Recursive step: ...". For range, write out a few values to check. This 30-second investment prevents off-by-one bugs.</div></div>
+
+    <div class="check" data-check="9">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">Spot the bug: <code>def fib(n): return fib(n-1) + fib(n-2)</code></div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer">Missing base case! The function will recurse infinitely. It needs: <code>if n <= 1: return n</code> at the top, before the recursive step. Without it, even <code>fib(1)</code> and <code>fib(0)</code> will recurse forever.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 10 ============ -->
+<div class="step" id="step-10" data-step="10">
+  <div class="step-header" onclick="toggleStep(10)">
+    <div class="step-num locked">10</div>
+    <div class="step-title"><h3>Python → Java Concept Map for Lesson 9</h3><div class="step-sub">Everything from recursion, encoding, and comprehensions mapped to Java</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">Here's the full concept map for Lesson 9. Recursion works the same in both languages. Character encoding is the same concept (different internal representation). List comprehensions are Python-only, but the functional thinking applies to Java Streams.</p>
+    <table class="concept-map">
+      <tr><th>Concept</th><th class="py">Python (INFO1110)</th><th class="jv">Java (INFO1113)</th></tr>
+      <tr><td>Recursive function</td><td class="py">def fact(n): base case + recursive step</td><td class="jv">public int fact(int n): base case + recursive step</td></tr>
+      <tr><td>Base case (essential!)</td><td class="py">if n <= 1: return 1</td><td class="jv">if (n <= 1) return 1;</td></tr>
+      <tr><td>Stack overflow</td><td class="py">RecursionError (max depth exceeded)</td><td class="jv">StackOverflowError (stack full)</td></tr>
+      <tr><td>Binary search</td><td class="py">Implement recursively with halving</td><td class="jv">Use Collections.binarySearch() or implement</td></tr>
+      <tr><td>Character code</td><td class="py">ord('A') → 65, chr(65) → 'A'</td><td class="jv">(int)'A' → 65, (char)65 → 'A'</td></tr>
+      <tr><td>UTF-8 encoding</td><td class="py">Implicit; Python 3 handles Unicode</td><td class="jv">UTF-16 internal; explicit with .getBytes()</td></tr>
+      <tr><td>List comprehension</td><td class="py">[x**2 for x in range(10) if x % 2 == 0]</td><td class="jv">DOESN'T EXIST. Use for loop or Streams API</td></tr>
+      <tr><td>Functional equivalent</td><td class="py">List comprehension (eager)</td><td class="jv">Streams.filter().map().collect() (lazy)</td></tr>
+      <tr><td>range() equivalent</td><td class="py">range(1, 11, 2) → [1,3,5,7,9]</td><td class="jv">for(int i=1; i<11; i+=2) or IntStream</td></tr>
+      <tr><td>Iterate backwards</td><td class="py">range(10, 0, -1)</td><td class="jv">for(int i=10; i>0; i--) or reverse iterator</td></tr>
+    </table>
+    <div class="summary-box teal">
+      <h4>Lesson 9 in one sentence</h4>
+      <p><strong>Recursion</strong> (function calls itself with a base case) is critical for data structures in Java. <strong>Character encoding</strong> (characters are numbers) is everywhere. <strong>List comprehensions</strong> are Python syntax for filtering/transforming lists, but understanding them teaches you the functional thinking you need for Java Streams.</p>
+    </div>
+    <div class="callout ok"><div class="callout-icon">✅</div><div><strong>You're ready for recursion in Java.</strong> If you understand base cases, recursive steps, and can trace through a call stack — you have the foundation for trees, linked lists, and graph algorithms in INFO1113.</div></div>
+    <div class="check" data-check="10">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">Name one reason recursion is important in data structures, and explain why list comprehensions don't exist in Java (but why understanding them is still useful).</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer"><strong>Why recursion matters:</strong> Trees are defined recursively (each node has left and right subtrees, which are themselves trees). You can't navigate or modify a tree without recursion. <strong>Why no comprehensions in Java:</strong> Java requires explicit type declarations and doesn't support the syntactic shorthand. But Streams API does the same job — filter and map collections — using a different syntax. Understanding comprehensions helps you learn Streams faster because the logic is identical.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ SELF-TEST ============ -->
+<div class="self-test">
+  <div class="self-test-title">📝 Lesson 9 Self-Test</div>
+  <div class="self-test-sub">12 questions covering recursion, character encoding, and list comprehensions. Try to answer before revealing.</div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q1</span><span class="st-q-bloom">Remembering</span></div><p>What are the two essential parts of a recursive function?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer"><strong>Base case</strong> — the condition that stops recursion and returns a value without recursing. <strong>Recursive step</strong> — the part where the function calls itself with a simpler/smaller version of the problem, moving toward the base case.</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q2</span><span class="st-q-bloom">Understanding</span></div><p>Explain why you need a base case. What happens without one?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">Without a base case, the function will call itself infinitely, consuming memory on the call stack until the program crashes with RecursionError (Python) or StackOverflowError (Java). The base case is the "exit ramp" — it stops the recursion and returns a concrete value.</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q3</span><span class="st-q-bloom">Remembering</span></div><p>Trace factorial(3). Show each recursive call and the final result.</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">factorial(3) → 3 × factorial(2) → 3 × (2 × factorial(1)) → 3 × (2 × 1) = 6. Or step-by-step: factorial(1)=1 (base), factorial(2)=2×1=2, factorial(3)=3×2=6.</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q4</span><span class="st-q-bloom">Applying</span></div><p>Write a recursive function that sums all numbers from 1 to n. Include the base case.</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer"><code>def sum_to(n):<br>&nbsp;&nbsp;if n <= 0:<br>&nbsp;&nbsp;&nbsp;&nbsp;return 0  # base case<br>&nbsp;&nbsp;else:<br>&nbsp;&nbsp;&nbsp;&nbsp;return n + sum_to(n - 1)  # recursive step</code></div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q5</span><span class="st-q-bloom">Understanding</span></div><p>Why is binary search better than linear search? How many comparisons does binary search need for 1000 items?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">Binary search halves the search space each time. Linear search needs up to 1000 comparisons. Binary search needs at most log₂(1000) ≈ 10 comparisons. This matters hugely at scale: for 1 million items, binary search is 100,000 × faster.</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q6</span><span class="st-q-bloom">Applying</span></div><p>What do these return? ord('5'), chr(65), ord('a') - ord('A')</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">ord('5') = 53 (ASCII code for digit 5). chr(65) = 'A'. ord('a') - ord('A') = 97 - 65 = 32 (the offset between lowercase and uppercase letters).</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q7</span><span class="st-q-bloom">Understanding</span></div><p>Explain the difference between ASCII, Unicode, and UTF-8. Why do we need more than ASCII?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer"><strong>ASCII:</strong> 7 bits, 128 chars (English only). <strong>Unicode:</strong> 32 bits, 1.1M+ chars (all languages, emojis). <strong>UTF-8:</strong> Variable-length encoding (ASCII=1 byte, others=2-4), efficient. ASCII alone can't represent Chinese, Arabic, or emojis. We need Unicode for global applications.</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q8</span><span class="st-q-bloom">Applying</span></div><p>Write a list comprehension that creates a list of even numbers from 0 to 20.</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer"><code>[x for x in range(0, 21) if x % 2 == 0]</code><br>Or: <code>[x for x in range(0, 21, 2)]</code> (stepping by 2).<br>Result: [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20]</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q9</span><span class="st-q-bloom">Analysing</span></div><p>What does range(10, 0, -1) produce? And what does range(10, 0) produce?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">range(10, 0, -1) produces [10, 9, 8, 7, 6, 5, 4, 3, 2, 1] (descending by 1). range(10, 0) produces empty [] — you can't go from 10 down to 0 with a positive step (default is +1).</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q10</span><span class="st-q-bloom">Applying (Bridge)</span></div><p>Write a Java for loop equivalent to this Python list comprehension: [x*2 for x in range(5)]</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer"><code>List&lt;Integer&gt; result = new ArrayList&lt;&gt;();<br>for(int x = 0; x < 5; x++) {<br>&nbsp;&nbsp;result.add(x * 2);<br>}</code><br>Or with Streams: <code>IntStream.range(0, 5).map(x -> x * 2).boxed().collect(Collectors.toList());</code></div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q11</span><span class="st-q-bloom">Understanding (Bridge)</span></div><p>In Java, what error do you get if a recursive method doesn't have a base case?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer"><code>StackOverflowError</code> — the call stack runs out of memory because recursion never terminates. The error is different from Python (RecursionError), but the cause is identical: missing or unreachable base case.</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q12</span><span class="st-q-bloom">Analysing (Bridge)</span></div><p>Why does Java have no list comprehension syntax, and what Java feature teaches similar functional thinking?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">Java prioritizes explicit type declarations and verbose syntax for clarity (especially in large teams). List comprehensions are syntactic sugar that conflicts with this philosophy. Instead, Java 8+ has the <strong>Streams API</strong>, which provides the same functional thinking: filter, map, and reduce. Learning comprehensions helps you understand Streams because the logic is identical — just different syntax.</div></div>
+</div>
+
+<div class="nav-footer">
+  <a class="nav-btn" href="info1110-review-foundations.html">← Foundations Recap</a>
+  <a class="nav-btn primary" href="info1110-review-lesson10.html">Lesson 10: Args, Kwargs & Sets →</a>
+</div>
+
+</div>
+
+<script>
+const totalSteps=10;let completedSteps=new Set();
+function toggleStep(n){document.getElementById('step-'+n).classList.toggle('open')}
+function enableReveal(ta){const btn=ta.closest('.check,.st-q').querySelector('.check-reveal button');btn.disabled=ta.value.trim().length<5}
+function revealAnswer(btn){const c=btn.closest('.check,.st-q');c.querySelector('.check-answer').classList.add('show');const r=c.querySelector('.check-rating');if(r)r.classList.add('show');btn.style.display='none'}
+function rateCheck(btn,rating){const check=btn.closest('.check'),step=btn.closest('.step'),n=parseInt(step.dataset.step);check.querySelector('.check-rating').querySelectorAll('button').forEach(b=>b.style.opacity='0.4');btn.style.opacity='1';completedSteps.add(n);updateProgress();step.querySelector('.step-num').className='step-num done';const next=document.getElementById('step-'+(n+1));if(next){const nn=next.querySelector('.step-num');if(nn.classList.contains('locked'))nn.className='step-num active'}}
+function updateProgress(){const p=Math.round(completedSteps.size/totalSteps*100);document.getElementById('progressFill').style.width=p+'%';document.getElementById('progressLabel').textContent=completedSteps.size+' of '+totalSteps+' complete'}
+</script>
+<script>
+(function(){
+  function notifyHeight(){
+    if(window.parent!==window){
+      window.parent.postMessage({type:"vgResize",height:document.documentElement.scrollHeight},"*");
+    }
+  }
+  notifyHeight();
+  new MutationObserver(notifyHeight).observe(document.body,{childList:true,subtree:true,attributes:true});
+  window.addEventListener("resize",notifyHeight);
+})();
+</script>
+</body>
+</html>
