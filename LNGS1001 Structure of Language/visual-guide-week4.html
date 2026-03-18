@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LNGS1001 — Week 4 Visual Guide</title>
+<style>
+:root {
+  --green: #10b981; --green-light: #ecfdf5; --green-dark: #065f46;
+  --blue: #3b82f6; --blue-light: #eff6ff;
+  --orange: #f59e0b; --orange-light: #fffbeb;
+  --purple: #8b5cf6; --purple-light: #f5f3ff;
+  --red: #ef4444; --red-light: #fef2f2;
+  --gray-50: #f8fafc; --gray-100: #f1f5f9; --gray-200: #e2e8f0;
+  --gray-400: #94a3b8; --gray-600: #475569; --gray-800: #1e293b;
+  --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --mono: 'SF Mono', 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: var(--font); background: var(--gray-50); color: var(--gray-800); line-height: 1.65; }
+
+.header { background: linear-gradient(135deg, var(--green-dark) 0%, var(--green) 100%); color: #fff; padding: 32px 0 28px; }
+.header-inner { max-width: 800px; margin: 0 auto; padding: 0 24px; }
+.header-tag { font-size: 12px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; opacity: 0.8; margin-bottom: 8px; }
+.header h1 { font-size: 26px; font-weight: 700; margin-bottom: 4px; }
+.header p { font-size: 14px; opacity: 0.85; }
+.header-reassure { margin-top: 14px; padding: 12px 16px; background: rgba(255,255,255,0.12); border-radius: 10px; font-size: 13px; line-height: 1.5; }
+
+.progress-bar { max-width: 800px; margin: 0 auto; padding: 16px 24px 0; }
+.progress-track { background: var(--gray-200); height: 6px; border-radius: 3px; overflow: hidden; }
+.progress-fill { background: var(--green); height: 100%; width: 0%; border-radius: 3px; transition: width 0.5s ease; }
+.progress-label { font-size: 12px; color: var(--gray-400); margin-top: 6px; text-align: right; }
+
+.content { max-width: 800px; margin: 0 auto; padding: 24px; }
+
+.step { background: #fff; border: 1px solid var(--gray-200); border-radius: 16px; margin-bottom: 20px; overflow: hidden; }
+.step-header { display: flex; align-items: center; gap: 12px; padding: 18px 22px; cursor: pointer; user-select: none; }
+.step-header:hover { background: var(--gray-50); }
+.step-num { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; flex-shrink: 0; }
+.step-num.locked { background: var(--gray-200); color: var(--gray-400); }
+.step-num.active { background: var(--green); color: #fff; }
+.step-num.done { background: var(--green); color: #fff; }
+.step-title { flex: 1; }
+.step-title h3 { font-size: 16px; font-weight: 600; }
+.step-title .step-sub { font-size: 12px; color: var(--gray-400); margin-top: 1px; }
+.step-chevron { font-size: 18px; color: var(--gray-400); transition: transform 0.2s; }
+.step.open .step-chevron { transform: rotate(90deg); }
+.step-body { display: none; padding: 0 22px 22px; }
+.step.open .step-body { display: block; }
+
+.diagram { background: var(--gray-50); border: 1px solid var(--gray-200); border-radius: 12px; padding: 20px; margin: 14px 0; text-align: center; overflow-x: auto; }
+.diagram svg { max-width: 100%; height: auto; }
+
+.prose { font-size: 15px; color: var(--gray-600); margin: 12px 0; }
+.prose strong { color: var(--gray-800); }
+
+.label { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 4px; }
+.label-idea { color: var(--green); } .label-how { color: var(--blue); } .label-trap { color: var(--red); } .label-why { color: var(--purple); } .label-tip { color: var(--orange); }
+
+.compare { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 14px 0; }
+@media (max-width: 600px) { .compare { grid-template-columns: 1fr; } }
+.cmp-box { border-radius: 10px; padding: 14px; }
+.cmp-box.informal { background: var(--orange-light); border: 1px solid #fed7aa; }
+.cmp-box.formal { background: var(--blue-light); border: 1px solid #bfdbfe; }
+.cmp-box.before { background: var(--red-light); border: 1px solid #fecaca; }
+.cmp-box.after { background: var(--green-light); border: 1px solid #a7f3d0; }
+.cmp-box h4 { font-size: 12px; font-weight: 700; margin-bottom: 6px; }
+.cmp-box.informal h4 { color: #b45309; } .cmp-box.formal h4 { color: var(--blue-dark); }
+.cmp-box.before h4 { color: var(--red); } .cmp-box.after h4 { color: var(--green-dark); }
+.cmp-box p { font-size: 13px; line-height: 1.55; }
+
+.callout { display: flex; gap: 10px; padding: 14px 16px; border-radius: 10px; margin: 14px 0; font-size: 14px; line-height: 1.55; }
+.callout-icon { font-size: 18px; flex-shrink: 0; line-height: 1.5; }
+.callout.tip { background: var(--blue-light); border: 1px solid #bfdbfe; }
+.callout.warn { background: var(--red-light); border: 1px solid #fecaca; }
+.callout.ok { background: var(--green-light); border: 1px solid #a7f3d0; }
+
+.analogy { background: var(--purple-light); border: 1px solid #ddd6fe; border-radius: 12px; padding: 16px; margin: 14px 0; }
+.analogy-label { font-size: 11px; font-weight: 700; color: var(--purple); letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 4px; }
+.analogy p { font-size: 14px; color: var(--gray-600); }
+
+.check { background: var(--green-light); border: 1px solid #a7f3d0; border-radius: 12px; padding: 18px; margin: 18px 0; }
+.check-title { font-size: 13px; font-weight: 700; color: var(--green); margin-bottom: 6px; }
+.check-q { font-size: 14px; margin-bottom: 10px; }
+.check textarea { width: 100%; padding: 8px 10px; border: 1px solid #a7f3d0; border-radius: 8px; font-family: var(--font); font-size: 13px; resize: vertical; min-height: 44px; background: #fff; }
+.check textarea:focus { outline: 2px solid var(--green); border-color: transparent; }
+.check-reveal { margin-top: 8px; }
+.check-reveal button { background: var(--green); color: #fff; border: none; padding: 7px 16px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; }
+.check-reveal button:hover { background: #059669; }
+.check-reveal button:disabled { background: var(--gray-400); cursor: not-allowed; }
+.check-answer { display: none; margin-top: 10px; padding: 12px; background: #fff; border-radius: 8px; border: 1px solid #a7f3d0; font-size: 13px; line-height: 1.6; }
+.check-answer.show { display: block; }
+.check-rating { display: none; margin-top: 8px; gap: 8px; }
+.check-rating.show { display: flex; }
+.check-rating button { padding: 5px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid var(--gray-200); background: #fff; }
+.check-rating .got-it { color: var(--green); border-color: #a7f3d0; }
+.check-rating .not-yet { color: var(--red); border-color: #fecaca; }
+
+.lab-link { display: flex; align-items: center; gap: 10px; padding: 14px 16px; background: #fff; border: 2px solid var(--green); border-radius: 12px; margin: 16px 0; text-decoration: none; color: var(--gray-800); transition: all 0.15s; }
+.lab-link:hover { background: var(--green-light); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(16,185,129,0.15); }
+.lab-link-icon { font-size: 24px; }
+.lab-link-text { flex: 1; }
+.lab-link-title { font-size: 14px; font-weight: 700; color: var(--green-dark); }
+.lab-link-desc { font-size: 12px; color: var(--gray-400); }
+.lab-link-arrow { font-size: 18px; color: var(--green); font-weight: 700; }
+
+.summary-box { padding: 18px; border-radius: 12px; margin: 18px 0; }
+.summary-box.green { background: var(--green-light); border: 1px solid #a7f3d0; }
+.summary-box h4 { font-size: 15px; margin-bottom: 6px; color: var(--green-dark); }
+.summary-box p { font-size: 14px; color: var(--gray-600); }
+
+.self-test { background: #fff; border: 2px solid var(--orange); border-radius: 16px; padding: 22px; margin: 28px 0; }
+.self-test-title { font-size: 18px; font-weight: 700; color: var(--orange); margin-bottom: 4px; }
+.self-test-sub { font-size: 13px; color: var(--gray-400); margin-bottom: 16px; }
+.st-q { margin-bottom: 16px; }
+.st-q-header { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.st-q-num { font-size: 12px; font-weight: 700; color: var(--orange); background: var(--orange-light); padding: 2px 8px; border-radius: 4px; }
+.st-q-bloom { font-size: 10px; color: var(--gray-400); }
+.st-q p { font-size: 14px; margin-bottom: 6px; }
+.st-q textarea { width: 100%; padding: 8px 10px; border: 1px solid #fed7aa; border-radius: 8px; font-family: var(--font); font-size: 13px; resize: vertical; min-height: 44px; background: #fff; }
+.st-q textarea:focus { outline: 2px solid var(--orange); border-color: transparent; }
+.st-q .check-reveal button { background: var(--orange); }
+.st-q .check-reveal button:hover { background: #d97706; }
+.st-q .check-reveal button:disabled { background: var(--gray-400); }
+.st-q .check-answer { border-color: #fed7aa; }
+
+.nav-footer { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; border-top: 1px solid var(--gray-200); margin-top: 28px; }
+.nav-btn { display: inline-flex; align-items: center; gap: 6px; padding: 9px 18px; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; border: 1px solid var(--gray-200); background: #fff; color: var(--gray-600); text-decoration: none; }
+.nav-btn:hover { background: var(--gray-100); }
+.nav-btn.primary { background: var(--green); color: #fff; border-color: var(--green); }
+.nav-btn.primary:hover { background: var(--green-dark); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="header-tag">LNGS1001 · Week 4 · Visual Guide</div>
+    <h1>Phonology: The Phoneme &amp; Allophony</h1>
+    <p>10 steps · Monday &amp; Tuesday lectures · work through at your own pace</p>
+    <div class="header-reassure">
+      <strong>This week marks a big conceptual shift.</strong> You're moving from phonetics (physical sounds) to phonology (mental sound categories). The key question changes from "What sounds can humans make?" to "Which sound differences matter in a given language?" Take it step by step.
+    </div>
+  </div>
+</div>
+
+<div class="progress-bar">
+  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="progress-label" id="progressLabel">0 of 10 complete</div>
+</div>
+
+<div class="content">
+
+<!-- ============ STEP 1 ============ -->
+<div class="step open" id="step-1" data-step="1">
+  <div class="step-header" onclick="toggleStep(1)">
+    <div class="step-num active">1</div>
+    <div class="step-title"><h3>From Phonetics to Phonology</h3><div class="step-sub">Physical sounds vs mental categories</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">Weeks 2 and 3 were about <strong>phonetics</strong> — the physical production, acoustics, and perception of speech sounds. This week we shift to <strong>phonology</strong>: how languages organise sounds into meaningful systems. Phonetics asks "What sounds exist?" Phonology asks "Which differences between sounds actually matter in this language?"</p>
+    <div class="compare">
+      <div class="cmp-box informal"><h4>Phonetics (Weeks 2-3)</h4><p>Studies the <strong>physical properties</strong> of speech sounds. Universal — applies to all languages the same way. Describes what humans CAN produce. Uses square brackets: [p], [pʰ].</p></div>
+      <div class="cmp-box formal"><h4>Phonology (Week 4+)</h4><p>Studies the <strong>mental organisation</strong> of sounds in a specific language. Language-specific — rules differ between languages. Describes what speakers KNOW. Uses slashes: /p/, /b/.</p></div>
+    </div>
+    <p class="prose">The central insight: speakers don't hear every physical difference between sounds. English speakers hear [pʰ] (aspirated) and [p] (unaspirated) as "the same sound" because the difference never changes meaning in English. But Hindi speakers hear them as completely different sounds. <strong>Phonology is about what your brain categorises as "same" vs "different."</strong></p>
+    <div class="analogy">
+      <div class="analogy-label">Analogy</div>
+      <p>Think of handwriting. The letter "a" can be written in many different ways — tall, short, curly, printed, cursive. Physically they look different, but you recognise them all as the same letter. Phonology works the same way: physically different sounds get grouped into the same mental category.</p>
+    </div>
+    <div class="check" data-check="1">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">What is the fundamental question that distinguishes phonology from phonetics?</div>
+      <textarea placeholder="Type your answer first…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer">Phonetics asks "What speech sounds can humans produce and how?" (physical/universal). Phonology asks "Which sound differences are meaningful in a particular language?" (mental/language-specific). Phonetics describes the raw material; phonology describes how each language organises that material into a system.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 2 ============ -->
+<div class="step" id="step-2" data-step="2">
+  <div class="step-header" onclick="toggleStep(2)">
+    <div class="step-num locked">2</div>
+    <div class="step-title"><h3>What Is a Phoneme?</h3><div class="step-sub">Abstract category vs physical sound</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">A <strong>phoneme</strong> is an abstract mental category — a unit in the sound system of a language that can distinguish one word from another. A <strong>phone</strong> is any physical speech sound, regardless of its role in the system. Every phoneme is realised as one or more phones when actually spoken.</p>
+    <div class="compare">
+      <div class="cmp-box before"><h4>Phone (physical)</h4><p>Written in <strong>square brackets</strong>: [p], [pʰ], [b]<br>Any speech sound actually produced.<br>Infinite variation — no two productions are identical.<br>"What you actually say."</p></div>
+      <div class="cmp-box after"><h4>Phoneme (abstract)</h4><p>Written in <strong>slashes</strong>: /p/, /b/<br>A mental category that groups phones.<br>Finite set per language — English has ~44.<br>"What you think you're saying."</p></div>
+    </div>
+    <p class="prose">The notation is critical: <strong>/p/</strong> means "the phoneme p" (abstract category), while <strong>[p]</strong> means "the phone p" (specific physical sound). When you see slashes, think "mental unit." When you see brackets, think "physical realisation."</p>
+    <div class="callout tip"><div class="callout-icon">💡</div><div><strong>Slashes = mind, brackets = mouth.</strong> /p/ is what's in your head. [p] is what comes out of your mouth. A phoneme like /p/ may come out as [pʰ] in one context and [p] in another — same mental unit, different physical realisations.</div></div>
+    <div class="check" data-check="2">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">If English has the phoneme /p/, and it can be pronounced as [pʰ] or [p] depending on context, how many phonemes and how many phones are we talking about?</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer">One phoneme (/p/) and two phones ([pʰ] and [p]). The phoneme is the abstract category. The two phones are its physical realisations — called allophones. English speakers treat both as "the same sound" even though they are physically different.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 3 ============ -->
+<div class="step" id="step-3" data-step="3">
+  <div class="step-header" onclick="toggleStep(3)">
+    <div class="step-num locked">3</div>
+    <div class="step-title"><h3>Allophones: Variants of a Phoneme</h3><div class="step-sub">Same category, different realisations</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose"><strong>Allophones</strong> are the different phonetic variants of a single phoneme. They are phones that belong to the same mental category. Native speakers usually cannot hear the difference between allophones of the same phoneme — the variation is automatic and unconscious.</p>
+    <p class="prose"><span class="label label-how">Example 1: English /p/</span></p>
+    <p class="prose">Say "pin" and hold your hand in front of your mouth. You feel a burst of air — that's <strong>aspiration</strong>. Now say "spin" — no air burst. The [pʰ] in "pin" and the [p] in "spin" are physically different, but English speakers hear both as /p/.</p>
+    <div class="diagram">
+      <svg viewBox="0 0 500 120" xmlns="http://www.w3.org/2000/svg" style="max-width:480px">
+        <style>svg text{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;}</style>
+        <rect x="180" y="10" width="140" height="36" rx="18" fill="#10b981"/>
+        <text x="250" y="34" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">Phoneme /p/</text>
+        <line x1="220" y1="46" x2="140" y2="75" stroke="#10b981" stroke-width="2"/>
+        <line x1="280" y1="46" x2="360" y2="75" stroke="#10b981" stroke-width="2"/>
+        <rect x="60" y="75" width="160" height="32" rx="10" fill="#ecfdf5" stroke="#10b981" stroke-width="1.5"/>
+        <text x="140" y="97" text-anchor="middle" font-size="13" fill="#065f46" font-weight="600">[pʰ] aspirated</text>
+        <rect x="280" y="75" width="160" height="32" rx="10" fill="#ecfdf5" stroke="#10b981" stroke-width="1.5"/>
+        <text x="360" y="97" text-anchor="middle" font-size="13" fill="#065f46" font-weight="600">[p] unaspirated</text>
+        <text x="140" y="120" text-anchor="middle" font-size="11" fill="#94a3b8">word-initially: "pin"</text>
+        <text x="360" y="120" text-anchor="middle" font-size="11" fill="#94a3b8">after /s/: "spin"</text>
+      </svg>
+    </div>
+    <p class="prose"><span class="label label-how">Example 2: English /l/</span></p>
+    <p class="prose">Say "lip" — the /l/ is <strong>clear [l]</strong> (tongue tip at alveolar ridge, front of tongue raised). Now say "pill" — the final /l/ is <strong>dark [ɫ]</strong> (tongue tip at alveolar ridge, but back of tongue raised toward velum). Same phoneme /l/, two allophones: [l] before vowels, [ɫ] after vowels or at word end.</p>
+    <div class="callout warn"><div class="callout-icon">⚠️</div><div><strong>Common mistake:</strong> Don't confuse "allophone" with "phoneme." Allophones are the <em>variants</em> — they belong TO a phoneme. [pʰ] and [p] are allophones OF the phoneme /p/. They are not phonemes themselves.</div></div>
+    <div class="check" data-check="3">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">Give the two allophones of English /l/ and state the environment where each appears.</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer">Clear [l] appears before vowels (onset position), as in "lip" and "glow." Dark [ɫ] appears after vowels or at word end (coda position), as in "pill" and "milk." Both are allophones of the single phoneme /l/.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 4 ============ -->
+<div class="step" id="step-4" data-step="4">
+  <div class="step-header" onclick="toggleStep(4)">
+    <div class="step-num locked">4</div>
+    <div class="step-title"><h3>Minimal Pairs: The Test for Phonemes</h3><div class="step-sub">Proving two sounds are separate phonemes</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">A <strong>minimal pair</strong> is two words that differ in exactly one sound and have different meanings. If you find a minimal pair, the two differing sounds MUST be separate phonemes — because swapping them changes the meaning.</p>
+    <div class="diagram">
+      <svg viewBox="0 0 540 160" xmlns="http://www.w3.org/2000/svg" style="max-width:520px">
+        <style>svg text{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;}</style>
+        <!-- Minimal pair: pin vs bin -->
+        <rect x="20" y="10" width="240" height="140" rx="12" fill="#ecfdf5" stroke="#10b981" stroke-width="2"/>
+        <text x="35" y="35" font-size="14" font-weight="700" fill="#065f46">Minimal Pair Test</text>
+        <text x="35" y="58" font-size="13" fill="#475569">"pin" /pɪn/ vs "bin" /bɪn/</text>
+        <text x="35" y="78" font-size="13" fill="#475569">Same: /ɪn/</text>
+        <text x="35" y="98" font-size="13" fill="#475569">Different: /p/ vs /b/</text>
+        <text x="35" y="118" font-size="13" font-weight="700" fill="#065f46">Different meaning?  YES</text>
+        <text x="35" y="140" font-size="13" font-weight="700" fill="#10b981">→ /p/ and /b/ are separate phonemes</text>
+        <!-- Non-minimal pair -->
+        <rect x="280" y="10" width="240" height="140" rx="12" fill="#fef2f2" stroke="#ef4444" stroke-width="2"/>
+        <text x="295" y="35" font-size="14" font-weight="700" fill="#991b1b">NOT a Minimal Pair</text>
+        <text x="295" y="58" font-size="13" fill="#475569">"pin" [pʰɪn] vs "spin" [spɪn]</text>
+        <text x="295" y="78" font-size="13" fill="#475569">These differ in MORE than one</text>
+        <text x="295" y="98" font-size="13" fill="#475569">segment (presence of /s/).</text>
+        <text x="295" y="118" font-size="13" fill="#475569">Can't use this to test</text>
+        <text x="295" y="140" font-size="13" fill="#475569">[pʰ] vs [p] as phonemes.</text>
+      </svg>
+    </div>
+    <p class="prose">More English minimal pairs: "bat" /bæt/ vs "pat" /pæt/ (proves /b/ ≠ /p/), "sip" /sɪp/ vs "zip" /zɪp/ (proves /s/ ≠ /z/), "bit" /bɪt/ vs "beat" /biːt/ (proves /ɪ/ ≠ /iː/).</p>
+    <div class="callout tip"><div class="callout-icon">💡</div><div><strong>The logic:</strong> If swapping sound X for sound Y changes the word's meaning, then X and Y must be different phonemes. If it doesn't change meaning, they MIGHT be allophones (but you need more evidence — see Steps 5-7).</div></div>
+    <div class="check" data-check="4">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">"Tip" and "dip" form a minimal pair. What does this prove, and why?</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer">"Tip" /tɪp/ and "dip" /dɪp/ differ only in the initial consonant (/t/ vs /d/) and have different meanings. This proves that /t/ and /d/ are separate phonemes in English — the difference between them is contrastive (meaning-changing).</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 5 ============ -->
+<div class="step" id="step-5" data-step="5">
+  <div class="step-header" onclick="toggleStep(5)">
+    <div class="step-num locked">5</div>
+    <div class="step-title"><h3>Complementary Distribution</h3><div class="step-sub">Sounds that never compete for the same slot</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">Two sounds are in <strong>complementary distribution</strong> when they never appear in the same phonetic environment. Each one shows up only where the other doesn't — they fill complementary slots. This is the hallmark of <strong>allophones of the same phoneme</strong>.</p>
+    <div class="diagram">
+      <svg viewBox="0 0 560 280" xmlns="http://www.w3.org/2000/svg" style="max-width:540px">
+        <style>svg text{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;}</style>
+        <!-- Title -->
+        <text x="280" y="22" text-anchor="middle" font-size="15" font-weight="700" fill="#065f46">Complementary Distribution of [pʰ] and [p] in English</text>
+        <!-- Environment boxes -->
+        <rect x="20" y="40" width="250" height="100" rx="12" fill="#eff6ff" stroke="#3b82f6" stroke-width="2"/>
+        <text x="145" y="62" text-anchor="middle" font-size="13" font-weight="700" fill="#1e40af">Environment A: Word-initial / Stressed onset</text>
+        <text x="145" y="85" text-anchor="middle" font-size="22" fill="#1e40af" font-weight="700">[pʰ]</text>
+        <text x="145" y="108" text-anchor="middle" font-size="12" fill="#475569">"pin" [pʰɪn], "pat" [pʰæt], "pool" [pʰʉːl]</text>
+        <text x="145" y="128" text-anchor="middle" font-size="12" fill="#475569">"apart" [əˈpʰɑːt]</text>
+
+        <rect x="290" y="40" width="250" height="100" rx="12" fill="#ecfdf5" stroke="#10b981" stroke-width="2"/>
+        <text x="415" y="62" text-anchor="middle" font-size="13" font-weight="700" fill="#065f46">Environment B: After /s/</text>
+        <text x="415" y="85" text-anchor="middle" font-size="22" fill="#065f46" font-weight="700">[p]</text>
+        <text x="415" y="108" text-anchor="middle" font-size="12" fill="#475569">"spin" [spɪn], "spat" [spæt], "spool" [spʉːl]</text>
+        <text x="415" y="128" text-anchor="middle" font-size="12" fill="#475569">"crisp" [kɹɪsp]</text>
+
+        <!-- No overlap arrow -->
+        <line x1="270" y1="90" x2="290" y2="90" stroke="#ef4444" stroke-width="3" stroke-dasharray="6,3"/>
+        <text x="280" y="82" text-anchor="middle" font-size="16" fill="#ef4444" font-weight="700">✕</text>
+
+        <!-- Conclusion box -->
+        <rect x="80" y="165" width="400" height="50" rx="12" fill="#ecfdf5" stroke="#10b981" stroke-width="2"/>
+        <text x="280" y="185" text-anchor="middle" font-size="13" fill="#065f46" font-weight="700">No overlap = Complementary distribution</text>
+        <text x="280" y="205" text-anchor="middle" font-size="13" fill="#065f46">→ [pʰ] and [p] are ALLOPHONES of the phoneme /p/</text>
+
+        <!-- Key insight -->
+        <rect x="80" y="230" width="400" height="40" rx="10" fill="#f5f3ff" stroke="#8b5cf6" stroke-width="1.5"/>
+        <text x="280" y="255" text-anchor="middle" font-size="12" fill="#6d28d9">You can NEVER find a minimal pair for sounds in complementary distribution</text>
+      </svg>
+    </div>
+    <p class="prose">The logic: if two sounds never appear in the same environment, you can never build a minimal pair with them. And if there's no minimal pair, they can't be separate phonemes. Instead, the choice between them is <strong>predictable from context</strong> — which is exactly what makes them allophones.</p>
+    <div class="callout ok"><div class="callout-icon">✅</div><div><strong>Rule of thumb:</strong> Complementary distribution = allophones = same phoneme. The environment automatically determines which allophone appears. Speakers have no choice in the matter.</div></div>
+    <div class="check" data-check="5">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">Why is it impossible to find a minimal pair for [pʰ] and [p] in English?</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer">Because [pʰ] and [p] are in complementary distribution — they never occur in the same phonetic environment. [pʰ] only appears word-initially or in stressed onsets; [p] only appears after /s/ or in unstressed positions. Since a minimal pair requires two words that differ in the same position, and these sounds never compete for the same position, no minimal pair is possible.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 6 ============ -->
+<div class="step" id="step-6" data-step="6">
+  <div class="step-header" onclick="toggleStep(6)">
+    <div class="step-num locked">6</div>
+    <div class="step-title"><h3>Contrastive Distribution</h3><div class="step-sub">Sounds that CAN appear in the same slot</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">Two sounds are in <strong>contrastive distribution</strong> when they CAN appear in the same environment AND swapping one for the other changes the meaning. This proves they are <strong>separate phonemes</strong>.</p>
+    <div class="compare">
+      <div class="cmp-box after"><h4>Contrastive (separate phonemes)</h4><p>/p/ and /b/ in English:<br>"pin" /pɪn/ vs "bin" /bɪn/<br>"pat" /pæt/ vs "bat" /bæt/<br><strong>Same environment, different meaning</strong> → minimal pair exists → separate phonemes.</p></div>
+      <div class="cmp-box before"><h4>Complementary (same phoneme)</h4><p>[pʰ] and [p] in English:<br>"pin" [pʰɪn] — word-initial<br>"spin" [spɪn] — after /s/<br><strong>Different environments</strong> → no minimal pair possible → allophones of /p/.</p></div>
+    </div>
+    <p class="prose">The decision tree is simple: <strong>Can these two sounds appear in the same environment?</strong> If YES and swapping changes meaning → contrastive distribution → separate phonemes. If NO (they never appear in the same position) → complementary distribution → allophones.</p>
+    <div class="callout tip"><div class="callout-icon">💡</div><div><strong>Quick test:</strong> Can you find a minimal pair? If yes → separate phonemes (contrastive distribution). If no, and the sounds appear in mutually exclusive environments → allophones (complementary distribution).</div></div>
+    <div class="check" data-check="6">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">Are /s/ and /z/ in contrastive or complementary distribution in English? Prove it.</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer">Contrastive distribution. Minimal pairs: "sip" /sɪp/ vs "zip" /zɪp/, "bus" /bɐs/ vs "buzz" /bɐz/, "seal" /siːl/ vs "zeal" /ziːl/. They can appear in the same environments and swapping them changes meaning, so /s/ and /z/ are separate phonemes.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 7 ============ -->
+<div class="step" id="step-7" data-step="7">
+  <div class="step-header" onclick="toggleStep(7)">
+    <div class="step-num locked">7</div>
+    <div class="step-title"><h3>Free Variation</h3><div class="step-sub">Same environment, no meaning change</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">There's a third possibility: two sounds appear in the <strong>same environment</strong>, but swapping one for the other does NOT change the meaning. This is called <strong>free variation</strong>. The sounds are interchangeable in that position — speakers can use either one freely.</p>
+    <div class="diagram">
+      <svg viewBox="0 0 560 170" xmlns="http://www.w3.org/2000/svg" style="max-width:540px">
+        <style>svg text{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;}</style>
+        <rect x="20" y="10" width="520" height="150" rx="12" fill="#f5f3ff" stroke="#8b5cf6" stroke-width="2"/>
+        <text x="280" y="35" text-anchor="middle" font-size="14" font-weight="700" fill="#6d28d9">Free Variation: Three Scenarios</text>
+        <!-- Example 1 -->
+        <text x="40" y="65" font-size="13" font-weight="600" fill="#475569">1. Word-final /t/ in "cat":</text>
+        <text x="40" y="85" font-size="12" fill="#475569">[kʰæt] (released) ~ [kʰætʔ] (glottalised) ~ [kʰæʔ] (glottal stop)</text>
+        <text x="40" y="105" font-size="12" fill="#94a3b8">All mean "cat" — speaker can use any variant</text>
+        <!-- Example 2 -->
+        <text x="40" y="130" font-size="13" font-weight="600" fill="#475569">2. Word-final /p/ in "stop":</text>
+        <text x="40" y="150" font-size="12" fill="#475569">[stɒp] (released) ~ [stɒp̚] (unreleased) — same meaning, speaker's choice</text>
+      </svg>
+    </div>
+    <p class="prose">Free variation tells us the two sounds are <strong>not contrastive</strong> (no meaning change), but they're also not in complementary distribution (they DO appear in the same environment). They may be allophones showing optional variation, or socially conditioned variants (e.g., dialectal differences).</p>
+    <div class="callout warn"><div class="callout-icon">⚠️</div><div><strong>Exam trap:</strong> Don't confuse free variation with contrastive distribution. In both cases, the sounds appear in the same environment. The difference: contrastive = meaning changes; free variation = meaning stays the same.</div></div>
+    <div class="check" data-check="7">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">If two sounds appear in the same environment but swapping them doesn't change meaning, what type of distribution is this? Are the sounds separate phonemes?</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer">This is free variation. The sounds are NOT separate phonemes — since swapping them doesn't change meaning, they are not contrastive. They are typically allophones that happen to overlap in some environments, or optional variants. Unlike complementary distribution (where context determines the choice), in free variation the speaker can freely choose either sound.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 8 ============ -->
+<div class="step" id="step-8" data-step="8">
+  <div class="step-header" onclick="toggleStep(8)">
+    <div class="step-num locked">8</div>
+    <div class="step-title"><h3>Writing Phonological Rules</h3><div class="step-sub">Formal notation for allophonic processes</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">When allophones are in complementary distribution, we can write a <strong>phonological rule</strong> that predicts which allophone appears in which environment. The standard notation is:</p>
+    <div class="diagram">
+      <svg viewBox="0 0 520 80" xmlns="http://www.w3.org/2000/svg" style="max-width:500px">
+        <style>svg text{font-family:'SF Mono','Cascadia Code','Fira Code','Consolas',monospace;}</style>
+        <rect x="20" y="15" width="480" height="50" rx="12" fill="#ecfdf5" stroke="#10b981" stroke-width="2"/>
+        <text x="260" y="48" text-anchor="middle" font-size="18" fill="#065f46" font-weight="700">/X/ → [Y] / Z__</text>
+      </svg>
+    </div>
+    <p class="prose">Read as: "<strong>/X/ becomes [Y] in the environment Z</strong>." The underscore __ marks where the sound occurs. Z describes what's before and/or after it.</p>
+    <p class="prose"><span class="label label-how">Example 1: English aspiration rule</span></p>
+    <div class="diagram">
+      <svg viewBox="0 0 520 110" xmlns="http://www.w3.org/2000/svg" style="max-width:500px">
+        <style>svg text{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;}</style>
+        <rect x="20" y="10" width="480" height="90" rx="12" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.5"/>
+        <text x="260" y="35" text-anchor="middle" font-size="15" font-weight="700" fill="#1e40af" font-family="'SF Mono','Consolas',monospace">/p, t, k/ → [pʰ, tʰ, kʰ] / #__V</text>
+        <text x="260" y="58" text-anchor="middle" font-size="12" fill="#475569">"Voiceless stops become aspirated at the start of a word before a vowel"</text>
+        <text x="260" y="78" text-anchor="middle" font-size="12" fill="#475569"># = word boundary, __ = the sound, V = vowel</text>
+        <text x="260" y="95" text-anchor="middle" font-size="12" fill="#94a3b8">Examples: "pin" [pʰɪn], "tin" [tʰɪn], "kin" [kʰɪn]</text>
+      </svg>
+    </div>
+    <p class="prose"><span class="label label-how">Example 2: English vowel nasalisation rule</span></p>
+    <div class="diagram">
+      <svg viewBox="0 0 520 90" xmlns="http://www.w3.org/2000/svg" style="max-width:500px">
+        <style>svg text{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;}</style>
+        <rect x="20" y="10" width="480" height="70" rx="12" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.5"/>
+        <text x="260" y="35" text-anchor="middle" font-size="15" font-weight="700" fill="#1e40af" font-family="'SF Mono','Consolas',monospace">V → [Ṽ] / __[+nasal]</text>
+        <text x="260" y="58" text-anchor="middle" font-size="12" fill="#475569">"Vowels become nasalised before a nasal consonant"</text>
+        <text x="260" y="75" text-anchor="middle" font-size="12" fill="#94a3b8">Examples: "ban" [bæ̃n], "ham" [hæ̃m], "sing" [sɪ̃ŋ]</text>
+      </svg>
+    </div>
+    <p class="prose">The rule captures the <strong>predictability</strong> of allophonic variation. If you know the environment, you can predict which allophone will appear — that's what makes it a rule rather than a coincidence.</p>
+    <div class="check" data-check="8">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">Write the phonological rule for English dark L: /l/ is realised as dark [ɫ] after a vowel (in coda position).</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer">/l/ → [ɫ] / V__ (or equivalently, /l/ → [ɫ] in coda position). Read: "/l/ becomes dark [ɫ] after a vowel." The underscore shows where /l/ sits, and V before the underscore indicates a preceding vowel. In all other environments, /l/ surfaces as clear [l].</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 9 ============ -->
+<div class="step" id="step-9" data-step="9">
+  <div class="step-header" onclick="toggleStep(9)">
+    <div class="step-num locked">9</div>
+    <div class="step-title"><h3>Cross-Language Differences</h3><div class="step-sub">Same sounds, different phonological status</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">The same pair of physical sounds can have <strong>completely different phonological status</strong> in different languages. This is one of the most important insights in phonology.</p>
+    <div class="compare">
+      <div class="cmp-box informal"><h4>English: [pʰ] and [p] are ALLOPHONES</h4><p>"pin" [pʰɪn] vs "spin" [spɪn] — same word meaning? No, but the words differ in more than just [pʰ]/[p]. No minimal pair for aspiration alone exists. These are allophones of /p/ in <strong>complementary distribution</strong>.</p></div>
+      <div class="cmp-box formal"><h4>Hindi: [pʰ] and [p] are SEPARATE PHONEMES</h4><p>[pʰal] "fruit" vs [pal] "moment" — minimal pair! Same environment, different meaning. Aspiration is <strong>contrastive</strong> in Hindi. /pʰ/ and /p/ are distinct phonemes.</p></div>
+    </div>
+    <p class="prose">This means an English speaker learning Hindi must learn to hear and produce a difference they've been ignoring their entire life. And a Hindi speaker learning English might over-distinguish sounds that English treats as the same.</p>
+    <div class="callout tip"><div class="callout-icon">💡</div><div><strong>Why this matters:</strong> The physical sounds [pʰ] and [p] are available to all humans (phonetics is universal). But whether a language USES that difference to distinguish words is a language-specific phonological decision. Phonetics provides the palette; each language's phonology chooses which contrasts to paint with.</div></div>
+    <p class="prose">More examples: English /l/ and /r/ are separate phonemes ("light" vs "right"), but in Japanese they are allophones of a single phoneme. Korean has three-way voiceless stop contrasts (lax, tense, aspirated) where English has only two (voiced vs voiceless).</p>
+    <div class="check" data-check="9">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">A Japanese speaker learning English struggles to distinguish "light" and "right." Using what you've learned, explain why.</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer">In Japanese, [l] and [ɾ] (a tap similar to English [r]) are allophones of a single phoneme — they're in complementary distribution. Japanese speakers are trained to hear them as "the same sound." In English, /l/ and /r/ are separate phonemes (contrastive distribution: "light" vs "right"). The Japanese speaker's phonological system doesn't distinguish the two, making it hard to perceive and produce the English contrast.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 10 ============ -->
+<div class="step" id="step-10" data-step="10">
+  <div class="step-header" onclick="toggleStep(10)">
+    <div class="step-num locked">10</div>
+    <div class="step-title"><h3>Applying the Method to New Data</h3><div class="step-sub">Step-by-step analysis for Cree, Even, Japanese</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">The tutorial this week gives you data from <strong>Cree, Even, and Japanese</strong> and asks: are two given sounds separate phonemes or allophones? Here's the systematic method to apply:</p>
+    <div class="diagram">
+      <svg viewBox="0 0 560 300" xmlns="http://www.w3.org/2000/svg" style="max-width:540px">
+        <style>svg text{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;}</style>
+        <!-- Step boxes -->
+        <rect x="20" y="10" width="520" height="45" rx="10" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.5"/>
+        <text x="30" y="28" font-size="13" font-weight="700" fill="#1e40af">Step 1:</text>
+        <text x="90" y="28" font-size="13" fill="#475569">List all environments where Sound A appears</text>
+        <text x="90" y="46" font-size="12" fill="#94a3b8">What comes before and after it in each word?</text>
+
+        <text x="280" y="68" text-anchor="middle" font-size="14" fill="#10b981" font-weight="700">↓</text>
+
+        <rect x="20" y="75" width="520" height="45" rx="10" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.5"/>
+        <text x="30" y="93" font-size="13" font-weight="700" fill="#1e40af">Step 2:</text>
+        <text x="90" y="93" font-size="13" fill="#475569">List all environments where Sound B appears</text>
+        <text x="90" y="111" font-size="12" fill="#94a3b8">Same approach — catalogue every context</text>
+
+        <text x="280" y="133" text-anchor="middle" font-size="14" fill="#10b981" font-weight="700">↓</text>
+
+        <rect x="20" y="140" width="520" height="45" rx="10" fill="#ecfdf5" stroke="#10b981" stroke-width="2"/>
+        <text x="30" y="158" font-size="13" font-weight="700" fill="#065f46">Step 3:</text>
+        <text x="90" y="158" font-size="13" fill="#475569">Compare the environment lists — any overlap?</text>
+        <text x="90" y="176" font-size="12" fill="#94a3b8">Do both sounds ever appear in the same position?</text>
+
+        <text x="280" y="198" text-anchor="middle" font-size="14" fill="#10b981" font-weight="700">↓</text>
+
+        <!-- Decision -->
+        <rect x="20" y="205" width="250" height="85" rx="10" fill="#ecfdf5" stroke="#10b981" stroke-width="2"/>
+        <text x="145" y="225" text-anchor="middle" font-size="13" font-weight="700" fill="#065f46">NO overlap?</text>
+        <text x="145" y="245" text-anchor="middle" font-size="12" fill="#475569">→ Complementary distribution</text>
+        <text x="145" y="262" text-anchor="middle" font-size="12" fill="#475569">→ Allophones of one phoneme</text>
+        <text x="145" y="280" text-anchor="middle" font-size="12" fill="#065f46" font-weight="600">→ Write the allophonic rule</text>
+
+        <rect x="290" y="205" width="250" height="85" rx="10" fill="#fef2f2" stroke="#ef4444" stroke-width="2"/>
+        <text x="415" y="225" text-anchor="middle" font-size="13" font-weight="700" fill="#991b1b">YES overlap?</text>
+        <text x="415" y="245" text-anchor="middle" font-size="12" fill="#475569">→ Check: does swapping change meaning?</text>
+        <text x="415" y="262" text-anchor="middle" font-size="12" fill="#475569">YES → Contrastive (separate phonemes)</text>
+        <text x="415" y="280" text-anchor="middle" font-size="12" fill="#475569">NO → Free variation</text>
+      </svg>
+    </div>
+    <p class="prose"><span class="label label-trap">Common mistake</span></p>
+    <p class="prose">Students often jump to conclusions without systematically listing environments first. <strong>Always start by cataloguing the data.</strong> Write down every word containing Sound A and note what comes before and after it. Do the same for Sound B. Only THEN compare the lists.</p>
+    <div class="callout tip"><div class="callout-icon">💡</div><div><strong>Tutorial tip for Cree/Even/Japanese:</strong> Look for natural classes. If Sound A appears before front vowels and Sound B appears before back vowels, that's complementary distribution conditioned by vowel quality. The allophonic rule will reference the vowel environment.</div></div>
+
+    <div class="summary-box green">
+      <h4>Week 4 in one sentence</h4>
+      <p>Phonology studies how languages organise physically different sounds (phones) into abstract mental categories (phonemes), using minimal pairs to prove contrast and complementary distribution to identify allophones — and the same physical sounds can have entirely different phonological status across languages. The method for any new data: list environments, check for overlap, then classify as contrastive, complementary, or free variation.</p>
+    </div>
+
+    <div class="check" data-check="10">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">You're given data from an unfamiliar language and asked whether [s] and [ʃ] are allophones or separate phonemes. You find [s] only before [i, e] and [ʃ] only before [a, o, u]. What's your conclusion?</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer">Complementary distribution — [s] appears only before front vowels [i, e] and [ʃ] appears only before non-front vowels [a, o, u]. Their environments never overlap. They are allophones of the same phoneme. The rule: the phoneme /s/ (or /ʃ/) → [s] before front vowels, [ʃ] elsewhere (or vice versa — to decide which is the "basic" form, choose the one with the less restricted distribution).</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ SELF-TEST ============ -->
+<div class="self-test">
+  <div class="self-test-title">📝 Week 4 Self-Test</div>
+  <div class="self-test-sub">12 exam-style questions covering phonemes, allophones, and distribution. Try to answer each one before revealing.</div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q1</span><span class="st-q-bloom">Remembering</span></div><p>What is the difference between a phoneme and a phone?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">A phoneme is an abstract mental category — a unit in the sound system of a language that can distinguish meaning (written in slashes: /p/). A phone is any physical speech sound actually produced, regardless of its linguistic function (written in square brackets: [p]). A phoneme may be realised as multiple different phones (its allophones).</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q2</span><span class="st-q-bloom">Remembering</span></div><p>What notation is used for phonemes vs phones?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">Phonemes are written between slashes: /p/, /b/, /t/. Phones are written between square brackets: [p], [pʰ], [b]. Slashes indicate an abstract, language-specific mental category. Square brackets indicate a concrete, physical sound.</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q3</span><span class="st-q-bloom">Understanding</span></div><p>What is a minimal pair and what does it prove?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">A minimal pair is two words that differ in exactly one sound segment and have different meanings (e.g., "pin" /pɪn/ vs "bin" /bɪn/). A minimal pair proves that the two differing sounds are separate phonemes in that language, because the sound difference alone is enough to change the word's meaning — i.e., the contrast is phonemic.</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q4</span><span class="st-q-bloom">Understanding</span></div><p>Explain complementary distribution vs contrastive distribution.</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">Complementary distribution: two sounds never appear in the same phonetic environment — each occurs only where the other does not. This means they are allophones of the same phoneme (e.g., [pʰ] word-initially and [p] after /s/ in English). Contrastive distribution: two sounds CAN appear in the same environment, and swapping one for the other changes meaning. This means they are separate phonemes (e.g., /p/ and /b/ — "pin" vs "bin").</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q5</span><span class="st-q-bloom">Understanding</span></div><p>What is allophony?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">Allophony is the phenomenon where a single phoneme has multiple phonetic realisations (allophones) that are predictable from context. The choice of allophone is automatic and rule-governed — determined by the surrounding sounds or position in the word. For example, English /p/ has the allophones [pʰ] (word-initial) and [p] (after /s/). Speakers produce the correct allophone unconsciously.</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q6</span><span class="st-q-bloom">Applying</span></div><p>Given "pin" [pʰɪn] and "spin" [spɪn], are [pʰ] and [p] separate phonemes or allophones? Explain your reasoning.</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">They are allophones of the phoneme /p/. Evidence: [pʰ] appears word-initially (before a vowel) and [p] appears after /s/. These are different environments — the two sounds are in complementary distribution. You cannot construct a minimal pair that differs only in [pʰ] vs [p], because they never occur in the same position. The aspiration is predictable from context, so it's allophonic, not phonemic.</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q7</span><span class="st-q-bloom">Applying</span></div><p>Write the phonological rule for English vowel nasalisation.</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">V → [Ṽ] / __[+nasal]. In prose: "A vowel becomes nasalised when it immediately precedes a nasal consonant (/m/, /n/, or /ŋ/)." Examples: "ban" [bæ̃n], "ham" [hæ̃m], "sing" [sɪ̃ŋ]. The tilde (  ̃) above the vowel indicates nasalisation. Oral and nasalised vowels are allophones in English — the nasalisation is predictable and never changes meaning.</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q8</span><span class="st-q-bloom">Applying</span></div><p>In Hindi, [pʰal] "fruit" and [pal] "moment" form a minimal pair. What does this tell us about the phonological status of [pʰ] and [p] in Hindi?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">This minimal pair proves that [pʰ] and [p] are separate phonemes in Hindi (/pʰ/ and /p/). They appear in the same environment (word-initial, before the same vowel [a] and consonant [l]), and swapping one for the other changes the meaning. Aspiration is contrastive in Hindi, unlike English where it is allophonic. The same physical sounds have different phonological status in different languages.</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q9</span><span class="st-q-bloom">Applying</span></div><p>Describe the step-by-step method for analysing whether two sounds in an unfamiliar language are phonemes or allophones.</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">(1) List all words containing Sound A and note the environment (what precedes and follows it). (2) Do the same for Sound B. (3) Compare the environment lists: do the sounds ever appear in the same environment? (4a) If NO overlap → complementary distribution → allophones of one phoneme. Write the allophonic rule describing which allophone appears in which environment. (4b) If YES overlap → check whether swapping changes meaning. If meaning changes → contrastive distribution → separate phonemes. If no meaning change → free variation.</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q10</span><span class="st-q-bloom">Analysing</span></div><p>Why can the same physical sounds have different phonological status in different languages?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">Because phonetics and phonology operate at different levels. Phonetics is universal — all humans have the same vocal apparatus and can produce the same range of sounds. But phonology is language-specific — each language independently decides which phonetic differences to use contrastively (to distinguish meaning) and which to ignore or treat as allophonic. There is no universal requirement that any particular phonetic distinction must be phonemic. The "choice" of which contrasts matter is an arbitrary, historical property of each language's sound system.</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q11</span><span class="st-q-bloom">Analysing</span></div><p>Given data from a language: [tasa] "sun", [muta] "moon", [sudu] "star", [diki] "sky", [teku] "cloud", [dumu] "rain" — are [t] and [d] allophones or separate phonemes? If allophones, write the rule.</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">List environments: [t] appears before [a, e] (tasa, muta, teku) — before low/mid vowels. [d] appears before [u, i] (sudu, diki, dumu) — before high vowels. The environments don't overlap → complementary distribution → allophones. Rule: /t/ → [d] / __V[+high] ("The phoneme /t/ is realised as [d] before high vowels [i, u], and as [t] elsewhere"). The voicing is predictable from the following vowel height.</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q12</span><span class="st-q-bloom">Analysing</span></div><p>How do Week 3's allophonic rules (aspiration, nasalisation, dark L) connect to Week 4's phoneme concept?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">Week 3 introduced allophonic rules as phonetic processes (aspiration, nasalisation, dark L) without yet framing them in terms of phoneme theory. Week 4 provides the theoretical framework: these rules exist because the sounds involved are allophones of the same phoneme in complementary distribution. Aspiration ([pʰ] vs [p]) is allophonic because the sounds are in complementary distribution. Nasalisation ([æ] vs [æ̃]) is allophonic because it's predictable from the nasal consonant environment. Dark/clear L ([l] vs [ɫ]) is allophonic because position determines the variant. Week 3 described WHAT happens; Week 4 explains WHY — because languages organise sounds into phoneme categories with predictable variation.</div></div>
+</div>
+
+<!-- Practice Lab links -->
+<p class="prose" style="margin-top:20px;"><span class="label label-tip">Practice next</span></p>
+<p class="prose">Now apply what you've learned:</p>
+
+<a class="lab-link" href="#" onclick="window.parent.openPracticeLabTool('ipa',4); return false;"><div class="lab-link-icon">🗣</div><div class="lab-link-text"><div class="lab-link-title">IPA Transcription Drill</div><div class="lab-link-desc">Practise phonemic and phonetic transcription</div></div><div class="lab-link-arrow">→</div></a>
+<a class="lab-link" href="#" onclick="window.parent.openPracticeLabTool('phonology',4); return false;"><div class="lab-link-icon">🔬</div><div class="lab-link-text"><div class="lab-link-title">Phonology Analysis</div><div class="lab-link-desc">Minimal pairs, complementary distribution, allophonic rules</div></div><div class="lab-link-arrow">→</div></a>
+<a class="lab-link" href="#" onclick="window.parent.openPracticeLabTool('quiz',4); return false;"><div class="lab-link-icon">📚</div><div class="lab-link-text"><div class="lab-link-title">Key Terms Quiz</div><div class="lab-link-desc">Phoneme, allophone, minimal pair, complementary distribution, free variation</div></div><div class="lab-link-arrow">→</div></a>
+
+<div class="nav-footer">
+  <a class="nav-btn" href="#">← Back to Dashboard</a>
+  <a class="nav-btn primary" href="#">Week 5: Distinctive Features →</a>
+</div>
+
+</div>
+
+<script>
+const totalSteps=10;let completedSteps=new Set();
+function toggleStep(n){document.getElementById('step-'+n).classList.toggle('open')}
+function enableReveal(ta){const btn=ta.closest('.check,.st-q').querySelector('.check-reveal button');btn.disabled=ta.value.trim().length<5}
+function revealAnswer(btn){const c=btn.closest('.check,.st-q');c.querySelector('.check-answer').classList.add('show');const r=c.querySelector('.check-rating');if(r)r.classList.add('show');btn.style.display='none'}
+function rateCheck(btn,rating){const check=btn.closest('.check'),step=btn.closest('.step'),n=parseInt(step.dataset.step);check.querySelector('.check-rating').querySelectorAll('button').forEach(b=>b.style.opacity='0.4');btn.style.opacity='1';completedSteps.add(n);updateProgress();step.querySelector('.step-num').className='step-num done';const next=document.getElementById('step-'+(n+1));if(next){const nn=next.querySelector('.step-num');if(nn.classList.contains('locked'))nn.className='step-num active'}}
+function updateProgress(){const p=Math.round(completedSteps.size/totalSteps*100);document.getElementById('progressFill').style.width=p+'%';document.getElementById('progressLabel').textContent=completedSteps.size+' of '+totalSteps+' complete'}
+</script>
+<script>
+/* Notify parent dashboard of height changes so iframe can resize (no iframe scrollbar) */
+(function(){
+  function notifyHeight(){
+    if(window.parent!==window){
+      window.parent.postMessage({type:"vgResize",height:document.documentElement.scrollHeight},"*");
+    }
+  }
+  notifyHeight();
+  new MutationObserver(notifyHeight).observe(document.body,{childList:true,subtree:true,attributes:true});
+  window.addEventListener("resize",notifyHeight);
+})();
+</script>
+</body>
+</html>

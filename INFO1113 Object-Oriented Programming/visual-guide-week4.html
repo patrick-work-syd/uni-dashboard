@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>INFO1113 — Week 4 Visual Guide</title>
+<style>
+:root {
+  --blue: #3b82f6; --blue-light: #eff6ff; --blue-dark: #1e40af;
+  --green: #10b981; --green-light: #ecfdf5;
+  --orange: #f59e0b; --orange-light: #fffbeb;
+  --purple: #8b5cf6; --purple-light: #f5f3ff;
+  --red: #ef4444; --red-light: #fef2f2;
+  --gray-50: #f8fafc; --gray-100: #f1f5f9; --gray-200: #e2e8f0;
+  --gray-400: #94a3b8; --gray-600: #475569; --gray-800: #1e293b;
+  --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --mono: 'SF Mono', 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: var(--font); background: var(--gray-50); color: var(--gray-800); line-height: 1.65; }
+
+.header { background: linear-gradient(135deg, var(--blue-dark) 0%, var(--blue) 100%); color: #fff; padding: 32px 0 28px; }
+.header-inner { max-width: 800px; margin: 0 auto; padding: 0 24px; }
+.header-tag { font-size: 12px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; opacity: 0.8; margin-bottom: 8px; }
+.header h1 { font-size: 26px; font-weight: 700; margin-bottom: 4px; }
+.header p { font-size: 14px; opacity: 0.85; }
+.header-reassure { margin-top: 14px; padding: 12px 16px; background: rgba(255,255,255,0.12); border-radius: 10px; font-size: 13px; line-height: 1.5; }
+
+.progress-bar { max-width: 800px; margin: 0 auto; padding: 16px 24px 0; }
+.progress-track { background: var(--gray-200); height: 6px; border-radius: 3px; overflow: hidden; }
+.progress-fill { background: var(--green); height: 100%; width: 0%; border-radius: 3px; transition: width 0.5s ease; }
+.progress-label { font-size: 12px; color: var(--gray-400); margin-top: 6px; text-align: right; }
+
+.content { max-width: 800px; margin: 0 auto; padding: 24px; }
+
+.step { background: #fff; border: 1px solid var(--gray-200); border-radius: 16px; margin-bottom: 20px; overflow: hidden; }
+.step-header { display: flex; align-items: center; gap: 12px; padding: 18px 22px; cursor: pointer; user-select: none; }
+.step-header:hover { background: var(--gray-50); }
+.step-num { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; flex-shrink: 0; }
+.step-num.locked { background: var(--gray-200); color: var(--gray-400); }
+.step-num.active { background: var(--blue); color: #fff; }
+.step-num.done { background: var(--green); color: #fff; }
+.step-title { flex: 1; }
+.step-title h3 { font-size: 16px; font-weight: 600; }
+.step-title .step-sub { font-size: 12px; color: var(--gray-400); margin-top: 1px; }
+.step-chevron { font-size: 18px; color: var(--gray-400); transition: transform 0.2s; }
+.step.open .step-chevron { transform: rotate(90deg); }
+.step-body { display: none; padding: 0 22px 22px; }
+.step.open .step-body { display: block; }
+
+.diagram { background: var(--gray-50); border: 1px solid var(--gray-200); border-radius: 12px; padding: 20px; margin: 14px 0; text-align: center; overflow-x: auto; }
+.diagram svg { max-width: 100%; height: auto; }
+
+.prose { font-size: 15px; color: var(--gray-600); margin: 12px 0; }
+.prose strong { color: var(--gray-800); }
+
+.label { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 4px; }
+.label-idea { color: var(--green); } .label-how { color: var(--blue); } .label-trap { color: var(--red); } .label-why { color: var(--purple); } .label-tip { color: var(--orange); }
+
+pre { background: #1e293b; color: #e2e8f0; padding: 14px 16px; border-radius: 10px; font-family: var(--mono); font-size: 13px; line-height: 1.7; overflow-x: auto; margin: 10px 0; white-space: pre; }
+pre .kw { color: #c084fc; } pre .str { color: #86efac; } pre .cmt { color: #64748b; font-style: italic; }
+pre .type { color: #67e8f9; } pre .num { color: #fbbf24; } pre .ann { color: #f472b6; }
+code { font-family: var(--mono); font-size: 0.88em; background: var(--gray-100); padding: 1px 5px; border-radius: 4px; }
+
+.compare { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 14px 0; }
+@media (max-width: 600px) { .compare { grid-template-columns: 1fr; } }
+.cmp-box { border-radius: 10px; padding: 14px; }
+.cmp-box.python { background: var(--orange-light); border: 1px solid #fed7aa; }
+.cmp-box.java { background: var(--blue-light); border: 1px solid #bfdbfe; }
+.cmp-box.before { background: var(--red-light); border: 1px solid #fecaca; }
+.cmp-box.after { background: var(--green-light); border: 1px solid #a7f3d0; }
+.cmp-box h4 { font-size: 12px; font-weight: 700; margin-bottom: 6px; }
+.cmp-box.python h4 { color: #b45309; } .cmp-box.java h4 { color: var(--blue-dark); }
+.cmp-box.before h4 { color: var(--red); } .cmp-box.after h4 { color: #065f46; }
+.cmp-box pre { font-size: 12.5px; padding: 10px; margin: 0; }
+
+.callout { display: flex; gap: 10px; padding: 14px 16px; border-radius: 10px; margin: 14px 0; font-size: 14px; line-height: 1.55; }
+.callout-icon { font-size: 18px; flex-shrink: 0; line-height: 1.5; }
+.callout.tip { background: var(--blue-light); border: 1px solid #bfdbfe; }
+.callout.warn { background: var(--red-light); border: 1px solid #fecaca; }
+.callout.ok { background: var(--green-light); border: 1px solid #a7f3d0; }
+
+.analogy { background: var(--purple-light); border: 1px solid #ddd6fe; border-radius: 12px; padding: 16px; margin: 14px 0; }
+.analogy-label { font-size: 11px; font-weight: 700; color: var(--purple); letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 4px; }
+.analogy p { font-size: 14px; color: var(--gray-600); }
+
+.check { background: var(--green-light); border: 1px solid #a7f3d0; border-radius: 12px; padding: 18px; margin: 18px 0; }
+.check-title { font-size: 13px; font-weight: 700; color: var(--green); margin-bottom: 6px; }
+.check-q { font-size: 14px; margin-bottom: 10px; }
+.check textarea { width: 100%; padding: 8px 10px; border: 1px solid #a7f3d0; border-radius: 8px; font-family: var(--font); font-size: 13px; resize: vertical; min-height: 44px; background: #fff; }
+.check textarea:focus { outline: 2px solid var(--green); border-color: transparent; }
+.check-reveal { margin-top: 8px; }
+.check-reveal button { background: var(--green); color: #fff; border: none; padding: 7px 16px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; }
+.check-reveal button:hover { background: #059669; }
+.check-reveal button:disabled { background: var(--gray-400); cursor: not-allowed; }
+.check-answer { display: none; margin-top: 10px; padding: 12px; background: #fff; border-radius: 8px; border: 1px solid #a7f3d0; font-size: 13px; line-height: 1.6; }
+.check-answer.show { display: block; }
+.check-rating { display: none; margin-top: 8px; gap: 8px; }
+.check-rating.show { display: flex; }
+.check-rating button { padding: 5px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid var(--gray-200); background: #fff; }
+.check-rating .got-it { color: var(--green); border-color: #a7f3d0; }
+.check-rating .not-yet { color: var(--red); border-color: #fecaca; }
+
+.lab-link { display: flex; align-items: center; gap: 10px; padding: 14px 16px; background: #fff; border: 2px solid var(--blue); border-radius: 12px; margin: 16px 0; text-decoration: none; color: var(--gray-800); transition: all 0.15s; }
+.lab-link:hover { background: var(--blue-light); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(59,130,246,0.15); }
+.lab-link-icon { font-size: 24px; }
+.lab-link-text { flex: 1; }
+.lab-link-title { font-size: 14px; font-weight: 700; color: var(--blue-dark); }
+.lab-link-desc { font-size: 12px; color: var(--gray-400); }
+.lab-link-arrow { font-size: 18px; color: var(--blue); font-weight: 700; }
+
+.summary-box { padding: 18px; border-radius: 12px; margin: 18px 0; }
+.summary-box.blue { background: var(--blue-light); border: 1px solid #bfdbfe; }
+.summary-box h4 { font-size: 15px; margin-bottom: 6px; color: var(--blue-dark); }
+.summary-box p { font-size: 14px; color: var(--gray-600); }
+
+.self-test { background: #fff; border: 2px solid var(--orange); border-radius: 16px; padding: 22px; margin: 28px 0; }
+.self-test-title { font-size: 18px; font-weight: 700; color: var(--orange); margin-bottom: 4px; }
+.self-test-sub { font-size: 13px; color: var(--gray-400); margin-bottom: 16px; }
+.st-q { margin-bottom: 16px; }
+.st-q-header { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.st-q-num { font-size: 12px; font-weight: 700; color: var(--orange); background: var(--orange-light); padding: 2px 8px; border-radius: 4px; }
+.st-q-bloom { font-size: 10px; color: var(--gray-400); }
+.st-q p { font-size: 14px; margin-bottom: 6px; }
+.st-q textarea { width: 100%; padding: 8px 10px; border: 1px solid #fed7aa; border-radius: 8px; font-family: var(--font); font-size: 13px; resize: vertical; min-height: 44px; background: #fff; }
+.st-q textarea:focus { outline: 2px solid var(--orange); border-color: transparent; }
+.st-q .check-reveal button { background: var(--orange); }
+.st-q .check-reveal button:hover { background: #d97706; }
+.st-q .check-reveal button:disabled { background: var(--gray-400); }
+.st-q .check-answer { border-color: #fed7aa; }
+
+.nav-footer { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; border-top: 1px solid var(--gray-200); margin-top: 28px; }
+.nav-btn { display: inline-flex; align-items: center; gap: 6px; padding: 9px 18px; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; border: 1px solid var(--gray-200); background: #fff; color: var(--gray-600); text-decoration: none; }
+.nav-btn:hover { background: var(--gray-100); }
+.nav-btn.primary { background: var(--blue); color: #fff; border-color: var(--blue); }
+.nav-btn.primary:hover { background: var(--blue-dark); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="header-tag">INFO1113 · Week 4 · Visual Guide</div>
+    <h1>Collections & Interfaces</h1>
+    <p>10 steps · work through at your own pace · each builds on the last</p>
+    <div class="header-reassure">
+      This week Eduardo Velloso builds a food delivery app called "ZipDish" to show why arrays aren't enough and how Java's collections and interfaces solve real problems. By the end, you'll understand ArrayList, generics, and the power of programming to an interface.
+    </div>
+  </div>
+</div>
+
+<div class="progress-bar">
+  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="progress-label" id="progressLabel">0 of 10 complete</div>
+</div>
+
+<div class="content">
+
+<!-- ============ STEP 1 ============ -->
+<div class="step open" id="step-1" data-step="1">
+  <div class="step-header" onclick="toggleStep(1)">
+    <div class="step-num active">1</div>
+    <div class="step-title"><h3>Week 3 Review & Big Picture</h3><div class="step-sub">Access control, polymorphism, inheritance, overriding, exceptions</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">Before diving into collections and interfaces, let's make sure the Week 3 foundations are solid. These concepts keep appearing throughout the rest of the course.</p>
+    <p class="prose"><span class="label label-how">Key concepts from Week 3</span></p>
+    <ul style="margin: 8px 0 12px 24px; color: var(--gray-600); font-size: 15px;">
+      <li><strong>Access control:</strong> <code>private</code> (only this class), <code>protected</code> (this class + subclasses), <code>public</code> (everyone)</li>
+      <li><strong>Inheritance:</strong> <code>extends</code> lets a subclass reuse code from a superclass</li>
+      <li><strong>Polymorphism:</strong> a superclass variable can hold any subclass object — the <em>actual object</em> determines which method runs</li>
+      <li><strong>Overriding:</strong> a subclass provides its own version of a parent method using <code>@Override</code></li>
+      <li><strong>Substitutability (LSP):</strong> anywhere the superclass works, a subclass should too</li>
+      <li><strong>Exceptions:</strong> <code>throw</code> creates an exception, <code>try/catch</code> handles it gracefully</li>
+    </ul>
+    <div class="diagram">
+      <svg viewBox="0 0 640 180" xmlns="http://www.w3.org/2000/svg" style="max-width:560px">
+        <style>svg text{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;}</style>
+        <rect x="20" y="20" width="140" height="60" rx="8" fill="#eff6ff" stroke="#3b82f6" stroke-width="2"/>
+        <text x="90" y="42" text-anchor="middle" font-size="12" font-weight="700" fill="#3b82f6">Week 3</text>
+        <text x="90" y="58" text-anchor="middle" font-size="11" fill="#475569">Inheritance</text>
+        <text x="90" y="72" text-anchor="middle" font-size="11" fill="#475569">Polymorphism</text>
+        <line x1="160" y1="50" x2="240" y2="50" stroke="#3b82f6" stroke-width="2" marker-end="url(#arr1)"/>
+        <text x="200" y="42" text-anchor="middle" font-size="10" fill="#94a3b8">builds on</text>
+        <rect x="240" y="20" width="160" height="60" rx="8" fill="#ecfdf5" stroke="#10b981" stroke-width="2"/>
+        <text x="320" y="42" text-anchor="middle" font-size="12" font-weight="700" fill="#10b981">Week 4</text>
+        <text x="320" y="58" text-anchor="middle" font-size="11" fill="#475569">Collections</text>
+        <text x="320" y="72" text-anchor="middle" font-size="11" fill="#475569">Interfaces</text>
+        <line x1="400" y1="50" x2="470" y2="50" stroke="#10b981" stroke-width="2" marker-end="url(#arr1)"/>
+        <text x="435" y="42" text-anchor="middle" font-size="10" fill="#94a3b8">enables</text>
+        <rect x="470" y="20" width="160" height="60" rx="8" fill="#f5f3ff" stroke="#8b5cf6" stroke-width="2"/>
+        <text x="550" y="42" text-anchor="middle" font-size="12" font-weight="700" fill="#8b5cf6">Real Apps</text>
+        <text x="550" y="58" text-anchor="middle" font-size="11" fill="#475569">Dynamic data</text>
+        <text x="550" y="72" text-anchor="middle" font-size="11" fill="#475569">Swappable code</text>
+        <text x="320" y="120" text-anchor="middle" font-size="12" fill="#475569" font-weight="600">Interfaces combine polymorphism + contracts to create flexible, swappable code.</text>
+        <defs><marker id="arr1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#3b82f6"/></marker></defs>
+      </svg>
+    </div>
+    <div class="check" data-check="1">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">When would you use <code>protected</code> instead of <code>private</code> for a field?</div>
+      <textarea placeholder="Type your answer first…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer">Use <code>protected</code> when subclasses need direct access to the field. Use <code>private</code> when only the class itself should access it (even subclasses must go through getters/setters). In general, prefer <code>private</code> and only use <code>protected</code> when subclasses genuinely need to read or modify the field.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 2 ============ -->
+<div class="step" id="step-2" data-step="2">
+  <div class="step-header" onclick="toggleStep(2)">
+    <div class="step-num locked">2</div>
+    <div class="step-title"><h3>Why We Need Collections</h3><div class="step-sub">Arrays are fixed-size — real apps need dynamic data structures</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">So far, the only way to store multiple items in Java is an <strong>array</strong>. But arrays have a critical limitation: <strong>you must decide the size when you create them, and it can never change.</strong></p>
+    <div class="analogy">
+      <div class="analogy-label">Real-World Analogy</div>
+      <p>Imagine a bookshelf with exactly 10 slots. If you have 11 books, you're stuck. If you only have 3 books, you're wasting 7 empty slots. A real library needs shelves that grow and shrink. That's what collections do for Java.</p>
+    </div>
+    <p class="prose">Think about a food delivery app like "ZipDish." You need to track:</p>
+    <ul style="margin: 8px 0 12px 24px; color: var(--gray-600); font-size: 15px;">
+      <li><strong>Orders queue:</strong> new orders arrive constantly — you can't predict how many</li>
+      <li><strong>Customer list:</strong> customers sign up and leave — the list changes</li>
+      <li><strong>Menu items:</strong> restaurants add/remove dishes</li>
+    </ul>
+    <p class="prose">With arrays, you'd have to guess a size. Too small? Crash. Too big? Wasted memory.</p>
+    <div class="callout warn"><div class="callout-icon">⚠️</div><div><strong>Arrays are not wrong — they're limited.</strong> If you know the exact size at compile time (e.g., days of the week = 7), arrays are fine. But for dynamic data, you need something better.</div></div>
+    <div class="check" data-check="2">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">What's wrong with using an array for a book catalogue where books are added and removed frequently?</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer">Arrays have a fixed size set at creation. You can't add a book once the array is full (you'd get <code>ArrayIndexOutOfBoundsException</code>). You also can't easily remove a book from the middle without shifting all subsequent elements. A dynamic collection like ArrayList handles both automatically.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 3 ============ -->
+<div class="step" id="step-3" data-step="3">
+  <div class="step-header" onclick="toggleStep(3)">
+    <div class="step-num locked">3</div>
+    <div class="step-title"><h3>Building a Queue with Arrays</h3><div class="step-sub">ZipDish Order class and array-based OrderManager</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">Let's build it step by step. First, create an <code>Order</code> class for the food delivery app:</p>
+<pre><span class="kw">public class</span> <span class="type">Order</span> {
+    <span class="kw">private</span> <span class="type">int</span> orderID;
+    <span class="kw">private</span> <span class="type">String</span> customer;
+    <span class="kw">private</span> <span class="type">String</span> restaurant;
+    <span class="kw">private</span> <span class="type">String</span> items;
+
+    <span class="kw">public</span> <span class="type">Order</span>(<span class="type">int</span> orderID, <span class="type">String</span> customer, <span class="type">String</span> restaurant, <span class="type">String</span> items) {
+        <span class="kw">this</span>.orderID = orderID;
+        <span class="kw">this</span>.customer = customer;
+        <span class="kw">this</span>.restaurant = restaurant;
+        <span class="kw">this</span>.items = items;
+    }
+
+    <span class="ann">@Override</span>
+    <span class="kw">public</span> <span class="type">String</span> toString() {
+        <span class="kw">return</span> <span class="str">"Order #"</span> + orderID + <span class="str">": "</span> + customer + <span class="str">" from "</span> + restaurant;
+    }
+}</pre>
+    <p class="prose">Now build an <code>OrderManager</code> using an array as a queue:</p>
+<pre><span class="kw">public class</span> <span class="type">ArrayOrderManager</span> {
+    <span class="kw">private</span> <span class="type">Order</span>[] orders;
+    <span class="kw">private</span> <span class="type">int</span> count = <span class="num">0</span>;
+
+    <span class="kw">public</span> <span class="type">ArrayOrderManager</span>(<span class="type">int</span> capacity) {
+        orders = <span class="kw">new</span> <span class="type">Order</span>[capacity];  <span class="cmt">← fixed size!</span>
+    }
+
+    <span class="kw">public void</span> placeOrder(<span class="type">Order</span> o) {
+        orders[count] = o;  <span class="cmt">← add to end</span>
+        count++;
+    }
+
+    <span class="kw">public</span> <span class="type">Order</span> dispatchNext() {
+        <span class="type">Order</span> first = orders[<span class="num">0</span>];  <span class="cmt">← take from front</span>
+        <span class="kw">for</span> (<span class="type">int</span> i = <span class="num">0</span>; i < count - <span class="num">1</span>; i++) {
+            orders[i] = orders[i + <span class="num">1</span>];  <span class="cmt">← shift everything left</span>
+        }
+        count--;
+        <span class="kw">return</span> first;
+    }
+}</pre>
+    <div class="callout tip"><div class="callout-icon">💡</div><div><strong>Queue = FIFO (First In, First Out).</strong> Orders are placed at the end and dispatched from the front — just like a real queue. The shifting in dispatchNext() is expensive but necessary with arrays.</div></div>
+    <div class="check" data-check="3">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">Trace what happens when you place orders A, B, C and then dispatch one. What does the array look like after the dispatch?</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer">After placing: <code>[A, B, C]</code>, count=3. Dispatch returns A, then shifts: B moves to index 0, C moves to index 1. Array is now <code>[B, C, _]</code>, count=2. The shifting is O(n) — every dispatch moves all remaining elements.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 4 ============ -->
+<div class="step" id="step-4" data-step="4">
+  <div class="step-header" onclick="toggleStep(4)">
+    <div class="step-num locked">4</div>
+    <div class="step-title"><h3>The Array Overflow Problem</h3><div class="step-sub">What happens when the array is full?</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">The array-based OrderManager has a fatal flaw. If you create it with capacity 3 and try to place a 4th order:</p>
+<pre><span class="type">ArrayOrderManager</span> mgr = <span class="kw">new</span> <span class="type">ArrayOrderManager</span>(<span class="num">3</span>);
+mgr.placeOrder(order1);  <span class="cmt">// OK</span>
+mgr.placeOrder(order2);  <span class="cmt">// OK</span>
+mgr.placeOrder(order3);  <span class="cmt">// OK</span>
+mgr.placeOrder(order4);  <span class="cmt">// 💥 ArrayIndexOutOfBoundsException!</span></pre>
+    <p class="prose">The program <strong>crashes</strong>. The array has 3 slots, and <code>orders[3] = o</code> is out of bounds.</p>
+    <div class="diagram">
+      <svg viewBox="0 0 640 160" xmlns="http://www.w3.org/2000/svg" style="max-width:560px">
+        <style>svg text{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;}</style>
+        <text x="320" y="20" text-anchor="middle" font-size="13" font-weight="700" fill="#475569">Array with capacity 3</text>
+        <rect x="120" y="35" width="120" height="50" rx="4" fill="#ecfdf5" stroke="#10b981" stroke-width="2"/>
+        <text x="180" y="65" text-anchor="middle" font-size="13" fill="#065f46" font-weight="600">[0] Order1</text>
+        <rect x="240" y="35" width="120" height="50" rx="4" fill="#ecfdf5" stroke="#10b981" stroke-width="2"/>
+        <text x="300" y="65" text-anchor="middle" font-size="13" fill="#065f46" font-weight="600">[1] Order2</text>
+        <rect x="360" y="35" width="120" height="50" rx="4" fill="#ecfdf5" stroke="#10b981" stroke-width="2"/>
+        <text x="420" y="65" text-anchor="middle" font-size="13" fill="#065f46" font-weight="600">[2] Order3</text>
+        <rect x="480" y="35" width="120" height="50" rx="4" fill="#fef2f2" stroke="#ef4444" stroke-width="2" stroke-dasharray="6,3"/>
+        <text x="540" y="58" text-anchor="middle" font-size="12" fill="#ef4444" font-weight="700">[3] ???</text>
+        <text x="540" y="75" text-anchor="middle" font-size="10" fill="#ef4444">OUT OF BOUNDS</text>
+        <text x="320" y="120" text-anchor="middle" font-size="12" fill="#ef4444" font-weight="600">ArrayIndexOutOfBoundsException — program crashes!</text>
+      </svg>
+    </div>
+    <p class="prose">This is a fundamental problem: <strong>fixed-size arrays can't handle dynamic data.</strong> You could guess a very large capacity (e.g., 10,000), but that wastes memory. And you still might run out.</p>
+    <div class="callout warn"><div class="callout-icon">⚠️</div><div><strong>This isn't just a theory problem.</strong> Real apps receive unpredictable amounts of data. A food delivery app can't crash because the lunch rush was bigger than expected.</div></div>
+  </div>
+</div>
+
+<!-- ============ STEP 5 ============ -->
+<div class="step" id="step-5" data-step="5">
+  <div class="step-header" onclick="toggleStep(5)">
+    <div class="step-num locked">5</div>
+    <div class="step-title"><h3>Variable-Length Arrays</h3><div class="step-sub">Resize by doubling — and let the garbage collector clean up</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">The manual solution: when the array is full, <strong>create a new array double the size</strong>, copy everything over, and reassign the reference.</p>
+<pre><span class="kw">public void</span> placeOrder(<span class="type">Order</span> o) {
+    <span class="kw">if</span> (count == orders.length) {
+        <span class="cmt">// Array is full — resize!</span>
+        <span class="type">Order</span>[] bigger = <span class="kw">new</span> <span class="type">Order</span>[orders.length * <span class="num">2</span>];
+        <span class="kw">for</span> (<span class="type">int</span> i = <span class="num">0</span>; i < orders.length; i++) {
+            bigger[i] = orders[i];  <span class="cmt">← copy all elements</span>
+        }
+        orders = bigger;  <span class="cmt">← point to new array</span>
+        <span class="cmt">// Old array is now unreferenced</span>
+    }
+    orders[count] = o;
+    count++;
+}</pre>
+    <div class="diagram">
+      <svg viewBox="0 0 640 200" xmlns="http://www.w3.org/2000/svg" style="max-width:560px">
+        <style>svg text{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;}</style>
+        <text x="160" y="20" text-anchor="middle" font-size="12" font-weight="700" fill="#ef4444">Old array (capacity 3)</text>
+        <rect x="40" y="30" width="80" height="35" rx="4" fill="#fef2f2" stroke="#ef4444" stroke-width="1.5"/>
+        <text x="80" y="52" text-anchor="middle" font-size="11" fill="#ef4444">A</text>
+        <rect x="120" y="30" width="80" height="35" rx="4" fill="#fef2f2" stroke="#ef4444" stroke-width="1.5"/>
+        <text x="160" y="52" text-anchor="middle" font-size="11" fill="#ef4444">B</text>
+        <rect x="200" y="30" width="80" height="35" rx="4" fill="#fef2f2" stroke="#ef4444" stroke-width="1.5"/>
+        <text x="240" y="52" text-anchor="middle" font-size="11" fill="#ef4444">C</text>
+        <text x="320" y="52" text-anchor="middle" font-size="18" fill="#94a3b8">→</text>
+        <text x="480" y="20" text-anchor="middle" font-size="12" font-weight="700" fill="#10b981">New array (capacity 6)</text>
+        <rect x="340" y="30" width="50" height="35" rx="4" fill="#ecfdf5" stroke="#10b981" stroke-width="1.5"/>
+        <text x="365" y="52" text-anchor="middle" font-size="11" fill="#065f46">A</text>
+        <rect x="390" y="30" width="50" height="35" rx="4" fill="#ecfdf5" stroke="#10b981" stroke-width="1.5"/>
+        <text x="415" y="52" text-anchor="middle" font-size="11" fill="#065f46">B</text>
+        <rect x="440" y="30" width="50" height="35" rx="4" fill="#ecfdf5" stroke="#10b981" stroke-width="1.5"/>
+        <text x="465" y="52" text-anchor="middle" font-size="11" fill="#065f46">C</text>
+        <rect x="490" y="30" width="50" height="35" rx="4" fill="#ecfdf5" stroke="#10b981" stroke-width="1.5" stroke-dasharray="4,3"/>
+        <rect x="540" y="30" width="50" height="35" rx="4" fill="#ecfdf5" stroke="#10b981" stroke-width="1.5" stroke-dasharray="4,3"/>
+        <rect x="590" y="30" width="50" height="35" rx="4" fill="#ecfdf5" stroke="#10b981" stroke-width="1.5" stroke-dasharray="4,3"/>
+        <text x="320" y="110" text-anchor="middle" font-size="12" fill="#475569" font-weight="600">Old array has no references → garbage collector deallocates it automatically.</text>
+        <text x="320" y="135" text-anchor="middle" font-size="11" fill="#94a3b8">In C, you'd have to manually free the memory (and forgetting = memory leak).</text>
+        <text x="320" y="155" text-anchor="middle" font-size="11" fill="#94a3b8">Java's garbage collector handles this for you.</text>
+      </svg>
+    </div>
+    <div class="callout ok"><div class="callout-icon">👍</div><div><strong>Java's garbage collector</strong> automatically frees memory for objects that no longer have any references. When <code>orders</code> is reassigned to the new array, the old array has zero references and gets cleaned up. In C, you'd need <code>free()</code> — forget it and you get a memory leak.</div></div>
+    <div class="check" data-check="5">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">What happens to the old array after <code>orders = bigger;</code> is executed?</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer">The old array no longer has any variable pointing to it (no references). Java's garbage collector detects this and automatically deallocates the memory. You don't have to do anything — this is one of Java's advantages over languages like C where you must manually free memory.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 6 ============ -->
+<div class="step" id="step-6" data-step="6">
+  <div class="step-header" onclick="toggleStep(6)">
+    <div class="step-num locked">6</div>
+    <div class="step-title"><h3>ArrayList — Java's Built-in Solution</h3><div class="step-sub">Generics, automatic resizing, and clean API</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">All that manual resizing code? Java already has it built in: <code>ArrayList</code>. It's a resizable array that handles growth automatically.</p>
+    <div class="compare">
+      <div class="cmp-box before"><h4>Manual resizing (tedious)</h4><pre><span class="type">Order</span>[] orders = <span class="kw">new</span> <span class="type">Order</span>[<span class="num">3</span>];
+<span class="type">int</span> count = <span class="num">0</span>;
+<span class="cmt">// Must handle resizing,</span>
+<span class="cmt">// shifting, count tracking…</span></pre></div>
+      <div class="cmp-box after"><h4>ArrayList (clean)</h4><pre><span class="type">ArrayList</span>&lt;<span class="type">Order</span>&gt; orders =
+    <span class="kw">new</span> <span class="type">ArrayList</span>&lt;&gt;();
+<span class="cmt">// Resizing is automatic!</span>
+<span class="cmt">// No count tracking needed.</span></pre></div>
+    </div>
+    <p class="prose"><span class="label label-how">Key ArrayList methods</span></p>
+    <ul style="margin: 8px 0 12px 24px; color: var(--gray-600); font-size: 15px;">
+      <li><code>add(item)</code> — append to end (auto-resizes if needed)</li>
+      <li><code>removeFirst()</code> — remove and return the first element</li>
+      <li><code>size()</code> — how many elements are in the list</li>
+      <li><code>isEmpty()</code> — returns true if list has no elements</li>
+      <li><code>get(index)</code> — access element at position</li>
+    </ul>
+    <p class="prose">Here's the OrderManager rewritten with ArrayList:</p>
+<pre><span class="kw">import</span> java.util.ArrayList;
+
+<span class="kw">public class</span> <span class="type">ArrayListOrderManager</span> {
+    <span class="kw">private</span> <span class="type">ArrayList</span>&lt;<span class="type">Order</span>&gt; orders = <span class="kw">new</span> <span class="type">ArrayList</span>&lt;&gt;();
+
+    <span class="kw">public void</span> placeOrder(<span class="type">Order</span> o) {
+        orders.add(o);  <span class="cmt">← that's it! No resize logic needed</span>
+    }
+
+    <span class="kw">public</span> <span class="type">Order</span> dispatchNext() {
+        <span class="kw">return</span> orders.removeFirst();  <span class="cmt">← removes and returns index 0</span>
+    }
+}</pre>
+    <div class="callout tip"><div class="callout-icon">💡</div><div><strong>The <code>&lt;Order&gt;</code> part is called generics.</strong> It tells ArrayList what type of objects it holds. Without it, ArrayList would accept anything (Object), and you'd need type casts everywhere. Generics = type safety.</div></div>
+    <div class="check" data-check="6">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">Rewrite the ArrayOrderManager's placeOrder and dispatchNext methods using ArrayList instead of an array.</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer"><code>private ArrayList&lt;Order&gt; orders = new ArrayList&lt;&gt;(); public void placeOrder(Order o) { orders.add(o); } public Order dispatchNext() { return orders.removeFirst(); }</code> — All the resizing and shifting logic is gone. ArrayList handles it internally.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 7 ============ -->
+<div class="step" id="step-7" data-step="7">
+  <div class="step-header" onclick="toggleStep(7)">
+    <div class="step-num locked">7</div>
+    <div class="step-title"><h3>From Arrays to Interfaces</h3><div class="step-sub">Two implementations, same public methods — time for a contract</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">Now we have two OrderManager classes: <code>ArrayOrderManager</code> and <code>ArrayListOrderManager</code>. Both have the same public methods:</p>
+    <ul style="margin: 8px 0 12px 24px; color: var(--gray-600); font-size: 15px;">
+      <li><code>placeOrder(Order o)</code></li>
+      <li><code>dispatchNext()</code> returns an <code>Order</code></li>
+    </ul>
+    <p class="prose">Could we use inheritance? Make one extend the other? <strong>No</strong> — they don't share implementation code. One uses arrays internally, the other uses ArrayList. A superclass would have nothing in its body.</p>
+    <div class="diagram">
+      <svg viewBox="0 0 640 200" xmlns="http://www.w3.org/2000/svg" style="max-width:560px">
+        <style>svg text{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;}</style>
+        <text x="320" y="20" text-anchor="middle" font-size="13" font-weight="700" fill="#475569">The Problem</text>
+        <rect x="40" y="35" width="240" height="70" rx="8" fill="#eff6ff" stroke="#3b82f6" stroke-width="2"/>
+        <text x="160" y="55" text-anchor="middle" font-size="12" font-weight="700" fill="#3b82f6">ArrayOrderManager</text>
+        <text x="160" y="72" text-anchor="middle" font-size="11" fill="#475569">placeOrder(), dispatchNext()</text>
+        <text x="160" y="88" text-anchor="middle" font-size="10" fill="#94a3b8">uses Order[] internally</text>
+        <rect x="360" y="35" width="240" height="70" rx="8" fill="#ecfdf5" stroke="#10b981" stroke-width="2"/>
+        <text x="480" y="55" text-anchor="middle" font-size="12" font-weight="700" fill="#10b981">ArrayListOrderManager</text>
+        <text x="480" y="72" text-anchor="middle" font-size="11" fill="#475569">placeOrder(), dispatchNext()</text>
+        <text x="480" y="88" text-anchor="middle" font-size="10" fill="#94a3b8">uses ArrayList internally</text>
+        <text x="320" y="135" text-anchor="middle" font-size="12" fill="#8b5cf6" font-weight="700">Same public methods, different internal implementations.</text>
+        <text x="320" y="155" text-anchor="middle" font-size="12" fill="#475569">Inheritance won't work (no shared code to inherit).</text>
+        <text x="320" y="175" text-anchor="middle" font-size="12" fill="#475569" font-weight="600">Solution: define an interface — a contract.</text>
+      </svg>
+    </div>
+    <p class="prose">This is where <strong>interfaces</strong> come in. An interface says "any class that claims to be an OrderManager <em>must</em> provide these methods" — but it doesn't say <em>how</em>.</p>
+    <div class="callout ok"><div class="callout-icon">🔑</div><div><strong>Inheritance = shared implementation.</strong> Interfaces = shared contract. When classes share behaviour (same methods) but not implementation (different internals), use an interface.</div></div>
+    <div class="check" data-check="7">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">Why can't you use inheritance (a superclass) to unify ArrayOrderManager and ArrayListOrderManager?</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer">Because they don't share implementation code. A superclass would have empty method bodies — there's no "default" version of placeOrder() that both could inherit. They agree on <em>what</em> methods to have (the contract) but not <em>how</em> to implement them. That's exactly what an interface is for.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 8 ============ -->
+<div class="step" id="step-8" data-step="8">
+  <div class="step-header" onclick="toggleStep(8)">
+    <div class="step-num locked">8</div>
+    <div class="step-title"><h3>Interfaces as Contracts</h3><div class="step-sub">Declare method signatures without implementation — classes "sign the contract"</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">An <strong>interface</strong> declares method signatures (name, parameters, return type) but provides <strong>no implementation</strong> — no method bodies, no fields, no constructors.</p>
+<pre><span class="kw">public interface</span> <span class="type">OrderManager</span> {
+    <span class="kw">void</span> placeOrder(<span class="type">Order</span> o);     <span class="cmt">← no body, just a semicolon</span>
+    <span class="type">Order</span> dispatchNext();          <span class="cmt">← no body, just a semicolon</span>
+}</pre>
+    <p class="prose">A class "signs the contract" using <code>implements</code>:</p>
+<pre><span class="kw">public class</span> <span class="type">ArrayOrderManager</span> <span class="kw">implements</span> <span class="type">OrderManager</span> {
+    <span class="cmt">// MUST provide placeOrder() and dispatchNext()</span>
+    <span class="cmt">// or the compiler will refuse to compile</span>
+
+    <span class="ann">@Override</span>
+    <span class="kw">public void</span> placeOrder(<span class="type">Order</span> o) {
+        <span class="cmt">// ... array-based implementation ...</span>
+    }
+
+    <span class="ann">@Override</span>
+    <span class="kw">public</span> <span class="type">Order</span> dispatchNext() {
+        <span class="cmt">// ... array-based implementation ...</span>
+    }
+}
+
+<span class="kw">public class</span> <span class="type">ArrayListOrderManager</span> <span class="kw">implements</span> <span class="type">OrderManager</span> {
+    <span class="ann">@Override</span>
+    <span class="kw">public void</span> placeOrder(<span class="type">Order</span> o) {
+        <span class="cmt">// ... ArrayList-based implementation ...</span>
+    }
+
+    <span class="ann">@Override</span>
+    <span class="kw">public</span> <span class="type">Order</span> dispatchNext() {
+        <span class="cmt">// ... ArrayList-based implementation ...</span>
+    }
+}</pre>
+    <div class="callout warn"><div class="callout-icon">⚠️</div><div><strong>The compiler enforces the contract.</strong> If you write <code>implements OrderManager</code> but forget to implement <code>dispatchNext()</code>, the code won't compile. The interface is a guarantee.</div></div>
+    <p class="prose"><span class="label label-how">Key syntax differences</span></p>
+    <ul style="margin: 8px 0 12px 24px; color: var(--gray-600); font-size: 15px;">
+      <li><code>interface</code> instead of <code>class</code> in the declaration</li>
+      <li>Methods have no body — just <code>;</code> after the signature</li>
+      <li>Classes use <code>implements</code> (not <code>extends</code>) to adopt an interface</li>
+      <li>The implementing class <strong>must</strong> provide all methods from the interface</li>
+    </ul>
+    <div class="check" data-check="8">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">Write an <code>OrderManager</code> interface with two methods: <code>placeOrder(Order o)</code> and <code>dispatchNext()</code> that returns an Order.</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer"><code>public interface OrderManager { void placeOrder(Order o); Order dispatchNext(); }</code> — Note: no method bodies, no curly braces on the methods. Just the signatures followed by semicolons.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 9 ============ -->
+<div class="step" id="step-9" data-step="9">
+  <div class="step-header" onclick="toggleStep(9)">
+    <div class="step-num locked">9</div>
+    <div class="step-title"><h3>Polymorphism via Interfaces</h3><div class="step-sub">Declare the interface type, swap implementations freely</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">Just like with inheritance, you can declare a variable as the <strong>interface type</strong> and assign any implementing class to it:</p>
+<pre><span class="cmt">// Declare as the interface type</span>
+<span class="type">OrderManager</span> manager = <span class="kw">new</span> <span class="type">ArrayListOrderManager</span>();
+
+<span class="cmt">// Use it — client code doesn't know (or care) which implementation</span>
+manager.placeOrder(order1);
+manager.placeOrder(order2);
+<span class="type">Order</span> next = manager.dispatchNext();
+
+<span class="cmt">// Want to swap implementations? Change ONE line:</span>
+<span class="type">OrderManager</span> manager = <span class="kw">new</span> <span class="type">ArrayOrderManager</span>(<span class="num">100</span>);
+<span class="cmt">// All other code stays exactly the same!</span></pre>
+    <div class="diagram">
+      <svg viewBox="0 0 640 200" xmlns="http://www.w3.org/2000/svg" style="max-width:560px">
+        <style>svg text{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;}</style>
+        <rect x="180" y="10" width="280" height="50" rx="8" fill="#f5f3ff" stroke="#8b5cf6" stroke-width="2"/>
+        <text x="320" y="32" text-anchor="middle" font-size="14" font-weight="700" fill="#8b5cf6">interface OrderManager</text>
+        <text x="320" y="48" text-anchor="middle" font-size="11" fill="#475569">placeOrder(), dispatchNext()</text>
+        <line x1="260" y1="60" x2="160" y2="90" stroke="#8b5cf6" stroke-width="2" stroke-dasharray="5,3"/>
+        <line x1="380" y1="60" x2="480" y2="90" stroke="#8b5cf6" stroke-width="2" stroke-dasharray="5,3"/>
+        <text x="200" y="78" text-anchor="middle" font-size="10" fill="#94a3b8">implements</text>
+        <text x="440" y="78" text-anchor="middle" font-size="10" fill="#94a3b8">implements</text>
+        <rect x="40" y="90" width="240" height="50" rx="8" fill="#eff6ff" stroke="#3b82f6" stroke-width="2"/>
+        <text x="160" y="112" text-anchor="middle" font-size="12" font-weight="700" fill="#3b82f6">ArrayOrderManager</text>
+        <text x="160" y="128" text-anchor="middle" font-size="10" fill="#94a3b8">uses Order[] inside</text>
+        <rect x="360" y="90" width="240" height="50" rx="8" fill="#ecfdf5" stroke="#10b981" stroke-width="2"/>
+        <text x="480" y="112" text-anchor="middle" font-size="12" font-weight="700" fill="#10b981">ArrayListOrderManager</text>
+        <text x="480" y="128" text-anchor="middle" font-size="10" fill="#94a3b8">uses ArrayList inside</text>
+        <text x="320" y="170" text-anchor="middle" font-size="12" fill="#475569" font-weight="600">Client code uses OrderManager type → can swap implementations freely.</text>
+      </svg>
+    </div>
+    <p class="prose"><span class="label label-idea">Key advantages of interfaces over inheritance</span></p>
+    <ul style="margin: 8px 0 12px 24px; color: var(--gray-600); font-size: 15px;">
+      <li><strong>Multiple interfaces:</strong> a class can <code>implements</code> many interfaces (Java only allows one <code>extends</code>)</li>
+      <li><strong>Loose coupling:</strong> client code depends on the interface, not the implementation</li>
+      <li><strong>Swap freely:</strong> change implementations by editing one line</li>
+    </ul>
+    <div class="callout ok"><div class="callout-icon">🔑</div><div><strong>"Program to an interface, not an implementation."</strong> This is one of the most important principles in software design. Your code should depend on <em>what</em> something can do (interface), not <em>how</em> it does it (class).</div></div>
+    <div class="check" data-check="9">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">Why can't you use inheritance (extends) to achieve the same flexibility as interfaces here? Give two reasons.</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer">(1) <strong>No shared implementation:</strong> a superclass would have empty method bodies — there's no default code to inherit. (2) <strong>Single inheritance:</strong> Java only allows one <code>extends</code>, so if ArrayListOrderManager already extends another class, it can't also extend OrderManager. Interfaces solve both: no implementation needed, and a class can implement multiple interfaces.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STEP 10 ============ -->
+<div class="step" id="step-10" data-step="10">
+  <div class="step-header" onclick="toggleStep(10)">
+    <div class="step-num locked">10</div>
+    <div class="step-title"><h3>Tutorial Preview: Lists & Maps</h3><div class="step-sub">ArrayList, LinkedList, HashMap, TreeMap, generics, and the == trap</div></div>
+    <div class="step-chevron">›</div>
+  </div>
+  <div class="step-body">
+    <p class="prose">Tutorial 4 dives deeper into Java's collections framework. Here's a preview of what you'll encounter:</p>
+    <p class="prose"><span class="label label-how">Lists: ArrayList vs LinkedList</span></p>
+    <ul style="margin: 8px 0 12px 24px; color: var(--gray-600); font-size: 15px;">
+      <li><code>ArrayList</code> — fast random access (<code>get(i)</code>), slow insert/remove in middle</li>
+      <li><code>LinkedList</code> — fast insert/remove anywhere, slow random access</li>
+      <li>Both implement the <code>List</code> interface — you can swap them!</li>
+    </ul>
+    <p class="prose"><span class="label label-how">Maps: like Python dictionaries</span></p>
+<pre><span class="cmt">// Python dictionary</span>
+<span class="cmt">// prices = {"burger": 12.50, "pizza": 15.00}</span>
+
+<span class="cmt">// Java HashMap — same idea</span>
+<span class="type">HashMap</span>&lt;<span class="type">String</span>, <span class="type">Double</span>&gt; prices = <span class="kw">new</span> <span class="type">HashMap</span>&lt;&gt;();
+prices.put(<span class="str">"burger"</span>, <span class="num">12.50</span>);
+prices.put(<span class="str">"pizza"</span>, <span class="num">15.00</span>);
+<span class="type">double</span> p = prices.get(<span class="str">"burger"</span>);  <span class="cmt">// 12.50</span></pre>
+    <p class="prose"><span class="label label-trap">Critical gotcha: wrapper classes and ==</span></p>
+    <p class="prose">Generics only work with <strong>object types</strong>, not primitives. Use wrapper classes:</p>
+    <ul style="margin: 8px 0 12px 24px; color: var(--gray-600); font-size: 15px;">
+      <li><code>int</code> → <code>Integer</code>, <code>double</code> → <code>Double</code>, <code>boolean</code> → <code>Boolean</code></li>
+      <li><code>ArrayList&lt;int&gt;</code> is <strong>illegal</strong> — use <code>ArrayList&lt;Integer&gt;</code></li>
+    </ul>
+<pre><span class="type">Integer</span> a = <span class="num">1000</span>;
+<span class="type">Integer</span> b = <span class="num">1000</span>;
+System.out.println(a == b);       <span class="cmt">// false! (compares references)</span>
+System.out.println(a.equals(b));  <span class="cmt">// true  (compares values)</span></pre>
+    <div class="callout warn"><div class="callout-icon">⚠️</div><div><strong><code>==</code> on Integer objects compares references (memory addresses), not values.</strong> Two separate Integer objects with value 1000 are at different addresses, so <code>==</code> returns false. Always use <code>.equals()</code> to compare wrapper objects. (Note: Java caches integers -128 to 127, so <code>==</code> works for small numbers — but don't rely on this!)</div></div>
+    <div class="summary-box blue">
+      <h4>Week 4 in one sentence</h4>
+      <p>Arrays are fixed-size, so Java provides <strong>ArrayList</strong> (auto-resizing with generics); when multiple classes share the same method signatures but not implementation, use an <strong>interface</strong> to define the contract, enabling <strong>polymorphism</strong> that lets you swap implementations by changing a single line of code.</p>
+    </div>
+    <div class="check" data-check="10">
+      <div class="check-title">✎ Quick check</div>
+      <div class="check-q">Why does <code>Integer a = 1000; Integer b = 1000; System.out.println(a == b);</code> print <code>false</code>?</div>
+      <textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea>
+      <div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div>
+      <div class="check-answer"><code>==</code> on objects compares <strong>references</strong> (memory addresses), not values. <code>a</code> and <code>b</code> are two separate Integer objects that happen to both contain 1000, but they're stored at different memory locations. Use <code>a.equals(b)</code> to compare the actual integer values.</div>
+      <div class="check-rating"><button class="got-it" onclick="rateCheck(this,'got-it')">✓ Got it</button><button class="not-yet" onclick="rateCheck(this,'not-yet')">✗ Not yet</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ SELF-TEST ============ -->
+<div class="self-test">
+  <div class="self-test-title">📝 Week 4 Self-Test</div>
+  <div class="self-test-sub">10 exam-style questions. Try to answer each one before revealing. These cover the full study guide.</div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q1</span><span class="st-q-bloom">Remembering</span></div><p>What is the difference between an array and an ArrayList?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">An <strong>array</strong> has a fixed size set at creation and cannot grow or shrink. An <strong>ArrayList</strong> automatically resizes as elements are added or removed. Arrays use <code>[]</code> syntax; ArrayList uses methods like <code>add()</code>, <code>get()</code>, <code>size()</code>. Arrays can hold primitives; ArrayList requires object types (wrapper classes).</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q2</span><span class="st-q-bloom">Understanding</span></div><p>Explain why Java's garbage collector matters when resizing arrays.</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">When you resize by creating a new larger array and reassigning the reference, the old array has no references left. Java's garbage collector automatically detects unreferenced objects and frees their memory. Without a garbage collector (like in C), the programmer must manually call <code>free()</code> — forgetting to do so causes a <strong>memory leak</strong> where unused memory is never released.</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q3</span><span class="st-q-bloom">Applying</span></div><p>Write the code to create an ArrayList of Strings and add 3 items: "Alice", "Bob", "Charlie".</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer"><code>ArrayList&lt;String&gt; names = new ArrayList&lt;&gt;(); names.add("Alice"); names.add("Bob"); names.add("Charlie");</code></div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q4</span><span class="st-q-bloom">Applying</span></div><p>Given an interface <code>Sortable</code> with one method <code>void sort()</code>, write a class <code>BubbleSorter</code> that implements it.</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer"><code>public class BubbleSorter implements Sortable { @Override public void sort() { // bubble sort implementation here } }</code> — The class must use <code>implements</code> (not extends) and must provide a body for every method declared in the interface.</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q5</span><span class="st-q-bloom">Analysing</span></div><p>A student writes <code>OrderManager om = new OrderManager();</code> where OrderManager is an interface. What happens and why?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer"><strong>Compiler error.</strong> You cannot instantiate an interface — interfaces have no constructors and no implementation. You can only declare a variable as the interface type and assign an implementing class: <code>OrderManager om = new ArrayListOrderManager();</code>. The interface is a contract, not a blueprint.</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q6</span><span class="st-q-bloom">Understanding</span></div><p>Explain the difference between inheritance and interfaces for achieving polymorphism.</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer"><strong>Inheritance</strong> provides polymorphism through shared implementation — the superclass has actual code that subclasses reuse or override. <strong>Interfaces</strong> provide polymorphism through shared contracts — no code, just method signatures. Inheritance is "is-a" with code sharing; interfaces are "can-do" contracts. A class can implement multiple interfaces but can only extend one class.</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q7</span><span class="st-q-bloom">Applying</span></div><p>Trace the execution of dispatching from an array-based queue that contains orders [A, B, C]. Show the array state after dispatch.</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer">1. <code>first = orders[0]</code> → saves A. 2. Shift loop: <code>orders[0] = orders[1]</code> (B moves to 0), <code>orders[1] = orders[2]</code> (C moves to 1). 3. <code>count--</code> → count becomes 2. 4. Return A. Final array: <code>[B, C, _]</code> with count=2.</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q8</span><span class="st-q-bloom">Analysing</span></div><p>Why does <code>Integer a = 1000; Integer b = 1000; a == b</code> return false?</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer"><code>==</code> on objects compares <strong>references</strong> (memory addresses). <code>a</code> and <code>b</code> are two separate Integer objects at different memory locations, even though both hold value 1000. Use <code>a.equals(b)</code> for value comparison. (Java caches Integer values -128 to 127, so small values might give <code>true</code> with <code>==</code> — but never rely on this.)</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q9</span><span class="st-q-bloom">Applying</span></div><p>Convert this array code to use ArrayList: <code>String[] names = new String[3]; names[0] = "Alice";</code></p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer"><code>ArrayList&lt;String&gt; names = new ArrayList&lt;&gt;(); names.add("Alice");</code> — No size needed at creation. Use <code>add()</code> instead of index assignment. To access: <code>names.get(0)</code> instead of <code>names[0]</code>.</div></div>
+
+  <div class="st-q"><div class="st-q-header"><span class="st-q-num">Q10</span><span class="st-q-bloom">Analysing</span></div><p>A class implements both <code>Printable</code> and <code>Loggable</code> interfaces. Both declare <code>void output()</code>. Is this a problem? Explain.</p><textarea placeholder="Type your answer…" oninput="enableReveal(this)"></textarea><div class="check-reveal"><button disabled onclick="revealAnswer(this)">Show answer</button></div><div class="check-answer"><strong>No, it's not a problem.</strong> The class provides one implementation of <code>output()</code>, which satisfies both interfaces simultaneously. Since interfaces only declare signatures (no bodies), there's no conflict — the single method body fulfils both contracts. This is different from the "diamond problem" in multiple inheritance (which Java avoids by only allowing single class inheritance).</div></div>
+</div>
+
+<!-- Practice Lab links -->
+<p class="prose" style="margin-top:20px;"><span class="label label-tip">Practice next</span></p>
+<p class="prose">Now apply what you've learned in the Java Practice Lab:</p>
+
+<a class="lab-link" href="#" onclick="window.parent.openPracticeLabTool('traces',4); return false;"><div class="lab-link-icon">🔍</div><div class="lab-link-text"><div class="lab-link-title">Code Traces</div><div class="lab-link-desc">Trace through ArrayList and interface polymorphism programs</div></div><div class="lab-link-arrow">→</div></a>
+<a class="lab-link" href="#" onclick="window.parent.openPracticeLabTool('debug',4); return false;"><div class="lab-link-icon">🐛</div><div class="lab-link-text"><div class="lab-link-title">Find the Bug</div><div class="lab-link-desc">Spot errors in collections code and interface implementations</div></div><div class="lab-link-arrow">→</div></a>
+<a class="lab-link" href="#" onclick="window.parent.openPracticeLabTool('challenges',4); return false;"><div class="lab-link-icon">⚡</div><div class="lab-link-text"><div class="lab-link-title">Coding Challenges</div><div class="lab-link-desc">Build classes with ArrayList and implement interfaces</div></div><div class="lab-link-arrow">→</div></a>
+
+<div class="nav-footer">
+  <a class="nav-btn" href="#">← Back to Dashboard</a>
+  <a class="nav-btn primary" href="#">Week 5: Abstract Classes & More →</a>
+</div>
+
+</div>
+
+<script>
+const totalSteps=10;let completedSteps=new Set();
+function toggleStep(n){document.getElementById('step-'+n).classList.toggle('open')}
+function enableReveal(ta){const btn=ta.closest('.check,.st-q').querySelector('.check-reveal button');btn.disabled=ta.value.trim().length<5}
+function revealAnswer(btn){const c=btn.closest('.check,.st-q');c.querySelector('.check-answer').classList.add('show');const r=c.querySelector('.check-rating');if(r)r.classList.add('show');btn.style.display='none'}
+function rateCheck(btn,rating){const check=btn.closest('.check'),step=btn.closest('.step'),n=parseInt(step.dataset.step);check.querySelector('.check-rating').querySelectorAll('button').forEach(b=>b.style.opacity='0.4');btn.style.opacity='1';completedSteps.add(n);updateProgress();step.querySelector('.step-num').className='step-num done';const next=document.getElementById('step-'+(n+1));if(next){const nn=next.querySelector('.step-num');if(nn.classList.contains('locked'))nn.className='step-num active'}}
+function updateProgress(){const p=Math.round(completedSteps.size/totalSteps*100);document.getElementById('progressFill').style.width=p+'%';document.getElementById('progressLabel').textContent=completedSteps.size+' of '+totalSteps+' complete'}
+</script>
+<script>
+/* Notify parent dashboard of height changes so iframe can resize (no iframe scrollbar) */
+(function(){
+  function notifyHeight(){
+    if(window.parent!==window){
+      window.parent.postMessage({type:"vgResize",height:document.documentElement.scrollHeight},"*");
+    }
+  }
+  notifyHeight();
+  new MutationObserver(notifyHeight).observe(document.body,{childList:true,subtree:true,attributes:true});
+  window.addEventListener("resize",notifyHeight);
+})();
+</script>
+</body>
+</html>

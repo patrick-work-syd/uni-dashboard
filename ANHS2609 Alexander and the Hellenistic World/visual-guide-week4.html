@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ANHS2609 Week 4: The Fall of Persia - Visual Guide</title>
+    <style>
+        :root {
+            --orange: #f59e0b;
+            --orange-light: #fffbeb;
+            --orange-dark: #b45309;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-600: #4b5563;
+            --gray-900: #111827;
+            --white: #ffffff;
+            --green-600: #16a34a;
+            --blue-600: #2563eb;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--gray-50);
+            color: var(--gray-900);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--orange-dark) 0%, var(--orange) 100%);
+            color: var(--white);
+            padding: 40px 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 25px rgba(180, 83, 9, 0.2);
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.95;
+            margin-bottom: 5px;
+        }
+
+        .course-meta {
+            font-size: 0.95em;
+            opacity: 0.9;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            margin-bottom: 30px;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--gray-700);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background-color: var(--gray-200);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--orange-dark), var(--orange));
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+
+        /* Navigation Tabs */
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            border-bottom: 2px solid var(--gray-200);
+            padding-bottom: 0;
+        }
+
+        .tab-button {
+            padding: 12px 20px;
+            background: none;
+            border: none;
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--gray-600);
+            transition: all 0.3s ease;
+            font-size: 0.95em;
+        }
+
+        .tab-button:hover {
+            color: var(--orange-dark);
+            border-bottom-color: var(--orange-light);
+        }
+
+        .tab-button.active {
+            color: var(--orange-dark);
+            border-bottom-color: var(--orange);
+        }
+
+        /* Content Area */
+        .content-wrapper {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
+        }
+
+        .step-card {
+            background: var(--white);
+            border-left: 5px solid var(--orange);
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            display: none;
+        }
+
+        .step-card.active {
+            display: block;
+        }
+
+        .step-card:hover {
+            box-shadow: 0 8px 20px rgba(180, 83, 9, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .step-number {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--orange-dark), var(--orange));
+            color: var(--white);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+
+        .step-title {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: var(--orange-dark);
+            margin-bottom: 15px;
+            margin-top: 10px;
+        }
+
+        .step-content {
+            font-size: 1em;
+            color: var(--gray-700);
+            line-height: 1.7;
+        }
+
+        .step-content p {
+            margin-bottom: 12px;
+        }
+
+        .step-content ul {
+            margin-left: 20px;
+            margin-bottom: 12px;
+        }
+
+        .step-content li {
+            margin-bottom: 8px;
+        }
+
+        .callout {
+            background: var(--orange-light);
+            border-left: 4px solid var(--orange);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+            font-style: italic;
+            color: var(--orange-dark);
+            font-weight: 500;
+        }
+
+        .check-prompt {
+            background: #elf5f3;
+            border-left: 4px solid var(--green-600);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+            color: var(--green-600);
+            font-weight: 500;
+        }
+
+        /* SVG Diagram */
+        .diagram-container {
+            background: var(--gray-100);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Self-Test Section */
+        .self-test-section {
+            background: var(--white);
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .self-test-section h2 {
+            color: var(--orange-dark);
+            font-size: 1.8em;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .question-item {
+            margin-bottom: 25px;
+            padding-bottom: 25px;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .question-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .question-text {
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: 10px;
+            font-size: 1.05em;
+        }
+
+        .bloom-tag {
+            display: inline-block;
+            background: var(--orange-light);
+            color: var(--orange-dark);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-right: 8px;
+            margin-bottom: 10px;
+        }
+
+        .answer-text {
+            background: var(--gray-50);
+            padding: 12px;
+            border-radius: 4px;
+            color: var(--gray-700);
+            margin-top: 8px;
+            line-height: 1.6;
+            font-size: 0.95em;
+        }
+
+        /* Practice Links */
+        .practice-section {
+            background: var(--white);
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            margin-top: 30px;
+        }
+
+        .practice-section h2 {
+            color: var(--orange-dark);
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .practice-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .practice-link {
+            background: linear-gradient(135deg, var(--orange-light) 0%, var(--white) 100%);
+            border: 2px solid var(--orange);
+            padding: 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .practice-link:hover {
+            background: linear-gradient(135deg, var(--orange) 0%, var(--orange-light) 100%);
+            color: var(--white);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(180, 83, 9, 0.2);
+        }
+
+        .practice-link:hover .practice-title,
+        .practice-link:hover .practice-icon {
+            color: var(--white);
+        }
+
+        .practice-icon {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            transition: color 0.3s ease;
+            color: var(--orange-dark);
+        }
+
+        .practice-title {
+            font-weight: 700;
+            font-size: 1.1em;
+            margin-bottom: 10px;
+            color: var(--orange-dark);
+            transition: color 0.3s ease;
+        }
+
+        .practice-description {
+            font-size: 0.9em;
+            color: var(--gray-700);
+        }
+
+        .practice-link:hover .practice-description {
+            color: var(--white);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: var(--gray-600);
+            border-top: 2px solid var(--gray-200);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .nav-tabs {
+                overflow-x: auto;
+            }
+
+            .steps-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .practice-links {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Hide/Show tabs */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>The Fall of Persia: Conquest and Empire</h1>
+            <p>ANHS2609: Alexander and the Hellenistic World</p>
+            <p style="margin-top: 10px; font-size: 1em;">Week 4 Visual Guide</p>
+            <div class="course-meta">
+                <strong>Focus:</strong> Alexander's invasion of the Persian Empire (334-331 BC), major battles (Granicus, Issus, Gaugamela), siege of Tyre, Egypt and the oracle at Siwah, military tactics, and the fall of the world's greatest superpower
+            </div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress-container">
+            <div class="progress-label">
+                <span>Course Progress</span>
+                <span id="progress-text">Step 1 of 10</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill" style="width: 10%;"></div>
+            </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="nav-tabs">
+            <button class="tab-button active" onclick="switchTab('steps')">Learning Steps</button>
+            <button class="tab-button" onclick="switchTab('selftest')">Self-Test Questions</button>
+            <button class="tab-button" onclick="switchTab('practice')">Practice Lab</button>
+        </div>
+
+        <!-- STEPS TAB -->
+        <div id="steps" class="tab-content active">
+            <!-- Navigation for steps -->
+            <div style="display: flex; justify-content: space-between; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;">
+                <button onclick="previousStep()" style="padding: 10px 20px; background: var(--gray-200); border: none; border-radius: 4px; cursor: pointer; font-weight: 600;">← Previous</button>
+                <select id="step-selector" onchange="goToStep(this.value)" style="padding: 10px 15px; border: 2px solid var(--orange); border-radius: 4px; cursor: pointer; font-weight: 600; color: var(--gray-900);">
+                    <option value="0">Step 1: The Granicus River (334 BC)</option>
+                    <option value="1">Step 2: The Battle of Issus (333 BC)</option>
+                    <option value="2">Step 3: The Siege of Tyre (332 BC)</option>
+                    <option value="3">Step 4: Alexander in Egypt & Siwah</option>
+                    <option value="4">Step 5: The Founding of Alexandria</option>
+                    <option value="5">Step 6: The Battle of Gaugamela (331 BC)</option>
+                    <option value="6">Step 7: The Fall of Persepolis</option>
+                    <option value="7">Step 8: Darius III's Fate & Persian Perspective</option>
+                    <option value="8">Step 9: Primary Sources: Arrian, Plutarch & Others</option>
+                    <option value="9">Step 10: Legacy & Debate: Conquest vs Diplomacy</option>
+                </select>
+                <button onclick="nextStep()" style="padding: 10px 20px; background: var(--orange); color: var(--white); border: none; border-radius: 4px; cursor: pointer; font-weight: 600;">Next →</button>
+            </div>
+
+            <div class="steps-grid">
+                <!-- Step 1 -->
+                <div class="step-card active">
+                    <div class="step-number">1</div>
+                    <h3 class="step-title">The Granicus River (334 BC)</h3>
+                    <div class="step-content">
+                        <p>Alexander's first major battle against the Persian Empire occurred at the Granicus River in northwestern Asia Minor (modern-day Turkey). This battle was crucial as it established Alexander's credibility and began the conquest of Persian-held territory.</p>
+                        <p><strong>The Challenge:</strong></p>
+                        <ul>
+                            <li>Facing Persian satraps' armies determined to stop Alexander before he gained a foothold in Asia</li>
+                            <li>Dangerous river crossing with enemy cavalry waiting on the opposite bank</li>
+                            <li>First direct confrontation between Macedonian and Persian forces</li>
+                        </ul>
+                        <p><strong>Alexander's Strategy:</strong></p>
+                        <ul>
+                            <li>Bold cavalry charge across the river, personally leading from the front</li>
+                            <li>Exploited his superior cavalry tactics and the sarissa-armed phalanx</li>
+                            <li>Demonstrated personal courage that became his trademark</li>
+                        </ul>
+                        <div class="callout">This was more than a military victory — it signaled to the Greek city-states and the Persian Empire that Alexander was a formidable threat who would not be easily stopped.</div>
+                    </div>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <h3 class="step-title">The Battle of Issus (333 BC)</h3>
+                    <div class="step-content">
+                        <p>At Issus in southern Asia Minor, Alexander confronted Darius III, the Great King of Persia himself, in person. This was the culmination of events after Granicus — Darius decided to personally lead his forces to crush Alexander.</p>
+                        <p><strong>Key Aspects:</strong></p>
+                        <ul>
+                            <li><strong>The Terrain Advantage:</strong> The narrow coastal plain limited Persia's numerical superiority. Alexander's smaller army could not be outflanked on this restricted battlefield</li>
+                            <li><strong>Darius's Presence:</strong> The Great King's personal involvement motivated his troops but also meant his defeat would be catastrophic for Persian morale</li>
+                            <li><strong>Tactical Innovation:</strong> Alexander used a hammer-and-anvil tactic — the phalanx held while cavalry wheeled around the flank</li>
+                        </ul>
+                        <p><strong>The Outcome:</strong> Darius III fled the battlefield, leaving his family behind as prisoners. This was a stunning psychological victory that shattered the myth of Persian invincibility.</p>
+                        <div class="callout">The famous mosaic from Pompeii depicts this moment — Alexander on his horse, Darius in his chariot, the personalization of ancient warfare between two civilizations.</div>
+                    </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <h3 class="step-title">The Siege of Tyre (332 BC)</h3>
+                    <div class="step-content">
+                        <p>After Issus, Alexander did not immediately pursue Darius. Instead, he turned south to eliminate Persian naval power. Tyre, the greatest naval power of the Levant, refused to submit. This led to one of the ancient world's most famous sieges.</p>
+                        <p><strong>The Problem for Alexander:</strong></p>
+                        <ul>
+                            <li>Tyre was an island city, naturally defended by the sea</li>
+                            <li>Alexander's forces were primarily land-based, with inferior naval capability</li>
+                            <li>A seven-month siege would tie up his resources</li>
+                        </ul>
+                        <p><strong>Alexander's Audacious Solution:</strong></p>
+                        <ul>
+                            <li>Built a massive causeway from the mainland to the island (the mole of Tyre)</li>
+                            <li>Used siege engines and engineering innovation to breach walls</li>
+                            <li>Eventually captured and destroyed the city, making an example of resistance</li>
+                        </ul>
+                        <p><strong>Why This Mattered:</strong> Elimination of Tyre secured Alexander's rear and eliminated Persian naval bases. It also demonstrated his determination — he would not be deterred by obstacles or time constraints.</p>
+                    </div>
+                </div>
+
+                <!-- Step 4 -->
+                <div class="step-card">
+                    <div class="step-number">4</div>
+                    <h3 class="step-title">Alexander in Egypt & Siwah</h3>
+                    <div class="step-content">
+                        <p>After Tyre, Alexander marched into Egypt (332-331 BC), where he was received as a liberator from Persian rule. Rather than immediately pursuing Darius, Alexander made a detour to the oracle of Zeus Ammon in the remote oasis of Siwah.</p>
+                        <p><strong>The Journey to Siwah:</strong></p>
+                        <ul>
+                            <li>A grueling three-month journey across the desert to reach the oracle</li>
+                            <li>Three months back = six months away from his main campaign</li>
+                            <li>High risk but strategically important to Alexander</li>
+                        </ul>
+                        <p><strong>The Oracle's Message:</strong> The oracle reportedly greeted Alexander as the son of Zeus-Ammon. What exactly was said remains unclear, but the implications were profound — Alexander could now claim divine parentage, legitimizing his rule in both Greek and Egyptian eyes.</p>
+                        <div class="callout">This visit raises fundamental questions: Was Alexander seeking military advice? Seeking legitimacy? Genuinely believing in his divinity? The historical sources offer different interpretations, and scholars debate his motivations.</div>
+                    </div>
+                </div>
+
+                <!-- Step 5 -->
+                <div class="step-card">
+                    <div class="step-number">5</div>
+                    <h3 class="step-title">The Founding of Alexandria</h3>
+                    <div class="step-content">
+                        <p>While in Egypt, Alexander founded the city of Alexandria, which would become one of the most important cities in the ancient world and a center of learning and culture in the Hellenistic period.</p>
+                        <p><strong>Strategic Location:</strong></p>
+                        <ul>
+                            <li>Founded on the Egyptian coast at the mouth of the Nile Delta</li>
+                            <li>Positioned to serve as a major Mediterranean trading port</li>
+                            <li>Could control both Egyptian and eastern Mediterranean commerce</li>
+                        </ul>
+                        <p><strong>Symbolic Importance:</strong></p>
+                        <ul>
+                            <li>A Greek city in Egypt — symbol of Hellenistic cultural fusion</li>
+                            <li>Named after Alexander himself, ensuring his lasting fame</li>
+                            <li>Would later house the Great Library and Museum (under the Ptolemies)</li>
+                        </ul>
+                        <p><strong>Urban Planning:</strong> Alexander planned the city's grid layout personally, showing his interest in not just conquest but in building and permanent settlement. Alexandria outlived Alexander by more than 2,000 years.</p>
+                    </div>
+                </div>
+
+                <!-- Step 6 -->
+                <div class="step-card">
+                    <div class="step-number">6</div>
+                    <h3 class="step-title">The Battle of Gaugamela (331 BC)</h3>
+                    <div class="step-content">
+                        <p>After Egypt, Alexander finally pursued Darius III into Mesopotamia. On October 1, 331 BC, they met at the plain of Gaugamela (near modern Irbil, Iraq). This was the decisive battle that ended the Persian Empire as a unified state.</p>
+                        <p><strong>The Numbers Game:</strong></p>
+                        <ul>
+                            <li>Darius brought a massive army — estimates range from 200,000 to 1,000,000 men (likely exaggerated by sources)</li>
+                            <li>Alexander had roughly 47,000 troops — outnumbered but superior discipline and tactics</li>
+                            <li>This was a David vs. Goliath moment that Alexander's forces won through skill, not numbers</li>
+                        </ul>
+                        <p><strong>Alexander's Tactical Masterpiece:</strong></p>
+                        <ul>
+                            <li>The phalanx formed the center, unbreakable as always</li>
+                            <li>Alexander personally led the cavalry on the right flank in a devastating charge</li>
+                            <li>Created a gap in the Persian line that widened into a rout</li>
+                        </ul>
+                        <p><strong>The Turning Point:</strong> Darius III fled again — this time, he would be assassinated by his own men before Alexander could capture him. The great Persian Empire, which had stood for 200 years, collapsed.</p>
+                    </div>
+                </div>
+
+                <!-- Step 7 -->
+                <div class="step-card">
+                    <div class="step-number">7</div>
+                    <h3 class="step-title">The Fall of Persepolis</h3>
+                    <div class="step-content">
+                        <p>After Gaugamela, Alexander marched to Persepolis, the ceremonial capital of the Persian Empire. The fall of this city symbolized the complete destruction of Persian imperial power.</p>
+                        <p><strong>The Physical Conquest:</strong></p>
+                        <ul>
+                            <li>Alexander captured Persepolis without a major siege — it was relatively lightly defended</li>
+                            <li>The city contained the royal palace, treasury, and administrative records of the empire</li>
+                            <li>Alexander's forces looted the treasury and then burned the palace — either deliberately or in a drunken celebration</li>
+                        </ul>
+                        <p><strong>Symbolic Destruction:</strong> The burning of Persepolis was both a practical decision (destroying the administrative center of Persian power) and a theatrical one (demonstrating total victory and the end of an era).</p>
+                        <p><strong>The Imperial Transformation:</strong> After Persepolis, Alexander began adopting Persian customs, dress, and court etiquette. He no longer saw himself as a conqueror of Persia but as its legitimate heir and Great King.</p>
+                        <div class="callout">The destruction of Persepolis remains controversial — was it justified military strategy or an act of destructive hubris? Ancient sources give different accounts, and historians debate Alexander's intentions and state of mind.</div>
+                    </div>
+                </div>
+
+                <!-- Step 8 -->
+                <div class="step-card">
+                    <div class="step-number">8</div>
+                    <h3 class="step-title">Darius III's Fate & Persian Perspective</h3>
+                    <div class="step-content">
+                        <p>The story of Darius III provides insight into the human cost of Alexander's conquest and the Persian view of events that Greek sources often marginalize.</p>
+                        <p><strong>The Last Great King:</strong></p>
+                        <ul>
+                            <li>Darius III was not an incompetent ruler — he led armies, made strategic decisions, and commanded loyalty</li>
+                            <li>Yet he was defeated twice by someone half his age with fewer resources</li>
+                            <li>After Gaugamela, he fled eastward, hoping to rally forces for a third confrontation</li>
+                        </ul>
+                        <p><strong>His Death:</strong> Before Alexander could capture him, Darius III was assassinated by Bessus, one of his own satraps, near the Caspian Sea. This assassination is itself dramatic — a dying king stabbed by a man claiming to save the Persian Empire from foreign conquest.</p>
+                        <p><strong>The Persian Perspective:</strong> For Persians, Alexander's conquest was not a glorious triumph but a catastrophe. Cities burned, the imperial structure collapsed, and Greek/Macedonian rule replaced Persian dominance in the Near East. Sources like Briant (1996) emphasize this perspective that Greek sources often downplay.</p>
+                    </div>
+                </div>
+
+                <!-- Step 9 -->
+                <div class="step-card">
+                    <div class="step-number">9</div>
+                    <h3 class="step-title">Primary Sources: Arrian, Plutarch & Others</h3>
+                    <div class="step-content">
+                        <p>Our knowledge of Alexander's Persian campaign comes largely from ancient literary sources written long after events. Understanding these sources is critical for evaluating the reliability of what we know.</p>
+                        <p><strong>Key Sources:</strong></p>
+                        <ul>
+                            <li><strong>Arrian's Anabasis</strong> — Written in the 2nd century AD, largely based on eyewitness accounts (lost sources by Ptolemy and Aristobulus). Most detailed and considered most reliable by scholars</li>
+                            <li><strong>Plutarch's Life of Alexander</strong> — Biographical, more interested in character than military detail. Contains anecdotes and psychological insight</li>
+                            <li><strong>Diodorus Siculus</strong> — Universal history that includes Alexander's campaigns</li>
+                            <li><strong>Ancient Persian sources</strong> — Limited compared to Greek sources, but some survive in later compilations</li>
+                        </ul>
+                        <p><strong>Source Evaluation:</strong> All sources were written centuries after Alexander's death, creating risks of distortion and legend. Literary sources tend to emphasize Alexander's genius and minimize the role of his commanders and accidents of chance.</p>
+                        <div class="callout">The further back you trace a source, the more reliable it tends to be. Arrian based his work on near-contemporary accounts, making him our best source despite being written 400 years after Alexander.</div>
+                    </div>
+                </div>
+
+                <!-- Step 10 -->
+                <div class="step-card">
+                    <div class="step-number">10</div>
+                    <h3 class="step-title">Legacy & Debate: Conquest vs Diplomacy</h3>
+                    <div class="step-content">
+                        <p>The fall of the Persian Empire invites fundamental questions about Alexander's strategy and its long-term consequences.</p>
+                        <p><strong>The Conquest Narrative:</strong> Alexander is celebrated as the ultimate military conqueror — brilliant tactics, personal bravery, never defeated in battle. His strategies set the standard for ancient warfare.</p>
+                        <p><strong>Alternative Perspectives:</strong></p>
+                        <ul>
+                            <li><strong>Total destruction:</strong> The complete annihilation of Persian power meant no stable partnership or integration. This created instability that his successors inherited</li>
+                            <li><strong>Darius's failure:</strong> Was Darius incompetent, or was Alexander simply a once-in-a-generation military genius? Scholars debate how much was Alexander's superiority vs. Persian weakness</li>
+                            <li><strong>Long-term sustainability:</strong> Alexander's empire fell apart immediately after his death, suggesting his military success did not create lasting political stability</li>
+                        </ul>
+                        <p><strong>Modern Debate:</strong> Some historians argue Alexander would have benefited from diplomacy and integration rather than total conquest. Others argue conquest was the only strategy available given the ideological distance between Macedonian and Persian culture.</p>
+                        <div class="callout">Week 5 will explore what happened AFTER the Persian Empire fell — how Alexander continued east, what happened to his empire after his death, and how the Hellenistic world that emerged was built on the ruins of Persian power.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SELF-TEST TAB -->
+        <div id="selftest" class="tab-content">
+            <div class="self-test-section">
+                <h2>Self-Test Questions: Week 4</h2>
+                <p style="margin-bottom: 20px; color: var(--gray-700);">Test your understanding with these 12 questions covering all major concepts from this week. Answers reveal on click — attempt the question first before looking!</p>
+
+                <!-- Q1 -->
+                <div class="question-item">
+                    <div class="question-text">
+                        Q1: What was the strategic significance of the Battle of Granicus (334 BC)?
+                    </div>
+                    <span class="bloom-tag">Remembering</span>
+                    <button onclick="toggleAnswer(this)" style="background: var(--orange); color: var(--white); padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; margin-bottom: 10px;">Show Answer</button>
+                    <div class="answer-text" style="display: none;">
+                        The Granicus River was Alexander's first major battle against Persian forces in Asia. A Macedonian victory here established Alexander's credibility, gained a foothold in Persian territory, and demonstrated that his forces could defeat Persian armies — crucially important for morale and legitimacy.
+                    </div>
+                </div>
+
+                <!-- Q2 -->
+                <div class="question-item">
+                    <div class="question-text">
+                        Q2: Why was the Battle of Issus (333 BC) considered a greater psychological victory than a mere military one?
+                    </div>
+                    <span class="bloom-tag">Understanding</span>
+                    <button onclick="toggleAnswer(this)" style="background: var(--orange); color: var(--white); padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; margin-bottom: 10px;">Show Answer</button>
+                    <div class="answer-text" style="display: none;">
+                        At Issus, Alexander defeated Darius III, the Great King himself, in person. Darius's presence meant the defeat of the Persian Empire's highest authority. Darius fled the battlefield, shattering the myth of Persian invincibility and showing that even the greatest king of the world's superpower could be defeated by Alexander's army.
+                    </div>
+                </div>
+
+                <!-- Q3 -->
+                <div class="question-item">
+                    <div class="question-text">
+                        Q3: How did Alexander overcome Tyre's natural island defenses during the siege of 332 BC?
+                    </div>
+                    <span class="bloom-tag">Remembering</span>
+                    <button onclick="toggleAnswer(this)" style="background: var(--orange); color: var(--white); padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; margin-bottom: 10px;">Show Answer</button>
+                    <div class="answer-text" style="display: none;">
+                        Alexander built a massive causeway (the mole) from the mainland to the island, allowing his forces to reach Tyre's walls. He then used siege engines and engineering innovation to breach the walls. This seven-month siege demonstrated his determination and engineering capabilities.
+                    </div>
+                </div>
+
+                <!-- Q4 -->
+                <div class="question-item">
+                    <div class="question-text">
+                        Q4: What was the significance of Alexander's visit to the oracle of Zeus Ammon at Siwah?
+                    </div>
+                    <span class="bloom-tag">Analysing</span>
+                    <button onclick="toggleAnswer(this)" style="background: var(--orange); color: var(--white); padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; margin-bottom: 10px;">Show Answer</button>
+                    <div class="answer-text" style="display: none;">
+                        The oracle reportedly hailed Alexander as the son of Zeus Ammon. This provided divine legitimacy in both Greek and Egyptian culture, supporting his claim to rule. Whether Alexander genuinely believed this or used it for propaganda remains debated, but it transformed his image from mere military conqueror to a divinely ordained ruler.
+                    </div>
+                </div>
+
+                <!-- Q5 -->
+                <div class="question-item">
+                    <div class="question-text">
+                        Q5: Why did Alexander deviate from his main campaign to spend six months visiting Egypt and Siwah?
+                    </div>
+                    <span class="bloom-tag">Analysing</span>
+                    <button onclick="toggleAnswer(this)" style="background: var(--orange); color: var(--white); padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; margin-bottom: 10px;">Show Answer</button>
+                    <div class="answer-text" style="display: none;">
+                        <strong>Open-ended answer.</strong> Possible motivations include: (1) securing Egypt as a critical resource base and trading center, (2) seeking legitimacy through the oracle to consolidate rule, (3) genuine religious devotion or curiosity about divinity, (4) strategic pause to ensure stability in conquered territories before pursuing Darius. Historians debate which motive dominated.
+                    </div>
+                </div>
+
+                <!-- Q6 -->
+                <div class="question-item">
+                    <div class="question-text">
+                        Q6: What made the Battle of Gaugamela (331 BC) the "decisive" battle despite Alexander being outnumbered?
+                    </div>
+                    <span class="bloom-tag">Applying</span>
+                    <button onclick="toggleAnswer(this)" style="background: var(--orange); color: var(--white); padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; margin-bottom: 10px;">Show Answer</button>
+                    <div class="answer-text" style="display: none;">
+                        Alexander's tactical innovation (phalanx hold + cavalry flank charge), superior discipline of his troops, personal leadership by Alexander, and the psychological impact of Darius fleeing again all contributed. But critically, Gaugamela ended Darius's ability to field another army — the Persian Empire as a political entity collapsed afterward.
+                    </div>
+                </div>
+
+                <!-- Q7 -->
+                <div class="question-item">
+                    <div class="question-text">
+                        Q7: What was the significance of the founding of Alexandria in 331 BC?
+                    </div>
+                    <span class="bloom-tag">Understanding</span>
+                    <button onclick="toggleAnswer(this)" style="background: var(--orange); color: var(--white); padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; margin-bottom: 10px;">Show Answer</button>
+                    <div class="answer-text" style="display: none;">
+                        Alexandria became one of the ancient world's greatest cities — a hub of Mediterranean trade, later home to the Great Library and Museum. It symbolized Hellenistic cultural fusion (Greek city in Egypt) and ensured Alexander's lasting fame through urbanization, not just conquest. It outlasted empires and became legendary.
+                    </div>
+                </div>
+
+                <!-- Q8 -->
+                <div class="question-item">
+                    <div class="question-text">
+                        Q8: Why did Alexander burn Persepolis after capturing it?
+                    </div>
+                    <span class="bloom-tag">Analysing</span>
+                    <button onclick="toggleAnswer(this)" style="background: var(--orange); color: var(--white); padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; margin-bottom: 10px;">Show Answer</button>
+                    <div class="answer-text" style="display: none;">
+                        <strong>Open-ended answer.</strong> Practical reasons: destroying the administrative center of Persian power. Symbolic reasons: demonstrating total victory and the end of the Persian Empire. Some sources suggest drunken celebration; others suggest deliberate strategy. Historians debate whether it was justified military strategy or destructive hubris.
+                    </div>
+                </div>
+
+                <!-- Q9 -->
+                <div class="question-item">
+                    <div class="question-text">
+                        Q9: What does the story of Darius III's assassination reveal about the Persian Empire's collapse?
+                    </div>
+                    <span class="bloom-tag">Analysing</span>
+                    <button onclick="toggleAnswer(this)" style="background: var(--orange); color: var(--white); padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; margin-bottom: 10px;">Show Answer</button>
+                    <div class="answer-text" style="display: none;">
+                        Darius III was assassinated by Bessus, one of his own satraps, before Alexander could capture him. This reveals the fragmentation and desperation of the Persian elite. Unlike a centralized dynasty, the Persian Empire had fractured into competing power centers, suggesting structural weaknesses that made it vulnerable to conquest.
+                    </div>
+                </div>
+
+                <!-- Q10 -->
+                <div class="question-item">
+                    <div class="question-text">
+                        Q10: Which ancient source on Alexander's campaigns is considered most reliable and why?
+                    </div>
+                    <span class="bloom-tag">Remembering</span>
+                    <button onclick="toggleAnswer(this)" style="background: var(--orange); color: var(--white); padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; margin-bottom: 10px;">Show Answer</button>
+                    <div class="answer-text" style="display: none;">
+                        Arrian's Anabasis is considered most reliable. Though written in the 2nd century AD (about 400 years after Alexander), Arrian based his account on near-contemporary sources (Ptolemy and Aristobulus) and is generally careful with sources. Plutarch's Life is more biographical and anecdotal. All sources carry risks of distortion and legend.
+                    </div>
+                </div>
+
+                <!-- Q11 -->
+                <div class="question-item">
+                    <div class="question-text">
+                        Q11: Compare: Was the Persian Empire conquered because of Alexander's genius or Persia's weakness?
+                    </div>
+                    <span class="bloom-tag">Evaluating</span>
+                    <button onclick="toggleAnswer(this)" style="background: var(--orange); color: var(--white); padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; margin-bottom: 10px;">Show Answer</button>
+                    <div class="answer-text" style="display: none;">
+                        <strong>Open-ended answer.</strong> Strong responses address both factors: Alexander's military innovations (sarissa, phalanx, cavalry tactics), personal leadership, and strategic vision were extraordinary. AND the Persian Empire may have been overextended, facing internal strains, or underestimating the threat. The best answer avoids false dichotomy — both factors mattered.
+                    </div>
+                </div>
+
+                <!-- Q12 -->
+                <div class="question-item">
+                    <div class="question-text">
+                        Q12: What do Persian sources reveal about the conquest that Greek sources often downplay?
+                    </div>
+                    <span class="bloom-tag">Understanding</span>
+                    <button onclick="toggleAnswer(this)" style="background: var(--orange); color: var(--white); padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; margin-bottom: 10px;">Show Answer</button>
+                    <div class="answer-text" style="display: none;">
+                        Persian sources emphasize the catastrophic human and cultural costs of conquest — cities burned, the imperial system destroyed, Persian dominance in the Near East ended. While Greek sources celebrate Alexander's triumph, Persian sources show conquest as devastating loss. Historians like Briant emphasize this "Persian perspective" that Greek sources marginalize.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PRACTICE TAB -->
+        <div id="practice" class="tab-content">
+            <div class="practice-section">
+                <h2>Practice Lab Tools</h2>
+                <p style="margin-bottom: 25px; color: var(--gray-700);">Deepen your learning with these interactive practice tools. Click any card to launch the practice lab.</p>
+
+                <div class="practice-links">
+                    <!-- Practice 1 -->
+                    <div class="practice-link" onclick="window.parent.openPracticeLabTool('map-quiz', 4)">
+                        <div class="practice-icon">🗺️</div>
+                        <div class="practice-title">Map Quiz Practice</div>
+                        <div class="practice-description">Master battle sites and key locations from Week 4: Granicus, Issus, Tyre, Gaugamela</div>
+                    </div>
+
+                    <!-- Practice 2 -->
+                    <div class="practice-link" onclick="window.parent.openPracticeLabTool('map-explore', 4)">
+                        <div class="practice-icon">🧭</div>
+                        <div class="practice-title">Map Exploration</div>
+                        <div class="practice-description">Explore Alexander's route from Egypt to Gaugamela and the fall of Persian cities</div>
+                    </div>
+
+                    <!-- Practice 3 -->
+                    <div class="practice-link" onclick="window.parent.openPracticeLabTool('timeline', 4)">
+                        <div class="practice-icon">⏳</div>
+                        <div class="practice-title">Timeline Practice</div>
+                        <div class="practice-description">Order events: Granicus, Issus, Tyre, Siwah, Alexandria, Gaugamela, Persepolis</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>ANHS2609 Visual Guide — Week 4: The Fall of Persia</p>
+            <p style="font-size: 0.9em; margin-top: 10px;">Standalone HTML guide | Orange theme | 10 learning steps | Self-assessment tools</p>
+        </div>
+    </div>
+
+    <script>
+        const totalSteps = 10;
+        let currentStep = 0;
+
+        // Tab switching
+        function switchTab(tabName) {
+            // Hide all tabs
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.remove('active'));
+
+            // Remove active class from all buttons
+            const buttons = document.querySelectorAll('.tab-button');
+            buttons.forEach(btn => btn.classList.remove('active'));
+
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+
+            // Add active class to clicked button
+            event.target.classList.add('active');
+        }
+
+        // Step navigation
+        function showStep(stepIndex) {
+            if (stepIndex < 0 || stepIndex >= totalSteps) return;
+
+            currentStep = stepIndex;
+
+            // Hide all step cards
+            const cards = document.querySelectorAll('.step-card');
+            cards.forEach(card => card.classList.remove('active'));
+
+            // Show current step
+            cards[currentStep].classList.add('active');
+
+            // Update selector
+            document.getElementById('step-selector').value = currentStep;
+
+            // Update progress
+            updateProgress();
+
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function nextStep() {
+            showStep(currentStep + 1);
+        }
+
+        function previousStep() {
+            showStep(currentStep - 1);
+        }
+
+        function goToStep(value) {
+            showStep(parseInt(value));
+        }
+
+        function updateProgress() {
+            const percentage = ((currentStep + 1) / totalSteps) * 100;
+            document.getElementById('progress-fill').style.width = percentage + '%';
+            document.getElementById('progress-text').textContent = `Step ${currentStep + 1} of ${totalSteps}`;
+        }
+
+        // Answer toggle for self-test
+        function toggleAnswer(button) {
+            const answerDiv = button.nextElementSibling;
+            if (answerDiv.style.display === 'none') {
+                answerDiv.style.display = 'block';
+                button.textContent = 'Hide Answer';
+            } else {
+                answerDiv.style.display = 'none';
+                button.textContent = 'Show Answer';
+            }
+        }
+
+        // Initialize
+        showStep(0);
+    </script>
+<script>
+/* Notify parent dashboard of height changes so iframe can resize (no iframe scrollbar) */
+(function(){
+  function notifyHeight(){
+    if(window.parent!==window){
+      window.parent.postMessage({type:"vgResize",height:document.documentElement.scrollHeight},"*");
+    }
+  }
+  notifyHeight();
+  new MutationObserver(notifyHeight).observe(document.body,{childList:true,subtree:true,attributes:true});
+  window.addEventListener("resize",notifyHeight);
+})();
+</script>
+</body>
+</html>

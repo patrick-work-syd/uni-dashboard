@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OLES1603 Week 4: How the Universe Began - Visual Guide</title>
+    <style>
+        :root {
+            --purple: #8b5cf6;
+            --purple-light: #f5f3ff;
+            --purple-dark: #6d28d9;
+            --gray-100: #f9fafb;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-700: #374151;
+            --gray-900: #111827;
+            --green: #10b981;
+            --blue: #3b82f6;
+            --red: #ef4444;
+            --amber: #f59e0b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--gray-900);
+            background-color: var(--gray-100);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--purple-dark) 0%, var(--purple) 100%);
+            color: white;
+            padding: 40px 30px;
+            border-radius: 10px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 25px rgba(107, 40, 217, 0.2);
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.1em;
+            opacity: 0.95;
+        }
+
+        .course-meta {
+            font-size: 0.9em;
+            opacity: 0.85;
+            margin-top: 10px;
+        }
+
+        .steps-container {
+            display: grid;
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        .step {
+            background: white;
+            border-left: 6px solid var(--purple);
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        .step:hover {
+            box-shadow: 0 8px 20px rgba(139, 92, 246, 0.15);
+        }
+
+        .step-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            gap: 15px;
+        }
+
+        .step-number {
+            background: linear-gradient(135deg, var(--purple-dark), var(--purple));
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.3em;
+            flex-shrink: 0;
+        }
+
+        .step-title {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: var(--purple-dark);
+        }
+
+        .step-content {
+            display: grid;
+            gap: 15px;
+        }
+
+        .step-content p {
+            color: var(--gray-700);
+            line-height: 1.7;
+        }
+
+        .step-content ul {
+            list-style: none;
+            padding-left: 20px;
+        }
+
+        .step-content li {
+            margin-bottom: 12px;
+            padding-left: 20px;
+            position: relative;
+            color: var(--gray-700);
+            line-height: 1.7;
+        }
+
+        .step-content li:before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: var(--purple);
+            font-weight: bold;
+        }
+
+        .comparison-box {
+            background: var(--purple-light);
+            border: 2px solid var(--purple);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .comparison-item {
+            padding: 0 15px;
+        }
+
+        .comparison-item h4 {
+            color: var(--purple-dark);
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .comparison-item ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .comparison-item li {
+            padding-left: 20px;
+            position: relative;
+            margin-bottom: 8px;
+            font-size: 0.95em;
+            color: var(--gray-700);
+        }
+
+        .comparison-item li:before {
+            content: "◆";
+            position: absolute;
+            left: 0;
+            color: var(--purple);
+            font-size: 0.8em;
+        }
+
+        .callout {
+            background: #fff3cd;
+            border-left: 5px solid var(--amber);
+            border-radius: 6px;
+            padding: 20px;
+            margin: 20px 0;
+            font-style: italic;
+            color: var(--gray-900);
+            line-height: 1.8;
+        }
+
+        .callout strong {
+            color: var(--gray-900);
+            font-weight: 700;
+        }
+
+        .diagram {
+            background: var(--purple-light);
+            border: 2px dashed var(--purple);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+            color: var(--gray-700);
+            font-size: 0.95em;
+            line-height: 1.8;
+        }
+
+        .section-break {
+            margin: 50px 0;
+            padding: 30px;
+            background: linear-gradient(135deg, var(--purple-light) 0%, white 100%);
+            border-radius: 8px;
+            text-align: center;
+            border: 2px solid var(--purple);
+        }
+
+        .section-break h2 {
+            color: var(--purple-dark);
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .self-test {
+            background: white;
+            border: 2px solid var(--green);
+            border-radius: 8px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .self-test h2 {
+            color: var(--green);
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        .question {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: var(--gray-100);
+            border-radius: 6px;
+        }
+
+        .question-header {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            align-items: start;
+        }
+
+        .question-number {
+            background: var(--green);
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .question-text {
+            font-weight: 600;
+            color: var(--gray-900);
+            flex-grow: 1;
+        }
+
+        .bloom-tag {
+            display: inline-block;
+            background: var(--blue);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .answer {
+            margin-top: 12px;
+            padding: 12px 15px;
+            background: white;
+            border-left: 3px solid var(--green);
+            border-radius: 4px;
+            color: var(--gray-700);
+            line-height: 1.7;
+        }
+
+        .practice-section {
+            background: white;
+            border: 2px solid var(--purple);
+            border-radius: 8px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .practice-section h2 {
+            color: var(--purple-dark);
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        .practice-links {
+            display: grid;
+            gap: 15px;
+        }
+
+        .practice-link {
+            background: var(--purple-light);
+            border: 2px solid var(--purple);
+            border-radius: 6px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+        }
+
+        .practice-link:hover {
+            background: var(--purple);
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .practice-link:hover .practice-title {
+            color: white;
+        }
+
+        .practice-link:hover .practice-desc {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .practice-icon {
+            font-size: 1.5em;
+            margin-right: 10px;
+        }
+
+        .practice-title {
+            font-weight: 700;
+            font-size: 1.1em;
+            color: var(--purple-dark);
+            margin-bottom: 5px;
+            transition: color 0.3s ease;
+        }
+
+        .practice-desc {
+            font-size: 0.95em;
+            color: var(--gray-700);
+            margin-left: 24px;
+            transition: color 0.3s ease;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: var(--gray-700);
+            border-top: 2px solid var(--gray-200);
+            margin-top: 50px;
+            font-size: 0.95em;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8em;
+            }
+
+            .step {
+                padding: 20px;
+            }
+
+            .step-title {
+                font-size: 1.2em;
+            }
+
+            .comparison-box {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔭 OLES1603: Astronomy</h1>
+            <p>Week 4: How the Universe Began — The Big Bang</p>
+            <p class="course-meta">Exploring the Universe | Semester 1, 2026 | University of Sydney</p>
+        </header>
+
+        <div class="steps-container">
+            <!-- Step 1: The Astronomy Project -->
+            <div class="step">
+                <div class="step-header">
+                    <div class="step-number">1</div>
+                    <h2 class="step-title">The Astronomy Project</h2>
+                </div>
+                <div class="step-content">
+                    <p><strong>The Astronomy Project is the major assessment for this course, worth 40% of your final grade.</strong></p>
+                    <p>The task: communicate an astronomy-related topic in any mode you choose. This is deliberately open-ended:</p>
+                    <ul>
+                        <li><strong>Mode:</strong> Written report, painting, video, podcast, interpretive dance, sculpture — anything that communicates your chosen topic</li>
+                        <li><strong>Audience:</strong> You must target a specific audience (e.g., primary school children, retirees, science enthusiasts)</li>
+                        <li><strong>Idea Exploration:</strong> Due end of Week 4 (500-1000 words). Outline your topic, chosen mode, and target audience</li>
+                    </ul>
+                    <p><strong>Assessment criteria:</strong></p>
+                    <ul>
+                        <li>Understanding of your chosen astronomy topic</li>
+                        <li>Effectiveness of communication in your chosen mode</li>
+                        <li>Appropriateness for your target audience</li>
+                    </ul>
+                    <div class="callout">
+                        <strong>Start thinking about your topic now.</strong> The Idea Exploration is due at the end of this week. Choose something you're genuinely curious about — your enthusiasm will come through in the final project. The best projects are those where the student clearly enjoyed exploring the topic.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 2: Cosmology & The Expanding Universe -->
+            <div class="step">
+                <div class="step-header">
+                    <div class="step-number">2</div>
+                    <h2 class="step-title">Cosmology & The Expanding Universe</h2>
+                </div>
+                <div class="step-content">
+                    <p><strong>Cosmology is the study of the origins, structure, and evolution of the universe as a whole.</strong></p>
+                    <p>This week builds directly on Week 3's distance measurement techniques. Recall:</p>
+                    <ul>
+                        <li><strong>Cepheid variables</strong> (Leavitt's period-luminosity relationship) gave us distances to nearby galaxies</li>
+                        <li><strong>Spectroscopy</strong> revealed the chemical composition of stars and their motion</li>
+                    </ul>
+                    <p>Edwin Hubble combined these two tools to make a revolutionary discovery: <strong>the farther a galaxy is from us, the faster it is moving away.</strong></p>
+                    <p>Almost all galaxies are receding from us. The few exceptions (like Andromeda) are close enough that local gravitational attraction overcomes the cosmic expansion.</p>
+                </div>
+            </div>
+
+            <!-- Step 3: Doppler Shift & Measuring Galaxy Velocities -->
+            <div class="step">
+                <div class="step-header">
+                    <div class="step-number">3</div>
+                    <h2 class="step-title">Doppler Shift & Measuring Galaxy Velocities</h2>
+                </div>
+                <div class="step-content">
+                    <p><strong>The Doppler effect applies to light just as it applies to sound.</strong></p>
+                    <p>When a source of light moves relative to the observer, its spectral lines shift:</p>
+                    <div class="comparison-box">
+                        <div class="comparison-item">
+                            <h4>Redshift (Moving Away)</h4>
+                            <ul>
+                                <li>Spectral lines shift toward longer wavelengths</li>
+                                <li>Light appears "redder"</li>
+                                <li>Galaxy is receding from us</li>
+                                <li>Almost all distant galaxies show this</li>
+                            </ul>
+                        </div>
+                        <div class="comparison-item">
+                            <h4>Blueshift (Approaching)</h4>
+                            <ul>
+                                <li>Spectral lines shift toward shorter wavelengths</li>
+                                <li>Light appears "bluer"</li>
+                                <li>Galaxy is approaching us</li>
+                                <li>Only a few very nearby galaxies (e.g., Andromeda)</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <p><strong>Vesto Slipher (1912):</strong> Measured the velocities of spiral nebulae by analyzing their spectral line shifts. He found them moving at hundreds to thousands of km/s — far faster than anything observed within our own galaxy. This was deeply puzzling and challenged the prevailing view that the Milky Way was the entire universe.</p>
+                </div>
+            </div>
+
+            <!-- Step 4: The Great Debate & Hubble's Revolution -->
+            <div class="step">
+                <div class="step-header">
+                    <div class="step-number">4</div>
+                    <h2 class="step-title">The Great Debate & Hubble's Revolution</h2>
+                </div>
+                <div class="step-content">
+                    <p><strong>The Great Debate (1920):</strong> One of astronomy's defining moments — Harlow Shapley vs Heber Curtis on the nature of the universe.</p>
+                    <div class="comparison-box">
+                        <div class="comparison-item">
+                            <h4>Shapley's Position</h4>
+                            <ul>
+                                <li>Measured globular cluster distances</li>
+                                <li>Found the Milky Way is very large</li>
+                                <li>Argued spiral nebulae fit inside it</li>
+                                <li>The Milky Way IS the entire universe</li>
+                            </ul>
+                        </div>
+                        <div class="comparison-item">
+                            <h4>Curtis's Position</h4>
+                            <ul>
+                                <li>Spiral nebulae are separate "island universes"</li>
+                                <li>They are too far away to be inside the MW</li>
+                                <li>Each is a galaxy in its own right</li>
+                                <li>The universe is far larger than the MW</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <p><strong>Edwin Hubble (1925):</strong> Resolved the debate definitively. He identified Cepheid variables in the Andromeda nebula and used Leavitt's period-luminosity relationship to calculate its distance: <strong>285,000 parsecs</strong> — far beyond the edge of the Milky Way.</p>
+                    <p>Andromeda was an external galaxy. Curtis was right: the universe extends far beyond our own galaxy. Hubble then combined his distance measurements with Slipher's velocity data to discover the expansion of the universe.</p>
+                </div>
+            </div>
+
+            <!-- Step 5: Hubble's Law -->
+            <div class="step">
+                <div class="step-header">
+                    <div class="step-number">5</div>
+                    <h2 class="step-title">Hubble's Law: v = H₀ × d</h2>
+                </div>
+                <div class="step-content">
+                    <p><strong>When you plot galaxy velocity against distance, the result is a straight line.</strong></p>
+                    <ul>
+                        <li><strong>v</strong> = recession velocity (km/s)</li>
+                        <li><strong>d</strong> = distance (Megaparsecs, Mpc)</li>
+                        <li><strong>H₀</strong> = Hubble constant (the gradient) ≈ 70 km/s/Mpc</li>
+                    </ul>
+                    <div class="diagram">
+                        <strong>Hubble's Law:</strong> v = H₀ × d<br><br>
+                        A galaxy 1 Mpc away recedes at ~70 km/s<br>
+                        A galaxy 2 Mpc away recedes at ~140 km/s<br>
+                        A galaxy 10 Mpc away recedes at ~700 km/s<br><br>
+                        <strong>Age of universe:</strong> 1/H₀ ≈ 13.8 billion years
+                    </div>
+                    <p><strong>Key insight:</strong> The expansion is not galaxies flying apart through space — it is <strong>space itself expanding</strong>.</p>
+                    <p><strong>The balloon analogy:</strong> Imagine dots on the surface of a balloon. As the balloon inflates, every dot moves away from every other dot. No dot is at the "center." The expansion looks the same from any point. This is how cosmic expansion works — we are not at the center of the universe; every observer sees the same expansion.</p>
+                    <div class="callout">
+                        <strong>From Hubble's constant, we can estimate the age of the universe.</strong> If galaxies have been receding at their current rates since the beginning, running the clock backwards gives 1/H₀ ≈ 13.8 billion years — the time since everything was together at a single point.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 6: The Big Bang Timeline -->
+            <div class="step">
+                <div class="step-header">
+                    <div class="step-number">6</div>
+                    <h2 class="step-title">The Big Bang Timeline</h2>
+                </div>
+                <div class="step-content">
+                    <p><strong>The history of the universe, compressed into a timeline:</strong></p>
+                    <ul>
+                        <li><strong>t = 0:</strong> Pure energy. Inconceivably hot and dense. No matter exists yet</li>
+                        <li><strong>t ≈ 10⁻³² seconds:</strong> First subatomic particles form from energy (E = mc²)</li>
+                        <li><strong>t < 1 second:</strong> Protons and neutrons form from the particle soup</li>
+                        <li><strong>t ≈ 0.001 seconds:</strong> Nucleosynthesis begins — protons and neutrons fuse into hydrogen and helium nuclei</li>
+                        <li><strong>t = 0 to 380,000 years:</strong> The hot plasma era. Free electrons scatter photons constantly — the universe is opaque (like being inside a dense fog)</li>
+                        <li><strong>t = 380,000 years:</strong> Recombination — electrons attach to nuclei, forming neutral atoms. Photons are freed. The universe becomes transparent</li>
+                    </ul>
+                    <div class="diagram">
+                        <strong>Big Bang Timeline:</strong><br><br>
+                        Pure Energy → Particles (10⁻³² s) → Protons/Neutrons (&lt;1 s) → Nuclei (0.001 s)<br>
+                        → Hot Plasma Era (opaque) → <strong>Recombination (380,000 yr)</strong> → Transparent Universe<br><br>
+                        The photons released at recombination are still around today — we call them the CMB
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 7: The Cosmic Microwave Background (CMB) -->
+            <div class="step">
+                <div class="step-header">
+                    <div class="step-number">7</div>
+                    <h2 class="step-title">The Cosmic Microwave Background (CMB)</h2>
+                </div>
+                <div class="step-content">
+                    <p><strong>The photons released at recombination (380,000 years after the Big Bang) are still traveling through the universe.</strong></p>
+                    <p>Originally, they were extremely hot and energetic. But as space expanded, their wavelengths stretched — they are now <strong>redshifted into microwaves</strong>, corresponding to a temperature of about 3 Kelvin (-270°C).</p>
+                    <ul>
+                        <li>There are approximately <strong>400 million CMB photons per cubic meter</strong> all around us</li>
+                        <li>They come from every direction in the sky, uniformly</li>
+                        <li>They represent the oldest light in the universe — a snapshot of the cosmos at age 380,000 years</li>
+                    </ul>
+                    <p><strong>Penzias & Wilson (1965):</strong> Arno Penzias and Robert Wilson were calibrating a radio antenna at Bell Labs when they detected persistent background noise coming from all directions. They couldn't eliminate it:</p>
+                    <ul>
+                        <li>They cleaned the antenna thoroughly</li>
+                        <li>They blamed pigeons nesting in the horn and removed them</li>
+                        <li>The signal persisted — it was the same from every direction</li>
+                    </ul>
+                    <p>They had accidentally discovered the Cosmic Microwave Background. It was the afterglow of the Big Bang itself. <strong>Nobel Prize 1978.</strong></p>
+                    <div class="callout">
+                        <strong>The pigeons of cosmology:</strong> Penzias and Wilson's attempt to blame pigeons for the CMB signal is one of the most famous anecdotes in physics. Sometimes the most important discoveries happen when you can't get rid of the "noise."
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 8: Mapping the CMB: COBE, WMAP, Planck -->
+            <div class="step">
+                <div class="step-header">
+                    <div class="step-number">8</div>
+                    <h2 class="step-title">Mapping the CMB: COBE, WMAP, Planck</h2>
+                </div>
+                <div class="step-content">
+                    <p><strong>The CMB is almost perfectly uniform — but not quite.</strong> Tiny temperature fluctuations (about 1 part in 100,000) reveal the seeds of all cosmic structure.</p>
+                    <ul>
+                        <li><strong>COBE (1990s, NASA):</strong> The Cosmic Background Explorer was the first satellite to detect these tiny temperature fluctuations. The cold spots in the CMB map correspond to regions of slightly higher density — these are the seeds that would eventually grow into galaxies and galaxy clusters</li>
+                        <li><strong>WMAP (2000s, NASA):</strong> The Wilkinson Microwave Anisotropy Probe provided a higher-resolution map of the CMB, refining measurements of the universe's age, composition, and geometry</li>
+                        <li><strong>Planck (2010s, ESA):</strong> The European Space Agency's Planck satellite produced the highest-resolution CMB map to date. Its pattern of hot and cold spots matches the observed distribution of the earliest galaxies</li>
+                    </ul>
+                    <div class="diagram">
+                        <strong>CMB Satellite Resolution:</strong><br><br>
+                        COBE (1990s) → Low resolution, first detection of fluctuations<br>
+                        ↓<br>
+                        WMAP (2000s) → Medium resolution, refined cosmic parameters<br>
+                        ↓<br>
+                        Planck (2010s) → High resolution, most detailed CMB map ever<br><br>
+                        Each generation reveals finer detail in the seeds of cosmic structure
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 9: The Name "Big Bang" & Scientific Certainty -->
+            <div class="step">
+                <div class="step-header">
+                    <div class="step-number">9</div>
+                    <h2 class="step-title">The Name "Big Bang" & Scientific Certainty</h2>
+                </div>
+                <div class="step-content">
+                    <p><strong>The term "Big Bang" was coined by Fred Hoyle — and he meant it as an insult.</strong></p>
+                    <p>Hoyle supported the rival Steady State theory (the universe has always existed and continuously creates new matter). In a 1949 BBC radio interview, he dismissively referred to the competing theory as "this big bang idea." The name stuck, much to the amusement of Big Bang proponents.</p>
+                    <p><strong>How science works:</strong></p>
+                    <ul>
+                        <li>Science is <strong>never 100% certain</strong> — all it takes is one contradictory observation to overturn a theory</li>
+                        <li>The strength of a theory lies in its ability to make predictions that are later confirmed</li>
+                    </ul>
+                    <div class="diagram">
+                        <strong>The Scientific Cycle:</strong><br><br>
+                        Observation → Explanation → Prediction → New Observation<br><br>
+                        <strong>Example:</strong><br>
+                        Hubble's expansion (observation) → Universe had a beginning (explanation)<br>
+                        → There should be leftover radiation from the early universe (prediction)<br>
+                        → CMB discovered by Penzias & Wilson (new observation confirming prediction)
+                    </div>
+                    <p>The Big Bang theory's greatest triumph: it <strong>predicted</strong> the existence of background radiation before anyone detected it. When Penzias and Wilson found the CMB, it was a dramatic confirmation of a theoretical prediction — the hallmark of robust science.</p>
+                </div>
+            </div>
+
+            <!-- Step 10: Looking Into the Past & The Observable Universe -->
+            <div class="step">
+                <div class="step-header">
+                    <div class="step-number">10</div>
+                    <h2 class="step-title">Looking Into the Past & The Observable Universe</h2>
+                </div>
+                <div class="step-content">
+                    <p><strong>Looking farther into space means looking further back in time.</strong></p>
+                    <p>Light travels at a finite speed (~300,000 km/s). When we observe a galaxy 10 million light-years away, we see it as it was 10 million years ago. The farther we look, the younger the universe appears:</p>
+                    <ul>
+                        <li><strong>Nearby galaxies:</strong> We see them as they were millions of years ago</li>
+                        <li><strong>Distant galaxies:</strong> We see them as they were billions of years ago</li>
+                        <li><strong>The CMB:</strong> We see the universe as it was ~13.8 billion years ago — the farthest and oldest light we can detect</li>
+                    </ul>
+                    <p><strong>The observable universe</strong> has a finite radius — it is the sphere of everything whose light has had time to reach us since the Big Bang. Beyond this, there may be more universe, but we cannot see it (yet).</p>
+                    <div class="callout">
+                        <strong>The mirror thought experiment:</strong> Imagine placing a mirror 30 million light-years away. Light from Earth would take 30 million years to reach the mirror, and another 30 million years to return. Looking into that mirror, you would see Earth as it was 60 million years ago — you'd see the dinosaurs. This illustrates how every telescope is a time machine.
+                    </div>
+                    <p><strong>A profound consequence:</strong> We can never see the universe "as it is now" — we can only see it as it was. The farther we look, the deeper into history we peer. The CMB is our ultimate limit: the edge of the observable universe and the beginning of time as we can detect it.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Self-Test Section -->
+        <div class="section-break">
+            <h2>Self-Test Your Understanding</h2>
+            <p>10 questions spanning Bloom's Taxonomy</p>
+        </div>
+
+        <div class="self-test">
+            <h2>10 Self-Test Questions</h2>
+
+            <div class="question">
+                <div class="question-header">
+                    <div class="question-number">1</div>
+                    <div>
+                        <div class="question-text">What is cosmology? <span class="bloom-tag">Remembering</span></div>
+                    </div>
+                </div>
+                <div class="answer">
+                    <strong>Answer:</strong> Cosmology is the study of the origins, structure, and evolution of the universe as a whole. It seeks to answer fundamental questions about how the universe began, how it has changed over time, and what its ultimate fate might be.
+                </div>
+            </div>
+
+            <div class="question">
+                <div class="question-header">
+                    <div class="question-number">2</div>
+                    <div>
+                        <div class="question-text">Explain how Doppler shift allows astronomers to measure galaxy velocities. <span class="bloom-tag">Understanding</span></div>
+                    </div>
+                </div>
+                <div class="answer">
+                    <strong>Answer:</strong> Each element produces spectral lines at known wavelengths. When a galaxy moves away from us, these lines shift toward longer (redder) wavelengths; when it approaches, they shift toward shorter (bluer) wavelengths. By measuring how much the spectral lines have shifted from their laboratory positions, astronomers can calculate the galaxy's velocity toward or away from us.
+                </div>
+            </div>
+
+            <div class="question">
+                <div class="question-header">
+                    <div class="question-number">3</div>
+                    <div>
+                        <div class="question-text">Why was the Great Debate (Shapley vs Curtis) resolved by Hubble? <span class="bloom-tag">Understanding</span></div>
+                    </div>
+                </div>
+                <div class="answer">
+                    <strong>Answer:</strong> Shapley argued that the Milky Way was the entire universe and that spiral nebulae were inside it. Curtis argued they were separate galaxies. Hubble resolved the debate by identifying Cepheid variable stars in Andromeda and using Leavitt's period-luminosity relationship to measure its distance at 285,000 parsecs — far beyond the Milky Way's edge. This proved Andromeda was a separate galaxy, confirming Curtis's position.
+                </div>
+            </div>
+
+            <div class="question">
+                <div class="question-header">
+                    <div class="question-number">4</div>
+                    <div>
+                        <div class="question-text">Using Hubble's Law (H₀ = 70 km/s/Mpc), calculate the recession velocity of a galaxy 3 Mpc away. <span class="bloom-tag">Applying</span></div>
+                    </div>
+                </div>
+                <div class="answer">
+                    <strong>Answer:</strong> v = H₀ × d = 70 km/s/Mpc × 3 Mpc = <strong>210 km/s</strong>. The galaxy is receding from us at 210 kilometers per second.
+                </div>
+            </div>
+
+            <div class="question">
+                <div class="question-header">
+                    <div class="question-number">5</div>
+                    <div>
+                        <div class="question-text">Describe the balloon analogy for cosmic expansion. Why don't we need to be at the center? <span class="bloom-tag">Understanding</span></div>
+                    </div>
+                </div>
+                <div class="answer">
+                    <strong>Answer:</strong> Imagine dots painted on a balloon's surface. As the balloon inflates, every dot moves away from every other dot — and the farther apart two dots are, the faster they separate. No dot is at the "center" of the expansion because the expansion happens everywhere equally. Similarly, cosmic expansion is the stretching of space itself: every observer in the universe sees all distant galaxies receding, making every point appear to be the center.
+                </div>
+            </div>
+
+            <div class="question">
+                <div class="question-header">
+                    <div class="question-number">6</div>
+                    <div>
+                        <div class="question-text">Put these events in chronological order: recombination, nucleosynthesis, first protons form, CMB detected, pure energy. <span class="bloom-tag">Applying</span></div>
+                    </div>
+                </div>
+                <div class="answer">
+                    <strong>Answer:</strong> 1) Pure energy (t = 0) → 2) First protons form (t &lt; 1 second) → 3) Nucleosynthesis — hydrogen and helium nuclei form (t ≈ 0.001 seconds) → 4) Recombination — electrons attach to nuclei, universe becomes transparent (t = 380,000 years) → 5) CMB detected by Penzias &amp; Wilson (1965, ~13.8 billion years later).
+                </div>
+            </div>
+
+            <div class="question">
+                <div class="question-header">
+                    <div class="question-number">7</div>
+                    <div>
+                        <div class="question-text">Why was the universe opaque before recombination? <span class="bloom-tag">Understanding</span></div>
+                    </div>
+                </div>
+                <div class="answer">
+                    <strong>Answer:</strong> Before recombination, the universe was a hot plasma of free electrons and atomic nuclei. Free electrons constantly scattered photons (light particles), preventing light from traveling in a straight line — similar to how fog scatters car headlights. At recombination (380,000 years), the universe cooled enough for electrons to bind to nuclei, forming neutral atoms. With no more free electrons to scatter them, photons could finally travel freely, and the universe became transparent.
+                </div>
+            </div>
+
+            <div class="question">
+                <div class="question-header">
+                    <div class="question-number">8</div>
+                    <div>
+                        <div class="question-text">How did the COBE satellite show that the CMB supports galaxy formation theory? <span class="bloom-tag">Analysing</span></div>
+                    </div>
+                </div>
+                <div class="answer">
+                    <strong>Answer:</strong> COBE detected tiny temperature fluctuations in the CMB — variations of about 1 part in 100,000. These fluctuations correspond to regions of slightly different density in the early universe. The slightly denser (colder) regions had stronger gravitational attraction, pulling in more matter over billions of years. These cold spots are the "seeds" that grew into galaxies and galaxy clusters. The pattern of fluctuations matches the observed large-scale distribution of galaxies, providing direct evidence that today's cosmic structure grew from these primordial density variations.
+                </div>
+            </div>
+
+            <div class="question">
+                <div class="question-header">
+                    <div class="question-number">9</div>
+                    <div>
+                        <div class="question-text">Who coined the term "Big Bang" and why is it ironic? <span class="bloom-tag">Understanding</span></div>
+                    </div>
+                </div>
+                <div class="answer">
+                    <strong>Answer:</strong> Fred Hoyle coined the term "Big Bang" during a 1949 BBC radio interview. The irony is that Hoyle was a supporter of the rival Steady State theory and used the term mockingly to ridicule the idea of the universe having a beginning. Despite his intent to dismiss the theory, the catchy name stuck and is now universally used — even by supporters of the theory Hoyle was trying to discredit.
+                </div>
+            </div>
+
+            <div class="question">
+                <div class="question-header">
+                    <div class="question-number">10</div>
+                    <div>
+                        <div class="question-text">Why can science never be 100% certain about the Big Bang? Use the observation-theory cycle to explain. <span class="bloom-tag">Analysing</span></div>
+                    </div>
+                </div>
+                <div class="answer">
+                    <strong>Answer:</strong> Science operates through a cycle: observation leads to explanation, which generates predictions, which are tested by new observations. The Big Bang theory is extremely well-supported — Hubble's expansion predicted background radiation, and the CMB was found; COBE's fluctuations predicted galaxy distributions, which match observations. However, no scientific theory can ever be proven with absolute certainty. It only takes one reproducible, contradictory observation to require revision. The theory's strength lies not in certainty but in its repeated, successful predictions. Science embraces this uncertainty as a feature, not a flaw — it keeps the door open for deeper understanding.
+                </div>
+            </div>
+        </div>
+
+        <!-- Practice Section -->
+        <div class="practice-section">
+            <h2>Practice Activities</h2>
+            <div class="practice-links">
+                <div class="practice-link" onclick="window.parent.openPracticeLabTool('terms', 4)">
+                    <div class="practice-title">
+                        <span class="practice-icon">🔭</span>Astronomy Terms
+                    </div>
+                    <div class="practice-desc">Key terms flashcards for the Big Bang, CMB, Hubble's Law, and cosmology</div>
+                </div>
+                <div class="practice-link" onclick="window.parent.openPracticeLabTool('quiz', 4)">
+                    <div class="practice-title">
+                        <span class="practice-icon">🌟</span>Concept Quiz
+                    </div>
+                    <div class="practice-desc">Test your understanding of expansion, Doppler shift, and the Big Bang timeline</div>
+                </div>
+                <div class="practice-link" onclick="window.parent.openPracticeLabTool('sorts', 4)">
+                    <div class="practice-title">
+                        <span class="practice-icon">📏</span>Sort Challenge
+                    </div>
+                    <div class="practice-desc">Order Big Bang events, CMB satellites, and cosmic milestones chronologically</div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>OLES1603 Visual Guide - Week 4: How the Universe Began — The Big Bang</p>
+            <p>University of Sydney | Semester 1, 2026</p>
+            <p style="margin-top: 15px; font-size: 0.9em; color: var(--gray-600);">totalSteps=10 | Last updated: March 2026</p>
+        </footer>
+    </div>
+
+    <script>
+        // Configuration
+        const totalSteps = 10;
+
+        // Console message
+        console.log(`OLES1603 Week 4 Visual Guide loaded. Total steps: ${totalSteps}`);
+
+        // Track progress
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Visual guide initialized with purple theme');
+        });
+
+        // Provide fallback for practice tools
+        if (typeof window.parent === 'undefined' || !window.parent.openPracticeLabTool) {
+            window.openPracticeLabTool = function(type, week) {
+                alert(`Practice lab (${type}, Week ${week}) would open here in the full application.`);
+            };
+        }
+    </script>
+<script>
+/* Notify parent dashboard of height changes so iframe can resize (no iframe scrollbar) */
+(function(){
+  function notifyHeight(){
+    if(window.parent!==window){
+      window.parent.postMessage({type:"vgResize",height:document.documentElement.scrollHeight},"*");
+    }
+  }
+  notifyHeight();
+  new MutationObserver(notifyHeight).observe(document.body,{childList:true,subtree:true,attributes:true});
+  window.addEventListener("resize",notifyHeight);
+})();
+</script>
+</body>
+</html>
