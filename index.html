@@ -1545,6 +1545,7 @@ const COURSES = {
   LNGS1001: { code:'LNGS1001', name:'Linguistics', color:'var(--lngs)', badge:'badge-lngs', folder:'LNGS1001 Structure of Language' },
   ANHS2609: { code:'ANHS2609', name:'Alexander', color:'var(--anhs)', badge:'badge-anhs', folder:'ANHS2609 Alexander and the Hellenistic World' },
   OLES1603: { code:'OLES1603', name:'Astronomy', color:'var(--oles)', badge:'badge-oles', folder:'OLES1603 Astronomy' },
+  INFO1110: { code:'INFO1110', name:'Python Review', color:'var(--review)', badge:'badge-review', folder:'INFO1110 Python Review' },
 };
 
 const ASSESSMENTS = [
@@ -1648,7 +1649,41 @@ const ASSESSMENTS = [
       ]
     }
   },
-  { date:'2026-03-20', course:'INFO1113', name:'Task 2', weight:'4%', type:'task', desc:'Second weighted online coding task on Ed. Write code from specification. Covers Weeks 1-4 content including arithmetic operations and sorting. Can submit multiple times before deadline (only latest graded). Due 20 Mar 23:59. Released 17 Mar.' },
+  { date:'2026-03-20', course:'INFO1113', name:'Task 2', weight:'4%', type:'task', desc:'Employee Performance Analysis. Read a CSV file (via command-line arg), skip header, find employee(s) with highest and lowest sales. Must handle ties (multiple employees with same max/min). Class: PerformanceDataAnalysis. Max 100 employees. Due 20 Mar 23:59. Multiple submissions allowed.',
+    prep: {
+      rubric: [
+        { q:'Correct output (basic)', pts:2, topic:'Correct highest/lowest employee + sales for single-winner cases' },
+        { q:'Correct output (ties)', pts:2, topic:'Handles ties: multiple employees can share highest or lowest — all must be listed' },
+        { q:'File I/O', pts:2, topic:'Reads filename from args[0], opens file, skips header row correctly' },
+        { q:'Parsing', pts:2, topic:'Splits CSV lines on comma, parses sales as int, stores employee names' },
+        { q:'Output format', pts:1, topic:'Exact format: "Employee with Highest Sales:" then "Name (sales)" on separate lines' },
+        { q:'Compilation', pts:1, topic:'Code compiles — class name must be PerformanceDataAnalysis' }
+      ],
+      rules: [
+        'Online coding task on Ed — open book, AI allowed (acknowledge in comments)',
+        'Multiple submissions allowed — only your latest submission is graded',
+        'Deadline: 20 Mar 23:59 — late submissions may not be accepted',
+        'Class name MUST be <code>PerformanceDataAnalysis</code>',
+        'Filename provided as command-line argument: <code>java PerformanceDataAnalysis employees.txt</code>',
+        'First line is header row (Employee Name,Sales) — must skip it',
+        'Must handle ties: if multiple employees share highest or lowest sales, list ALL of them',
+        'Max 100 employees — can use fixed-size arrays',
+        'Output: "Employee with Highest Sales:" then each name as "Name (sales)" on its own line'
+      ],
+      files: [
+        { name:'Task 2 Spec (full)', path:'INFO1113 Object-Oriented Programming/Assessments/Task 2 - Employee Performance Analysis.md' },
+        { name:'Task 2 Announcement', path:'INFO1113 Object-Oriented Programming/Assessments/Task 2 Announcement.md' }
+      ],
+      tips: [
+        '<strong>Break it into steps:</strong> (1) Read args[0] for filename (2) Open file with Scanner(new File(args[0])) (3) Skip header with nextLine() (4) Loop reading lines, split on comma, parse int (5) Track max/min (6) Second pass to print all ties',
+        '<strong>Handle ties with arrays:</strong> Store all names+sales in arrays (max 100). After finding max/min values, loop again to print ALL employees matching that value',
+        '<strong>Watch output format carefully:</strong> Compare character-by-character with samples. "Employee with Highest Sales:" then "Name (sales)" — the autograder is exact',
+        '<strong>Edge cases:</strong> All employees with same sales (everyone ties), only one employee, two employees (one max one min)',
+        '<strong>Quick start skeleton:</strong> <code>import java.util.Scanner; import java.io.File;</code> then <code>Scanner sc = new Scanner(new File(args[0]));</code> then <code>sc.nextLine();</code> to skip header, then while loop with <code>line.split(",")</code>',
+        'Submit early with basic case working, then iterate for ties — you get unlimited attempts before deadline'
+      ]
+    }
+  },
   { date:'2026-03-20', course:'OLES1603', name:'Astronomy Idea Exploration', weight:'10%', type:'assignment', desc:'Present and explore your astronomy project topic idea (Week 4). Explain what interests you, what questions you want to investigate, and your preliminary research direction. Due 20 Mar 23:59. AI use limited — check Canvas for policy.',
     prep: {
       rubric: [
@@ -1682,7 +1717,6 @@ const ASSESSMENTS = [
   { date:'2026-03-20', course:'OLES1603', name:'Continuous: Big Bang', weight:'1%', type:'continuous', desc:'Weekly Canvas task related to the Big Bang topic. Engage with material on the origins of the universe, cosmic expansion, and evidence for the Big Bang theory. Submit via Canvas.' },
   { date:'2026-03-27', course:'LNGS1001', name:'Short Assignment 2', weight:'15%', type:'assignment', desc:'Covers Weeks 4-5 content: phonology (phonemic analysis, distinctive features, Sundanese exercises). Likely involves identifying phonemes, allophones, and applying phonological rules. AI allowed.' },
   { date:'2026-03-27', course:'OLES1603', name:'Continuous: Project ideas', weight:'1%', type:'continuous', desc:'Weekly Canvas task. Refine and share your project ideas with the group. Provide feedback on peers\' project concepts. Submit via Canvas.' },
-  { date:'2026-04-03', course:'INFO1113', name:'Task 2 (approx)', weight:'4%', type:'task', desc:'Marked online coding task on Ed. Expected to cover OOP fundamentals from Weeks 3-5: control flow, arrays, methods, and classes. Date approximate — check Ed for exact deadline.' },
   { date:'2026-04-03', course:'OLES1603', name:'Continuous: Galaxy Zoo', weight:'1%', type:'continuous', desc:'Weekly Canvas task. Participate in the Galaxy Zoo citizen science project — classify galaxies from real telescope images. Submit via Canvas.' },
   { date:'2026-04-10', course:'INFO1113', name:'Quiz 1 (approx)', weight:'3%', type:'quiz', desc:'Online quiz on Ed covering Weeks 1-5 content. Tests theoretical understanding of Java fundamentals, OOP concepts, and code reading. Date approximate — check Ed for exact schedule.' },
   { date:'2026-04-17', course:'OLES1603', name:'Continuous: Life elsewhere', weight:'1%', type:'continuous', desc:'Weekly Canvas task (Week 7). Explore the possibility of life beyond Earth — conditions for habitability, extremophiles, and the search for extraterrestrial intelligence. Submit via Canvas by 17 Apr 23:59.' },
@@ -3102,6 +3136,255 @@ const STUDY_GUIDES = {
       examRelevance: '<strong>No final exam for OLES1603.</strong> The Idea Exploration (10%) is due <strong>20 March</strong> \u2014 this is your immediate priority. The project (40%) + supporting documentation (20%) = 60% of your total grade. The Big Bang evidence chain (Hubble + CMB) and the cosmic distance ladder provide excellent project topic material. The Nobel Prize discussion and the observation\u2013theory interplay are themes the lecturer repeatedly emphasises.',
       distinctionTip: 'For a strong pass: (1) <strong>Submit the Idea Exploration on time</strong> \u2014 it\u2019s worth 10% and should articulate a clear, focused project idea drawing on Weeks 1\u20134 themes. (2) <strong>Consider the Big Bang evidence chain as a project lens</strong> \u2014 how Hubble\u2019s distance measurements built on Leavitt\u2019s Cepheids, which built on parallax. (3) <strong>Connect this week to the \u201coverlooked scientists\u201d theme</strong> from Week 3 \u2014 Hubble not receiving a Nobel Prize fits the pattern of institutional barriers to recognition. (4) <strong>Think about the readings technically</strong> \u2014 even skimming the original Hubble and Penzias & Wilson papers shows you can engage with primary sources.',
     }
+  },
+  INFO1110: {
+    0: {
+      title: 'Foundations Recap: Lessons 1-8',
+      studyHours: '~2-3 hours \u2014 Python review & Java bridge',
+      learningObjectives: [
+        '<strong>Recall</strong> Python variable types, expressions, and dynamic typing vs Java\'s static typing',
+        '<strong>Apply</strong> input/output and string operations, comparing Python\'s <code>input()</code>/<code>print()</code> to Java\'s Scanner/System.out',
+        '<strong>Compare</strong> conditional syntax (if/elif/else vs if/else if/else with braces)',
+        '<strong>Translate</strong> Python for/while loops to Java equivalents',
+        '<strong>Distinguish</strong> lists (mutable) from tuples (immutable) and map to Java ArrayList vs arrays',
+        '<strong>Explain</strong> dictionaries and map to Java HashMap',
+      ],
+      keyConcepts: [
+        'Python variables are labels pointing to objects \u2014 no declared type. Java variables have fixed types declared upfront. This is the fundamental difference: <strong>dynamic vs static typing</strong>.',
+        'Python uses <code>input()</code>/<code>print()</code>; Java uses <code>Scanner</code> for input and <code>System.out.println()</code> for output. String methods are similar but called differently.',
+        'Python uses indentation for code blocks; Java uses <code>{}</code> braces. Logical operators: Python uses <code>and</code>/<code>or</code>/<code>not</code>; Java uses <code>&&</code>/<code>||</code>/<code>!</code>.',
+        'Python <code>for x in list</code> becomes Java <code>for (Type x : list)</code> (enhanced for) or <code>for (int i=0; i&lt;n; i++)</code> (C-style). While loops are nearly identical.',
+        'Python lists are mutable sequences (<code>append</code>, <code>pop</code>, <code>insert</code>). Java equivalent: <code>ArrayList&lt;T&gt;</code> with <code>.add()</code>, <code>.remove()</code>, <code>.get()</code>.',
+        'Python tuples are immutable sequences. Java has no direct equivalent \u2014 use final arrays or immutable collections.',
+        'Python dicts map keys\u2192values. Java equivalent: <code>HashMap&lt;K,V&gt;</code> with <code>.put()</code>, <code>.get()</code>, <code>.containsKey()</code>.',
+        'Python error handling uses <code>try/except</code>; Java uses <code>try/catch</code>. Same concept, different syntax. Java also has checked exceptions.',
+      ],
+      keyTerms: {
+        'dynamic typing': 'Type checked at runtime (Python) \u2014 flexible but errors found late',
+        'static typing': 'Type checked at compile time (Java) \u2014 catches errors early',
+        'list': 'Mutable ordered sequence in Python; Java equivalent is ArrayList',
+        'tuple': 'Immutable ordered sequence in Python; no direct Java equivalent',
+        'dictionary': 'Key-value mapping in Python; Java equivalent is HashMap',
+        'indentation': 'Whitespace defining code blocks in Python (Java uses braces instead)',
+        'string method': 'Built-in operations like .upper(), .split(), .strip()',
+        'type casting': 'Converting between types: int(), str() in Python; (int), Integer.parseInt() in Java',
+        'boolean': 'True/False in Python; true/false (lowercase) in Java',
+        'try/except': 'Python error handling; equivalent to Java try/catch',
+        'f-string': 'Python string formatting f"Hello {name}"; Java uses String.format() or + concatenation',
+        'None': 'Python\'s null value; Java equivalent is null',
+      },
+      selfTest: [
+        {q:'What is the key difference between Python\'s dynamic typing and Java\'s static typing?', a:'Python: variables can hold any type, checked at runtime. Java: every variable declares a fixed type, checked at compile time. Java catches type mismatches before the program runs.', bloom:2},
+        {q:'How does Python\'s <code>for x in my_list</code> translate to Java?', a:'Java enhanced for: <code>for (Type x : myList)</code>. Or C-style: <code>for (int i = 0; i &lt; myList.size(); i++)</code>.', bloom:3},
+        {q:'What Java class is equivalent to a Python dictionary?', a:'<code>HashMap&lt;K,V&gt;</code>. Python <code>d["key"]</code> becomes Java <code>d.get("key")</code>; <code>d["key"] = val</code> becomes <code>d.put("key", val)</code>.', bloom:2},
+      ],
+    },
+    9: {
+      title: 'Recursion, Characters & List Comprehensions',
+      studyHours: '~2-3 hours \u2014 Python review & Java bridge',
+      learningObjectives: [
+        '<strong>Explain</strong> how recursion works with base case + recursive step',
+        '<strong>Trace</strong> recursive function execution using the call stack',
+        '<strong>Apply</strong> binary search recursively and explain O(log n) efficiency',
+        '<strong>Describe</strong> character encoding (ASCII \u2192 Unicode \u2192 UTF-8)',
+        '<strong>Write</strong> list comprehensions and translate the logic to Java loops/streams',
+        '<strong>Compare</strong> Python\'s RecursionError to Java\'s StackOverflowError',
+      ],
+      keyConcepts: [
+        'A <strong>recursive function</strong> calls itself. Every recursive function needs two parts: a <strong>base case</strong> (exit condition) and a <strong>recursive step</strong> (call to self with smaller input).',
+        'Classic example: <code>factorial(n)</code>. Base case: n==1 returns 1. Recursive: n * factorial(n-1). Trace: factorial(4) \u2192 4*factorial(3) \u2192 4*3*factorial(2) \u2192 4*3*2*1 = 24.',
+        '<strong>Binary search</strong> recursively halves a sorted list. Check middle; if target is smaller, search left half; if larger, search right. O(log n) \u2014 64 items needs max 6 comparisons.',
+        'Each recursive call adds a frame to the <strong>call stack</strong>. Too many nested calls = <strong>RecursionError</strong> (Python) or <strong>StackOverflowError</strong> (Java). Both languages have stack limits.',
+        'Characters are stored as numbers. <strong>ASCII</strong>: 0-127 (A=65, a=97). <strong>Unicode</strong>: covers all languages. <strong>UTF-8</strong>: variable-width encoding used everywhere.',
+        'Python: <code>ord("A")</code> returns 65, <code>chr(65)</code> returns "A". Java: <code>(int)\'A\'</code> returns 65, <code>(char)65</code> returns \'A\'. Same concept, different syntax.',
+        '<strong>List comprehensions</strong> are Python-only: <code>[x*2 for x in range(5) if x > 1]</code>. Java has no equivalent \u2014 use a for loop or Streams API.',
+        'The comprehension pattern (transform + filter) maps to functional concepts. Java Streams: <code>list.stream().filter(x -> x > 1).map(x -> x*2).collect(Collectors.toList())</code>.',
+      ],
+      keyTerms: {
+        'recursion': 'A function that calls itself to solve smaller instances of the same problem',
+        'base case': 'The stopping condition that prevents infinite recursion',
+        'recursive step': 'The part that calls the function again with a smaller input',
+        'call stack': 'Memory structure tracking active function calls; has limited depth',
+        'stack overflow': 'Error when too many nested calls exceed stack memory (RecursionError in Python, StackOverflowError in Java)',
+        'binary search': 'Efficient search algorithm dividing a sorted collection in half each step \u2014 O(log n)',
+        'list comprehension': 'Compact Python syntax: <code>[expr for item in list if condition]</code>',
+        'ASCII': 'Standard character encoding mapping numbers 0-127 to common characters',
+        'Unicode': 'Extended encoding supporting all world languages and symbols',
+        'ord()': 'Python function returning the integer code point of a character',
+        'chr()': 'Python function returning the character for an integer code point',
+        'enumerate()': 'Built-in that yields (index, value) pairs when iterating',
+      },
+      selfTest: [
+        {q:'What are the two essential parts of every recursive function?', a:'A <strong>base case</strong> (exit condition that returns a value without recursion) and a <strong>recursive step</strong> (calls itself with a smaller input). Without the base case, you get infinite recursion and a stack overflow.', bloom:2},
+        {q:'How many comparisons does binary search need for a sorted list of 1000 items?', a:'At most 10 comparisons. log\u2082(1000) \u2248 10. Each step halves the search space. Compare to linear search which needs up to 1000 comparisons.', bloom:3},
+        {q:'Translate <code>[x**2 for x in range(5)]</code> to Java.', a:'Java has no list comprehension. Use a loop: <code>List&lt;Integer&gt; result = new ArrayList&lt;&gt;(); for (int x = 0; x &lt; 5; x++) result.add(x * x);</code> Or Streams: <code>IntStream.range(0,5).map(x -> x*x).boxed().collect(Collectors.toList())</code>', bloom:3},
+      ],
+    },
+    10: {
+      title: 'Function Arguments, Parameters & Sets',
+      studyHours: '~2-3 hours \u2014 Python review & Java bridge',
+      learningObjectives: [
+        '<strong>Distinguish</strong> parameters (in definitions) from arguments (in calls)',
+        '<strong>Apply</strong> default values, keyword arguments, and positional arguments',
+        '<strong>Explain</strong> *args and **kwargs and why Java has no direct equivalent',
+        '<strong>Compare</strong> Python\'s <code>__name__ == "__main__"</code> to Java\'s main() method',
+        '<strong>Use</strong> the <code>with</code> statement for resource management and compare to Java\'s try-with-resources',
+        '<strong>Apply</strong> set operations (union, intersection, difference) and map to Java HashSet',
+      ],
+      keyConcepts: [
+        '<strong>Parameters</strong> are variables in a function definition. <strong>Arguments</strong> are values passed when calling. The distinction matters for understanding function signatures.',
+        'Python supports <strong>keyword arguments</strong>: <code>greet(name="Alice")</code>. Java has no keyword args \u2014 you use method overloading instead (multiple methods with different parameter lists).',
+        '<code>*args</code> collects extra positional arguments into a tuple. Java equivalent: <strong>varargs</strong> with <code>int... nums</code>. Both let you pass variable numbers of arguments.',
+        '<code>**kwargs</code> collects keyword arguments into a dictionary. Java has no equivalent \u2014 the closest pattern is passing a Map or using the Builder pattern.',
+        '<code>if __name__ == "__main__"</code> runs code only when the file executes directly (not when imported). Java equivalent: the <code>public static void main(String[] args)</code> method.',
+        'Python\'s <code>with open("file") as f:</code> guarantees cleanup. Java equivalent: <code>try (FileReader f = new FileReader("file")) { }</code> (try-with-resources). Both auto-close resources.',
+        '<strong>Sets</strong> are unordered collections of unique elements. Operations: union (<code>|</code>), intersection (<code>&amp;</code>), difference (<code>-</code>).',
+        'Java equivalent: <code>HashSet&lt;T&gt;</code>. Methods: <code>.add()</code>, <code>.contains()</code>, <code>.retainAll()</code> (intersection), <code>.addAll()</code> (union), <code>.removeAll()</code> (difference).',
+      ],
+      keyTerms: {
+        'parameter': 'Variable in a function definition: <code>def greet(name)</code>',
+        'argument': 'Value passed when calling: <code>greet("Alice")</code>',
+        'keyword argument': 'Argument passed by name: <code>greet(name="Alice")</code>. Java has no equivalent.',
+        'default parameter': 'Parameter with a fallback value: <code>def greet(name="World")</code>',
+        '*args': 'Collects extra positional arguments into a tuple. Java: <code>int... nums</code> (varargs)',
+        '**kwargs': 'Collects keyword arguments into a dictionary. No Java equivalent.',
+        '__name__': 'Special variable set to "__main__" when file runs directly, or module name when imported',
+        'with statement': 'Context manager for automatic resource cleanup. Java: try-with-resources.',
+        'set': 'Unordered collection of unique elements. Java: HashSet.',
+        'union': 'Combined elements from two sets. Python: <code>a | b</code>. Java: <code>a.addAll(b)</code>',
+        'intersection': 'Elements common to both sets. Python: <code>a &amp; b</code>. Java: <code>a.retainAll(b)</code>',
+        'scope': 'Region where a variable is accessible \u2014 local (inside function) vs global',
+      },
+      selfTest: [
+        {q:'What is the Java equivalent of Python\'s <code>*args</code>?', a:'Java <strong>varargs</strong>: <code>public void method(int... nums)</code>. Like *args, it accepts any number of arguments. Internally it becomes an array in Java (a tuple in Python).', bloom:2},
+        {q:'How does Java handle "keyword arguments" when Python has <code>def connect(host="localhost", port=8080)</code>?', a:'Java has no keyword arguments. Use <strong>method overloading</strong>: <code>connect()</code>, <code>connect(String host)</code>, <code>connect(String host, int port)</code>. Or use the Builder pattern for many optional parameters.', bloom:3},
+        {q:'What does the <code>with</code> statement guarantee? What\'s the Java equivalent?', a:'<code>with</code> guarantees resource cleanup (e.g., file closing) even if an exception occurs. Java equivalent: <strong>try-with-resources</strong>: <code>try (var f = new FileReader("x")) { ... }</code>.', bloom:2},
+      ],
+    },
+    11: {
+      title: 'Classes & Inheritance',
+      studyHours: '~3 hours \u2014 most critical for Java bridge',
+      learningObjectives: [
+        '<strong>Explain</strong> the class-object relationship (blueprint vs instance)',
+        '<strong>Create</strong> Python classes with __init__, instance variables, and methods',
+        '<strong>Distinguish</strong> instance variables from class variables and map to Java static fields',
+        '<strong>Apply</strong> special methods (__str__, __repr__, __eq__) and compare to Java toString/equals',
+        '<strong>Implement</strong> inheritance and method overriding in Python, mapping to Java extends/@Override',
+        '<strong>Use</strong> isinstance() for type checking, comparing to Java instanceof',
+      ],
+      keyConcepts: [
+        'A <strong>class</strong> is a blueprint; an <strong>object</strong> is an instance built from it. One class, many objects. Each object has the same structure but its own data.',
+        'Python: <code>__init__(self, name)</code> is the constructor. Java: <code>ClassName(String name)</code>. Both run when you create an object. Python uses <code>self</code>; Java uses <code>this</code>.',
+        '<strong>Instance variables</strong> belong to each object (<code>self.name</code>). <strong>Class variables</strong> are shared across all instances. Java equivalent: class variables are <code>static</code> fields.',
+        'Python <code>__str__</code> = Java <code>toString()</code>. Python <code>__eq__</code> = Java <code>equals()</code>. Python <code>__lt__</code> = Java <code>compareTo()</code>. Same concepts, different syntax.',
+        'Python uses <strong>naming conventions</strong> for privacy: <code>_private</code> (convention), <code>__mangled</code> (name mangling). Java enforces it: <code>private</code> keyword blocks access at compile time.',
+        '<strong>Inheritance</strong>: Python <code>class Dog(Animal)</code> = Java <code>class Dog extends Animal</code>. Child inherits all parent methods/fields. Use <code>super().__init__()</code> to call parent constructor.',
+        '<strong>Method overriding</strong>: child redefines a parent method. Python: just redefine it. Java: use <code>@Override</code> annotation. Both achieve polymorphism \u2014 same method name, different behaviour.',
+        '<code>isinstance(obj, ClassName)</code> checks type. Java equivalent: <code>obj instanceof ClassName</code>. Both return boolean. Used for type-safe operations.',
+      ],
+      keyTerms: {
+        'class': 'Blueprint defining attributes (data) and methods (behaviour) for objects',
+        'object': 'A specific instance of a class with its own data',
+        '__init__': 'Python constructor method. Java equivalent: <code>ClassName()</code> constructor',
+        'self': 'Reference to the current object in Python methods. Java equivalent: <code>this</code>',
+        'instance variable': 'Data belonging to a specific object (<code>self.name</code>). Java: non-static field',
+        'class variable': 'Data shared by all instances. Java equivalent: <code>static</code> field',
+        'inheritance': 'Child class inherits from parent. Python: <code>class Dog(Animal)</code>. Java: <code>extends</code>',
+        'method overriding': 'Child redefines parent method. Java uses <code>@Override</code> annotation',
+        'super()': 'Calls parent class method/constructor. Same keyword in both Python and Java',
+        'isinstance()': 'Type check in Python. Java equivalent: <code>instanceof</code> operator',
+        '__str__': 'Special method for string representation. Java equivalent: <code>toString()</code>',
+        'encapsulation': 'Hiding internal data. Python: naming convention. Java: <code>private</code> keyword',
+      },
+      selfTest: [
+        {q:'Translate this Python class to Java: <code>class Dog(Animal): def __init__(self, name): super().__init__(name)</code>', a:'<code>class Dog extends Animal { public Dog(String name) { super(name); } }</code>. Key mappings: <code>class Dog(Animal)</code> \u2192 <code>extends</code>, <code>__init__</code> \u2192 constructor, <code>super().__init__</code> \u2192 <code>super()</code>.', bloom:3},
+        {q:'What is the Java equivalent of Python\'s <code>__str__</code> method?', a:'Java\'s <code>toString()</code> method. Both are called automatically when you print an object or convert it to a string. In Java you typically add <code>@Override</code> when redefining it.', bloom:2},
+        {q:'How does Python\'s approach to private variables differ from Java\'s?', a:'Python uses <strong>naming conventions</strong> (_prefix = private by convention, __prefix = name mangling). Nothing is truly enforced. Java uses the <code>private</code> keyword which the compiler enforces \u2014 code outside the class literally cannot access private fields.', bloom:4},
+        {q:'What is polymorphism and how does it work through inheritance?', a:'Polymorphism means "many forms" \u2014 a child class can override a parent method, so calling the same method on different objects produces different behaviour. A list of Animal objects can contain Dog and Cat instances; calling <code>speak()</code> on each produces the appropriate sound.', bloom:2},
+      ],
+    },
+    12: {
+      title: 'Modules, NumPy & Comprehensions',
+      studyHours: '~2-3 hours \u2014 Python review & Java bridge',
+      learningObjectives: [
+        '<strong>Explain</strong> what modules are and why code reuse matters',
+        '<strong>Compare</strong> Python\'s three import patterns to Java\'s import system',
+        '<strong>Use</strong> standard library modules (math, os, random, datetime)',
+        '<strong>Apply</strong> NumPy array operations and understand vectorization',
+        '<strong>Write</strong> the ternary if expression and compare to Java\'s <code>? :</code> operator',
+        '<strong>Create</strong> set and dictionary comprehensions',
+      ],
+      keyConcepts: [
+        'A <strong>module</strong> is a .py file containing reusable code. <code>import math</code> loads the whole module. <code>from math import sqrt</code> imports one function. <code>from math import *</code> imports everything (avoid this).',
+        'Java equivalent: <code>import java.util.ArrayList;</code> imports a class. <code>import java.util.*;</code> imports all classes in a package. Same concept, but Java imports classes while Python imports modules.',
+        'Python standard library: <code>math</code> (sqrt, pi), <code>os</code> (file paths), <code>random</code> (random numbers), <code>datetime</code> (dates/times), <code>json</code> (JSON parsing). Java has equivalent classes in java.lang, java.util, java.io.',
+        '<strong>NumPy</strong> arrays are fixed-type, fixed-size, and support <strong>vectorized operations</strong> (operate on entire arrays at once). <code>arr * 2</code> doubles every element. No Java equivalent built-in \u2014 you\'d loop.',
+        'Python ternary: <code>x if condition else y</code>. Java ternary: <code>condition ? x : y</code>. Same logic, different syntax order. Python reads like English; Java puts condition first.',
+        '<strong>Set comprehension</strong>: <code>{x**2 for x in range(5)}</code> creates a set. <strong>Dict comprehension</strong>: <code>{k: v for k, v in pairs}</code> creates a dictionary. Java has no comprehensions \u2014 use loops or Streams.',
+        'You can create your own modules: write functions in a .py file, then <code>import mymodule</code> from another file. Use <code>__name__ == "__main__"</code> guard for test code.',
+        '<strong>Generator expressions</strong> use parentheses: <code>(x**2 for x in range(5))</code>. Like list comprehensions but produce values lazily \u2014 one at a time, saving memory for large datasets.',
+      ],
+      keyTerms: {
+        'module': 'A .py file containing reusable Python code. Java equivalent: a .java class file',
+        'import': 'Keyword to load a module. Python: <code>import math</code>. Java: <code>import java.util.List</code>',
+        'package': 'A directory of related modules (Python) or classes (Java)',
+        'standard library': 'Built-in modules shipped with the language (math, os, random, etc.)',
+        'NumPy': 'Third-party library for fast numerical arrays and vectorized operations',
+        'vectorized': 'Operations applied to entire arrays at once (no explicit loops needed)',
+        'ternary operator': 'Python: <code>x if cond else y</code>. Java: <code>cond ? x : y</code>',
+        'set comprehension': 'Compact syntax <code>{expr for item in list}</code> creating a set',
+        'dict comprehension': 'Compact syntax <code>{k: v for item in list}</code> creating a dictionary',
+        'generator expression': 'Lazy comprehension using parentheses \u2014 produces values one at a time',
+        'pip': 'Python package installer for third-party libraries (pip install numpy)',
+        'PyPI': 'Python Package Index \u2014 repository of 500,000+ third-party packages',
+      },
+      selfTest: [
+        {q:'Compare <code>import math</code> vs <code>from math import sqrt</code>. When would you use each?', a:'<code>import math</code> loads the whole module; access with <code>math.sqrt()</code>. <code>from math import sqrt</code> imports just sqrt; access as <code>sqrt()</code> directly. Use the first when you need multiple functions (keeps namespace clean); use the second for frequently-used single functions.', bloom:2},
+        {q:'What is the Java equivalent of Python\'s ternary <code>"even" if x % 2 == 0 else "odd"</code>?', a:'<code>x % 2 == 0 ? "even" : "odd"</code>. Java puts the condition first, then <code>?</code> true-value <code>:</code> false-value. Python reads left-to-right like English.', bloom:3},
+        {q:'Why are NumPy arrays faster than Python lists for numerical operations?', a:'NumPy arrays are <strong>fixed-type</strong> and stored in contiguous memory, enabling vectorized C-level operations on entire arrays. Python lists store pointers to objects of mixed types, requiring per-element Python interpretation. NumPy avoids the loop overhead entirely.', bloom:4},
+      ],
+    },
+    13: {
+      title: 'Decorators, Generators & Regular Expressions',
+      studyHours: '~2-3 hours \u2014 Python review & Java bridge',
+      learningObjectives: [
+        '<strong>Explain</strong> what decorators do and how the wrapper pattern works',
+        '<strong>Write</strong> a custom decorator that adds behaviour to a function',
+        '<strong>Compare</strong> Python decorators to Java\'s @annotations and Decorator design pattern',
+        '<strong>Explain</strong> how generators use yield to produce values lazily',
+        '<strong>Compare</strong> generators to Java\'s Iterator interface and Streams',
+        '<strong>Apply</strong> regex patterns using Python\'s re module (same syntax works in Java)',
+      ],
+      keyConcepts: [
+        'A <strong>decorator</strong> is a function that wraps another function to add behaviour. <code>@timer</code> above a function definition is syntactic sugar for <code>func = timer(func)</code>.',
+        'The wrapper pattern: decorator receives a function, defines an inner wrapper that runs code before/after calling the original, and returns the wrapper. The original function is unchanged.',
+        'Python <code>@decorator</code> \u2260 Java <code>@annotation</code>. Python decorators wrap and modify behaviour. Java annotations are just metadata tags. The closest Java equivalent is the <strong>Decorator design pattern</strong> (wrapping classes).',
+        'A <strong>generator</strong> uses <code>yield</code> instead of <code>return</code>. It pauses execution, returns a value, and resumes from that point on the next call. Produces values lazily \u2014 one at a time.',
+        'Java equivalent: the <code>Iterator</code> interface with <code>hasNext()</code>/<code>next()</code>. Also <strong>Streams</strong>: <code>Stream.generate(() -> value)</code>. Same lazy evaluation concept, more verbose in Java.',
+        '<strong>Generator expressions</strong>: <code>(x**2 for x in range(10))</code>. Like list comprehensions but lazy. Use when you don\'t need all values at once (saves memory for large datasets).',
+        '<strong>Regex</strong> (regular expressions) define patterns for matching text. The pattern syntax is nearly identical in Python and Java: <code>\\d+</code> matches digits, <code>[A-Z]</code> matches uppercase, <code>.*</code> matches anything.',
+        'Python: <code>re.search(r"\\d+", text)</code>. Java: <code>Pattern.compile("\\\\d+").matcher(text).find()</code>. Same regex engine, different API wrapper.',
+      ],
+      keyTerms: {
+        'decorator': 'Function that wraps another function to add behaviour. Uses <code>@</code> syntax.',
+        'wrapper': 'Inner function that calls the original function with added before/after logic',
+        '@decorator': 'Syntactic sugar: <code>@timer</code> above <code>def func()</code> equals <code>func = timer(func)</code>',
+        'generator': 'Function using <code>yield</code> that produces values lazily, one at a time',
+        'yield': 'Pauses function execution and returns a value; resumes on next iteration',
+        'generator expression': 'Compact lazy syntax: <code>(expr for item in iterable)</code>',
+        'StopIteration': 'Exception raised when a generator has no more values. For loops handle this automatically.',
+        'regex': 'Regular expression \u2014 pattern language for matching text. Same syntax in Python and Java.',
+        're module': 'Python module for regex: re.search(), re.findall(), re.sub()',
+        'Pattern': 'Java regex class: Pattern.compile("pattern").matcher(text)',
+        '\\d, \\w, \\s': 'Regex shorthand: \\d = digit, \\w = word char, \\s = whitespace. Same in both languages.',
+        'Iterator': 'Java interface with hasNext()/next() \u2014 closest equivalent to Python generators',
+      },
+      selfTest: [
+        {q:'What is the difference between a Python <code>@decorator</code> and a Java <code>@annotation</code>?', a:'A Python decorator <strong>wraps and modifies function behaviour</strong> (it\'s actual code that runs). A Java annotation is <strong>metadata only</strong> \u2014 it tags code with information but doesn\'t modify behaviour by itself. Java\'s Decorator design pattern (wrapping classes) is the closer equivalent.', bloom:4},
+        {q:'What happens when you call a generator function? Do you get a value?', a:'No \u2014 you get a <strong>generator object</strong>. No code runs yet. Values are produced one at a time when you call <code>next()</code> or iterate with a for loop. Each <code>yield</code> pauses execution until the next value is requested.', bloom:2},
+        {q:'Write a regex pattern that matches email addresses like <code>user@example.com</code>.', a:'<code>r"[\\w.+-]+@[\\w-]+\\.[\\w.]+"</code> or similar. The pattern syntax is the same in both Python (<code>re.search()</code>) and Java (<code>Pattern.compile()</code>).', bloom:3},
+      ],
+    },
   }
 };
 
@@ -10443,6 +10726,7 @@ function saDetectCourse() {
   const active = document.querySelector('.view.active');
   if (!active) return null;
   const id = active.id;
+  if (id.includes('info1110')) return 'INFO1110';
   if (id.includes('info1113')) return 'INFO1113';
   if (id.includes('lngs1001')) return 'LNGS1001';
   if (id.includes('anhs2609')) return 'ANHS2609';
@@ -10570,6 +10854,15 @@ function saBuildContext(courseCode) {
     if (typeof ASTRO_SORTS !== 'undefined') ctx += 'Sort exercises (' + ASTRO_SORTS.length + '): Drag items into correct order (spectral types, orbital mechanics, etc.)\n';
   }
 
+  if (!courseCode || courseCode === 'INFO1110') {
+    ctx += '\n### INFO1110 Python Review\n';
+    ctx += 'This is a prerequisite review section — the student passed Python basics (Lessons 1-8) but skipped advanced content (Lessons 9-13). He now needs those concepts for INFO1113 (Java/OOP).\n';
+    ctx += 'Available: 6 Visual Guides (Foundations Recap L1-8, L9 Recursion, L10 Args/Sets, L11 Classes/Inheritance, L12 Modules/NumPy, L13 Decorators/Generators/Regex)\n';
+    ctx += 'Each guide has Python→Java bridge panels, concept maps, and self-test questions.\n';
+    ctx += 'External tool: Advanced Studio (auto-graded coding drills) at Study guide for programing exam\\Foundational review\\INFO1110 Review v3\n';
+    ctx += 'CRITICAL BRIDGE CONCEPTS: self→this, __init__→constructor, class Dog(Animal)→class Dog extends Animal, *args→varargs, __name__→main(), with→try-with-resources, set→HashSet\n';
+  }
+
   // Study techniques
   ctx += '\n## STUDY TECHNIQUES\n';
   if (typeof STUDY_TECHNIQUES !== 'undefined') {
@@ -10632,6 +10925,7 @@ COURSE-SPECIFIC TUTORING:
 - LNGS1001 (Linguistics): For IPA errors, isolate the specific sound confusion (e.g., confusing /ɪ/ with /iː/). For phonology, walk through rules with minimal pairs. Always connect to Australian English examples they can say out loud.
 - ANHS2609 (History): Push beyond narrative ("Alexander did X") toward analysis ("Why did Alexander do X, and what does Source Y tell us about his motivations?"). For essay skills, model how to structure an argument with evidence. Reference specific primary and secondary sources from the materials.
 - OLES1603 (Astronomy): Distinguish observation from theory. For calculation questions, walk through the logic step by step. Use visual/spatial reasoning for concepts like parallax, redshift, spectral types.
+- INFO1110 (Python Review): This is a prerequisite review — the student passed Python basics (L1-8) but skipped advanced content (L9-13) and now needs those concepts for Java. Always bridge Python concepts to Java equivalents: self→this, __init__→constructor, class Dog(Animal)→extends, *args→varargs. Focus on conceptual understanding, not drill memorisation. When explaining Python, immediately show how the same idea appears in Java.
 
 GENERATING EXERCISES:
 When the student needs practice, generate fresh questions — don't just repeat the stored self-test bank. Create questions that target the specific gap you've identified. Tag questions by Bloom level (L1: Remember, L2: Understand, L3: Apply, L4: Analyse).
