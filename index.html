@@ -1717,7 +1717,7 @@ const ASSESSMENTS = [
     }
   },
   { date:'2026-03-20', course:'OLES1603', name:'Continuous: Big Bang', weight:'1%', type:'continuous', desc:'Weekly Canvas task related to the Big Bang topic. Engage with material on the origins of the universe, cosmic expansion, and evidence for the Big Bang theory. Submit via Canvas.' },
-  { date:'2026-03-27', course:'LNGS1001', name:'Short Assignment 2', weight:'15%', type:'assignment', desc:'Covers Weeks 4-5 content: phonology (phonemic analysis, distinctive features, Sundanese exercises). Likely involves identifying phonemes, allophones, and applying phonological rules. AI allowed.' },
+  { date:'2026-03-27', course:'LNGS1001', name:'Short Assignment 2', weight:'15%', type:'assignment', desc:'Covers Weeks 4-5 content: phonology (phonemic analysis, distinctive features, Sundanese exercises). Likely involves identifying phonemes, allophones, and applying phonological rules. AI allowed. NOTE from A1 feedback: velarisation of word-final [l] was missed — pay attention to allophonic variation rules in A2.' },
   { date:'2026-03-27', course:'OLES1603', name:'Continuous: Project ideas', weight:'1%', type:'continuous', desc:'Weekly Canvas task. Refine and share your project ideas with the group. Provide feedback on peers\' project concepts. Submit via Canvas.' },
   { date:'2026-04-03', course:'OLES1603', name:'Continuous: Galaxy Zoo', weight:'1%', type:'continuous', desc:'Weekly Canvas task. Participate in the Galaxy Zoo citizen science project — classify galaxies from real telescope images. Submit via Canvas.' },
   { date:'2026-04-10', course:'INFO1113', name:'Quiz 1 (approx)', weight:'3%', type:'quiz', desc:'Online quiz on Ed covering Weeks 1-5 content. Tests theoretical understanding of Java fundamentals, OOP concepts, and code reading. Date approximate — check Ed for exact schedule.' },
@@ -1737,7 +1737,7 @@ const ASSESSMENTS = [
   { date:'2026-05-22', course:'OLES1603', name:'Astronomy Project', weight:'40%', type:'assignment', desc:'Major capstone project — the centrepiece of the course. Present a comprehensive investigation of your chosen astronomy topic. Must demonstrate research depth, scientific understanding, and clear communication. AI allowed for written work.' },
   { date:'2026-05-22', course:'OLES1603', name:'Supporting Documentation', weight:'20%', type:'assignment', desc:'Documentation supporting your Astronomy Project: research notes, draft iterations, source annotations, peer feedback records, and reflection on your learning process. Due same day as the project.' },
   { date:'2026-05-29', course:'ANHS2609', name:'Tutorial Participation', weight:'10%', type:'continuous', desc:'Ongoing throughout semester. Assessed in tutorials — active, scholarly contributions including answers, questions, group work, and whole-class discussion. Graded cumulatively at end of semester.' },
-  { date:'2026-05-29', course:'OLES1603', name:'Round-table Presentations', weight:'10%', type:'assignment', desc:'Multiple presentations throughout the semester in tutorial round-table format. Present on astronomy topics to your group. AI prohibited for presentations — must demonstrate genuine understanding.' },
+  { date:'2026-05-29', course:'OLES1603', name:'Round-table Presentations', weight:'10%', type:'assignment', desc:'Mark is from the BEST of 3 key tutorial sessions: Weeks 3, 5, and 8 (all focused on the Astronomy Project). Present on astronomy topics to your group in round-table format. AI prohibited — must demonstrate genuine understanding. Week 3 session was MISSED (see Continuous: Group discussion entry). Only 2 chances remain (Weeks 5 and 8).' },
   { date:'2026-06-18', course:'LNGS1001', name:'Final Exam', weight:'40%', type:'exam', desc:'In-person, invigilated sit-down exam covering all semester content: phonetics, phonology, morphology, word classes, syntax, semantics, and discourse. AI prohibited.' },
   { date:'2026-06-20', course:'INFO1113', name:'Final Exam', weight:'55%', type:'exam', desc:'Hurdle requirement: must score ≥40% to pass the course regardless of overall mark. Covers all semester content. AI prohibited. In-person, supervised examination.' },
   { date:'2026-06-22', course:'ANHS2609', name:'Final Exam (1.5 hrs)', weight:'40%', type:'exam', desc:'1.5-hour in-person exam. Covers Alexander\'s campaigns, Hellenistic kingdoms, philosophy, and legacy. Expect essay-style and identification questions. AI prohibited.' },
@@ -4308,7 +4308,7 @@ const WORKFLOW_TRACKER = {
     { course:'OLES1603', name:'Astronomy Idea Exploration', date:'2026-03-20', weight:'10%', status:'complete',
       detail:'Rubric (5 criteria, 10pts), rules (6 incl. AI policy + topic selection advice), files (Assessment Overview + PDF), tips (5). Practice Lab link to Concept Lab. Added 8 Mar.' },
     { course:'LNGS1001', name:'Short Assignment 2', date:'2026-03-27', weight:'15%', status:'pending',
-      detail:'Phonology (phonemic analysis, distinctive features). Prep guide needed when Week 4-5 content available.' },
+      detail:'Phonology (phonemic analysis, distinctive features). Prep guide needed when Week 4-5 content available. A1 feedback: velarisation of word-final [l] was a weak area — ensure prep covers allophonic rules.' },
     { course:'ANHS2609', name:'Short Essay - Opis', date:'2026-04-17', weight:'17%', status:'pending',
       detail:'1000-word essay on mutiny at Opis. Prep guide needed when essay prompt released.' },
     { course:'LNGS1001', name:'Mid-term Quiz', date:'2026-04-17', weight:'20%', status:'pending',
@@ -4337,7 +4337,8 @@ const WORKFLOW_TRACKER = {
     { id:'materials-audit', desc:'Materials tab links audited (0 gaps all courses)', status:'done', date:'2026-03-16', note:'validate-materials.py: INFO(0), LNGS(0), ANHS(0), OLES(0)' },
     { id:'scrollbar-fix', desc:'Visual Guide iframe scrollbar eliminated', status:'done', date:'2026-03-16', note:'postMessage resize + autoResizeVgFrame onload — verified all 4 courses' },
     { id:'pctdraft-fix', desc:'pctDraft JS error in workflow tracker fixed', status:'done', date:'2026-03-16', note:'Was crashing wftRenderGuides on page load' },
-    { id:'wft-stats-review', desc:'Workflow Tracker stats show actionable info (not noise)', status:'done', date:'2026-03-18', note:'All 8 card badges show actionable state: pending/draft counts when work needed, "All done"/"All clear" when complete. Subtitle highlights only items needing attention.' }
+    { id:'wft-stats-review', desc:'Workflow Tracker stats show actionable info (not noise)', status:'done', date:'2026-03-18', note:'All 8 card badges show actionable state: pending/draft counts when work needed, "All done"/"All clear" when complete. Subtitle highlights only items needing attention.' },
+    { id:'email-workflow', desc:'Email check integrated into sync process (§7.1A)', status:'done', date:'2026-03-19', note:'Sync-prompt §7.1A: Will USyd Outlook check with follow-through chain (marks→assessment enrichment→prep feedback→MISSING flags). Logged in sync summary.' }
   ],
   weeklyReview: {
     schedule: 'Every Sunday before the weekly sync',
@@ -4444,131 +4445,7 @@ const SECURITY_AUDIT = {
   ]
 };
 
-// COMMERCIALIZATION_START (deploy-dashboard.sh strips this block for public repo)
-// ── Commercialization Research (parked 18 Mar 2026) ──
-const COMMERCIALIZATION = {
-  status: 'research',
-  lastUpdated: '2026-03-18',
-  concept: {
-    name: 'TBD (see naming research below)',
-    description: 'Adaptive AI study dashboard for university students — course-aware tutoring, practice tools, learning profiles, exercise generation. Currently built as single-student SPA; exploring B2B (university licensing) and B2C (direct-to-student) paths.',
-    techStack: 'Single-file HTML SPA, Claude API (BYOK), localStorage persistence, GitHub Pages hosting',
-    currentState: 'Working prototype serving 4 University of Sydney courses (Semester 1 2026). Adaptive Socratic tutor, 376 practice items, 15 study guides, visual guides, assessment prep, learning profiles, tutoring analytics.'
-  },
-  naming: {
-    original: 'SmartEd',
-    verdict: 'HIGH RISK — at least 5 active edtech companies use SmartEd or near-identical variants',
-    conflicts: [
-      { name:'SmartED Innovations', url:'smarted.in', desc:'Indian edtech startup, 150 employees, 1500+ students/month. Direct name collision.' },
-      { name:'SmartEd Systems', url:'smartedsystems.org', desc:'US grading reform platform for schools.' },
-      { name:'SmartEdTech', url:'smartedtech.com', desc:'Mobile learning platform for PK-12 education.' },
-      { name:'Smarted', url:'smarted.it', desc:'Italian startup from cognitive sciences/AI research.' },
-      { name:'SmarterEd', url:'smartered.com.au', desc:'Australian edtech selling maths/science resources. Same country, same sector.' }
-    ],
-    alternativesResearched: [
-      { name:'LearnSmart', risk:'FATAL', reason:'McGraw-Hill product since 2009, 2M+ users' },
-      { name:'SmartLearn', risk:'FATAL', reason:'Active AI-powered LMS platform + Indian EdTech company' },
-      { name:'EduSmart', risk:'FATAL', reason:'K-12 science platform + multiple regional entities' },
-      { name:'SmartStudy', risk:'FATAL', reason:'Multiple apps and platforms globally' },
-      { name:'StudyWise', risk:'FATAL', reason:'Israeli startup acquired by Collage AI (2025), 150K+ users' },
-      { name:'LearnWise', risk:'FATAL', reason:'Amsterdam-based, €2M seed, 720K+ students, integrates with Canvas/Moodle/Blackboard — direct competitor' },
-      { name:'EduWise', risk:'HIGH', reason:'At least 5 entities using this name' },
-      { name:'SmartPath', risk:'HIGH', reason:'Multiple active education products' },
-      { name:'BrightEd', risk:'MEDIUM-HIGH', reason:'.ai and .io available but multiple Bright+Ed companies exist' },
-      { name:'ClearEd', risk:'MEDIUM', reason:'Less crowded but .com taken, sounds like past tense verb' }
-    ],
-    recommendations: [
-      { name:'StudyWeave', risk:'LOW', domains:'.com/.ai/.io/.com.au all available', rationale:'Strong metaphor (weaving course materials together). No meaningful prior art.' },
-      { name:'EdGround', risk:'LOW', domains:'.com/.ai/.io/.com.au all available', rationale:'Short, memorable, suggests solid foundation. Works well in B2B positioning.' },
-      { name:'StudyTrellis', risk:'LOW', domains:'.com/.ai/.io/.com.au all available', rationale:'Support structure for growth. Classical/academic feel suits university buyers.' },
-      { name:'EdClara', risk:'LOW-MEDIUM', domains:'.com/.ai/.io/.com.au all available', rationale:'Latin root clara = clear/bright. Elegant. Clara EdTech (India) is different market.' },
-      { name:'StudyCanopy', risk:'LOW-MEDIUM', domains:'.com/.ai/.io/.com.au all available', rationale:'Shelter/coverage metaphor. Canopy Ed exists but different market (teacher PD).' },
-      { name:'EdGrove', risk:'LOW', domains:'.com/.ai/.io/.com.au all available', rationale:'Nature metaphor, cultivated learning environment. Very clean.' }
-    ]
-  },
-  businessApproach: [
-    { model:'B2B University Licensing', pros:'Recurring revenue, institutional buy-in, scale per university', cons:'Long sales cycles, procurement complexity, need multi-tenant architecture', notes:'LearnWise (competitor) raised €2M doing exactly this with Canvas integration. Validates the market but means competition.' },
-    { model:'B2C Direct-to-Student', pros:'Fast iteration, direct feedback, subscription model', cons:'High CAC, students are price-sensitive, need content for many universities', notes:'Current BYOK pattern (student provides own API key) reduces cost barrier. Could offer free tier + premium.' },
-    { model:'Freemium SaaS', pros:'Low barrier to entry, viral potential among students', cons:'Conversion rates typically low for student tools, support burden', notes:'Free: basic study guides + practice tools. Premium: AI tutor, learning profiles, analytics, exercise saving.' }
-  ],
-  privacy: {
-    principle: 'We collect aggregate learning pattern data to improve materials. We do not track, profile, or report on individual students. Period.',
-    dataClassification: [
-      { category: 'Individual Profile', description: 'Error history, confidence scores, tool usage, topic strengths/weaknesses for a specific student', storage: 'Student\u2019s device only (localStorage or local encrypted store)', shared: 'Never. Not transmitted to our servers. Not visible to instructors, administrators, or us.', purpose: 'Personalise the AI tutor\u2019s responses for that student\u2019s session.' },
-      { category: 'Aggregate Error Patterns', description: 'Anonymised: "42% of students answered Q7 on recursion incorrectly" \u2014 no student IDs, no names, no device fingerprints', storage: 'Our analytics service (AWS)', shared: 'Used internally to identify weak content. Shared with course authors as aggregate stats only.', purpose: 'If 5 out of 10 students repeatedly misunderstand a concept, the problem is the material, not the students. This data tells us what to fix.' },
-      { category: 'Content Effectiveness Metrics', description: 'Which visual guides, practice tools, and study techniques correlate with improved quiz performance (aggregate only)', storage: 'Our analytics service (AWS)', shared: 'Used to rank and recommend study approaches. Never tied to individuals.', purpose: 'Measure whether what we\u2019re building actually works. Iterate based on evidence, not guesswork.' },
-      { category: 'Session Telemetry', description: 'Time-on-task, tool opens, guide views \u2014 anonymised and aggregated', storage: 'Our analytics service (AWS)', shared: 'Internal product analytics only.', purpose: 'Understand which features get used and which are ignored.' }
-    ],
-    policyApproach: {
-      philosophy: 'No bullshit. Every data point we collect has a stated purpose. If the purpose doesn\u2019t justify it, we don\u2019t collect it. The policy is written in plain English, not legalese.',
-      optOut: 'Students can opt out of aggregate data contribution entirely. If they do: (1) their AI tutor still works (profile stays local), (2) practice tools still work, (3) they lose personalised \u201cstudents like you found X helpful\u201d recommendations. We tell them exactly what they lose \u2014 no dark patterns, no guilt trips.',
-      principles: [
-        'Individual learning data never leaves the student\u2019s device',
-        'Aggregate data is truly anonymised \u2014 no re-identification possible, especially in small cohorts',
-        'No instructor/admin dashboards showing individual student performance (that\u2019s LMS territory, not ours)',
-        'Opt-out is one click, with a clear explanation of what changes',
-        'Privacy policy is max 2 pages, plain language, with a summary table at the top',
-        'Annual third-party privacy audit once revenue justifies it'
-      ],
-      universityConsiderations: 'Australian universities operate under the Privacy Act 1988 and may have institution-specific policies. FERPA (US) applies if expanding internationally. Key: we\u2019re not an LMS and don\u2019t hold student records \u2014 this simplifies compliance significantly. The fact that individual profiles never leave the device is our strongest privacy argument.'
-    }
-  },
-  infrastructure: {
-    currentState: 'Static SPA on GitHub Pages + direct browser-to-Anthropic API calls (BYOK). Zero server infrastructure. Zero ongoing cost.',
-    targetState: 'S3 + CloudFront (static hosting) + Lambda + DynamoDB (profile sync + aggregate analytics) + Anthropic API proxy',
-    apiModel: {
-      decision: 'Proxy (not BYOK)',
-      rationale: 'BYOK doesn\u2019t scale \u2014 you can\u2019t ask every student to get their own API key. The product needs to be a complete package: sign up, log in, start studying. We manage the Anthropic relationship and bill institutions or students as part of the subscription.',
-      implementation: 'API Gateway + Lambda proxy to Anthropic. Per-user rate limiting. Usage metering for billing. Caching of system prompts (Anthropic prompt caching reduces cost ~90% for repeated system prompts).'
-    },
-    aws: [
-      { service: 'S3 + CloudFront', purpose: 'Static dashboard hosting. Global CDN. ~$5/month at scale.', notes: 'Replace GitHub Pages. Custom domain. HTTPS.' },
-      { service: 'Cognito', purpose: 'Authentication. University SSO/SAML integration for B2B. Email/password for B2C.', notes: 'Handles the auth model question cleanly. SAML federation lets universities use their existing login.' },
-      { service: 'API Gateway + Lambda', purpose: 'Anthropic API proxy, profile sync endpoints, aggregate analytics ingestion.', notes: 'Serverless = zero cost at zero usage, scales automatically. No servers to manage.' },
-      { service: 'DynamoDB', purpose: 'User accounts, session metadata, aggregate error pattern store.', notes: 'NOT for individual learning profiles (those stay on-device). Only for: account info, anonymised aggregates, opt-in profile backup.' },
-      { service: 'Athena + S3 (data lake)', purpose: 'Analytics queries over aggregate data. "What % of students struggled with recursion this semester?"', notes: 'Query on demand, pay per query. No always-on analytics database needed.' }
-    ],
-    dataResidency: {
-      position: 'Offer AP-Southeast-2 (Sydney) as default region for Australian university deployments. Data stays in Australia.',
-      rationale: 'Some procurement teams will ask about this. The honest answer is it rarely matters for anonymised aggregate data with no PII, but offering AU hosting removes the objection entirely and costs us nothing (AWS Sydney region has full service coverage).',
-      implementation: 'Multi-region deployment is straightforward with CloudFront + regional DynamoDB tables. If we expand to US/EU universities, spin up in those regions.'
-    },
-    costEstimate: 'At 1,000 students: ~$200-400/month AWS + ~$500-2,000/month Anthropic API (depending on usage, with prompt caching). Anthropic cost is the dominant factor by far.'
-  },
-  partnerships: {
-    anthropicUniversity: {
-      opportunity: 'Anthropic (and OpenAI, Google) are actively pursuing university partnerships to establish their models as the standard in higher education. This creates a potential win-win: we provide the study platform that makes the AI useful for students, Anthropic provides discounted or free API access to drive adoption.',
-      valueToAnthropic: [
-        'Distribution channel into universities \u2014 thousands of students using Claude daily for coursework',
-        'High-quality, supervised AI usage data (educational context is great PR vs. concerns about AI misuse)',
-        'Lock-in effect: students trained on Claude become professionals who prefer Claude',
-        'Competitive moat against OpenAI\u2019s university play (ChatGPT Edu)'
-      ],
-      valueToUs: [
-        'Eliminates our largest variable cost (API usage)',
-        'Co-marketing with a well-known AI brand',
-        'Technical support and early access to new features',
-        'Credibility with university procurement ("powered by Anthropic" vs. random startup)'
-      ],
-      approach: 'Reach out to Anthropic\u2019s partnerships team once we have a working multi-tenant demo with 2-3 pilot courses. Come with data: student engagement numbers, learning outcome improvements, cost-per-student projections. The pitch is: "We\u2019ve built the best university study tool on Claude. Help us scale it and you own the university market."',
-      competitiveLandscape: 'OpenAI launched ChatGPT Edu in 2024. Google is pushing NotebookLM for education. Anthropic needs an education play. We could be that play.'
-    }
-  },
-  nextSteps: [
-    'Choose a brand name (top 3: StudyWeave, EdGround, StudyTrellis)',
-    'Register domains (.com + .ai minimum)',
-    'Draft the plain-language privacy policy (2-page max, summary table, opt-out flow)',
-    'Build multi-tenant architecture: Cognito auth + DynamoDB accounts + anonymised aggregate pipeline',
-    'Implement API proxy (replace BYOK with managed Anthropic access)',
-    'Set up AWS Sydney region deployment (S3 + CloudFront + Lambda)',
-    'Create demo with 2-3 pilot courses showing aggregate analytics',
-    'Approach Anthropic partnerships team with usage data and co-marketing pitch',
-    'Research university procurement processes in Australia',
-    'Create landing page and pitch deck',
-    'Identify pilot universities / departments for beta'
-  ]
-};
-// COMMERCIALIZATION_END
+const COMMERCIALIZATION = { status: "local-only", lastUpdated: "stripped", concept: { name: "", description: "", techStack: "", currentState: "" }, naming: { original: "", verdict: "", conflicts: [], alternativesResearched: [], recommendations: [] }, businessApproach: [], nextSteps: [] };
 
 // ======================== HELPERS ========================
 
