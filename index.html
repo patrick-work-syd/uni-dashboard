@@ -976,6 +976,7 @@ document.getElementById('pin-input').focus();
           <li><a href="https://github.com/patrick-work-syd/Uni-2026/blob/main/INFO1113%20Object-Oriented%20Programming/Assessments/Task%201.md" target="_blank">Task 1</a></li>
           <li><a href="https://github.com/patrick-work-syd/Uni-2026/blob/main/INFO1113%20Object-Oriented%20Programming/Assessments/EFT%20Announcement%20-%20Week%203.md" target="_blank">EFT Announcement - Week 3</a></li>
           <li><a href="https://github.com/patrick-work-syd/Uni-2026/blob/main/INFO1113%20Object-Oriented%20Programming/Assessments/Task%202%20Announcement.md" target="_blank">Task 2 Announcement</a></li>
+          <li><a href="https://github.com/patrick-work-syd/Uni-2026/blob/main/INFO1113%20Object-Oriented%20Programming/Assessments/Task%202%20-%20Employee%20Performance%20Analysis.md" target="_blank">Task 2 - Employee Performance Analysis</a></li>
         </ul>
       </details>
       <details><summary style="font-weight:600;cursor:pointer;margin-bottom:6px">Transcripts</summary>
@@ -1827,6 +1828,7 @@ const DASHBOARD_CHANGELOG = [
   { date: '2026-03-18', action: 'add', target: 'VISUAL_GUIDES', detail: 'ANHS2609 Week 4 visual guide created (The Fall of Persia \u2014 10 steps, orange theme). Covers Granicus, Issus, Tyre, Egypt/Siwah, Alexandria, Gaugamela, Persepolis, Darius III, primary sources. 12 self-test Qs. NBML_VALIDATED set false (needs validation).' },
   { date: '2026-03-18', action: 'fix', target: 'SYNC_TRACKER', detail: 'Fixed CC5 file path mismatches: OLES1603_Lec1.pdf \u2192 Week 01 - Astronomy Through the Ages.pdf, Week 03 - Stars and Constellations.md \u2192 Week 03 - How We Know What We Know.md. consistency-check.py updated to search nested subdirs.' },
   { date: '2026-03-18', action: 'update', target: 'CONSISTENCY', detail: 'Full consistency validation: 10/10 PASS, 0 warnings, 0 issues. All 16 study guides + 16 visual guides aligned. All SYNC_TRACKER files verified on disk.' },
+  { date: '2026-03-19', action: 'fix', target: 'VISUAL_GUIDES', detail: 'ANHS2609 Week 4 visual guide: NotebookLM validation fix — corrected Tyre siege duration (7→6 months), replaced Q8 (Persepolis burning, not in Week 4 scope) with Memnon of Rhodes question, replaced Q9 (Darius assassination, not in Week 4 scope) with Alexander administrative approach question. NBML_VALIDATED.visualGuides.ANHS2609[4] set true.' },
 ];
 
 const WEEKLY_CONTENT = {
@@ -4119,7 +4121,7 @@ const ASTRO_SORTS = [
 
 // ======================== SYNC TRACKER DATA ========================
 
-const LAST_SYNC_DATE = '2026-03-18T22:00';
+const LAST_SYNC_DATE = '2026-03-19T10:00';
 
 const SYNC_TRACKER = {
   1: {
@@ -4253,7 +4255,7 @@ const NBML_VALIDATED = {
   visualGuides: {
     INFO1113: { 1: true, 2: true, 3: true, 4: true },
     LNGS1001: { 1: true, 2: true, 3: true, 4: true },
-    ANHS2609: { 1: true, 2: true, 3: true, 4: false },
+    ANHS2609: { 1: true, 2: true, 3: true, 4: true },
     OLES1603: { 1: true, 2: true, 3: true, 4: true }
   },
   practiceTools: {
@@ -4331,7 +4333,8 @@ const WORKFLOW_TRACKER = {
     { id:'ai-docs', desc:'AI Integration docs match actual SA capabilities', status:'done', date:'2026-03-16', note:'Sync>AI Integration panel fully rewritten: adaptive tutoring, error tracking, exercise gen, learning profile, course strategies, analytics. Must be updated when SA features change.' },
     { id:'materials-audit', desc:'Materials tab links audited (0 gaps all courses)', status:'done', date:'2026-03-16', note:'validate-materials.py: INFO(0), LNGS(0), ANHS(0), OLES(0)' },
     { id:'scrollbar-fix', desc:'Visual Guide iframe scrollbar eliminated', status:'done', date:'2026-03-16', note:'postMessage resize + autoResizeVgFrame onload — verified all 4 courses' },
-    { id:'pctdraft-fix', desc:'pctDraft JS error in workflow tracker fixed', status:'done', date:'2026-03-16', note:'Was crashing wftRenderGuides on page load' }
+    { id:'pctdraft-fix', desc:'pctDraft JS error in workflow tracker fixed', status:'done', date:'2026-03-16', note:'Was crashing wftRenderGuides on page load' },
+    { id:'wft-stats-review', desc:'Workflow Tracker stats show actionable info (not noise)', status:'done', date:'2026-03-18', note:'All 8 card badges show actionable state: pending/draft counts when work needed, "All done"/"All clear" when complete. Subtitle highlights only items needing attention.' }
   ],
   weeklyReview: {
     schedule: 'Every Sunday before the weekly sync',
@@ -4342,7 +4345,7 @@ const WORKFLOW_TRACKER = {
       { area: 'Content Quality', question: 'Are study guides accurate and thorough? Do self-test questions cover the right Bloom levels for each assessment type?', research: 'Review latest pedagogical research on question design and cognitive load theory' },
       { area: 'Missing Features', question: 'What features would most improve learning outcomes right now? What are similar university study platforms doing?', research: 'Look at Anki, Quizlet, Notion student templates, and university LMS plugins for inspiration' },
       { area: 'Assessment Readiness', question: 'Are upcoming assessments fully prepared for? Are prep guides actionable enough?', research: 'Check rubric alignment — does each prep guide directly address every rubric criterion?' },
-      { area: 'Technical Health', question: 'Are there any broken links, JS errors, or UX friction points? Is the SA giving helpful answers?', research: 'Run validate-materials.py and security-audit.py, test SA with 5 sample questions per course' },
+      { area: 'Technical Health', question: 'Are there any broken links, JS errors, or UX friction points? Is the SA giving helpful answers? Are Workflow Tracker stats showing actionable info (not noise)?', research: 'Run validate-materials.py and security-audit.py, test SA with 5 sample questions per course, check all 8 WFT card badges show relevant state' },
       { area: 'External Innovation', question: 'What new tools, APIs, or approaches could we adopt? Are we stuck in a bubble?', research: 'Search: "best university study tools 2026", "AI tutoring research", "active learning technology", "programming education tools" — find at least 2 ideas worth evaluating' }
     ],
     reviewLog: [
@@ -4404,21 +4407,34 @@ const COMPLIANCE_LOG = [
     materials: { INFO1113: {files:34,linked:24,excluded:10,gaps:0}, LNGS1001: {files:90,linked:71,excluded:19,gaps:0}, ANHS2609: {files:45,linked:38,excluded:7,gaps:0}, OLES1603: {files:34,linked:27,excluded:7,gaps:0} },
     issues: ['CC2: ANHS2609 Wk4 visual guide still pending (outline-only study guide — awaiting NotebookLM validation)','CC5: 10 false-positive file-not-found warnings (files in subdirs)'],
     fixes: ['Added 8 Materials tab links (LNGS transcript+announce, ANHS transcript, OLES slides+tutorials+announce)','Updated 4 Course Index.md files','All Wk4 GUIDE_SOURCES upgraded to notebooklm']
+  },
+  {
+    date: '2026-03-19',
+    type: 'Automated Sync',
+    agent: 'CLI + Chrome + NotebookLM MCP',
+    commits: [],
+    deployed: false,
+    content: 'ANHS2609 Wk4 visual guide validated via NotebookLM — 3 corrections: Tyre siege 7→6 months, replaced Q8 (Persepolis, out of scope) with Memnon of Rhodes, replaced Q9 (Darius assassination, out of scope) with Alexander admin approach. NBML_VALIDATED.ANHS2609[4] set true.',
+    infra: 'I1: PASS (LAST_SYNC_DATE), I2: PASS (CHANGELOG +1 entry)',
+    finals: 'F1: PASS (0 gaps), F2: PASS (5 pass, 6 warn, 0 fail), CC: 10/10 PASS',
+    materials: { INFO1113: {files:35,linked:26,excluded:10,gaps:0}, LNGS1001: {files:90,linked:57,excluded:19,gaps:0}, ANHS2609: {files:46,linked:39,excluded:8,gaps:0}, OLES1603: {files:34,linked:28,excluded:7,gaps:0} },
+    issues: ['No new content to collect (all Wk4 materials already done, Wk5 not yet available)','S8 regression: 1 non-HTTPS resource in dashboard.html (pre-existing, newly flagged)'],
+    fixes: ['ANHS2609 VG Wk4: 3 self-test fixes via NotebookLM validation','Added INFO1113 Task 2 spec to Materials tab (1 gap fixed)']
   }
 ];
 
 const SECURITY_AUDIT = {
-  lastRun: '2026-03-18',
-  summary: { pass: 6, warn: 5, fail: 0 },
+  lastRun: '2026-03-19',
+  summary: { pass: 5, warn: 6, fail: 0 },
   checks: [
     { id:'S1', name:'Secrets & Credentials', status:'pass', detail:'No hardcoded secrets in dashboard or 16 visual guides' },
     { id:'S2', name:'PIN Authentication', status:'pass', detail:'Hash-based PIN, single session auth point' },
     { id:'S3', name:'External Resources', status:'warn', detail:'unpkg.com loaded (marked-js for chat). Add to allowed list or self-host for pilot' },
-    { id:'S4', name:'XSS / Injection', status:'pass', detail:'No URL-to-innerHTML paths, no dangerous JS patterns. 79 innerHTML assignments (static data only)' },
+    { id:'S4', name:'XSS / Injection', status:'pass', detail:'No URL-to-innerHTML paths, no dangerous JS patterns. 81 innerHTML assignments (static data only)' },
     { id:'S5', name:'Data Exposure', status:'pass', detail:'No emails, phone numbers, student IDs, or grades in source' },
     { id:'S6', name:'API Key Handling', status:'warn', detail:'Anthropic API calls present — verify BYOK pattern active' },
     { id:'S7', name:'Content Security Policy', status:'warn', detail:'No CSP meta tag — add for pilot' },
-    { id:'S8', name:'HTTPS / Mixed Content', status:'pass', detail:'All external resources use HTTPS across all files' },
+    { id:'S8', name:'HTTPS / Mixed Content', status:'warn', detail:'1 non-HTTPS resource in dashboard.html (mixed content risk). Visual guides all HTTPS.' },
     { id:'S9', name:'Sensitive Files', status:'warn', detail:'2 Marks files on disk — verify .gitignore excludes them' },
     { id:'S10', name:'iframe Security', status:'warn', detail:'postMessage listener accepts * origin — tighten for pilot' },
     { id:'S11', name:'Client Storage', status:'pass', detail:'10 localStorage keys (progress/state only), no sensitive data' }
@@ -6147,30 +6163,42 @@ function renderWorkflowPage() {
   const apPending = ap.filter(a => a.status === 'pending').length;
 
   var vgs = wftGetVisualGuideStats();
-  var nbmlNote = gs.needsNbml > 0 ? ' \u2022 ' + gs.needsNbml + ' needs NbML' : '';
-  document.getElementById('wft-subtitle').textContent = gs.complete + ' guides validated \u2022 ' + vgs.nbmlValidated + '/' + vgs.done + ' visual guides \u2022 ' + tools.length + ' tools \u2022 ' + apComplete + '/' + ap.length + ' prep guides';
 
+  // Subtitle: only highlight what needs attention
+  var subtitleParts = [];
+  if (gs.draft > 0 || gs.pending > 0) subtitleParts.push((gs.draft + gs.pending) + ' guides need work');
+  if (vgs.missing > 0 || vgs.unvalidated > 0) subtitleParts.push((vgs.missing + vgs.unvalidated) + ' visual guides need work');
+  if (apPending > 0) subtitleParts.push(apPending + ' prep guides pending');
+  if (subtitleParts.length === 0) subtitleParts.push('All content up to date');
+  document.getElementById('wft-subtitle').textContent = subtitleParts.join(' \u2022 ');
+
+  // Summary bar: show actionable counts, not totals
+  var guideSummary = (gs.draft > 0 || gs.pending > 0)
+    ? gs.needsNbml + ' needs NbML \u2022 ' + gs.draft + ' draft \u2022 ' + gs.pending + ' pending'
+    : 'All validated';
+  var prepSummary = apPending > 0 ? apPending + ' pending' : 'All ready';
   document.getElementById('wft-summary').innerHTML = '<div class="sync-summary">' +
-    '<div><div class="sync-summary-stat">' + gs.complete + '/' + gs.total + ' NbML validated</div>' +
-    '<div class="sync-summary-sub">' + gs.needsNbml + ' needs NbML \u2022 ' + gs.draft + ' draft \u2022 ' + gs.pending + ' pending</div></div>' +
+    '<div><div class="sync-summary-stat">' + gs.complete + '/' + gs.total + ' guides</div>' +
+    '<div class="sync-summary-sub">' + guideSummary + '</div></div>' +
     '<div class="sync-progress"><div class="sync-progress-fill ' + (gs.draft===0&&gs.pending===0?'complete':'') + '" style="width:' + Math.round(gs.done/gs.total*100) + '%"></div></div>' +
-    '<div style="text-align:center"><div class="sync-summary-stat">' + tools.length + ' tools</div>' +
-    '<div class="sync-summary-sub">' + totalItems + ' items</div></div>' +
+    '<div style="text-align:center"><div class="sync-summary-stat">' + totalItems + ' practice items</div>' +
+    '<div class="sync-summary-sub">' + tools.length + ' tools across 4 courses</div></div>' +
     '<div style="text-align:right"><div class="sync-summary-stat">' + apComplete + '/' + ap.length + ' prep</div>' +
-    '<div class="sync-summary-sub">' + apPending + ' pending</div></div></div>';
+    '<div class="sync-summary-sub">' + prepSummary + '</div></div></div>';
 
+  // Card stats: only show actionable info, "All done" / "All clear" when nothing to do
   document.getElementById('wft-stat-guides').textContent = gs.draft > 0 ? gs.draft + ' draft' : gs.pending > 0 ? gs.pending + ' pending' : 'All done';
-  document.getElementById('wft-stat-visguides').textContent = vgs.missing > 0 ? vgs.done + ' done, ' + vgs.missing + ' missing' : vgs.unvalidated > 0 ? vgs.unvalidated + ' unvalidated' : vgs.done + ' done';
-  document.getElementById('wft-stat-tools').textContent = totalItems + ' items';
-  document.getElementById('wft-stat-assessprep').textContent = apComplete + ' ready, ' + apPending + ' pending';
-  document.getElementById('wft-stat-roadmap').textContent = planned + ' planned';
+  document.getElementById('wft-stat-visguides').textContent = vgs.missing > 0 ? vgs.missing + ' missing' : vgs.unvalidated > 0 ? vgs.unvalidated + ' unvalidated' : 'All done';
+  document.getElementById('wft-stat-tools').textContent = tools.filter(function(t){ return t.status !== 'active'; }).length > 0 ? tools.filter(function(t){ return t.status !== 'active'; }).length + ' need attention' : 'All active';
+  document.getElementById('wft-stat-assessprep').textContent = apPending > 0 ? apPending + ' pending' : 'All ready';
+  document.getElementById('wft-stat-roadmap').textContent = planned > 0 ? planned + ' planned' : ideas > 0 ? ideas + ' ideas' : 'Up to date';
   var healthDone = WORKFLOW_TRACKER.dashboardChecks.filter(function(c) { return c.status === 'done'; }).length;
-  document.getElementById('wft-stat-health').textContent = healthDone + '/' + WORKFLOW_TRACKER.dashboardChecks.length + ' checks';
+  var healthPending = WORKFLOW_TRACKER.dashboardChecks.length - healthDone;
+  document.getElementById('wft-stat-health').textContent = healthPending > 0 ? healthPending + ' pending' : 'All clear';
   var secFails = SECURITY_AUDIT.summary.fail;
   var secWarns = SECURITY_AUDIT.summary.warn;
   document.getElementById('wft-stat-compliance').textContent = secFails > 0 ? secFails + ' FAIL' : secWarns > 0 ? secWarns + ' warn' : 'All clear';
-  var commSections = (COMMERCIALIZATION.privacy ? 1 : 0) + (COMMERCIALIZATION.infrastructure ? 1 : 0) + (COMMERCIALIZATION.partnerships ? 1 : 0);
-  document.getElementById('wft-stat-commercialization').textContent = commSections + ' sections drafted';
+  document.getElementById('wft-stat-commercialization').textContent = COMMERCIALIZATION.status === 'research' ? 'Research phase' : COMMERCIALIZATION.status;
 
   wftRenderActivePanel();
 }
