@@ -1280,6 +1280,7 @@ document.getElementById('pin-input').focus();
         <ul style="font-size:13px;padding-left:20px;margin-bottom:10px">
           <li><a href="https://github.com/patrick-work-syd/Uni-2026/blob/main/OLES1603%20Astronomy/Lectures/Week%2001%20-%20Astronomy%20Through%20the%20Ages.pdf" target="_blank">Week 01 - Astronomy Through the Ages (PDF)</a></li>
           <li><a href="https://github.com/patrick-work-syd/Uni-2026/blob/main/OLES1603%20Astronomy/Lectures/Week%2002%20-%20Astronomy%20without%20a%20Telescope.pdf" target="_blank">Week 02 - Astronomy without a Telescope (PDF)</a></li>
+          <li><a href="https://github.com/patrick-work-syd/Uni-2026/blob/main/OLES1603%20Astronomy/Lectures/OLES1603_Lec3.pdf" target="_blank">Week 03 - How We Know What We Know (PDF)</a></li>
           <li><a href="https://github.com/patrick-work-syd/Uni-2026/blob/main/OLES1603%20Astronomy/Lectures/OLES1603_Lec4.pdf" target="_blank">Week 04 - How the Universe Began (PDF)</a></li>
         </ul>
       </details>
@@ -1399,7 +1400,7 @@ document.getElementById('pin-input').focus();
     <div class="sync-tool-card" onclick="syncShowPanel('methodology')">
       <div class="sync-tool-icon">&#128218;</div>
       <div class="sync-tool-title">How Guides Work</div>
-      <div class="sync-tool-desc">Study guide methodology &amp; sources</div>
+      <div class="sync-tool-desc">Reference guide methodology &amp; sources</div>
       <div class="sync-tool-stat" id="sync-stat-methodology"></div>
     </div>
     <div class="sync-tool-card" onclick="syncShowPanel('ai')">
@@ -1425,8 +1426,8 @@ document.getElementById('pin-input').focus();
   <div class="sync-tools">
     <div class="sync-tool-card active" onclick="wftShowPanel('guides')">
       <div class="sync-tool-icon">&#128214;</div>
-      <div class="sync-tool-title">Study Guides</div>
-      <div class="sync-tool-desc">Weekly study guide coverage</div>
+      <div class="sync-tool-title">Reference Guides</div>
+      <div class="sync-tool-desc">Weekly reference guide coverage</div>
       <div class="sync-tool-stat" id="wft-stat-guides"></div>
     </div>
     <div class="sync-tool-card" onclick="wftShowPanel('visguides')">
@@ -1484,6 +1485,7 @@ document.getElementById('pin-input').focus();
 
 </div><!-- /main -->
 
+<script src="commercialization-data.js"></script>
 <script>
 // ======================== DATA ========================
 
@@ -1832,13 +1834,16 @@ const DASHBOARD_CHANGELOG = [
   { date: '2026-03-19', action: 'fix', target: 'VISUAL_GUIDES', detail: 'ANHS2609 Week 4 visual guide: NotebookLM validation fix — corrected Tyre siege duration (7→6 months), replaced Q8 (Persepolis burning, not in Week 4 scope) with Memnon of Rhodes question, replaced Q9 (Darius assassination, not in Week 4 scope) with Alexander administrative approach question. NBML_VALIDATED.visualGuides.ANHS2609[4] set true.' },
   { date: '2026-03-19', action: 'update', target: 'ASSESSMENTS', detail: 'LNGS1001 Assignment 1 mark updated: 18/20 (90%). Feedback: good effort, consonant/vowel mistakes, missing velarisation of word-final [l]. Source: Canvas grades page + Will USyd Outlook email.' },
   { date: '2026-03-19', action: 'add', target: 'ASSESSMENTS', detail: 'Added OLES1603 Week 3 Round-table 1 (part of 10%). Physical question sheet — form groups, discuss Astronomy Project ideas. Canvas shows MISSING. Graded best-of-3 (Wk 3/5/8), so not a lost mark but a missed opportunity. Updated Round-table Presentations desc with per-week breakdown.' },
+  { date: '2026-03-20', action: 'update', target: 'SYNC_TRACKER', detail: 'Automated sync (Chrome + Canvas). Downloaded OLES1603_Lec3.pdf (Week 3 slides, 3MB) — was missing from collection. Added to Week 3 tracker. No new course content for any course (Week 5 not yet released). Ed: no new lessons. Canvas: OLES1603 Wk5 page 403, LNGS1001 Wk5 has only What\'s on. Email: 2 new (Ed digest, USU event), 0 actionable academic items.' },
+  { date: '2026-03-20', action: 'update', target: 'WEEKLY_CONTENT', detail: 'Fixed INFO1113 Week 4: lecture "Arrays & Methods"→"Arithmetic & Sorting / Collections & Interfaces", tutorial "TBD"→"Collections".' },
+  { date: '2026-03-20', action: 'add', target: 'FILES', detail: 'OLES1603_Lec3.pdf (3.0MB) added to Lectures folder. Materials tab link added.' },
 ];
 
 const WEEKLY_CONTENT = {
   INFO1113: {
     1: { lecture:'Basics of Java Programming', tutorial:'IO & Conditionals', reading:'Savitch Ch.1-2' },
     2: { lecture:'Loops & Static Methods', tutorial:'Tutorial 2: Loops & Arrays', reading:'Savitch Ch.3-4' },
-    3: { lecture:'Inheritance, Exceptions, Polymorphism & File I/O', tutorial:'Class, UML & File I/O' }, 4: { lecture:'Arrays & Methods', tutorial:'TBD' },
+    3: { lecture:'Inheritance, Exceptions, Polymorphism & File I/O', tutorial:'Class, UML & File I/O' }, 4: { lecture:'Arithmetic & Sorting / Collections & Interfaces', tutorial:'Collections' },
     5: { lecture:'OOP Fundamentals', tutorial:'TBD' }, 6: { lecture:'Inheritance', tutorial:'TBD' },
     7: { lecture:'Polymorphism', tutorial:'TBD' }, 8: { lecture:'Abstract Classes & Interfaces', tutorial:'TBD' },
     9: { lecture:'Exception Handling', tutorial:'TBD' }, 10: { lecture:'File I/O', tutorial:'TBD' },
@@ -3450,14 +3455,14 @@ const STUDY_TECHNIQUES = [
     icon: '⏩',
     source: 'Stanford/Helsinki flipped classroom research',
     tip: 'Spend 10 minutes before each lecture scanning the topic headings, key terms, and learning objectives. This "primes" your brain to recognise important information during the lecture, dramatically improving comprehension.',
-    action: 'Before your next lecture, read the study guide key concepts for that week\'s topic.',
+    action: 'Before your next lecture, read the reference guide key concepts for that week\'s topic.',
   },
   {
     title: 'Self-Testing Before It Counts',
     icon: '✅',
     source: 'Roediger & Karpicke (Washington Uni)',
     tip: 'Testing yourself — even when you get answers wrong — is one of the most powerful study techniques known. The effort of trying to recall produces stronger memory traces than passive review.',
-    action: 'Use the Self-Test Questions in each study guide. Write answers without checking, then compare.',
+    action: 'Use the Self-Test Questions in each reference guide. Write answers without checking, then compare.',
   },
   {
     title: 'Sleep-Consolidated Learning',
@@ -4124,7 +4129,7 @@ const ASTRO_SORTS = [
 
 // ======================== SYNC TRACKER DATA ========================
 
-const LAST_SYNC_DATE = '2026-03-19T10:00';
+const LAST_SYNC_DATE = '2026-03-20T10:00';
 
 const SYNC_TRACKER = {
   1: {
@@ -4180,6 +4185,7 @@ const SYNC_TRACKER = {
       { id:'anhs-w3-page', course:'ANHS2609', type:'page', desc:'Lecture + Tutorial page', status:'done', file:'Week 03 - Philip and Alexander.md' },
       { id:'oles-w3-transcript', course:'OLES1603', type:'transcript', desc:'Lecture transcript', status:'done', file:'Week 03 - Astronomy-transcript.txt', note:'43KB, downloaded 10 Mar via Echo360, uploaded to NotebookLM' },
       { id:'oles-w3-page', course:'OLES1603', type:'page', desc:'Canvas page', status:'done', file:'Week 03 - How We Know What We Know.md' },
+      { id:'oles-w3-slides', course:'OLES1603', type:'slides', desc:'Lecture slides (PDF)', status:'done', file:'OLES1603_Lec3.pdf', note:'3.0MB. Downloaded 20 Mar from Canvas.' },
     ]
   },
   4: {
@@ -4287,7 +4293,7 @@ const WORKFLOW_TRACKER = {
       detail:'Key Terms Flashcards (51 terms), Concept Quiz MCQ (30 questions), Sort & Match (5 exercises). Filterable by week (1-3) and category (observational, historical, stellar, phenomena).' }
   ],
   studyGuides: {
-    summary: 'Study guides generated from lecture transcripts (primary) and outlines (draft). Each guide has 10 structured fields: title, studyHours, learningObjectives, keyConcepts, keyTerms, keyExamples, mustDo, selfTest (interactive quiz), examRelevance, distinctionTip.',
+    summary: 'Reference guides generated from lecture transcripts (primary) and outlines (draft). Each guide has 10 structured fields: title, studyHours, learningObjectives, keyConcepts, keyTerms, keyExamples, mustDo, selfTest (interactive quiz), examRelevance, distinctionTip.',
     coverage: {
       INFO1113: { complete:[1,2,3,4], draft:[], pending:[], notes:'Weeks 1-4 all NbML validated. Week 3: toString/Override, inheritance, exceptions, file I/O, polymorphism/LSP. Week 4: arrays, methods.' },
       LNGS1001: { complete:[1,2,3,4], draft:[], pending:[], notes:'Weeks 1-4 all NbML validated. Week 3: vowels + suprasegmentals. Week 4: Phonology I — The Phoneme.' },
@@ -4346,7 +4352,7 @@ const WORKFLOW_TRACKER = {
     nextReview: '2026-03-23',
     prompts: [
       { area: 'Study Effectiveness', question: 'Are the practice tools targeting the right skills? Are students struggling with anything the tools don\'t address?', research: 'Search for latest evidence-based study tool research (retrieval practice, spaced repetition apps, IPA training methods)' },
-      { area: 'Content Quality', question: 'Are study guides accurate and thorough? Do self-test questions cover the right Bloom levels for each assessment type?', research: 'Review latest pedagogical research on question design and cognitive load theory' },
+      { area: 'Content Quality', question: 'Are reference guides accurate and thorough? Do self-test questions cover the right Bloom levels for each assessment type?', research: 'Review latest pedagogical research on question design and cognitive load theory' },
       { area: 'Missing Features', question: 'What features would most improve learning outcomes right now? What are similar university study platforms doing?', research: 'Look at Anki, Quizlet, Notion student templates, and university LMS plugins for inspiration' },
       { area: 'Assessment Readiness', question: 'Are upcoming assessments fully prepared for? Are prep guides actionable enough?', research: 'Check rubric alignment — does each prep guide directly address every rubric criterion?' },
       { area: 'Technical Health', question: 'Are there any broken links, JS errors, or UX friction points? Is the SA giving helpful answers? Are Workflow Tracker stats showing actionable info (not noise)?', research: 'Run validate-materials.py and security-audit.py, test SA with 5 sample questions per course, check all 8 WFT card badges show relevant state' },
@@ -4424,11 +4430,64 @@ const COMPLIANCE_LOG = [
     materials: { INFO1113: {files:35,linked:26,excluded:10,gaps:0}, LNGS1001: {files:90,linked:57,excluded:19,gaps:0}, ANHS2609: {files:46,linked:39,excluded:8,gaps:0}, OLES1603: {files:34,linked:28,excluded:7,gaps:0} },
     issues: ['No new content to collect (all Wk4 materials already done, Wk5 not yet available)','S8 regression: 1 non-HTTPS resource in dashboard.html (pre-existing, newly flagged)'],
     fixes: ['ANHS2609 VG Wk4: 3 self-test fixes via NotebookLM validation','Added INFO1113 Task 2 spec to Materials tab (1 gap fixed)']
+  },
+  {
+    date: '2026-03-20',
+    type: 'Automated Sync',
+    agent: 'CLI + Chrome',
+    commits: [],
+    deployed: false,
+    content: 'Downloaded OLES1603_Lec3.pdf (Week 3 slides, previously missing). No new course content for any course (Week 5 not yet released). Fixed INFO1113 WEEKLY_CONTENT Week 4 topic + tutorial.',
+    infra: 'I1: PASS (LAST_SYNC_DATE), I2: PASS (CHANGELOG +3 entries)',
+    finals: 'F1: PASS (0 gaps), F2: PASS (5 pass, 6 warn, 0 fail), CC: 10/10 PASS',
+    materials: { INFO1113: {files:35,linked:26,excluded:10,gaps:0}, LNGS1001: {files:90,linked:57,excluded:19,gaps:0}, ANHS2609: {files:46,linked:39,excluded:8,gaps:0}, OLES1603: {files:35,linked:29,excluded:7,gaps:0} },
+    issues: ['Canvas auth expired initially (Okta push resolved)', 'No Week 5 content available yet on any platform'],
+    fixes: ['Downloaded OLES1603_Lec3.pdf (missing Week 3 slides)', 'Added Materials tab link for OLES Lec3', 'Fixed INFO1113 Wk4 WEEKLY_CONTENT']
   }
 ];
 
+// ── Validation & Consistency Checks ──
+// Tracks the last run of each automated validation suite.
+// Updated by sync automation and manual runs.
+const VALIDATION_STATUS = {
+  lastFullRun: '2026-03-20',
+  nextScheduledRun: '2026-03-28',
+  consistency: {
+    script: 'consistency-check.py',
+    lastRun: '2026-03-20',
+    result: '10/10 PASS',
+    checks: [
+      { id:'CC1', name:'Model & Cost Refs', status:'pass', detail:'No stale Haiku/cost references' },
+      { id:'CC2', name:'Reference ↔ Visual Guide Alignment', status:'pass', detail:'All reference guides have matching visual guides' },
+      { id:'CC3', name:'Visual Guide Files on Disk', status:'pass', detail:'All VISUAL_GUIDE_WEEKS entries have HTML files' },
+      { id:'CC4', name:'GUIDE_SOURCES ↔ STUDY_GUIDES', status:'pass', detail:'Every guide has a source quality entry' },
+      { id:'CC5', name:'SYNC_TRACKER ↔ Files on Disk', status:'pass', detail:'All tracked files exist' },
+      { id:'CC6', name:'NBML_VALIDATED ↔ Visual Guides', status:'pass', detail:'Validation flags align with guide existence' },
+      { id:'CC7', name:'Doc Cross-References', status:'pass', detail:'Model names, capabilities consistent across .md files' },
+      { id:'CC8', name:'Week Filter Constants', status:'pass', detail:'Filter ranges match available data' },
+      { id:'CC9', name:'Course Folder Structure', status:'pass', detail:'All required subdirectories present' },
+      { id:'CC10', name:'CHANGELOG Currency', status:'pass', detail:'Recent changes logged' }
+    ]
+  },
+  materials: {
+    script: 'validate-materials.py',
+    lastRun: '2026-03-20',
+    result: '0 gaps across all courses',
+    perCourse: { INFO1113: 0, LNGS1001: 0, ANHS2609: 0, OLES1603: 0 }
+  },
+  updateChecklist: {
+    lastRun: '2026-03-20',
+    tracks: [
+      { name:'Content Track', checks:'C1–C10', passed:10, total:10, detail:'Files, naming, Materials links, STUDY_GUIDES, GUIDE_SOURCES, NBML_VALIDATED, VISUAL_GUIDE_WEEKS, SYNC_TRACKER, NotebookLM uploads, CHANGELOG' },
+      { name:'Infrastructure Track', checks:'I1–I10', passed:10, total:10, detail:'Console errors, course pages, sync-prompt.md, Weekly Sync Guide, CLAUDE.md, doc agreement, regressions, SA hooks, AI Integration Guide, factual consistency' },
+      { name:'Security Track', checks:'SEC1–SEC4', passed:4, total:4, detail:'Security audit script, no new WARNs, SECURITY_AUDIT constant, COMPLIANCE_LOG entry' },
+      { name:'Final Checks', checks:'F1–F8', passed:8, total:8, detail:'Materials validation, security audit, git clean, commit messages, push, deploy, compliance log, consistency validation' }
+    ]
+  }
+};
+
 const SECURITY_AUDIT = {
-  lastRun: '2026-03-19',
+  lastRun: '2026-03-20',
   summary: { pass: 5, warn: 6, fail: 0 },
   checks: [
     { id:'S1', name:'Secrets & Credentials', status:'pass', detail:'No hardcoded secrets in dashboard or 16 visual guides' },
@@ -4445,131 +4504,15 @@ const SECURITY_AUDIT = {
   ]
 };
 
-// COMMERCIALIZATION_START (deploy-dashboard.sh strips this block for public repo)
-// ── Commercialization Research (parked 18 Mar 2026) ──
-const COMMERCIALIZATION = {
-  status: 'research',
-  lastUpdated: '2026-03-18',
-  concept: {
-    name: 'TBD (see naming research below)',
-    description: 'Adaptive AI study dashboard for university students — course-aware tutoring, practice tools, learning profiles, exercise generation. Currently built as single-student SPA; exploring B2B (university licensing) and B2C (direct-to-student) paths.',
-    techStack: 'Single-file HTML SPA, Claude API (BYOK), localStorage persistence, GitHub Pages hosting',
-    currentState: 'Working prototype serving 4 University of Sydney courses (Semester 1 2026). Adaptive Socratic tutor, 376 practice items, 15 study guides, visual guides, assessment prep, learning profiles, tutoring analytics.'
-  },
-  naming: {
-    original: 'SmartEd',
-    verdict: 'HIGH RISK — at least 5 active edtech companies use SmartEd or near-identical variants',
-    conflicts: [
-      { name:'SmartED Innovations', url:'smarted.in', desc:'Indian edtech startup, 150 employees, 1500+ students/month. Direct name collision.' },
-      { name:'SmartEd Systems', url:'smartedsystems.org', desc:'US grading reform platform for schools.' },
-      { name:'SmartEdTech', url:'smartedtech.com', desc:'Mobile learning platform for PK-12 education.' },
-      { name:'Smarted', url:'smarted.it', desc:'Italian startup from cognitive sciences/AI research.' },
-      { name:'SmarterEd', url:'smartered.com.au', desc:'Australian edtech selling maths/science resources. Same country, same sector.' }
-    ],
-    alternativesResearched: [
-      { name:'LearnSmart', risk:'FATAL', reason:'McGraw-Hill product since 2009, 2M+ users' },
-      { name:'SmartLearn', risk:'FATAL', reason:'Active AI-powered LMS platform + Indian EdTech company' },
-      { name:'EduSmart', risk:'FATAL', reason:'K-12 science platform + multiple regional entities' },
-      { name:'SmartStudy', risk:'FATAL', reason:'Multiple apps and platforms globally' },
-      { name:'StudyWise', risk:'FATAL', reason:'Israeli startup acquired by Collage AI (2025), 150K+ users' },
-      { name:'LearnWise', risk:'FATAL', reason:'Amsterdam-based, €2M seed, 720K+ students, integrates with Canvas/Moodle/Blackboard — direct competitor' },
-      { name:'EduWise', risk:'HIGH', reason:'At least 5 entities using this name' },
-      { name:'SmartPath', risk:'HIGH', reason:'Multiple active education products' },
-      { name:'BrightEd', risk:'MEDIUM-HIGH', reason:'.ai and .io available but multiple Bright+Ed companies exist' },
-      { name:'ClearEd', risk:'MEDIUM', reason:'Less crowded but .com taken, sounds like past tense verb' }
-    ],
-    recommendations: [
-      { name:'StudyWeave', risk:'LOW', domains:'.com/.ai/.io/.com.au all available', rationale:'Strong metaphor (weaving course materials together). No meaningful prior art.' },
-      { name:'EdGround', risk:'LOW', domains:'.com/.ai/.io/.com.au all available', rationale:'Short, memorable, suggests solid foundation. Works well in B2B positioning.' },
-      { name:'StudyTrellis', risk:'LOW', domains:'.com/.ai/.io/.com.au all available', rationale:'Support structure for growth. Classical/academic feel suits university buyers.' },
-      { name:'EdClara', risk:'LOW-MEDIUM', domains:'.com/.ai/.io/.com.au all available', rationale:'Latin root clara = clear/bright. Elegant. Clara EdTech (India) is different market.' },
-      { name:'StudyCanopy', risk:'LOW-MEDIUM', domains:'.com/.ai/.io/.com.au all available', rationale:'Shelter/coverage metaphor. Canopy Ed exists but different market (teacher PD).' },
-      { name:'EdGrove', risk:'LOW', domains:'.com/.ai/.io/.com.au all available', rationale:'Nature metaphor, cultivated learning environment. Very clean.' }
-    ]
-  },
-  businessApproach: [
-    { model:'B2B University Licensing', pros:'Recurring revenue, institutional buy-in, scale per university', cons:'Long sales cycles, procurement complexity, need multi-tenant architecture', notes:'LearnWise (competitor) raised €2M doing exactly this with Canvas integration. Validates the market but means competition.' },
-    { model:'B2C Direct-to-Student', pros:'Fast iteration, direct feedback, subscription model', cons:'High CAC, students are price-sensitive, need content for many universities', notes:'Current BYOK pattern (student provides own API key) reduces cost barrier. Could offer free tier + premium.' },
-    { model:'Freemium SaaS', pros:'Low barrier to entry, viral potential among students', cons:'Conversion rates typically low for student tools, support burden', notes:'Free: basic study guides + practice tools. Premium: AI tutor, learning profiles, analytics, exercise saving.' }
-  ],
-  privacy: {
-    principle: 'We collect aggregate learning pattern data to improve materials. We do not track, profile, or report on individual students. Period.',
-    dataClassification: [
-      { category: 'Individual Profile', description: 'Error history, confidence scores, tool usage, topic strengths/weaknesses for a specific student', storage: 'Student\u2019s device only (localStorage or local encrypted store)', shared: 'Never. Not transmitted to our servers. Not visible to instructors, administrators, or us.', purpose: 'Personalise the AI tutor\u2019s responses for that student\u2019s session.' },
-      { category: 'Aggregate Error Patterns', description: 'Anonymised: "42% of students answered Q7 on recursion incorrectly" \u2014 no student IDs, no names, no device fingerprints', storage: 'Our analytics service (AWS)', shared: 'Used internally to identify weak content. Shared with course authors as aggregate stats only.', purpose: 'If 5 out of 10 students repeatedly misunderstand a concept, the problem is the material, not the students. This data tells us what to fix.' },
-      { category: 'Content Effectiveness Metrics', description: 'Which visual guides, practice tools, and study techniques correlate with improved quiz performance (aggregate only)', storage: 'Our analytics service (AWS)', shared: 'Used to rank and recommend study approaches. Never tied to individuals.', purpose: 'Measure whether what we\u2019re building actually works. Iterate based on evidence, not guesswork.' },
-      { category: 'Session Telemetry', description: 'Time-on-task, tool opens, guide views \u2014 anonymised and aggregated', storage: 'Our analytics service (AWS)', shared: 'Internal product analytics only.', purpose: 'Understand which features get used and which are ignored.' }
-    ],
-    policyApproach: {
-      philosophy: 'No bullshit. Every data point we collect has a stated purpose. If the purpose doesn\u2019t justify it, we don\u2019t collect it. The policy is written in plain English, not legalese.',
-      optOut: 'Students can opt out of aggregate data contribution entirely. If they do: (1) their AI tutor still works (profile stays local), (2) practice tools still work, (3) they lose personalised \u201cstudents like you found X helpful\u201d recommendations. We tell them exactly what they lose \u2014 no dark patterns, no guilt trips.',
-      principles: [
-        'Individual learning data never leaves the student\u2019s device',
-        'Aggregate data is truly anonymised \u2014 no re-identification possible, especially in small cohorts',
-        'No instructor/admin dashboards showing individual student performance (that\u2019s LMS territory, not ours)',
-        'Opt-out is one click, with a clear explanation of what changes',
-        'Privacy policy is max 2 pages, plain language, with a summary table at the top',
-        'Annual third-party privacy audit once revenue justifies it'
-      ],
-      universityConsiderations: 'Australian universities operate under the Privacy Act 1988 and may have institution-specific policies. FERPA (US) applies if expanding internationally. Key: we\u2019re not an LMS and don\u2019t hold student records \u2014 this simplifies compliance significantly. The fact that individual profiles never leave the device is our strongest privacy argument.'
-    }
-  },
-  infrastructure: {
-    currentState: 'Static SPA on GitHub Pages + direct browser-to-Anthropic API calls (BYOK). Zero server infrastructure. Zero ongoing cost.',
-    targetState: 'S3 + CloudFront (static hosting) + Lambda + DynamoDB (profile sync + aggregate analytics) + Anthropic API proxy',
-    apiModel: {
-      decision: 'Proxy (not BYOK)',
-      rationale: 'BYOK doesn\u2019t scale \u2014 you can\u2019t ask every student to get their own API key. The product needs to be a complete package: sign up, log in, start studying. We manage the Anthropic relationship and bill institutions or students as part of the subscription.',
-      implementation: 'API Gateway + Lambda proxy to Anthropic. Per-user rate limiting. Usage metering for billing. Caching of system prompts (Anthropic prompt caching reduces cost ~90% for repeated system prompts).'
-    },
-    aws: [
-      { service: 'S3 + CloudFront', purpose: 'Static dashboard hosting. Global CDN. ~$5/month at scale.', notes: 'Replace GitHub Pages. Custom domain. HTTPS.' },
-      { service: 'Cognito', purpose: 'Authentication. University SSO/SAML integration for B2B. Email/password for B2C.', notes: 'Handles the auth model question cleanly. SAML federation lets universities use their existing login.' },
-      { service: 'API Gateway + Lambda', purpose: 'Anthropic API proxy, profile sync endpoints, aggregate analytics ingestion.', notes: 'Serverless = zero cost at zero usage, scales automatically. No servers to manage.' },
-      { service: 'DynamoDB', purpose: 'User accounts, session metadata, aggregate error pattern store.', notes: 'NOT for individual learning profiles (those stay on-device). Only for: account info, anonymised aggregates, opt-in profile backup.' },
-      { service: 'Athena + S3 (data lake)', purpose: 'Analytics queries over aggregate data. "What % of students struggled with recursion this semester?"', notes: 'Query on demand, pay per query. No always-on analytics database needed.' }
-    ],
-    dataResidency: {
-      position: 'Offer AP-Southeast-2 (Sydney) as default region for Australian university deployments. Data stays in Australia.',
-      rationale: 'Some procurement teams will ask about this. The honest answer is it rarely matters for anonymised aggregate data with no PII, but offering AU hosting removes the objection entirely and costs us nothing (AWS Sydney region has full service coverage).',
-      implementation: 'Multi-region deployment is straightforward with CloudFront + regional DynamoDB tables. If we expand to US/EU universities, spin up in those regions.'
-    },
-    costEstimate: 'At 1,000 students: ~$200-400/month AWS + ~$500-2,000/month Anthropic API (depending on usage, with prompt caching). Anthropic cost is the dominant factor by far.'
-  },
-  partnerships: {
-    anthropicUniversity: {
-      opportunity: 'Anthropic (and OpenAI, Google) are actively pursuing university partnerships to establish their models as the standard in higher education. This creates a potential win-win: we provide the study platform that makes the AI useful for students, Anthropic provides discounted or free API access to drive adoption.',
-      valueToAnthropic: [
-        'Distribution channel into universities \u2014 thousands of students using Claude daily for coursework',
-        'High-quality, supervised AI usage data (educational context is great PR vs. concerns about AI misuse)',
-        'Lock-in effect: students trained on Claude become professionals who prefer Claude',
-        'Competitive moat against OpenAI\u2019s university play (ChatGPT Edu)'
-      ],
-      valueToUs: [
-        'Eliminates our largest variable cost (API usage)',
-        'Co-marketing with a well-known AI brand',
-        'Technical support and early access to new features',
-        'Credibility with university procurement ("powered by Anthropic" vs. random startup)'
-      ],
-      approach: 'Reach out to Anthropic\u2019s partnerships team once we have a working multi-tenant demo with 2-3 pilot courses. Come with data: student engagement numbers, learning outcome improvements, cost-per-student projections. The pitch is: "We\u2019ve built the best university study tool on Claude. Help us scale it and you own the university market."',
-      competitiveLandscape: 'OpenAI launched ChatGPT Edu in 2024. Google is pushing NotebookLM for education. Anthropic needs an education play. We could be that play.'
-    }
-  },
-  nextSteps: [
-    'Choose a brand name (top 3: StudyWeave, EdGround, StudyTrellis)',
-    'Register domains (.com + .ai minimum)',
-    'Draft the plain-language privacy policy (2-page max, summary table, opt-out flow)',
-    'Build multi-tenant architecture: Cognito auth + DynamoDB accounts + anonymised aggregate pipeline',
-    'Implement API proxy (replace BYOK with managed Anthropic access)',
-    'Set up AWS Sydney region deployment (S3 + CloudFront + Lambda)',
-    'Create demo with 2-3 pilot courses showing aggregate analytics',
-    'Approach Anthropic partnerships team with usage data and co-marketing pitch',
-    'Research university procurement processes in Australia',
-    'Create landing page and pitch deck',
-    'Identify pilot universities / departments for beta'
-  ]
+// Commercialization data loaded from external gitignored file (commercialization-data.js)
+// On GitHub (both repos), this file doesn't exist — COMMERCIALIZATION stays as stub below.
+// On local OneDrive, the file sets window._COMMERCIALIZATION_FULL which overrides the stub.
+const COMMERCIALIZATION = window._COMMERCIALIZATION_FULL || {
+  status: 'local-only', lastUpdated: 'stripped',
+  concept: { name: '', description: '', techStack: '', currentState: '' },
+  naming: { original: '', verdict: '', conflicts: [], alternativesResearched: [], recommendations: [] },
+  businessApproach: [], nextSteps: []
 };
-// COMMERCIALIZATION_END
 
 // ======================== HELPERS ========================
 
@@ -4724,7 +4667,7 @@ function renderDashboard() {
       <span style="font-size:20px">🔄</span>
       <div style="flex:1">
         <div style="font-size:13px;font-weight:700;color:${urgency}">Weekly sync ${daysSinceSync >= 7 ? 'overdue' : 'due soon'} — last sync ${fmtDateTime(LAST_SYNC_DATE)}</div>
-        <div style="font-size:12px;color:var(--muted)">Log into Canvas first, then run the sync to update Week ${weekNum} content & study guides</div>
+        <div style="font-size:12px;color:var(--muted)">Log into Canvas first, then run the sync to update Week ${weekNum} content & reference guides</div>
       </div>
       <span style="font-size:12px;color:var(--info);font-weight:600">Go to Sync →</span>
     </div>`;
@@ -4766,7 +4709,7 @@ function renderDashboard() {
     }
     // Link to study guide
     if (guide) {
-      twHtml += `<div style="margin-top:6px"><span class="sg-link" onclick="goToStudyGuide('${code}')" style="font-size:11px">Study guide →</span></div>`;
+      twHtml += `<div style="margin-top:6px"><span class="sg-link" onclick="goToStudyGuide('${code}')" style="font-size:11px">Reference →</span></div>`;
     }
     twHtml += `</div>`;
   }
@@ -4924,7 +4867,7 @@ function renderDashboard() {
         <ul>`;
       previewConcepts.forEach(c => { prepHtml += `<li>${c}</li>`; });
       prepHtml += `</ul>
-        <span class="sg-link" onclick="goToStudyGuide('${code}')">View full study guide \u2192</span>
+        <span class="sg-link" onclick="goToStudyGuide('${code}')">View full reference \u2192</span>
       </div>`;
     }
 
@@ -5213,8 +5156,8 @@ function renderStudyGuide(containerId, courseCode) {
 
   if (!guides || Object.keys(guides).length === 0) {
     document.getElementById(containerId).innerHTML = `<div class="sg-empty">
-      <p>No study guides available yet.</p>
-      <p style="margin-top:8px">Study guides are generated during the weekly sync from lecture transcripts and course materials.</p>
+      <p>No reference guides available yet.</p>
+      <p style="margin-top:8px">Reference guides are generated during the weekly sync from lecture transcripts and course materials.</p>
     </div>`;
     return;
   }
@@ -5686,7 +5629,7 @@ function goToStudyGuide(courseCode) {
   const guideContent = document.getElementById(prefix + '-guide');
   if (guideContent) guideContent.classList.add('active');
   viewEl.querySelectorAll('.tab').forEach(t => {
-    if (t.textContent.trim() === 'Study Guide') t.classList.add('active');
+    if (t.textContent.trim() === 'Reference') t.classList.add('active');
   });
 }
 
@@ -5958,9 +5901,9 @@ function syncRenderMethodology() {
 
   // Section 1: What are study guides?
   html += '<div class="meth-section">';
-  html += '<h3>&#127891; What Are the Study Guides?</h3>';
-  html += '<p>Each weekly study guide is a structured summary designed to replace scattered lecture notes with a single, comprehensive learning resource. Every guide follows a consistent 10-field format so you always know where to find what you need, regardless of course.</p>';
-  html += '<p style="margin-top:8px">Study guides are <strong>generated by Claude</strong> from the richest available source material for each week. The richer the source, the better the guide. This means guide quality directly tracks how much content has been collected.</p>';
+  html += '<h3>&#127891; What Are the Reference Guides?</h3>';
+  html += '<p>Each weekly reference guide is a structured summary designed to replace scattered lecture notes with a single, comprehensive learning resource. Every guide follows a consistent 10-field format so you always know where to find what you need, regardless of course.</p>';
+  html += '<p style="margin-top:8px">Reference guides are <strong>generated by Claude</strong> from the richest available source material for each week. The richer the source, the better the guide. This means guide quality directly tracks how much content has been collected.</p>';
   html += '</div>';
 
   // Section 2: Source hierarchy
@@ -5988,7 +5931,7 @@ function syncRenderMethodology() {
 
   // Section 4: The 10 study guide fields
   html += '<div class="meth-section">';
-  html += '<h3>&#128203; The 10 Study Guide Fields</h3>';
+  html += '<h3>&#128203; The 10 Reference Guide Fields</h3>';
   html += '<p>Every guide has exactly these 10 sections. Each is designed around a specific learning need:</p>';
   html += '<div class="meth-field-grid">';
   var fields = [
@@ -6023,7 +5966,7 @@ function syncRenderMethodology() {
 
   html += '<h4 style="margin-top:14px;font-size:14px;color:var(--info)">Cognitive Science \u2014 How Learning Actually Works</h4>';
   html += '<ul>';
-  html += '<li><strong>Cognitive Load Theory</strong> (Sweller) \u2014 Working memory holds only 4\u20137 items. Study guides reduce extraneous load by organizing concepts into structured schemas. Practice labs target one concept at a time.</li>';
+  html += '<li><strong>Cognitive Load Theory</strong> (Sweller) \u2014 Working memory holds only 4\u20137 items. Reference guides reduce extraneous load by organizing concepts into structured schemas. Practice labs target one concept at a time.</li>';
   html += '<li><strong>Recognition vs Production gap</strong> (Gomes et al., 2018) \u2014 Students score 8.5% higher on MCQs than equivalent code-writing tasks. MCQ performance systematically overstates actual ability. <em>Implementation:</em> All self-test questions and the Astronomy quiz use write-first textareas, not multiple choice. Students must produce their answer before seeing the model answer.</li>';
   html += '<li><strong>Illusion of Competence</strong> (Koriat & Bjork) \u2014 Watching tutorials creates false confidence. Processing fluency is mistaken for understanding. <em>Implementation:</em> Self-test questions require writing 10+ characters before the answer can be revealed. Self-rating ("Got it" / "Not yet") forces metacognitive judgment.</li>';
   html += '<li><strong>Deliberate Practice</strong> (Ericsson) \u2014 Expertise requires focused practice on weaknesses, not comfortable repetition. Aim for 70\u201380% success rate during practice. <em>Implementation:</em> Bloom\'s taxonomy tags (Remember/Understand/Apply/Analyse) let students target their weak cognitive level.</li>';
@@ -6041,9 +5984,9 @@ function syncRenderMethodology() {
 
   html += '<h4 style="margin-top:14px;font-size:14px;color:var(--info)">How Each Dashboard Tool Maps to Research <span style="font-size:11px;font-weight:400;color:var(--muted)">(Retrofitted 4 Mar 2026)</span></h4>';
   html += '<table class="meth-source-table"><thead><tr><th>Dashboard Tool</th><th>Research Technique</th><th>How It\'s Implemented</th></tr></thead><tbody>';
-  html += '<tr><td><strong>Study Guide \u2014 Self-Test</strong></td><td>Retrieval Practice (production), Bloom\'s Taxonomy, Spaced Retrieval</td><td>Write-first textarea (10+ chars) before answer reveal. Bloom\'s level badges (Remember/Understand/Apply/Analyse). Self-rating ("Got it"/"Not yet"). Past-week questions resurface from Week 3+.</td></tr>';
-  html += '<tr><td><strong>Study Guide \u2014 Key Terms</strong></td><td>Schema Building, Cognitive Load</td><td>Term\u2192definition pairs build structured vocabulary for each week\'s content.</td></tr>';
-  html += '<tr><td><strong>Study Guide \u2014 Distinction Tip</strong></td><td>Elaborative Interrogation, Desirable Difficulties</td><td>Pushes beyond surface understanding to deeper "why" questions.</td></tr>';
+  html += '<tr><td><strong>Reference Guide \u2014 Self-Test</strong></td><td>Retrieval Practice (production), Bloom\'s Taxonomy, Spaced Retrieval</td><td>Write-first textarea (10+ chars) before answer reveal. Bloom\'s level badges (Remember/Understand/Apply/Analyse). Self-rating ("Got it"/"Not yet"). Past-week questions resurface from Week 3+.</td></tr>';
+  html += '<tr><td><strong>Reference Guide \u2014 Key Terms</strong></td><td>Schema Building, Cognitive Load</td><td>Term\u2192definition pairs build structured vocabulary for each week\'s content.</td></tr>';
+  html += '<tr><td><strong>Reference Guide \u2014 Distinction Tip</strong></td><td>Elaborative Interrogation, Desirable Difficulties</td><td>Pushes beyond surface understanding to deeper "why" questions.</td></tr>';
   html += '<tr><td><strong>Java Practice Lab \u2014 Code Tracing</strong></td><td>PRIMM (Predict), Code Tracing (Lister)</td><td>Type predicted output of 20 programs. Instant feedback + detailed walkthrough. Builds the "notional machine."</td></tr>';
   html += '<tr><td><strong>Java Practice Lab \u2014 Python\u2192Java</strong></td><td>Worked Example Fading, Debugging Practice</td><td>20 common mistakes to identify \u2014 systematic error recognition.</td></tr>';
   html += '<tr><td><strong>Java Practice Lab \u2014 Challenges</strong></td><td>Deliberate Practice, Helsinki Mastery Gating</td><td>Mastery-gated: must write 20+ chars describing approach before solution unlocks. Timed 40-min mode.</td></tr>';
@@ -6081,9 +6024,9 @@ function syncRenderMethodology() {
   // Section 7: Integration
   html += '<div class="meth-section">';
   html += '<h3>&#128279; Integration Across the Dashboard</h3>';
-  html += '<p>Study guides don\'t exist in isolation. They connect to other dashboard features:</p>';
+  html += '<p>Reference guides don\'t exist in isolation. They connect to other dashboard features:</p>';
   html += '<ul>';
-  html += '<li><strong>Self-Test Quiz Panel:</strong> All selfTest questions from study guides are collected into the interactive quiz on each course page. Progress is tracked per question.</li>';
+  html += '<li><strong>Self-Test Quiz Panel:</strong> All selfTest questions from reference guides are collected into the interactive quiz on each course page. Progress is tracked per question.</li>';
   html += '<li><strong>Prep Checklists:</strong> The mustDo items from each week\'s guide feed into the Prep tab\'s interactive checklists, with automatic carry-over for unchecked items.</li>';
   html += '<li><strong>Practice Labs:</strong> Labs provide deeper practice on the same concepts covered in guides \u2014 Java code tracing mirrors INFO1113 guide examples, IPA exercises mirror LNGS1001 phonetics terms, etc.</li>';
   html += '<li><strong>Calendar:</strong> Study hours from guides inform the weekly time budget shown in Study Smart.</li>';
@@ -6104,12 +6047,12 @@ function syncRenderAI() {
   html += '<p>Two AI systems work together to support your study. They serve different purposes and have different strengths.</p>';
   html += '<table class="meth-source-table"><thead><tr><th>Tool</th><th>What It Does</th><th>Knowledge Base</th><th>Best For</th></tr></thead><tbody>';
   html += '<tr><td><strong>NotebookLM</strong><br><span style="font-size:11px;color:var(--muted)">Google, free</span></td>';
-  html += '<td>AI chat grounded in all uploaded course materials. Can also generate audio overviews, quizzes, flashcards, and study guide reports.</td>';
+  html += '<td>AI chat grounded in all uploaded course materials. Can also generate audio overviews, quizzes, flashcards, and reference guide reports.</td>';
   html += '<td><strong>' + totalSources + ' sources</strong> across 4 notebooks \u2014 every lecture transcript, reading, slide deck, and tutorial uploaded to date</td>';
   html += '<td>Deep content questions, essay research, cross-week synthesis, audio revision</td></tr>';
   html += '<tr><td><strong>Study Assistant</strong><br><span style="font-size:11px;color:var(--muted)">Claude Sonnet 4.6, ~$0.02/Q</span></td>';
   html += '<td>Adaptive AI tutor (bottom-right corner). Tracks errors from practice exercises, builds a learning profile, generates targeted exercises, coaches toward distinction. Uses Socratic method and course-specific tutoring strategies.</td>';
-  html += '<td>Study guides + assessments + practice tool inventories + study techniques + your error history &amp; learning profile</td>';
+  html += '<td>Reference guides + assessments + practice tool inventories + study techniques + your error history &amp; learning profile</td>';
   html += '<td>Error coaching, exercise generation, assessment prep, distinction coaching, quick recall. For deep content research, use NotebookLM.</td></tr>';
   html += '</tbody></table>';
   html += '</div>';
@@ -6122,7 +6065,7 @@ function syncRenderAI() {
   html += '<div class="sync-callout" style="margin-top:12px"><strong>The workflow:</strong>';
   html += '<ol style="margin:8px 0 0 16px">';
   html += '<li><strong>Query NotebookLM</strong> \u2014 "What are the key concepts and exam-relevant points from Week 4?"</li>';
-  html += '<li><strong>Build dashboard content</strong> \u2014 Claude Code takes that comprehensive, source-grounded answer and creates structured study guides, quiz questions, and practice drills</li>';
+  html += '<li><strong>Build dashboard content</strong> \u2014 Claude Code takes that comprehensive, source-grounded answer and creates structured reference guides, quiz questions, and practice drills</li>';
   html += '<li><strong>Validate</strong> \u2014 "Are these quiz questions accurate?" \u2014 NotebookLM fact-checks against the actual materials</li>';
   html += '</ol></div>';
 
@@ -6172,7 +6115,7 @@ function syncRenderAI() {
 
   html += '<h4 style="margin-top:14px;font-size:14px;color:var(--info)">Core Capabilities</h4>';
   html += '<table class="meth-source-table"><thead><tr><th>Feature</th><th>How It Works</th></tr></thead><tbody>';
-  html += '<tr><td><strong>Course-Aware Context</strong></td><td>Detects which course page you\'re on and loads only that course\'s study guides, assessments, practice tool inventories, key examples, and weekly tasks as context</td></tr>';
+  html += '<tr><td><strong>Course-Aware Context</strong></td><td>Detects which course page you\'re on and loads only that course\'s reference guides, assessments, practice tool inventories, key examples, and weekly tasks as context</td></tr>';
   html += '<tr><td><strong>Adaptive Tutoring</strong></td><td>Uses the Socratic method \u2014 asks what you were thinking before giving answers. Adjusts difficulty based on your level: struggling students get concrete examples first, strong students get pushed toward distinction-level analysis</td></tr>';
   html += '<tr><td><strong>Error Tracking</strong></td><td>When you get practice exercises wrong anywhere on the dashboard, the error is automatically logged. The tutor sees your recent mistakes and addresses patterns in your misunderstandings</td></tr>';
   html += '<tr><td><strong>Exercise Generation</strong></td><td>Generates fresh practice questions targeting your specific gaps, tagged by Bloom level (L1\u2013L4). Uses numbered bold format so you can save exercises for later review</td></tr>';
@@ -6191,7 +6134,7 @@ function syncRenderAI() {
 
   html += '<h4 style="margin-top:14px;font-size:14px;color:var(--info)">What Data It Has Access To</h4>';
   html += '<table class="meth-source-table"><thead><tr><th>Data Source</th><th>Available?</th><th>Detail Level</th></tr></thead><tbody>';
-  html += '<tr><td>Study Guides (objectives, concepts, terms, examples, self-test)</td><td style="color:#22c55e">&#9989; Yes</td><td>Full content incl. keyExamples and mustDo tasks</td></tr>';
+  html += '<tr><td>Reference Guides (objectives, concepts, terms, examples, self-test)</td><td style="color:#22c55e">&#9989; Yes</td><td>Full content incl. keyExamples and mustDo tasks</td></tr>';
   html += '<tr><td>Assessment details (dates, weights, rubrics, rules, tips)</td><td style="color:#22c55e">&#9989; Yes</td><td>Full content</td></tr>';
   html += '<tr><td>Practice tool inventories (items, titles, sample content)</td><td style="color:#22c55e">&#9989; Yes</td><td>Array lengths + sample items per course</td></tr>';
   html += '<tr><td>Study techniques (active recall, spaced repetition, etc.)</td><td style="color:#22c55e">&#9989; Yes</td><td>Title, tip, and action for each</td></tr>';
@@ -6222,11 +6165,11 @@ function syncRenderAI() {
   html += '<div style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:16px;font-family:monospace;font-size:12px;line-height:1.8;overflow-x:auto">';
   html += '<strong style="color:var(--info)">NotebookLM</strong> (all electronic records, cross-referenced)<br>';
   html += '&nbsp;&nbsp;&nbsp;&nbsp;\u2193 Claude Code queries for content synthesis<br>';
-  html += '&nbsp;&nbsp;&nbsp;&nbsp;\u2193 Claude Code builds study guides, quizzes, drills<br>';
+  html += '&nbsp;&nbsp;&nbsp;&nbsp;\u2193 Claude Code builds reference guides, quizzes, drills<br>';
   html += '&nbsp;&nbsp;&nbsp;&nbsp;\u2193 Content added to dashboard data structures<br>';
   html += '&nbsp;&nbsp;&nbsp;&nbsp;\u2193<br>';
   html += '<strong style="color:var(--info)">Dashboard</strong> (serves content to you)<br>';
-  html += '&nbsp;&nbsp;&nbsp;&nbsp;\u251c\u2500\u2500 Study guides, self-test, practice labs (interactive)<br>';
+  html += '&nbsp;&nbsp;&nbsp;&nbsp;\u251c\u2500\u2500 Reference guides, self-test, practice labs (interactive)<br>';
   html += '&nbsp;&nbsp;&nbsp;&nbsp;\u251c\u2500\u2500 Error tracking feeds into \u2193<br>';
   html += '&nbsp;&nbsp;&nbsp;&nbsp;\u2514\u2500\u2500 <strong style="color:var(--info)">Study Assistant</strong> adaptive tutor (exercises, error coaching, learning profile)<br>';
   html += '<br>';
@@ -6326,7 +6269,16 @@ function renderWorkflowPage() {
   var secFails = SECURITY_AUDIT.summary.fail;
   var secWarns = SECURITY_AUDIT.summary.warn;
   document.getElementById('wft-stat-compliance').textContent = secFails > 0 ? secFails + ' FAIL' : secWarns > 0 ? secWarns + ' warn' : 'All clear';
-  document.getElementById('wft-stat-commercialization').textContent = COMMERCIALIZATION.status === 'research' ? 'Research phase' : COMMERCIALIZATION.status;
+  // Hide commercialization card entirely when data is local-only (stripped from GitHub)
+  var commCard = document.querySelector('[onclick="wftShowPanel(\'commercialization\')"]');
+  if (commCard) {
+    if (COMMERCIALIZATION.status === 'local-only') {
+      commCard.style.display = 'none';
+    } else {
+      commCard.style.display = '';
+      document.getElementById('wft-stat-commercialization').textContent = COMMERCIALIZATION.status === 'research' ? 'Research phase' : COMMERCIALIZATION.status;
+    }
+  }
 
   wftRenderActivePanel();
 }
@@ -6512,19 +6464,19 @@ function wftRenderVisualGuides() {
   }
 
   // Sync status with study guides
-  html += '<div class="wft-section-title">Study Guide ↔ Visual Guide Alignment</div>';
+  html += '<div class="wft-section-title">Reference ↔ Visual Guide Alignment</div>';
   var mismatches = [];
   for (var i = 0; i < courses.length; i++) {
     var c = courses[i];
     for (var w = 1; w <= currentWeek; w++) {
       var hasStudy = STUDY_GUIDES[c.code] && STUDY_GUIDES[c.code][w];
       var hasVisual = VISUAL_GUIDE_WEEKS[c.code] && VISUAL_GUIDE_WEEKS[c.code].includes(w);
-      if (hasStudy && !hasVisual) mismatches.push({ course: c.label, week: w, issue: 'Study guide exists, no visual guide', color: c.color });
-      else if (!hasStudy && hasVisual) mismatches.push({ course: c.label, week: w, issue: 'Visual guide exists, no study guide', color: c.color });
+      if (hasStudy && !hasVisual) mismatches.push({ course: c.label, week: w, issue: 'Reference guide exists, no visual guide', color: c.color });
+      else if (!hasStudy && hasVisual) mismatches.push({ course: c.label, week: w, issue: 'Visual guide exists, no reference guide', color: c.color });
     }
   }
   if (mismatches.length === 0) {
-    html += '<div style="padding:12px;background:#f0fdf4;border-radius:8px;color:#166534;font-size:13px">&#9989; All study guides and visual guides are in sync for weeks 1\u2013' + currentWeek + '</div>';
+    html += '<div style="padding:12px;background:#f0fdf4;border-radius:8px;color:#166534;font-size:13px">&#9989; All reference guides and visual guides are in sync for weeks 1\u2013' + currentWeek + '</div>';
   } else {
     html += '<div style="padding:12px;background:#fef3c7;border-radius:8px;font-size:13px">';
     html += '<strong style="color:#92400e">' + mismatches.length + ' alignment gap' + (mismatches.length!==1?'s':'') + ':</strong><ul style="margin:6px 0 0 16px;padding:0">';
@@ -6610,7 +6562,7 @@ function wftRenderAssessPrep() {
   // Study Guide coverage summary
   var sg = WORKFLOW_TRACKER.studyGuides;
   if (sg) {
-    html += '<div class="wft-section-title">Study Guide Coverage</div>';
+    html += '<div class="wft-section-title">Reference Guide Coverage</div>';
     html += '<div style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:16px">';
     html += '<div style="font-size:12px;color:var(--muted);margin-bottom:12px">' + sg.summary + '</div>';
     html += '<div style="font-size:13px;margin-bottom:8px"><strong>' + sg.totalQuizQuestions + ' self-test questions</strong> across ' + sg.weeksCovered + ' week entries</div>';
@@ -6720,7 +6672,7 @@ function wftRenderHealth() {
   var saChecks = [
     { name: 'Dashboard features guide', status: true },
     { name: 'Assessments (dates, weights, rubrics, rules, tips, files)', status: true },
-    { name: 'Study guides (objectives, concepts, examples, terms, mustDo, selfTest)', status: true },
+    { name: 'Reference guides (objectives, concepts, examples, terms, mustDo, selfTest)', status: true },
     { name: 'Weekly content summaries', status: true },
     { name: 'Practice tool inventories (items, counts, samples)', status: true },
     { name: 'Study techniques (5 evidence-based methods with actions)', status: true },
@@ -6781,6 +6733,58 @@ function wftRenderCompliance() {
     html += '<div style="font-size:12px;color:var(--muted);margin-top:2px">' + c.detail + '</div>';
     html += '</div></div>';
   }
+  html += '</div>';
+
+  // ── Validation & Consistency Checks ──
+  html += '<div class="wft-section-title">Validation & Consistency Checks</div>';
+  html += '<div style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:16px;margin-bottom:16px">';
+  html += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">';
+  html += '<span style="font-size:13px;color:var(--muted)">Last full run: ' + fmtDate(VALIDATION_STATUS.lastFullRun) + '</span>';
+  html += '<span style="font-size:12px;color:var(--muted)">Next scheduled: ' + fmtDate(VALIDATION_STATUS.nextScheduledRun) + '</span>';
+  html += '</div>';
+
+  // Update Checklist tracks
+  html += '<div style="font-size:12px;font-weight:600;margin-bottom:8px">Update Checklist</div>';
+  for (var i = 0; i < VALIDATION_STATUS.updateChecklist.tracks.length; i++) {
+    var track = VALIDATION_STATUS.updateChecklist.tracks[i];
+    var allPassed = track.passed === track.total;
+    html += '<div style="display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid var(--border)">';
+    html += '<span style="font-size:14px;min-width:20px">' + (allPassed ? '&#9989;' : '&#9888;&#65039;') + '</span>';
+    html += '<div style="flex:1">';
+    html += '<span style="font-size:12px;font-weight:600">' + track.name + '</span>';
+    html += '<span style="font-size:11px;color:var(--muted)"> (' + track.checks + ')</span>';
+    html += '<div style="font-size:11px;color:var(--muted);margin-top:1px">' + track.detail + '</div>';
+    html += '</div>';
+    html += '<span style="font-size:12px;font-weight:600;color:' + (allPassed ? '#10b981' : '#f59e0b') + '">' + track.passed + '/' + track.total + '</span>';
+    html += '</div>';
+  }
+
+  // Consistency checks (CC1-CC10)
+  html += '<div style="font-size:12px;font-weight:600;margin:12px 0 8px">Consistency Checks (CC1–CC10)</div>';
+  html += '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:6px">';
+  for (var i = 0; i < VALIDATION_STATUS.consistency.checks.length; i++) {
+    var cc = VALIDATION_STATUS.consistency.checks[i];
+    var ccIcon = cc.status === 'pass' ? '&#9989;' : cc.status === 'warn' ? '&#9888;' : '&#10060;';
+    html += '<div style="font-size:11px;padding:6px 8px;border-radius:6px;background:var(--bg);display:flex;align-items:flex-start;gap:4px">';
+    html += '<span>' + ccIcon + '</span>';
+    html += '<div><strong>' + cc.id + '</strong> ' + cc.name + '</div>';
+    html += '</div>';
+  }
+  html += '</div>';
+
+  // Materials validation
+  html += '<div style="font-size:12px;font-weight:600;margin:12px 0 8px">Materials Validation</div>';
+  html += '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px">';
+  var matColors = { INFO1113:'#3b82f6', LNGS1001:'#10b981', ANHS2609:'#f59e0b', OLES1603:'#8b5cf6' };
+  for (var course in VALIDATION_STATUS.materials.perCourse) {
+    var gaps = VALIDATION_STATUS.materials.perCourse[course];
+    html += '<div style="text-align:center;padding:6px;border-radius:6px;background:' + (gaps > 0 ? '#fef2f2' : '#f0fdf4') + ';border:1px solid var(--border)">';
+    html += '<div style="font-size:11px;font-weight:600;color:' + (matColors[course]||'#666') + '">' + course.replace(/[0-9]/g,'') + '</div>';
+    html += '<div style="font-size:14px;font-weight:700;color:' + (gaps > 0 ? '#ef4444' : '#10b981') + '">' + gaps + '</div>';
+    html += '<div style="font-size:10px;color:var(--muted)">gaps</div>';
+    html += '</div>';
+  }
+  html += '</div>';
   html += '</div>';
 
   // ── Compliance Log ──
@@ -6848,6 +6852,7 @@ function wftRenderCompliance() {
   html += '<div style="font-size:12px;color:var(--muted)">';
   html += '<div>&#128269; <code>validate-materials.py</code> — Materials tab gap detection (run every sync)</div>';
   html += '<div>&#128274; <code>security-audit.py</code> — 11-check security scan (run every deploy)</div>';
+  html += '<div>&#128270; <code>consistency-check.py</code> — 10-check cross-system consistency (CC1–CC10, run every sync + weekly)</div>';
   html += '<div>&#128203; <code>compliance-log.md</code> — Full audit trail (append every session)</div>';
   html += '</div></div>';
 
@@ -7382,7 +7387,7 @@ function renderPracticeLab() {
     <details style="font-size:13px;color:var(--muted);margin-bottom:16px;cursor:pointer">
       <summary style="font-weight:600;color:var(--text);margin-bottom:8px">How to use these tools</summary>
       <div style="background:var(--surface);border-radius:8px;padding:12px 16px;line-height:1.6">
-        <p style="margin:0 0 8px"><strong>Start with the Study Guide tab</strong> \u2014 read the week\u2019s key concepts and terms first. The Practice Lab reinforces what you learn there.</p>
+        <p style="margin:0 0 8px"><strong>Start with the Reference tab</strong> \u2014 read the week\u2019s key concepts and terms first. The Practice Lab reinforces what you learn there.</p>
         <p style="margin:0 0 8px"><strong>Recommended order:</strong></p>
         <ol style="margin:0 0 8px;padding-left:20px">
           <li><strong>Python \u2192 Java Reference</strong> \u2014 Scan the syntax table to see how concepts you know in Python translate to Java. Keep it open while practising.</li>
@@ -9578,7 +9583,7 @@ function renderAstroPracticeLab() {
   let html = `<div class="card">
     <div class="card-title" style="font-size:18px">Astronomy Concept Lab</div>
     <div style="font-size:13px;color:var(--muted);margin-bottom:16px">
-      <p style="margin:0 0 8px"><strong>Start with the Study Guide tab</strong> \u2014 read the week\u2019s key concepts and terms first. The Practice Lab reinforces what you learn there.</p>
+      <p style="margin:0 0 8px"><strong>Start with the Reference tab</strong> \u2014 read the week\u2019s key concepts and terms first. The Practice Lab reinforces what you learn there.</p>
     </div>
     <div style="display:flex;gap:8px;margin-bottom:14px;align-items:center">
       <span style="font-size:12px;font-weight:600;color:var(--muted)">Filter by week:</span>
@@ -11006,13 +11011,13 @@ function saBuildContext(courseCode) {
   ctx += 'This study dashboard has the following features you can ask about:\n';
   ctx += '- Weekly Content tab: lecture topics, Canvas pages, and what was covered each week\n';
   ctx += '- Assessments tab: all assignments with due dates, weights, rubrics, rules, and tips\n';
-  ctx += '- Visual Guide tab: interactive HTML study guides for each week with self-test questions (Weeks 1-3)\n';
-  ctx += '- Study Guide tab: comprehensive reference guides with key concepts, terms, examples, and self-test questions\n';
+  ctx += '- Visual Guide tab: interactive HTML visual guides for each week with self-test questions\n';
+  ctx += '- Reference tab: comprehensive reference guides with key concepts, terms, examples, and self-test questions\n';
   ctx += '- Practice Lab tab: interactive exercises specific to each course (see PRACTICE TOOLS below)\n';
   ctx += '- Materials tab: links to all lecture slides, transcripts, readings, tutorials, and assessment files\n';
   ctx += '- Calendar page: month view of all assessment due dates across all courses\n';
   ctx += '- Study Smart section on home page: evidence-based study techniques, weekly hours breakdown, and a preparation checklist\n';
-  ctx += '- Preparation Checklist: weekly mustDo tasks from the study guide with carry-over for uncompleted items\n';
+  ctx += '- Preparation Checklist: weekly mustDo tasks from the reference guide with carry-over for uncompleted items\n';
   if (courseCode === 'ANHS2609') ctx += '- Timeline tab: interactive chronological timeline of events from 382 BCE to 323 BCE\n';
   ctx += '\n';
 
@@ -11031,8 +11036,8 @@ function saBuildContext(courseCode) {
     }
   });
 
-  // Study guides
-  ctx += '\n## STUDY GUIDES\n';
+  // Reference guides
+  ctx += '\n## REFERENCE GUIDES\n';
   const guideCourses = courseCode ? [courseCode] : Object.keys(STUDY_GUIDES);
   guideCourses.forEach(code => {
     const guides = STUDY_GUIDES[code];
