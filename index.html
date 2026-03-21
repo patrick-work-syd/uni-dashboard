@@ -1413,6 +1413,18 @@ document.getElementById('pin-input').focus();
       <div class="sync-tool-desc">NotebookLM &amp; Study Assistant</div>
       <div class="sync-tool-stat" id="sync-stat-ai"></div>
     </div>
+    <div class="sync-tool-card" onclick="syncShowPanel('dashboarddocs')">
+      <div class="sync-tool-icon">&#128187;</div>
+      <div class="sync-tool-title">How the Dashboard Works</div>
+      <div class="sync-tool-desc">Navigation, features &amp; data</div>
+      <div class="sync-tool-stat" id="sync-stat-dashboarddocs"></div>
+    </div>
+    <div class="sync-tool-card" onclick="syncShowPanel('calendardocs')">
+      <div class="sync-tool-icon">&#128197;</div>
+      <div class="sync-tool-title">Calendar</div>
+      <div class="sync-tool-desc">Assessment dates, timetable &amp; navigation</div>
+      <div class="sync-tool-stat" id="sync-stat-calendardocs"></div>
+    </div>
   </div>
 
   <div class="sync-panel active" id="sync-panel-tracker"></div>
@@ -1420,6 +1432,8 @@ document.getElementById('pin-input').focus();
   <div class="sync-panel" id="sync-panel-actions"></div>
   <div class="sync-panel" id="sync-panel-methodology"></div>
   <div class="sync-panel" id="sync-panel-ai"></div>
+  <div class="sync-panel" id="sync-panel-dashboarddocs"></div>
+  <div class="sync-panel" id="sync-panel-calendardocs"></div>
 </div>
 
 <!-- ==================== WORKFLOW TRACKER ==================== -->
@@ -5737,6 +5751,8 @@ function renderSyncPage() {
   var guideStats = wftGetGuideStats();
   document.getElementById('sync-stat-methodology').textContent = guideStats.complete + ' validated, ' + guideStats.needsNbml + ' needs NbML, ' + guideStats.draft + ' draft';
   document.getElementById('sync-stat-ai').textContent = '2 tools';
+  document.getElementById('sync-stat-dashboarddocs').textContent = '7 sections';
+  document.getElementById('sync-stat-calendardocs').textContent = 'Month view';
 
   syncRenderActivePanel();
 }
@@ -5747,7 +5763,7 @@ function syncShowPanel(panel) {
   syncView.querySelectorAll('.sync-tool-card').forEach(c => c.classList.remove('active'));
   syncView.querySelectorAll('.sync-panel').forEach(p => p.classList.remove('active'));
   var cards = syncView.querySelectorAll('.sync-tool-card');
-  var panels = { tracker:0, schedule:1, actions:2, methodology:3, ai:4 };
+  var panels = { tracker:0, schedule:1, actions:2, methodology:3, ai:4, dashboarddocs:5, calendardocs:6 };
   if (cards[panels[panel]]) cards[panels[panel]].classList.add('active');
   document.getElementById('sync-panel-' + panel)?.classList.add('active');
   syncRenderActivePanel();
@@ -5759,6 +5775,8 @@ function syncRenderActivePanel() {
   else if (syncActivePanel === 'actions') syncRenderActions();
   else if (syncActivePanel === 'methodology') syncRenderMethodology();
   else if (syncActivePanel === 'ai') syncRenderAI();
+  else if (syncActivePanel === 'dashboarddocs') syncRenderDashboardDocs();
+  else if (syncActivePanel === 'calendardocs') syncRenderCalendarDocs();
 }
 
 function syncRenderTracker() {
@@ -6217,6 +6235,221 @@ function syncRenderAI() {
   html += '<span style="color:var(--muted)">You can also use NotebookLM directly for deep questions,</span><br>';
   html += '<span style="color:var(--muted)">audio overviews, and exploratory research.</span>';
   html += '</div>';
+  html += '</div>';
+
+  el.innerHTML = html;
+}
+
+function syncRenderDashboardDocs() {
+  var el = document.getElementById('sync-panel-dashboarddocs');
+  var html = '';
+
+  // Section 1: Overview
+  html += '<div class="meth-section">';
+  html += '<h3>&#128187; Dashboard Overview</h3>';
+  html += '<p>The dashboard is a <strong>single-page application</strong> (one HTML file) that serves as the central hub for all four courses. It runs entirely in your browser \u2014 no server, no login, no internet required (except for the Study Assistant API calls). All your progress data is stored in your browser\'s <code>localStorage</code>.</p>';
+  html += '<p style="margin-top:8px">Access is protected by a <strong>PIN gate</strong> \u2014 you enter the PIN once per browser session. The PIN is a lightweight deterrent, not cryptographic security.</p>';
+  html += '</div>';
+
+  // Section 2: Navigation
+  html += '<div class="meth-section">';
+  html += '<h3>&#128204; Navigation</h3>';
+  html += '<p>The sidebar (left panel on desktop, hamburger menu on mobile) organises the dashboard into sections:</p>';
+  html += '<table class="meth-source-table"><thead><tr><th>Section</th><th>What It Contains</th></tr></thead><tbody>';
+  html += '<tr><td><strong>Dashboard</strong> (Home)</td><td>Week at a Glance, upcoming deadlines, prep checklists, Study Smart tips, semester progress bars</td></tr>';
+  html += '<tr><td><strong>Calendar</strong></td><td>Month-view calendar with all assessments, timetable overlay, holidays and mid-sem break</td></tr>';
+  html += '<tr><td><strong>Course Pages</strong> (x4)</td><td>Per-course pages with tabs: Weekly Content, Assessments, Visual Guide, Reference, Practice Lab, Materials</td></tr>';
+  html += '<tr><td><strong>Review</strong> (INFO1110)</td><td>Python prerequisite review with visual guides for Lessons 9\u201313 and link to Advanced Studio drills</td></tr>';
+  html += '<tr><td><strong>Sync &amp; Updates</strong></td><td>Material collection tracker, sync schedule, methodology docs (this page)</td></tr>';
+  html += '<tr><td><strong>Workflow Tracker</strong></td><td>Content pipeline status: reference guides, visual guides, practice tools, assessment prep, compliance</td></tr>';
+  html += '</tbody></table>';
+  html += '<p style="margin-top:8px;font-size:12px;color:var(--muted)">On mobile (under 1024px), the sidebar collapses and auto-closes after navigation.</p>';
+  html += '</div>';
+
+  // Section 3: Home page features
+  html += '<div class="meth-section">';
+  html += '<h3>&#127968; Home Page \u2014 What Each Section Does</h3>';
+
+  html += '<h4 style="margin-top:14px;font-size:14px;color:var(--info)">Week at a Glance</h4>';
+  html += '<p>Shows a card for each course with this week\'s content: lecture topic, key concept count, upcoming assessments within 14 days (with urgency colour coding), top priority action from the reference guide\'s mustDo list, tutorial topic, and required reading. Each card links to the full reference guide.</p>';
+
+  html += '<h4 style="margin-top:14px;font-size:14px;color:var(--info)">Sync Reminder</h4>';
+  html += '<p>Appears when materials haven\'t been synced in 5+ days or when the current week has no reference guide yet. Shows days since last sync and links to the Sync &amp; Updates page.</p>';
+
+  html += '<h4 style="margin-top:14px;font-size:14px;color:var(--info)">Overdue &amp; Crunch Warnings</h4>';
+  html += '<p><strong>Overdue alert:</strong> Flags assessments past their due date that haven\'t been marked as submitted. Includes checkboxes to dismiss. <strong>Crunch warning:</strong> Detects when 3+ assessments fall on the same date and highlights the combined weight \u2014 so you can plan ahead.</p>';
+
+  html += '<h4 style="margin-top:14px;font-size:14px;color:var(--info)">Upcoming Deadlines</h4>';
+  html += '<p>All assessments due in the next 21 days, sorted by date. Each row shows: submit checkbox, date, course badge, name (clickable for details), weight, and countdown. Colour coding: <span style="color:#ef4444;font-weight:600">\u226473 days = red</span>, <span style="color:#f59e0b;font-weight:600">\u22647 days = amber</span>, green otherwise. Submitted items dim to 50% opacity. Items with marks show the grade in green.</p>';
+
+  html += '<h4 style="margin-top:14px;font-size:14px;color:var(--info)">Prep Checklist</h4>';
+  html += '<p>Per-course checklists with interactive checkboxes (persisted in localStorage). Items include: lecture review, tutorial prep, required reading, and due assessments. Shows progress as "N/M done". Key concepts from the reference guide are previewed below each course. <strong>Carry-over:</strong> Unchecked items from previous weeks automatically appear under a "Carried over" section so nothing slips through.</p>';
+
+  html += '<h4 style="margin-top:14px;font-size:14px;color:var(--info)">Study Smart</h4>';
+  html += '<p>Two parts: (1) <strong>Weekly time budget</strong> \u2014 shows each course\'s recommended hours broken down by lecture, tutorial, and independent study. (2) <strong>Technique of the week</strong> \u2014 rotates through evidence-based study techniques (retrieval practice, spaced repetition, interleaving, elaboration, Pomodoro, etc.) with a concrete action step for the current week. All techniques cite their research source.</p>';
+
+  html += '<h4 style="margin-top:14px;font-size:14px;color:var(--info)">Semester Progress</h4>';
+  html += '<p>Overall semester progress bar (week N of 13) plus per-course cards showing: coursework weight submitted so far, progress bar, exam weight, and next assessment date. Helps you see at a glance where each course stands.</p>';
+  html += '</div>';
+
+  // Section 4: Course pages
+  html += '<div class="meth-section">';
+  html += '<h3>&#128218; Course Pages</h3>';
+  html += '<p>Each of the 4 courses has its own page with 6 tabs:</p>';
+  html += '<table class="meth-source-table"><thead><tr><th>Tab</th><th>Contents</th></tr></thead><tbody>';
+  html += '<tr><td><strong>Weekly Content</strong></td><td>13-week overview with lecture topics, tutorial descriptions, readings, and assessment due dates. Current week is highlighted.</td></tr>';
+  html += '<tr><td><strong>Assessments</strong></td><td>All assessments for the course with submit checkboxes, weights, countdown timers, and marks (when available). Click any assessment name for a detail modal with rubric, rules, tips, and prep guide if available.</td></tr>';
+  html += '<tr><td><strong>Visual Guide</strong></td><td>Interactive study tools loaded in an iframe. Step-through format with 8\u201312 content steps, self-test questions with Bloom\'s taxonomy tags, and links back to the practice lab. Week selector buttons let you switch between available weeks.</td></tr>';
+  html += '<tr><td><strong>Reference</strong></td><td>The structured reference guide with 10 fields: Learning Objectives, Study Hours, Key Concepts, Key Terms, Key Examples, Must-Do, Self-Test (interactive quiz with write-first format), Exam Relevance, Distinction Tip, and Prep Checklist. Week selector to switch weeks.</td></tr>';
+  html += '<tr><td><strong>Practice Lab</strong></td><td>Course-specific interactive exercises. INFO1113: code tracing, Parsons problems, Python\u2192Java mistakes, challenges. LNGS1001: IPA chart, transcription, quiz. ANHS2609: map quiz, timeline. OLES1603: concept quiz, term cards, sort exercises. All tools have week filters.</td></tr>';
+  html += '<tr><td><strong>Materials</strong></td><td>Links to all collected course files on GitHub: lessons, tutorials, assessments, transcripts, lecture notes, setup guides, and course info.</td></tr>';
+  html += '</tbody></table>';
+  html += '</div>';
+
+  // Section 5: Assessment detail modal
+  html += '<div class="meth-section">';
+  html += '<h3>&#128203; Assessment Detail Modal</h3>';
+  html += '<p>Clicking any assessment name (on the home page or a course page) opens a detail modal showing:</p>';
+  html += '<ul>';
+  html += '<li><strong>Header:</strong> Assessment name, course badge, type badge (colour-coded: task, quiz, assignment, essay, exam), and countdown</li>';
+  html += '<li><strong>Due date &amp; weight</strong> with urgency colouring</li>';
+  html += '<li><strong>Submission status:</strong> Checkbox to mark as submitted, plus mark display if graded</li>';
+  html += '<li><strong>Canvas link:</strong> Direct link to the assessment on Canvas/Ed (if available)</li>';
+  html += '<li><strong>Prep guide:</strong> If an assessment prep guide exists, it\'s embedded in the modal with strategy sections, key rubric points, common mistakes, and a preparation checklist</li>';
+  html += '</ul>';
+  html += '</div>';
+
+  // Section 6: Data & persistence
+  html += '<div class="meth-section">';
+  html += '<h3>&#128190; Data &amp; Persistence</h3>';
+  html += '<p>All user state is stored in <code>localStorage</code> (your browser, no server). Here\'s what\'s persisted and what resets:</p>';
+  html += '<table class="meth-source-table"><thead><tr><th>Data</th><th>Storage Key</th><th>Resets When</th></tr></thead><tbody>';
+  html += '<tr><td>Assessment submission checkboxes</td><td><code>uni-submit-*</code></td><td>Clear browser data</td></tr>';
+  html += '<tr><td>Prep checklist checkboxes</td><td><code>uni-prep-*</code></td><td>Clear browser data</td></tr>';
+  html += '<tr><td>Quiz/self-test progress</td><td><code>uni-sg-answers-*</code></td><td>Clear browser data</td></tr>';
+  html += '<tr><td>Study Assistant API key</td><td><code>uni-claude-key</code></td><td>Clear browser data</td></tr>';
+  html += '<tr><td>Learning profile</td><td><code>uni-student-profile</code></td><td>Clear browser data</td></tr>';
+  html += '<tr><td>Saved exercises</td><td><code>uni-sa-exercises</code></td><td>Clear browser data</td></tr>';
+  html += '<tr><td>PIN session</td><td><code>sessionStorage</code></td><td>Close browser tab</td></tr>';
+  html += '</tbody></table>';
+  html += '<p style="margin-top:12px;font-size:12px;color:var(--muted)"><strong>Tip:</strong> If you switch browsers or devices, your progress won\'t carry over (it\'s local to each browser). Course content and reference guides are baked into the HTML itself \u2014 they\'re always there regardless of localStorage.</p>';
+  html += '</div>';
+
+  // Section 7: Architecture
+  html += '<div class="meth-section">';
+  html += '<h3>&#9881;&#65039; Architecture</h3>';
+  html += '<p>The entire dashboard is a single <code>dashboard.html</code> file \u2014 no build step, no framework, no external dependencies. This design was chosen for:</p>';
+  html += '<ul>';
+  html += '<li><strong>Portability:</strong> One file works anywhere \u2014 laptop, phone, USB drive, GitHub Pages</li>';
+  html += '<li><strong>Offline access:</strong> Works without internet (except Study Assistant API calls)</li>';
+  html += '<li><strong>No build step:</strong> Edit and deploy directly \u2014 no npm, no webpack, no compilation</li>';
+  html += '<li><strong>Self-contained:</strong> All CSS, JS, and data constants are in the same file. Data structures (<code>COURSES</code>, <code>ASSESSMENTS</code>, <code>STUDY_GUIDES</code>, <code>WEEKLY_CONTENT</code>, etc.) are JavaScript constants updated during weekly sync</li>';
+  html += '</ul>';
+  html += '<p style="margin-top:8px">The dashboard is deployed to <strong>GitHub Pages</strong> as <code>index.html</code> (a copy of <code>dashboard.html</code>). The deploy script handles copying and pushing to the public repo.</p>';
+  html += '</div>';
+
+  el.innerHTML = html;
+}
+
+function syncRenderCalendarDocs() {
+  var el = document.getElementById('sync-panel-calendardocs');
+  var html = '';
+
+  // Section 1: Overview
+  html += '<div class="meth-section">';
+  html += '<h3>&#128197; Calendar Overview</h3>';
+  html += '<p>The Assessment Calendar is a full month-view calendar showing all assessments, class timetable, holidays, and key dates for the semester. It\'s designed to give you a visual overview of what\'s coming \u2014 especially when multiple courses have deadlines in the same week.</p>';
+  html += '</div>';
+
+  // Section 2: Navigation
+  html += '<div class="meth-section">';
+  html += '<h3>&#128268; Navigation Controls</h3>';
+  html += '<table class="meth-source-table"><thead><tr><th>Control</th><th>What It Does</th></tr></thead><tbody>';
+  html += '<tr><td><strong>\u2190 Prev / Next \u2192</strong></td><td>Move forward or backward one month at a time</td></tr>';
+  html += '<tr><td><strong>Today</strong></td><td>Jump back to the current month and scroll to today\'s date (highlighted with a pulse animation)</td></tr>';
+  html += '<tr><td><strong>Classes: ON/OFF</strong></td><td>Toggle the weekly timetable overlay. When ON, each day shows lecture and tutorial slots with course colours and times</td></tr>';
+  html += '</tbody></table>';
+  html += '</div>';
+
+  // Section 3: What appears on each day
+  html += '<div class="meth-section">';
+  html += '<h3>&#128197; What Appears on Each Day</h3>';
+  html += '<table class="meth-source-table"><thead><tr><th>Element</th><th>Appearance</th><th>Interaction</th></tr></thead><tbody>';
+  html += '<tr><td><strong>Assessment</strong></td><td>Coloured pill with course code + assessment name (matches course colour: blue=INFO, green=LNGS, orange=ANHS, purple=OLES)</td><td>Click to open the assessment detail modal with rubric, rules, tips, and prep guide</td></tr>';
+  html += '<tr><td><strong>Class slot</strong></td><td>Small bordered label with course code, type (Lec/Tut), and time</td><td>Visible only when "Classes" toggle is ON</td></tr>';
+  html += '<tr><td><strong>Today</strong></td><td>Blue-highlighted cell with pulse animation on load</td><td>\u2014</td></tr>';
+  html += '<tr><td><strong>Holiday</strong></td><td>Red background with holiday label (e.g. "Good Friday")</td><td>\u2014</td></tr>';
+  html += '<tr><td><strong>Mid-sem break</strong></td><td>Green-tinted background with "Mid-sem break" label</td><td>\u2014</td></tr>';
+  html += '<tr><td><strong>Other-month days</strong></td><td>Greyed out with dimmed day number (padding from adjacent months)</td><td>\u2014</td></tr>';
+  html += '</tbody></table>';
+  html += '</div>';
+
+  // Section 4: Assessment types & colour coding
+  html += '<div class="meth-section">';
+  html += '<h3>&#127912; Course Colour Coding</h3>';
+  html += '<p>Assessments and class slots use consistent course colours throughout the dashboard:</p>';
+  html += '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-top:8px">';
+  var calCourses = [
+    { code: 'INFO1113', label: 'Java (INFO)', color: '#3b82f6' },
+    { code: 'LNGS1001', label: 'Linguistics (LNGS)', color: '#10b981' },
+    { code: 'ANHS2609', label: 'Alexander (ANHS)', color: '#f59e0b' },
+    { code: 'OLES1603', label: 'Astronomy (OLES)', color: '#8b5cf6' }
+  ];
+  for (var i = 0; i < calCourses.length; i++) {
+    var cc = calCourses[i];
+    html += '<div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--card);border:1px solid var(--border);border-radius:8px">';
+    html += '<div style="width:16px;height:16px;border-radius:4px;background:' + cc.color + ';flex-shrink:0"></div>';
+    html += '<span style="font-size:13px;font-weight:600">' + cc.label + '</span>';
+    html += '</div>';
+  }
+  html += '</div>';
+  html += '</div>';
+
+  // Section 5: Timetable overlay
+  html += '<div class="meth-section">';
+  html += '<h3>&#128197; Timetable Overlay</h3>';
+  html += '<p>When "Classes: ON" is active, the calendar shows your weekly lecture and tutorial schedule on each applicable day. Classes are displayed within their semester date ranges (lectures and tutorials have separate start/end dates).</p>';
+  html += '<table class="meth-source-table"><thead><tr><th>Day</th><th>Classes</th></tr></thead><tbody>';
+  html += '<tr><td><strong>Monday</strong></td><td>LNGS1001 Lec (1\u20132pm), OLES1603 Lec (4\u20135pm), INFO1113 Lec (4\u20136pm)</td></tr>';
+  html += '<tr><td><strong>Tuesday</strong></td><td>ANHS2609 Lec (12\u20132pm), LNGS1001 Lec (1\u20132pm), LNGS1001 Tut (4\u20135pm)</td></tr>';
+  html += '<tr><td><strong>Friday</strong></td><td>ANHS2609 Tut (10\u201311am), OLES1603 Tut (12\u20131pm), INFO1113 Tut (2\u20134pm)</td></tr>';
+  html += '</tbody></table>';
+  html += '<p style="margin-top:8px;font-size:12px;color:var(--muted)">Wednesday and Thursday have no scheduled classes.</p>';
+  html += '</div>';
+
+  // Section 6: Key semester dates
+  html += '<div class="meth-section">';
+  html += '<h3>&#128205; Key Semester Dates</h3>';
+  html += '<table class="meth-source-table"><thead><tr><th>Date</th><th>Event</th></tr></thead><tbody>';
+  html += '<tr><td>23 Feb</td><td>Semester 1 starts (Week 1) \u2014 lectures begin</td></tr>';
+  html += '<tr><td>27 Feb</td><td>Tutorials begin (Friday of Week 1)</td></tr>';
+  html += '<tr><td>30 Mar</td><td>Last lectures before mid-sem break (end of Week 5)</td></tr>';
+  html += '<tr><td>31 Mar</td><td><strong>Census date</strong> \u2014 last day to withdraw without academic penalty</td></tr>';
+  html += '<tr><td>3 Apr</td><td>Good Friday (public holiday)</td></tr>';
+  html += '<tr><td>4 Apr</td><td>Easter Saturday (public holiday)</td></tr>';
+  html += '<tr><td>6\u201319 Apr</td><td><strong>Mid-semester break</strong> \u2014 2 weeks, no classes</td></tr>';
+  html += '<tr><td>6 Apr</td><td>Easter Monday (public holiday, first day of break)</td></tr>';
+  html += '<tr><td>20 Apr</td><td>Lectures resume (Week 7)</td></tr>';
+  html += '<tr><td>24 Apr</td><td>Tutorials resume (Friday of Week 7)</td></tr>';
+  html += '<tr><td>25 Apr</td><td>ANZAC Day (Saturday \u2014 no class impact)</td></tr>';
+  html += '<tr><td>25 May</td><td>Last lectures (end of Week 13)</td></tr>';
+  html += '<tr><td>29 May</td><td>Last tutorials (Friday of Week 13)</td></tr>';
+  html += '<tr><td>8 Jun</td><td>Queen\'s Birthday (public holiday)</td></tr>';
+  html += '<tr><td>8\u201314 Jun</td><td><strong>STUVAC</strong> \u2014 Study Vacation (no classes, revision week)</td></tr>';
+  html += '<tr><td>15\u201328 Jun</td><td><strong>Exam period</strong></td></tr>';
+  html += '</tbody></table>';
+  html += '</div>';
+
+  // Section 7: Tips
+  html += '<div class="meth-section">';
+  html += '<h3>&#128161; Tips for Using the Calendar</h3>';
+  html += '<div class="sync-callout">';
+  html += '<ul style="margin:4px 0 0 16px;list-style:disc">';
+  html += '<li><strong>Assessment crunch detection:</strong> The home page automatically warns you when 3+ assessments fall on the same date \u2014 but the calendar lets you visually spot dense weeks before they arrive</li>';
+  html += '<li><strong>Click any assessment pill</strong> on the calendar to open its detail modal with full rubric, rules, tips, and prep guide (if available)</li>';
+  html += '<li><strong>Use the timetable toggle</strong> to plan your study blocks around class times \u2014 especially useful for Fridays when all three tutorials are back-to-back</li>';
+  html += '<li><strong>Check adjacent months:</strong> Some assessments (especially major ones like essays and the final project) are due in later months. Navigate forward to see what\'s coming.</li>';
+  html += '</ul></div>';
   html += '</div>';
 
   el.innerHTML = html;
