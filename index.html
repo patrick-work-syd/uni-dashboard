@@ -7270,10 +7270,13 @@ function wftRenderCommercialization() {
     var rtDetailId = 'roundtable-results-detail';
     html += '<div style="background:#dcfce7;border:2px solid #86efac;border-radius:8px;padding:14px;margin-bottom:12px">';
     html += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">';
-    html += '<span style="font-size:14px;font-weight:700;color:#166534">\u2705 Roundtable Consensus: "' + rt.consensus + '"</span>';
+    var rtTitle = rt.round2Verdict ? 'Roundtable Complete (' + rt.rounds + ' rounds)' : '\u2705 Roundtable Consensus: "' + rt.consensus + '"';
+    html += '<span style="font-size:14px;font-weight:700;color:#166534">' + rtTitle + '</span>';
     html += '<button onclick="var d=document.getElementById(\'' + rtDetailId + '\');d.style.display=d.style.display===\'none\'?\'block\':\'none\';this.textContent=d.style.display===\'none\'?\'Full results \u25BC\':\'Hide \u25B2\'" style="font-size:11px;padding:3px 10px;border:1px solid #86efac;border-radius:4px;background:white;cursor:pointer;color:#166534;font-weight:600">Full results \u25BC</button>';
     html += '</div>';
-    html += '<div style="font-size:12px;margin-bottom:6px">' + rt.consensusRationale + '</div>';
+    if (rt.round1Consensus) html += '<div style="font-size:12px;margin-bottom:4px"><strong>Round 1:</strong> ' + rt.round1Consensus + '</div>';
+    if (rt.round2Verdict) html += '<div style="font-size:12px;margin-bottom:6px;color:#991b1b"><strong>Round 2:</strong> ' + rt.round2Verdict + '</div>';
+    if (rt.consensusRationale) html += '<div style="font-size:12px;margin-bottom:6px">' + rt.consensusRationale + '</div>';
     html += '<div style="font-size:11px;color:var(--muted)">' + rt.participants.length + ' experts (' + rt.date + ') \u2022 Full analysis in ' + rt.fullResultsFile + '</div>';
     html += '<div id="' + rtDetailId + '" style="display:none;margin-top:10px">';
 
@@ -7296,6 +7299,14 @@ function wftRenderCommercialization() {
     html += '<div style="font-size:12px;font-weight:600;margin:10px 0 6px">Key Insights</div>';
     for (var i = 0; i < rt.keyInsights.length; i++) {
       html += '<div style="font-size:11px;padding:2px 0;display:flex;align-items:flex-start;gap:6px"><span style="color:#16a34a;flex-shrink:0">\u25B6</span>' + rt.keyInsights[i] + '</div>';
+    }
+
+    // Synthesis ranking
+    if (rt.synthesisRanking) {
+      html += '<div style="font-size:12px;font-weight:600;margin:10px 0 6px;color:#7c3aed">Final Ranking</div>';
+      for (var i = 0; i < rt.synthesisRanking.length; i++) {
+        html += '<div style="font-size:11px;padding:3px 0;' + (i === 0 ? 'font-weight:600;color:#166534' : '') + '">' + rt.synthesisRanking[i] + '</div>';
+      }
     }
 
     // Critiques
