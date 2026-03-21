@@ -1425,6 +1425,12 @@ document.getElementById('pin-input').focus();
       <div class="sync-tool-desc">Assessment dates, timetable &amp; navigation</div>
       <div class="sync-tool-stat" id="sync-stat-calendardocs"></div>
     </div>
+    <div class="sync-tool-card" onclick="syncShowPanel('privacy')">
+      <div class="sync-tool-icon">&#128274;</div>
+      <div class="sync-tool-title">Privacy Policy</div>
+      <div class="sync-tool-desc">What data is collected &amp; your rights</div>
+      <div class="sync-tool-stat" id="sync-stat-privacy"></div>
+    </div>
   </div>
 
   <div class="sync-panel active" id="sync-panel-tracker"></div>
@@ -1434,6 +1440,7 @@ document.getElementById('pin-input').focus();
   <div class="sync-panel" id="sync-panel-ai"></div>
   <div class="sync-panel" id="sync-panel-dashboarddocs"></div>
   <div class="sync-panel" id="sync-panel-calendardocs"></div>
+  <div class="sync-panel" id="sync-panel-privacy"></div>
 </div>
 
 <!-- ==================== WORKFLOW TRACKER ==================== -->
@@ -5753,6 +5760,7 @@ function renderSyncPage() {
   document.getElementById('sync-stat-ai').textContent = '2 tools';
   document.getElementById('sync-stat-dashboarddocs').textContent = '7 sections';
   document.getElementById('sync-stat-calendardocs').textContent = 'Month view';
+  document.getElementById('sync-stat-privacy').textContent = 'On-device first';
 
   syncRenderActivePanel();
 }
@@ -5763,7 +5771,7 @@ function syncShowPanel(panel) {
   syncView.querySelectorAll('.sync-tool-card').forEach(c => c.classList.remove('active'));
   syncView.querySelectorAll('.sync-panel').forEach(p => p.classList.remove('active'));
   var cards = syncView.querySelectorAll('.sync-tool-card');
-  var panels = { tracker:0, schedule:1, actions:2, methodology:3, ai:4, dashboarddocs:5, calendardocs:6 };
+  var panels = { tracker:0, schedule:1, actions:2, methodology:3, ai:4, dashboarddocs:5, calendardocs:6, privacy:7 };
   if (cards[panels[panel]]) cards[panels[panel]].classList.add('active');
   document.getElementById('sync-panel-' + panel)?.classList.add('active');
   syncRenderActivePanel();
@@ -5777,6 +5785,7 @@ function syncRenderActivePanel() {
   else if (syncActivePanel === 'ai') syncRenderAI();
   else if (syncActivePanel === 'dashboarddocs') syncRenderDashboardDocs();
   else if (syncActivePanel === 'calendardocs') syncRenderCalendarDocs();
+  else if (syncActivePanel === 'privacy') syncRenderPrivacy();
 }
 
 function syncRenderTracker() {
@@ -6450,6 +6459,80 @@ function syncRenderCalendarDocs() {
   html += '<li><strong>Use the timetable toggle</strong> to plan your study blocks around class times \u2014 especially useful for Fridays when all three tutorials are back-to-back</li>';
   html += '<li><strong>Check adjacent months:</strong> Some assessments (especially major ones like essays and the final project) are due in later months. Navigate forward to see what\'s coming.</li>';
   html += '</ul></div>';
+  html += '</div>';
+
+  el.innerHTML = html;
+}
+
+function syncRenderPrivacy() {
+  var el = document.getElementById('sync-panel-privacy');
+  var html = '';
+
+  // Section 1: Core principle
+  html += '<div class="meth-section">';
+  html += '<h3>&#128274; Privacy Approach</h3>';
+  html += '<div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:14px;margin-bottom:12px;font-size:14px;font-weight:600;color:#1e40af">Your individual learning data never leaves your device. We collect only anonymised aggregate patterns to improve the study materials.</div>';
+  html += '</div>';
+
+  // Section 2: Summary table
+  html += '<div class="meth-section">';
+  html += '<h3>&#128203; At a Glance</h3>';
+  html += '<table class="meth-source-table"><thead><tr><th>What</th><th>Where It Lives</th><th>Who Sees It</th><th>Can You Opt Out?</th></tr></thead><tbody>';
+  html += '<tr><td>Your study profile (errors, strengths, progress)</td><td style="color:#16a34a;font-weight:600">Your device only</td><td>Only you</td><td>N/A \u2014 it\u2019s yours</td></tr>';
+  html += '<tr><td>AI tutor conversations</td><td>Your device + Anthropic API (processing only)</td><td>Only you</td><td>N/A \u2014 needed for the tutor</td></tr>';
+  html += '<tr><td>Aggregate error patterns (anonymised)</td><td>Cloud servers (AU region)</td><td>Our team + course authors (aggregate only)</td><td>Yes \u2014 one click</td></tr>';
+  html += '<tr><td>Feature usage stats (anonymised)</td><td>Cloud servers (AU region)</td><td>Our team only</td><td>Yes \u2014 one click</td></tr>';
+  html += '</tbody></table>';
+  html += '</div>';
+
+  // Section 3: What stays on device
+  html += '<div class="meth-section">';
+  html += '<h3>&#128241; What Stays on Your Device</h3>';
+  html += '<p>These are stored in your browser\u2019s <code>localStorage</code> and <strong>never transmitted</strong> to any server:</p>';
+  html += '<ul>';
+  html += '<li><strong>Learning profile</strong> \u2014 error history, topic strengths, study patterns</li>';
+  html += '<li><strong>Saved exercises</strong> \u2014 exercises you\u2019ve saved from the AI tutor</li>';
+  html += '<li><strong>Quiz progress</strong> \u2014 which self-test questions you\u2019ve answered</li>';
+  html += '<li><strong>Prep checklists</strong> \u2014 which tasks you\u2019ve checked off</li>';
+  html += '<li><strong>Submission tracking</strong> \u2014 which assessments you\u2019ve marked as submitted</li>';
+  html += '<li><strong>AI tutor conversation history</strong></li>';
+  html += '</ul>';
+  html += '<p style="margin-top:8px;font-size:12px;color:var(--muted)">If you clear your browser data, this is gone. We cannot access, recover, or view it.</p>';
+  html += '</div>';
+
+  // Section 4: AI tutor & Anthropic
+  html += '<div class="meth-section">';
+  html += '<h3>&#129302; AI Tutor &amp; Anthropic</h3>';
+  html += '<p>When you use the AI tutor, your question and relevant course context are sent to Anthropic\u2019s API for processing. This is necessary for the tutor to generate responses.</p>';
+  html += '<ul>';
+  html += '<li>We do <strong>not</strong> store your conversations on our servers</li>';
+  html += '<li>Anthropic does <strong>not</strong> use API data to train their models</li>';
+  html += '<li>Your API key (in the current BYOK setup) is stored only in your browser</li>';
+  html += '</ul>';
+  html += '</div>';
+
+  // Section 5: Aggregate data
+  html += '<div class="meth-section">';
+  html += '<h3>&#128202; Aggregate Data (Opt-In)</h3>';
+  html += '<p>If you opt in (default), we collect anonymised usage patterns with <strong>no student IDs, names, or device fingerprints</strong>:</p>';
+  html += '<ul>';
+  html += '<li>Which questions students commonly get wrong (to improve the material)</li>';
+  html += '<li>Which study tools are most effective (to recommend better approaches)</li>';
+  html += '<li>How long students spend on different topics (to balance difficulty)</li>';
+  html += '</ul>';
+  html += '<p style="margin-top:8px"><strong>Opting out:</strong> Toggle it off in Settings. Everything still works. You lose: recommendations based on what other students found helpful. That\u2019s it. No dark patterns, no guilt trips.</p>';
+  html += '</div>';
+
+  // Section 6: Your rights
+  html += '<div class="meth-section">';
+  html += '<h3>&#9989; Your Rights</h3>';
+  html += '<ul>';
+  html += '<li><strong>Export</strong> your local profile data at any time</li>';
+  html += '<li><strong>Delete</strong> your local profile at any time (Settings \u2192 Clear Profile)</li>';
+  html += '<li><strong>Opt out</strong> of aggregate data collection</li>';
+  html += '<li><strong>Request deletion</strong> of any aggregate data associated with your session</li>';
+  html += '</ul>';
+  html += '<p style="margin-top:8px;font-size:12px;color:var(--muted)">This policy is written in plain English, not legalese. If this policy changes, you\u2019ll be notified in the dashboard. Material changes require your explicit re-consent.</p>';
   html += '</div>';
 
   el.innerHTML = html;
@@ -7181,19 +7264,71 @@ function wftRenderCommercialization() {
   }
   html += '</div></div>';
 
-  // Recommended names
+  // Roundtable results
+  if (C.naming.roundtableResults) {
+    var rt = C.naming.roundtableResults;
+    var rtDetailId = 'roundtable-results-detail';
+    html += '<div style="background:#dcfce7;border:2px solid #86efac;border-radius:8px;padding:14px;margin-bottom:12px">';
+    html += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">';
+    html += '<span style="font-size:14px;font-weight:700;color:#166534">\u2705 Roundtable Consensus: "' + rt.consensus + '"</span>';
+    html += '<button onclick="var d=document.getElementById(\'' + rtDetailId + '\');d.style.display=d.style.display===\'none\'?\'block\':\'none\';this.textContent=d.style.display===\'none\'?\'Full results \u25BC\':\'Hide \u25B2\'" style="font-size:11px;padding:3px 10px;border:1px solid #86efac;border-radius:4px;background:white;cursor:pointer;color:#166534;font-weight:600">Full results \u25BC</button>';
+    html += '</div>';
+    html += '<div style="font-size:12px;margin-bottom:6px">' + rt.consensusRationale + '</div>';
+    html += '<div style="font-size:11px;color:var(--muted)">' + rt.participants.length + ' experts (' + rt.date + ') \u2022 Full analysis in ' + rt.fullResultsFile + '</div>';
+    html += '<div id="' + rtDetailId + '" style="display:none;margin-top:10px">';
+
+    // Top candidates
+    html += '<div style="font-size:12px;font-weight:600;margin-bottom:6px">Top Candidates</div>';
+    for (var i = 0; i < rt.topCandidates.length; i++) {
+      var tc = rt.topCandidates[i];
+      var isWinner = tc.name === rt.consensus;
+      html += '<div style="padding:8px;border-radius:6px;background:' + (isWinner ? '#bbf7d0' : 'white') + ';margin-bottom:4px;border:1px solid ' + (isWinner ? '#86efac' : '#e5e7eb') + '">';
+      html += '<div style="display:flex;justify-content:space-between;align-items:center">';
+      html += '<span style="font-size:13px;font-weight:' + (isWinner ? '700' : '600') + '">' + (isWinner ? '\u2B50 ' : '') + tc.name + '</span>';
+      html += '<span style="font-size:10px;color:var(--muted)">' + tc.votes + '</span>';
+      html += '</div>';
+      html += '<div style="font-size:11px;color:var(--muted);margin-top:2px">' + tc.domains + '</div>';
+      html += '<div style="font-size:11px;margin-top:2px">' + tc.rationale + '</div>';
+      html += '</div>';
+    }
+
+    // Key insights
+    html += '<div style="font-size:12px;font-weight:600;margin:10px 0 6px">Key Insights</div>';
+    for (var i = 0; i < rt.keyInsights.length; i++) {
+      html += '<div style="font-size:11px;padding:2px 0;display:flex;align-items:flex-start;gap:6px"><span style="color:#16a34a;flex-shrink:0">\u25B6</span>' + rt.keyInsights[i] + '</div>';
+    }
+
+    // Critiques
+    html += '<div style="font-size:12px;font-weight:600;margin:10px 0 6px;color:#991b1b">Critiques & Risks</div>';
+    for (var i = 0; i < rt.critiques.length; i++) {
+      html += '<div style="font-size:11px;padding:2px 0;display:flex;align-items:flex-start;gap:6px"><span style="color:#ef4444;flex-shrink:0">\u26A0</span>' + rt.critiques[i] + '</div>';
+    }
+
+    // Participants
+    html += '<div style="font-size:12px;font-weight:600;margin:10px 0 6px">Participants</div>';
+    for (var i = 0; i < rt.participants.length; i++) {
+      var p = rt.participants[i];
+      html += '<div style="font-size:10px;padding:2px 0;color:var(--muted)">[' + p.tier + '] ' + p.role + ' (' + p.model + ')</div>';
+    }
+    html += '</div></div>';
+  } else if (C.naming.roundtableStatus) {
+    html += '<div style="background:#dbeafe;border:1px solid #93c5fd;border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:12px">';
+    html += '<strong>\uD83D\uDD04 Roundtable:</strong> ' + C.naming.roundtableStatus;
+    html += '</div>';
+  }
+
+  // Pre-roundtable recommended names
   html += '<div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:12px;margin-bottom:16px">';
-  html += '<div style="font-size:13px;font-weight:600;color:#166534;margin-bottom:8px">&#9989; Recommended Names (clean domains available)</div>';
+  html += '<div style="font-size:13px;font-weight:600;color:#166534;margin-bottom:8px">Pre-Roundtable Candidates (clean domains available)</div>';
   for (var i = 0; i < C.naming.recommendations.length; i++) {
     var rec = C.naming.recommendations[i];
-    var rank = i < 3 ? '&#11088; ' : '';
-    html += '<div style="padding:8px;border-radius:6px;background:' + (i < 3 ? '#dcfce7' : 'white') + ';margin-bottom:6px;border:1px solid ' + (i < 3 ? '#86efac' : '#e5e7eb') + '">';
+    html += '<div style="padding:6px 8px;border-radius:6px;background:white;margin-bottom:4px;border:1px solid #e5e7eb">';
     html += '<div style="display:flex;justify-content:space-between;align-items:center">';
-    html += '<span style="font-size:13px;font-weight:600">' + rank + rec.name + '</span>';
+    html += '<span style="font-size:12px;font-weight:600">' + rec.name + '</span>';
     html += '<span style="font-size:11px;color:#166534;font-weight:500">' + rec.risk + ' risk</span>';
     html += '</div>';
     html += '<div style="font-size:11px;color:var(--muted);margin-top:2px">' + rec.domains + '</div>';
-    html += '<div style="font-size:12px;margin-top:4px">' + rec.rationale + '</div>';
+    html += '<div style="font-size:11px;margin-top:2px">' + rec.rationale + '</div>';
     html += '</div>';
   }
   html += '</div>';
@@ -7241,9 +7376,44 @@ function wftRenderCommercialization() {
     }
     html += '<div style="font-size:12px;color:var(--muted);margin-top:8px;padding-top:8px;border-top:1px solid var(--border)">' + pp.universityConsiderations + '</div>';
     html += '</div>';
+
+    // Draft privacy policy
+    if (C.privacy.draftPolicy) {
+      var dp = C.privacy.draftPolicy;
+      var dpDetailId = 'privacy-policy-draft';
+      html += '<div style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px;margin-bottom:12px">';
+      html += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">';
+      html += '<span style="font-size:13px;font-weight:600">\uD83D\uDCDC Draft Privacy Policy <span style="font-size:10px;padding:2px 6px;border-radius:4px;background:#dcfce7;color:#166534">' + dp.status + '</span></span>';
+      html += '<button onclick="var d=document.getElementById(\'' + dpDetailId + '\');d.style.display=d.style.display===\'none\'?\'block\':\'none\';this.textContent=d.style.display===\'none\'?\'View policy \u25BC\':\'Hide \u25B2\'" style="font-size:11px;padding:3px 10px;border:1px solid var(--border);border-radius:4px;background:var(--bg);cursor:pointer;color:var(--info);font-weight:600">View policy \u25BC</button>';
+      html += '</div>';
+      html += '<div id="' + dpDetailId + '" style="display:none;margin-top:8px">';
+
+      // Summary table
+      if (dp.summaryTable) {
+        html += '<div style="font-size:13px;font-weight:700;margin-bottom:6px">At a Glance</div>';
+        html += '<table class="meth-source-table" style="margin-bottom:14px"><thead><tr><th>What</th><th>Where</th><th>Who Sees It</th><th>Can You Opt Out?</th></tr></thead><tbody>';
+        for (var i = 0; i < dp.summaryTable.length; i++) {
+          var row = dp.summaryTable[i];
+          html += '<tr><td>' + row.what + '</td><td>' + row.where + '</td><td>' + row.whoSees + '</td><td>' + row.canOptOut + '</td></tr>';
+        }
+        html += '</tbody></table>';
+      }
+
+      // Policy sections
+      if (dp.sections) {
+        for (var i = 0; i < dp.sections.length; i++) {
+          var sec = dp.sections[i];
+          html += '<div style="margin-bottom:12px">';
+          html += '<div style="font-size:13px;font-weight:600;margin-bottom:4px">' + (i+1) + '. ' + sec.heading + '</div>';
+          html += '<div style="font-size:12px;line-height:1.6">' + sec.content + '</div>';
+          html += '</div>';
+        }
+      }
+      html += '</div></div>';
+    }
   }
 
-  // ── Infrastructure & AWS ──
+  // ── Infrastructure & Hosting ──
   if (C.infrastructure) {
     var infra = C.infrastructure;
     html += '<div class="wft-section-title">Infrastructure & Hosting</div>';
@@ -7255,79 +7425,365 @@ function wftRenderCommercialization() {
     html += '<div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:12px"><div style="font-size:11px;font-weight:600;color:#166534;margin-bottom:4px">TARGET</div><div style="font-size:12px">' + infra.targetState + '</div></div>';
     html += '</div>';
 
-    // API Model decision
+    // API Model decision with explanation
     html += '<div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:14px;margin-bottom:12px">';
     html += '<div style="font-size:13px;font-weight:600;margin-bottom:6px">API Model: ' + infra.apiModel.decision + '</div>';
     html += '<div style="font-size:12px;margin-bottom:6px">' + infra.apiModel.rationale + '</div>';
-    html += '<div style="font-size:11px;color:var(--muted)">' + infra.apiModel.implementation + '</div>';
+    html += '<div style="font-size:11px;color:var(--muted);margin-bottom:8px">' + infra.apiModel.implementation + '</div>';
+    if (infra.apiModel.explanation) {
+      html += '<div style="background:#dbeafe;border-radius:6px;padding:10px 12px;font-size:12px;border-left:3px solid #3b82f6">';
+      html += '<strong>\uD83D\uDCA1 In plain terms:</strong> ' + infra.apiModel.explanation;
+      html += '</div>';
+    }
     html += '</div>';
 
-    // AWS services
+    // Cloud services with detail buttons
+    var svcList = infra.services || infra.aws || [];
     html += '<div style="background:var(--card);border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:12px">';
-    html += '<div style="padding:10px 14px;background:#f8fafc;border-bottom:1px solid var(--border);font-size:12px;font-weight:600">AWS Services</div>';
-    for (var i = 0; i < infra.aws.length; i++) {
-      var svc = infra.aws[i];
-      html += '<div style="padding:10px 14px;border-bottom:' + (i < infra.aws.length - 1 ? '1px solid var(--border)' : 'none') + '">';
+    html += '<div style="padding:10px 14px;background:#f8fafc;border-bottom:1px solid var(--border);font-size:12px;font-weight:600">Cloud Services</div>';
+    for (var i = 0; i < svcList.length; i++) {
+      var svc = svcList[i];
+      var detailId = 'infra-detail-' + i;
+      html += '<div style="padding:10px 14px;border-bottom:' + (i < svcList.length - 1 ? '1px solid var(--border)' : 'none') + '">';
       html += '<div style="display:flex;justify-content:space-between;align-items:center">';
       html += '<span style="font-size:12px;font-weight:600">' + svc.service + '</span>';
+      if (svc.explanation) {
+        html += '<button onclick="var d=document.getElementById(\'' + detailId + '\');d.style.display=d.style.display===\'none\'?\'block\':\'none\';this.textContent=d.style.display===\'none\'?\'Detail \u25BC\':\'Hide \u25B2\'" style="font-size:11px;padding:3px 10px;border:1px solid var(--border);border-radius:4px;background:var(--bg);cursor:pointer;color:var(--info);font-weight:600">Detail \u25BC</button>';
+      }
       html += '</div>';
       html += '<div style="font-size:12px;margin-top:2px">' + svc.purpose + '</div>';
       html += '<div style="font-size:11px;color:var(--muted);margin-top:2px">' + svc.notes + '</div>';
+      if (svc.explanation) {
+        html += '<div id="' + detailId + '" style="display:none;margin-top:10px;background:#f0f9ff;border:1px solid #bae6fd;border-radius:8px;padding:12px">';
+        html += '<div style="font-size:12px;line-height:1.6;margin-bottom:8px"><strong>What is this?</strong> ' + svc.explanation + '</div>';
+        if (svc.analogy) {
+          html += '<div style="font-size:12px;background:#dbeafe;border-radius:6px;padding:8px 10px;margin-bottom:8px;border-left:3px solid #3b82f6">';
+          html += '<strong>\uD83D\uDCA1 Analogy:</strong> ' + svc.analogy;
+          html += '</div>';
+        }
+        if (svc.costDetail) {
+          html += '<div style="font-size:11px;background:white;border-radius:6px;padding:8px 10px;border:1px solid #e2e8f0">';
+          html += '<strong>\uD83D\uDCB0 Pricing:</strong> ' + svc.costDetail;
+          html += '</div>';
+        }
+        html += '</div>';
+      }
       html += '</div>';
     }
     html += '</div>';
 
-    // Data residency
-    html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">';
-    html += '<div style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px">';
-    html += '<div style="font-size:13px;font-weight:600;margin-bottom:6px">Data Residency</div>';
+    // Alternative platforms
+    if (infra.alternativePlatforms) {
+      html += '<div style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px;margin-bottom:12px">';
+      html += '<div style="font-size:13px;font-weight:600;margin-bottom:6px">Platform Comparison</div>';
+      html += '<div style="font-size:12px;color:var(--muted);margin-bottom:4px">' + infra.alternativePlatforms.note + '</div>';
+      if (infra.alternativePlatforms.recommendation) html += '<div style="font-size:12px;font-weight:600;color:#16a34a;margin-bottom:8px">\u2605 Recommended: ' + infra.alternativePlatforms.recommendation + '</div>';
+      html += '<table class="meth-source-table" style="margin-bottom:0"><thead><tr><th>Platform</th><th>Services</th><th>Pros</th><th>Cons</th><th>1K</th><th>10K</th></tr></thead><tbody>';
+      for (var i = 0; i < infra.alternativePlatforms.platforms.length; i++) {
+        var plat = infra.alternativePlatforms.platforms[i];
+        html += '<tr>';
+        html += '<td style="font-weight:600">' + plat.name + '</td>';
+        html += '<td style="font-size:10px">' + plat.services + '</td>';
+        html += '<td style="font-size:10px;color:#16a34a">' + plat.pros + '</td>';
+        html += '<td style="font-size:10px;color:#ef4444">' + plat.cons + '</td>';
+        html += '<td>' + (plat.costAt1K || '') + '</td>';
+        html += '<td>' + (plat.costAt10K || '') + '</td>';
+        html += '</tr>';
+      }
+      html += '</tbody></table></div>';
+    }
+
+    // Data residency + Cost estimate
+    html += '<div style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px;margin-bottom:12px">';
+    html += '<div style="font-size:13px;font-weight:600;margin-bottom:6px">\uD83C\uDF0F Data Residency</div>';
     html += '<div style="font-size:12px;margin-bottom:4px">' + infra.dataResidency.position + '</div>';
     html += '<div style="font-size:11px;color:var(--muted)">' + infra.dataResidency.rationale + '</div>';
     html += '</div>';
-    html += '<div style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px">';
-    html += '<div style="font-size:13px;font-weight:600;margin-bottom:6px">Cost Estimate</div>';
-    html += '<div style="font-size:12px">' + infra.costEstimate + '</div>';
-    html += '</div>';
-    html += '</div>';
+
+    // Cost breakdown
+    var cost = infra.costEstimate;
+    if (typeof cost === 'object' && cost.scales) {
+      html += '<div style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px;margin-bottom:12px">';
+      html += '<div style="font-size:13px;font-weight:600;margin-bottom:4px">\uD83D\uDCB0 Cost Breakdown by Scale</div>';
+      if (cost.note) html += '<div style="font-size:11px;color:var(--muted);margin-bottom:10px">' + cost.note + '</div>';
+
+      if (cost.keyInsight) html += '<div style="background:#dbeafe;border-left:3px solid #3b82f6;border-radius:0 8px 8px 0;padding:8px 12px;margin-bottom:10px;font-size:12px"><strong>\uD83D\uDCA1</strong> ' + cost.keyInsight + '</div>';
+      html += '<table class="meth-source-table" style="margin-bottom:12px"><thead><tr><th>Scale</th><th>Infrastructure</th><th>Sonnet 4.6</th><th>Haiku 4.5</th><th>Total (Sonnet)</th><th>Total (Haiku)</th><th>Per Student</th></tr></thead><tbody>';
+      for (var i = 0; i < cost.scales.length; i++) {
+        var sc = cost.scales[i];
+        html += '<tr>';
+        html += '<td><strong>' + sc.students.toLocaleString() + '</strong><br><span style="font-size:10px;color:var(--muted)">' + sc.usage + '</span></td>';
+        html += '<td>' + sc.infrastructure + '</td>';
+        html += '<td>' + (sc.anthropicSonnet || sc.anthropicApi || '') + '</td>';
+        html += '<td style="color:#16a34a">' + (sc.anthropicHaiku || '') + '</td>';
+        html += '<td style="font-weight:600">' + (sc.totalSonnet || sc.total || '') + '</td>';
+        html += '<td style="font-weight:600;color:#16a34a">' + (sc.totalHaiku || '') + '</td>';
+        html += '<td style="color:var(--info);font-weight:600;font-size:10px">' + (sc.perStudentSonnet || sc.perStudent || '') + '<br><span style="color:#16a34a">' + (sc.perStudentHaiku || '') + '</span></td>';
+        html += '</tr>';
+      }
+      html += '</tbody></table>';
+      if (cost.costControlStrategies) {
+        html += '<div style="font-size:12px;font-weight:600;margin-bottom:4px">Cost Control Strategies</div>';
+        for (var i = 0; i < cost.costControlStrategies.length; i++) {
+          html += '<div style="font-size:11px;padding:2px 0;display:flex;align-items:flex-start;gap:6px"><span style="color:#10b981;flex-shrink:0">&#10003;</span>' + cost.costControlStrategies[i] + '</div>';
+        }
+      }
+
+      // Anthropic API pricing detail
+      if (cost.anthropicBreakdown) {
+        var ab = cost.anthropicBreakdown;
+        var abDetailId = 'anthropic-pricing-detail';
+        html += '<div style="background:#f5f3ff;border:1px solid #c4b5fd;border-radius:8px;padding:12px">';
+        html += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">';
+        html += '<span style="font-size:12px;font-weight:600;color:#7c3aed">Anthropic API Pricing (Sonnet vs Haiku)</span>';
+        html += '<button onclick="var d=document.getElementById(\'' + abDetailId + '\');d.style.display=d.style.display===\'none\'?\'block\':\'none\';this.textContent=d.style.display===\'none\'?\'Detail \u25BC\':\'Hide \u25B2\'" style="font-size:11px;padding:3px 10px;border:1px solid #c4b5fd;border-radius:4px;background:white;cursor:pointer;color:#7c3aed;font-weight:600">Detail \u25BC</button>';
+        html += '</div>';
+        html += '<div id="' + abDetailId + '" style="display:none">';
+        var models = [];
+        if (ab.sonnet) models.push(ab.sonnet);
+        if (ab.haiku) models.push(ab.haiku);
+        if (models.length === 0 && ab.model) models.push(ab);
+        for (var m = 0; m < models.length; m++) {
+          var mod = models[m];
+          var isHaiku = mod.model && mod.model.indexOf('Haiku') >= 0;
+          html += '<div style="font-size:12px;font-weight:600;margin:' + (m > 0 ? '10px' : '0') + ' 0 6px;color:' + (isHaiku ? '#16a34a' : '#7c3aed') + '">' + mod.model + '</div>';
+          html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px">';
+          html += '<div style="font-size:11px;background:white;border-radius:4px;padding:6px 8px">Input: <strong>' + mod.inputPrice + '</strong></div>';
+          html += '<div style="font-size:11px;background:white;border-radius:4px;padding:6px 8px">Output: <strong>' + mod.outputPrice + '</strong></div>';
+          if (mod.cacheWritePrice) html += '<div style="font-size:11px;background:white;border-radius:4px;padding:6px 8px">Cache write: <strong>' + mod.cacheWritePrice + '</strong></div>';
+          html += '<div style="font-size:11px;background:#dcfce7;border-radius:4px;padding:6px 8px">Cache read: <strong>' + mod.cacheReadPrice + '</strong> \u2705</div>';
+          html += '</div>';
+          if (mod.perQuestion) html += '<div style="font-size:11px;background:white;border-radius:4px;padding:6px 8px;margin-bottom:4px">Per question: <strong>' + mod.perQuestion + '</strong> \u2022 20-question session: <strong>' + mod.per20QuestionSession + '</strong></div>';
+        }
+        if (ab.typicalQuestion) {
+          var tq = ab.typicalQuestion;
+          html += '<div style="font-size:12px;font-weight:600;margin:8px 0 4px">Typical Question Token Usage</div>';
+          html += '<div style="font-size:11px;background:white;border-radius:6px;padding:8px;border:1px solid #e2e8f0">';
+          html += 'System prompt: <strong>' + tq.systemPrompt + '</strong> \u2022 User message: <strong>' + tq.userMessage + '</strong> \u2022 Response: <strong>' + tq.response + '</strong>';
+          html += '</div>';
+        }
+        html += '</div></div>';
+      }
+      html += '</div>';
+    } else {
+      // Fallback for old string format
+      html += '<div style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px;margin-bottom:12px">';
+      html += '<div style="font-size:13px;font-weight:600;margin-bottom:6px">Cost Estimate</div>';
+      html += '<div style="font-size:12px">' + cost + '</div>';
+      html += '</div>';
+    }
   }
 
-  // ── Anthropic Partnership Opportunity ──
-  if (C.partnerships && C.partnerships.anthropicUniversity) {
+  // ── Strategic Partnerships ──
+  if (C.partnerships) {
     var partner = C.partnerships.anthropicUniversity;
-    html += '<div class="wft-section-title">Strategic Partnership: Anthropic</div>';
-    html += '<div style="background:linear-gradient(135deg,#fdf4ff,#eff6ff);border:1px solid #c4b5fd;border-radius:8px;padding:16px;margin-bottom:12px">';
-    html += '<div style="font-size:13px;margin-bottom:12px">' + partner.opportunity + '</div>';
+    if (partner) {
+      html += '<div class="wft-section-title">Strategic Partnership: Anthropic</div>';
 
-    html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">';
-    html += '<div style="background:rgba(255,255,255,0.7);border-radius:8px;padding:12px">';
-    html += '<div style="font-size:12px;font-weight:600;color:#7c3aed;margin-bottom:6px">Value to Anthropic</div>';
-    for (var i = 0; i < partner.valueToAnthropic.length; i++) {
-      html += '<div style="font-size:11px;padding:2px 0">\u2022 ' + partner.valueToAnthropic[i] + '</div>';
-    }
-    html += '</div>';
-    html += '<div style="background:rgba(255,255,255,0.7);border-radius:8px;padding:12px">';
-    html += '<div style="font-size:12px;font-weight:600;color:#2563eb;margin-bottom:6px">Value to Us</div>';
-    for (var i = 0; i < partner.valueToUs.length; i++) {
-      html += '<div style="font-size:11px;padding:2px 0">\u2022 ' + partner.valueToUs[i] + '</div>';
-    }
-    html += '</div>';
-    html += '</div>';
+      // Urgency banner
+      if (partner.urgency) {
+        html += '<div style="background:#fef2f2;border:2px solid #fca5a5;border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:13px;font-weight:600;color:#991b1b">\uD83D\uDEA8 ' + partner.urgency + '</div>';
+      }
 
-    html += '<div style="background:rgba(255,255,255,0.7);border-radius:8px;padding:12px;margin-bottom:8px">';
-    html += '<div style="font-size:12px;font-weight:600;margin-bottom:4px">Approach</div>';
-    html += '<div style="font-size:12px">' + partner.approach + '</div>';
-    html += '</div>';
-    html += '<div style="font-size:11px;color:#6b21a8;font-style:italic">' + partner.competitiveLandscape + '</div>';
-    html += '</div>';
+      html += '<div style="background:linear-gradient(135deg,#fdf4ff,#eff6ff);border:1px solid #c4b5fd;border-radius:8px;padding:16px;margin-bottom:12px">';
+      html += '<div style="font-size:13px;margin-bottom:12px">' + partner.opportunity + '</div>';
+
+      html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">';
+      html += '<div style="background:rgba(255,255,255,0.7);border-radius:8px;padding:12px">';
+      html += '<div style="font-size:12px;font-weight:600;color:#7c3aed;margin-bottom:6px">Value to Anthropic</div>';
+      for (var i = 0; i < partner.valueToAnthropic.length; i++) {
+        html += '<div style="font-size:11px;padding:2px 0">\u2022 ' + partner.valueToAnthropic[i] + '</div>';
+      }
+      html += '</div>';
+      html += '<div style="background:rgba(255,255,255,0.7);border-radius:8px;padding:12px">';
+      html += '<div style="font-size:12px;font-weight:600;color:#2563eb;margin-bottom:6px">Value to Us</div>';
+      for (var i = 0; i < partner.valueToUs.length; i++) {
+        html += '<div style="font-size:11px;padding:2px 0">\u2022 ' + partner.valueToUs[i] + '</div>';
+      }
+      html += '</div>';
+      html += '</div>';
+
+      html += '<div style="background:rgba(255,255,255,0.7);border-radius:8px;padding:12px;margin-bottom:8px">';
+      html += '<div style="font-size:12px;font-weight:600;margin-bottom:4px">Approach</div>';
+      html += '<div style="font-size:12px">' + partner.approach + '</div>';
+      html += '</div>';
+
+      // Pitch deck outline
+      if (partner.pitchDeck) {
+        var pdDetailId = 'pitch-deck-detail';
+        html += '<div style="background:rgba(255,255,255,0.7);border-radius:8px;padding:12px;margin-bottom:8px">';
+        html += '<div style="display:flex;justify-content:space-between;align-items:center">';
+        html += '<div style="font-size:12px;font-weight:600">Pitch Deck <span style="font-size:10px;padding:2px 6px;border-radius:4px;background:#fef3c7;color:#92400e">' + partner.pitchDeck.status + '</span></div>';
+        html += '<button onclick="var d=document.getElementById(\'' + pdDetailId + '\');d.style.display=d.style.display===\'none\'?\'block\':\'none\';this.textContent=d.style.display===\'none\'?\'Show slides \u25BC\':\'Hide \u25B2\'" style="font-size:11px;padding:3px 10px;border:1px solid #c4b5fd;border-radius:4px;background:white;cursor:pointer;color:#7c3aed;font-weight:600">Show slides \u25BC</button>';
+        html += '</div>';
+        html += '<div id="' + pdDetailId + '" style="display:none;margin-top:8px">';
+        html += '<div style="font-size:11px;color:var(--muted);margin-bottom:6px">Target: ' + partner.pitchDeck.targetAudience + '</div>';
+        for (var i = 0; i < partner.pitchDeck.keySlides.length; i++) {
+          html += '<div style="display:flex;gap:8px;padding:4px 0;font-size:11px"><span style="color:var(--muted);min-width:20px">' + (i+1) + '.</span>' + partner.pitchDeck.keySlides[i] + '</div>';
+        }
+        html += '</div></div>';
+      }
+
+      // Key contacts table
+      if (partner.keyContacts) {
+        var kcDetailId = 'anthropic-contacts-detail';
+        html += '<div style="background:rgba(255,255,255,0.7);border-radius:8px;padding:12px;margin-bottom:8px">';
+        html += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">';
+        html += '<span style="font-size:12px;font-weight:600">Key Contacts (' + partner.keyContacts.length + ')</span>';
+        html += '<button onclick="var d=document.getElementById(\'' + kcDetailId + '\');d.style.display=d.style.display===\'none\'?\'block\':\'none\';this.textContent=d.style.display===\'none\'?\'Show \u25BC\':\'Hide \u25B2\'" style="font-size:11px;padding:3px 10px;border:1px solid #c4b5fd;border-radius:4px;background:white;cursor:pointer;color:#7c3aed;font-weight:600">Show \u25BC</button>';
+        html += '</div>';
+        if (partner.emailPattern) html += '<div style="font-size:11px;color:var(--muted);margin-bottom:6px">Email pattern: ' + partner.emailPattern + '</div>';
+        html += '<div id="' + kcDetailId + '" style="display:none">';
+        for (var i = 0; i < partner.keyContacts.length; i++) {
+          var kc = partner.keyContacts[i];
+          var prColor = kc.priority.indexOf('PRIMARY') >= 0 ? '#166534' : kc.priority.indexOf('HIGH') >= 0 ? '#92400e' : '#64748b';
+          var prBg = kc.priority.indexOf('PRIMARY') >= 0 ? '#dcfce7' : kc.priority.indexOf('HIGH') >= 0 ? '#fef3c7' : '#f1f5f9';
+          html += '<div style="padding:8px;border-radius:6px;background:var(--bg);margin-bottom:6px;border:1px solid var(--border)">';
+          html += '<div style="display:flex;justify-content:space-between;align-items:center">';
+          html += '<span style="font-size:12px;font-weight:600">' + kc.name + '</span>';
+          html += '<span style="font-size:9px;padding:1px 6px;border-radius:4px;background:' + prBg + ';color:' + prColor + ';font-weight:600">' + kc.priority + '</span>';
+          html += '</div>';
+          html += '<div style="font-size:11px;font-weight:500;color:var(--info);margin-top:2px">' + kc.role + '</div>';
+          html += '<div style="font-size:11px;color:var(--muted);margin-top:2px">' + kc.background + '</div>';
+          if (kc.linkedin) html += '<div style="font-size:10px;color:var(--muted);margin-top:2px">\uD83D\uDD17 ' + kc.linkedin + '</div>';
+          html += '</div>';
+        }
+        html += '</div></div>';
+      }
+
+      // Contact paths
+      if (partner.contactPaths) {
+        html += '<div style="background:rgba(255,255,255,0.7);border-radius:8px;padding:12px;margin-bottom:8px">';
+        html += '<div style="font-size:12px;font-weight:600;margin-bottom:6px">Contact Paths</div>';
+        for (var i = 0; i < partner.contactPaths.length; i++) {
+          var cp = partner.contactPaths[i];
+          html += '<div style="font-size:11px;padding:3px 0;display:flex;align-items:flex-start;gap:6px"><span style="flex-shrink:0">\u2192</span><strong>' + cp.path + '</strong>' + (cp.url ? ' <span style="color:var(--muted)">(' + cp.url + ')</span>' : '') + '<br><span style="color:var(--muted)">' + cp.note + '</span></div>';
+        }
+        html += '</div>';
+      }
+
+      // Existing education partners & startup programs
+      if (partner.existingEducationPartners) {
+        html += '<div style="background:rgba(255,255,255,0.7);border-radius:8px;padding:12px;margin-bottom:8px">';
+        html += '<div style="font-size:12px;font-weight:600;margin-bottom:4px">Existing Education Partners <span style="font-size:10px;color:var(--muted)">(no AU universities yet)</span></div>';
+        html += '<div style="font-size:11px;color:var(--muted)">' + partner.existingEducationPartners.join(' \u2022 ') + '</div>';
+        if (partner.higherEdAdvisoryBoard) {
+          html += '<div style="font-size:11px;margin-top:6px"><strong>Higher Ed Advisory Board:</strong> Chaired by ' + partner.higherEdAdvisoryBoard.chair + '</div>';
+        }
+        html += '</div>';
+      }
+
+      if (partner.startupPrograms) {
+        html += '<div style="background:rgba(255,255,255,0.7);border-radius:8px;padding:12px;margin-bottom:8px">';
+        html += '<div style="font-size:12px;font-weight:600;margin-bottom:6px">Startup & Partner Programs</div>';
+        for (var i = 0; i < partner.startupPrograms.length; i++) {
+          var sp = partner.startupPrograms[i];
+          html += '<div style="font-size:11px;padding:4px 0;border-bottom:' + (i < partner.startupPrograms.length - 1 ? '1px solid var(--border)' : 'none') + '">';
+          html += '<strong>' + sp.program + '</strong> \u2014 ' + sp.credits;
+          html += '<div style="color:var(--muted);margin-top:1px">' + sp.requirement + '</div>';
+          html += '</div>';
+        }
+        html += '</div>';
+      }
+
+      html += '<div style="font-size:11px;color:#6b21a8;font-style:italic">' + partner.competitiveLandscape + '</div>';
+      html += '</div>';
+    }
+
+    // University procurement
+    if (C.partnerships.universityProcurement) {
+      var proc = C.partnerships.universityProcurement;
+      var procDetailId = 'procurement-detail';
+      html += '<div style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px;margin-bottom:12px">';
+      html += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">';
+      html += '<span style="font-size:13px;font-weight:600">University Procurement (Australia) <span style="font-size:10px;padding:2px 6px;border-radius:4px;background:#dcfce7;color:#166534">' + proc.status + '</span></span>';
+      html += '<button onclick="var d=document.getElementById(\'' + procDetailId + '\');d.style.display=d.style.display===\'none\'?\'block\':\'none\';this.textContent=d.style.display===\'none\'?\'Details \u25BC\':\'Hide \u25B2\'" style="font-size:11px;padding:3px 10px;border:1px solid var(--border);border-radius:4px;background:var(--bg);cursor:pointer;color:var(--info);font-weight:600">Details \u25BC</button>';
+      html += '</div>';
+      html += '<div style="font-size:12px;color:var(--muted);margin-bottom:8px">' + proc.overview + '</div>';
+      html += '<div id="' + procDetailId + '" style="display:none">';
+
+      // Decision chain
+      if (proc.decisionChain) {
+        html += '<div style="font-size:12px;font-weight:600;margin-bottom:6px">Decision Chain</div>';
+        for (var i = 0; i < proc.decisionChain.length; i++) {
+          var dc = proc.decisionChain[i];
+          html += '<div style="display:flex;gap:8px;padding:4px 0;font-size:11px;border-bottom:' + (i < proc.decisionChain.length - 1 ? '1px solid var(--border)' : 'none') + '">';
+          html += '<span style="min-width:18px;text-align:center;font-weight:700;color:var(--info)">' + dc.level + '</span>';
+          html += '<span style="min-width:180px;font-weight:600">' + dc.role + '</span>';
+          html += '<span style="color:var(--muted)">' + dc.approves + '</span>';
+          html += '</div>';
+        }
+      }
+
+      // University contacts
+      if (proc.universityContacts) {
+        html += '<div style="font-size:12px;font-weight:600;margin:12px 0 6px">Target Universities</div>';
+        for (var i = 0; i < proc.universityContacts.length; i++) {
+          var uc = proc.universityContacts[i];
+          html += '<div style="padding:6px 8px;border-radius:6px;background:var(--bg);margin-bottom:4px;font-size:11px">';
+          html += '<strong>' + uc.uni + '</strong>';
+          if (uc.dvcEducation) html += ' \u2022 DVC(Ed): ' + uc.dvcEducation;
+          if (uc.cio) html += ' \u2022 CIO: ' + uc.cio;
+          if (uc.procurement) html += ' \u2022 ' + uc.procurement;
+          if (uc.note) html += '<div style="color:var(--muted);margin-top:2px">' + uc.note + '</div>';
+          html += '</div>';
+        }
+      }
+
+      // Mandatory requirements
+      if (proc.mandatoryRequirements) {
+        html += '<div style="font-size:12px;font-weight:600;margin:12px 0 6px">Mandatory Requirements (' + proc.mandatoryRequirements.length + ')</div>';
+        for (var i = 0; i < proc.mandatoryRequirements.length; i++) {
+          html += '<div style="font-size:11px;padding:2px 0;display:flex;align-items:flex-start;gap:6px"><span style="color:#f59e0b;flex-shrink:0">\u25CF</span>' + proc.mandatoryRequirements[i] + '</div>';
+        }
+      }
+
+      // Procurement bodies
+      if (proc.procurementBodies) {
+        html += '<div style="font-size:12px;font-weight:600;margin:12px 0 6px">Procurement Bodies</div>';
+        for (var i = 0; i < proc.procurementBodies.length; i++) {
+          var pb = proc.procurementBodies[i];
+          html += '<div style="padding:6px 8px;border-radius:6px;background:var(--bg);margin-bottom:4px;font-size:11px">';
+          html += '<strong>' + pb.name + '</strong> \u2014 ' + pb.role;
+          html += '<div style="color:#166534;margin-top:2px">\u2605 ' + pb.advantage + '</div>';
+          html += '</div>';
+        }
+      }
+
+      // Recommended pathway
+      if (proc.recommendedPathway) {
+        html += '<div style="font-size:12px;font-weight:600;margin:12px 0 6px">Recommended Pathway</div>';
+        for (var i = 0; i < proc.recommendedPathway.length; i++) {
+          html += '<div style="font-size:11px;padding:3px 0;display:flex;align-items:flex-start;gap:6px"><span style="min-width:18px;text-align:center;font-weight:700;color:var(--info)">' + (i+1) + '</span>' + proc.recommendedPathway[i] + '</div>';
+        }
+      }
+
+      // Adoption lessons
+      if (proc.adoptionLessons) {
+        html += '<div style="font-size:12px;font-weight:600;margin:12px 0 6px">Adoption Lessons</div>';
+        html += '<div style="font-size:11px;color:var(--muted);margin-bottom:4px"><strong>Canvas:</strong> ' + proc.adoptionLessons.canvas + '</div>';
+        html += '<div style="font-size:11px;color:var(--muted);margin-bottom:4px"><strong>Turnitin:</strong> ' + proc.adoptionLessons.turnitin + '</div>';
+        html += '<div style="font-size:11px;background:#eff6ff;border-left:3px solid #3b82f6;border-radius:0 6px 6px 0;padding:6px 10px;margin-top:6px"><strong>Pattern:</strong> ' + proc.adoptionLessons.pattern + '</div>';
+      }
+
+      html += '</div></div>';
+    }
   }
 
-  // ── Business Approach ──
+  // ── Business Models ──
   html += '<div class="wft-section-title">Business Models</div>';
   html += '<div style="display:grid;gap:12px;margin-bottom:16px">';
   for (var i = 0; i < C.businessApproach.length; i++) {
     var biz = C.businessApproach[i];
+    var statusColors = { primary:'#dcfce7', secondary:'#f1f5f9', 'future-tbd':'#fef3c7' };
+    var statusLabels = { primary:'PRIMARY', secondary:'SECONDARY', 'future-tbd':'FUTURE / TBD' };
+    var statusBg = (biz.status && statusColors[biz.status]) || '#f1f5f9';
+    var statusLabel = (biz.status && statusLabels[biz.status]) || '';
     html += '<div style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px">';
-    html += '<div style="font-size:14px;font-weight:600;margin-bottom:8px">' + biz.model + '</div>';
+    html += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">';
+    html += '<span style="font-size:14px;font-weight:600">' + biz.model + '</span>';
+    if (statusLabel) html += '<span style="font-size:10px;padding:2px 8px;border-radius:4px;background:' + statusBg + ';font-weight:600">' + statusLabel + '</span>';
+    html += '</div>';
     html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">';
     html += '<div style="font-size:12px"><span style="color:#10b981;font-weight:600">Pros:</span> ' + biz.pros + '</div>';
     html += '<div style="font-size:12px"><span style="color:#ef4444;font-weight:600">Cons:</span> ' + biz.cons + '</div>';
@@ -7337,14 +7793,63 @@ function wftRenderCommercialization() {
   }
   html += '</div>';
 
+  // ── Demo Explanation ──
+  if (C.demo) {
+    html += '<div class="wft-section-title">Demo & Pilot</div>';
+    html += '<div style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px;margin-bottom:12px">';
+    html += '<div style="font-size:13px;margin-bottom:10px">' + C.demo.concept + '</div>';
+    html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:10px">';
+    html += '<div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:12px">';
+    html += '<div style="font-size:12px;font-weight:600;color:#166534;margin-bottom:6px">\u2705 What We Can Show Now</div>';
+    for (var i = 0; i < C.demo.whatWeCanShowNow.length; i++) {
+      html += '<div style="font-size:11px;padding:2px 0">\u2022 ' + C.demo.whatWeCanShowNow[i] + '</div>';
+    }
+    html += '</div>';
+    html += '<div style="background:#fef3c7;border:1px solid #fde68a;border-radius:8px;padding:12px">';
+    html += '<div style="font-size:12px;font-weight:600;color:#92400e;margin-bottom:6px">\u23F3 What We Need for Pilot</div>';
+    for (var i = 0; i < C.demo.whatWeNeedForPilot.length; i++) {
+      html += '<div style="font-size:11px;padding:2px 0">\u2022 ' + C.demo.whatWeNeedForPilot[i] + '</div>';
+    }
+    html += '</div>';
+    html += '</div>';
+    if (C.demo.aggregateAnalyticsExample) {
+      html += '<div style="background:#eff6ff;border-left:3px solid #3b82f6;border-radius:0 8px 8px 0;padding:10px 12px;font-size:12px">';
+      html += '<strong>\uD83D\uDCA1 Aggregate Analytics Example:</strong> ' + C.demo.aggregateAnalyticsExample;
+      html += '</div>';
+    }
+    html += '</div>';
+  }
+
   // ── Next Steps ──
   html += '<div class="wft-section-title">Next Steps</div>';
   html += '<div style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px">';
-  for (var i = 0; i < C.nextSteps.length; i++) {
-    html += '<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:' + (i < C.nextSteps.length - 1 ? '1px solid var(--border)' : 'none') + '">';
-    html += '<span style="font-size:13px;color:var(--muted);min-width:24px;text-align:center">' + (i + 1) + '.</span>';
-    html += '<span style="font-size:13px">' + C.nextSteps[i] + '</span>';
-    html += '</div>';
+  if (Array.isArray(C.nextSteps) && C.nextSteps.length > 0 && typeof C.nextSteps[0] === 'object') {
+    // New format with status tracking
+    var stepColors = { 'done':'#dcfce7', 'in-progress':'#dbeafe', 'todo':'#f1f5f9', 'blocked':'#fef2f2', 'future':'#fef3c7', 'critical':'#fee2e2' };
+    var stepIcons = { 'done':'\u2705', 'in-progress':'\uD83D\uDD04', 'todo':'\u2B1C', 'blocked':'\uD83D\uDEAB', 'future':'\u23F3', 'critical':'\uD83D\uDEA8' };
+    for (var i = 0; i < C.nextSteps.length; i++) {
+      var ns = C.nextSteps[i];
+      var bg = stepColors[ns.status] || '#f1f5f9';
+      var icon = stepIcons[ns.status] || '\u2B1C';
+      var priorityBadge = ns.priority === 'critical' ? '<span style="font-size:10px;padding:1px 6px;border-radius:4px;background:#fee2e2;color:#991b1b;font-weight:700;margin-left:6px">CRITICAL</span>' : ns.priority === 'high' ? '<span style="font-size:10px;padding:1px 6px;border-radius:4px;background:#fef3c7;color:#92400e;font-weight:600;margin-left:6px">HIGH</span>' : '';
+      html += '<div style="padding:8px 0;border-bottom:' + (i < C.nextSteps.length - 1 ? '1px solid var(--border)' : 'none') + '">';
+      html += '<div style="display:flex;align-items:center;gap:8px">';
+      html += '<span style="font-size:14px">' + icon + '</span>';
+      html += '<span style="font-size:13px;font-weight:600">' + ns.step + '</span>';
+      html += priorityBadge;
+      if (ns.owner) html += '<span style="font-size:10px;color:var(--muted);margin-left:auto">' + ns.owner + '</span>';
+      html += '</div>';
+      html += '<div style="font-size:12px;color:var(--muted);margin-top:3px;padding-left:28px">' + ns.detail + '</div>';
+      html += '</div>';
+    }
+  } else {
+    // Old string format fallback
+    for (var i = 0; i < C.nextSteps.length; i++) {
+      html += '<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:' + (i < C.nextSteps.length - 1 ? '1px solid var(--border)' : 'none') + '">';
+      html += '<span style="font-size:13px;color:var(--muted);min-width:24px;text-align:center">' + (i + 1) + '.</span>';
+      html += '<span style="font-size:13px">' + C.nextSteps[i] + '</span>';
+      html += '</div>';
+    }
   }
   html += '</div>';
 
