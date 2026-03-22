@@ -1579,10 +1579,10 @@ const COURSES = {
 const ASSESSMENTS = [
   { date:'2026-02-27', course:'OLES1603', name:'Continuous: Astronomically-aligned building', weight:'1%', type:'continuous', mark:'1/1', desc:'Weekly Canvas task. Research and identify a building or structure aligned with astronomical phenomena (solstice, equinox, star alignments). Submit via Canvas.' },
   { date:'2026-03-02', course:'OLES1603', name:'EFT: Online Discussion', weight:'1%', type:'discussion', mark:'1/1', desc:'Early Feedback Task. Make a meaningful contribution on the Ed Discussion forum before end of Week 3 (e.g. post a picture of your astronomically-aligned structure, or share sky observations). Marked 1/1 on 2 Mar.' },
-  { date:'2026-03-06', course:'INFO1113', name:'Task 1', weight:'4%', type:'task', mark:'graded (not yet posted)', desc:'Marked online coding task on Ed. Covers Java basics from Weeks 1-2: variables, types, expressions, I/O, and conditionals. Similar format to Task 0 (VoteDifference). Submitted 4 Mar. Graded 15 Mar but instructor has not posted the mark yet.' },
+  { date:'2026-03-06', course:'INFO1113', name:'Task 1', weight:'4%', type:'task', mark:'4/4', desc:'Marked online coding task on Ed. Covers Java basics from Weeks 1-2: variables, types, expressions, I/O, and conditionals. Similar format to Task 0 (VoteDifference). Submitted 4 Mar. Marked 22 Mar: 4/4 (perfect score). Mean: 3.96, Median: 4.' },
   { date:'2026-03-06', course:'OLES1603', name:'Continuous: Scientists of Mog', weight:'1%', type:'continuous', mark:'1/1', desc:'Tutorial role-play exercise due 6 Mar 23:59. You are scientists in the city of Mog (a swamp city where clouds have always hidden the sky). New observations emerge that contradict orthodox theories. In groups of 3, analyse a briefing paper for 35 minutes and develop a logical explanation of Mog\'s universe. Then present conclusions to the class. Submit the Week 2 Question Sheet documenting: your group, the observations analysed, and your scientific conclusions. Graded pass/fail on engagement. Marked 1/1.' },
   { date:'2026-03-13', course:'OLES1603', name:'Round-table 1: Group discussion and ideas', weight:'part of 10%', type:'continuous', mark:'MISSING', desc:'First of 3 Astronomy Project round-table sessions (Weeks 3, 5, 8). Physical question sheet handed in at end of tutorial. Form groups of 5-6, discuss project topics/delivery modes/audiences, record initial ideas. Graded "best of 3" on peer+tutor assessment of verbal presentation and feedback. Canvas shows MISSING — Will likely did not attend or did not hand in the sheet. Since grading is best-of-3, this is a missed opportunity but NOT a lost mark — Weeks 5 and 8 still available. Will MUST attend both remaining sessions.' },
-  { date:'2026-03-13', course:'INFO1113', name:'Coding Challenge', weight:'4%', type:'task', mark:'graded (not yet posted)', desc:'Invigilated, in-person coding test during your Week 3 tutorial (Fri 2-4pm). 40 minutes, AI strictly prohibited. Early Feedback Task assessing LO1-LO5: Java syntax, control flow, loops, I/O (Scanner + command-line args), static methods, arrays, and strings. Graded 15 Mar but instructor has not posted the mark yet.',
+  { date:'2026-03-13', course:'INFO1113', name:'Coding Challenge', weight:'4%', type:'task', mark:'0/4', desc:'Invigilated, in-person coding test during your Week 3 tutorial (Fri 2-4pm). 40 minutes, AI strictly prohibited. Early Feedback Task assessing LO1-LO5: Java syntax, control flow, loops, I/O (Scanner + command-line args), static methods, arrays, and strings. Marked 22 Mar: 0/4. Mean: 2.71, Median: 4. Coordinator sent personal support email — census date 31 Mar, support available via Student Portal.',
     prep: {
       rubric: [
         { q:'Correctness', pts:3, topic:'Program produces correct output for all test cases (edge cases, boundary values)' },
@@ -1713,7 +1713,7 @@ const ASSESSMENTS = [
       ]
     }
   },
-  { date:'2026-03-20', course:'OLES1603', name:'Astronomy Idea Exploration', weight:'10%', type:'assignment', desc:'Present and explore your astronomy project topic idea (Week 4). Explain what interests you, what questions you want to investigate, and your preliminary research direction. Due 20 Mar 23:59. AI use limited — check Canvas for policy.',
+  { date:'2026-03-20', course:'OLES1603', name:'Astronomy Idea Exploration', weight:'10%', type:'assignment', mark:'submitted (awaiting grade)', desc:'Present and explore your astronomy project topic idea (Week 4). Explain what interests you, what questions you want to investigate, and your preliminary research direction. Due 20 Mar 23:59. AI use limited — check Canvas for policy. Submitted 20 Mar 23:19. Per announcement: serious attempt on time = full marks.',
     prep: {
       rubric: [
         { q:'Topic choice', pts:2, topic:'Clear, focused astronomy topic with genuine personal interest evident' },
@@ -1743,7 +1743,7 @@ const ASSESSMENTS = [
       ]
     }
   },
-  { date:'2026-03-20', course:'OLES1603', name:'Continuous: Big Bang', weight:'1%', type:'continuous', desc:'Weekly Canvas task related to the Big Bang topic. Engage with material on the origins of the universe, cosmic expansion, and evidence for the Big Bang theory. Submit via Canvas.' },
+  { date:'2026-03-20', course:'OLES1603', name:'Continuous: Big Bang', weight:'1%', type:'continuous', mark:'1/1', desc:'Weekly Canvas task related to the Big Bang topic. Engage with material on the origins of the universe, cosmic expansion, and evidence for the Big Bang theory. Submit via Canvas. Marked 21 Mar: 1/1.' },
   { date:'2026-03-27', course:'LNGS1001', name:'Short Assignment 2', weight:'15%', type:'assignment', desc:'Covers Weeks 4-5 content: phonology (phonemic analysis, distinctive features, Sundanese exercises). Likely involves identifying phonemes, allophones, and applying phonological rules. AI allowed. NOTE from A1 feedback: velarisation of word-final [l] was missed — pay attention to allophonic variation rules in A2.' },
   { date:'2026-03-27', course:'OLES1603', name:'Continuous: Project ideas', weight:'1%', type:'continuous', desc:'Weekly Canvas task. Refine and share your project ideas with the group. Provide feedback on peers\' project concepts. Submit via Canvas.' },
   { date:'2026-04-03', course:'OLES1603', name:'Continuous: Galaxy Zoo', weight:'1%', type:'continuous', desc:'Weekly Canvas task. Participate in the Galaxy Zoo citizen science project — classify galaxies from real telescope images. Submit via Canvas.' },
@@ -1865,6 +1865,8 @@ const DASHBOARD_CHANGELOG = [
   { date: '2026-03-21', action: 'update', target: 'SYNC_TRACKER', detail: 'Automated sync (Chrome + Canvas + Ed + Outlook). Added Week 5 tracker (16 items: 6 done, 10 pending). OLES1603 Week 5 page extracted (Stars, guest lecturer Dr Angharad Weeks). 3 OLES1603 Tutorial 5 PDFs downloaded. OLES1603 announcement saved (Astronomy Project marking criteria). LNGS1001 Week 4 solutions page saved (Cree/Even/Russian). No new Ed lessons, no new ANHS2609 content. Echo360 AUTH_EXPIRED. Email: 3 new, 0 actionable.' },
   { date: '2026-03-21', action: 'update', target: 'WEEKLY_CONTENT', detail: 'Fixed OLES1603 Week 5: lecture "Galaxies & Initial Project Ideas"→"Stars (Guest: Dr Angharad Weeks)", tutorial "Project ideas workshop"→"Astronomy Ideas Exploration peer feedback".' },
   { date: '2026-03-21', action: 'add', target: 'FILES', detail: 'New files: OLES1603 Week 05 - Stars.md, Announcement - Astronomy Project More Details.md, Tute_5_Question_Sheet.pdf + Tute_5_Student_Notes.pdf + Tute_5_Tutor_Notes.pdf, LNGS1001 Week 04 - Solutions.md.' },
+  { date: '2026-03-22', action: 'update', target: 'ASSESSMENTS', detail: 'Marks update from Canvas grades pages (browser-verified): INFO1113 Task 1 4/4 (perfect), INFO1113 Coding Challenge 0/4 (coordinator sent progress email), OLES1603 Big Bang 1/1. OLES1603 Idea Exploration submitted (awaiting grade). ANHS2609 Map Quiz graded but not yet posted.' },
+  { date: '2026-03-22', action: 'update', target: 'LAST_SYNC_DATE', detail: 'Automated sync (Chrome + Canvas + Ed + Outlook). Marks collected from Canvas grades pages for all 4 courses. 6 unread Outlook emails (4 actionable: marks + coordinator progress email). No new content (Sun before Week 5 lectures). Echo360 auth expired.' },
 ];
 
 const WEEKLY_CONTENT = {
@@ -4157,7 +4159,7 @@ const ASTRO_SORTS = [
 
 // ======================== SYNC TRACKER DATA ========================
 
-const LAST_SYNC_DATE = '2026-03-21T10:00';
+const LAST_SYNC_DATE = '2026-03-22T10:00';
 
 const SYNC_TRACKER = {
   1: {
@@ -4505,6 +4507,19 @@ const COMPLIANCE_LOG = [
     materials: { INFO1113: {files:35,linked:26,excluded:10,gaps:0}, LNGS1001: {files:91,linked:58,excluded:19,gaps:0}, ANHS2609: {files:46,linked:39,excluded:8,gaps:0}, OLES1603: {files:40,linked:34,excluded:7,gaps:0} },
     issues: ['Echo360 AUTH_EXPIRED (Okta SSO timed out)', 'No new transcripts (Week 5 lectures start Mon 23 Mar)'],
     fixes: ['OLES1603 Wk5 WEEKLY_CONTENT corrected: Galaxies→Stars', 'Added 7 Materials tab links (OLES Wk5 page+tutorials+announcement, LNGS Wk4 solutions)', 'Updated 2 Course Index.md files']
+  },
+  {
+    date: '2026-03-22',
+    type: 'Automated Sync (Marks Update)',
+    agent: 'CLI + Chrome',
+    commits: [],
+    deployed: false,
+    content: 'No new course content (Sunday). Marks collected from Canvas grades pages: INFO1113 Task 1 4/4, Coding Challenge 0/4 (coordinator sent support email), OLES1603 Big Bang 1/1, Idea Exploration submitted. ANHS2609 Map Quiz graded but not posted. 6 Outlook emails checked (4 actionable).',
+    infra: 'I1: PASS (LAST_SYNC_DATE), I2: PASS (CHANGELOG +2 entries)',
+    finals: 'F1: PASS (0 gaps), F2: PASS (5 pass, 6 warn, 0 fail), F8: PASS (CC 11/11)',
+    materials: { INFO1113: {files:35,linked:26,excluded:10,gaps:0}, LNGS1001: {files:91,linked:58,excluded:19,gaps:0}, ANHS2609: {files:46,linked:39,excluded:8,gaps:0}, OLES1603: {files:40,linked:34,excluded:7,gaps:0} },
+    issues: ['Echo360 AUTH_EXPIRED', 'INFO1113 Coding Challenge 0/4 — coordinator sent support email before census date 31 Mar', 'OLES1603 Wk3 round-table MISSING — 2 of 3 sessions remain'],
+    fixes: ['Updated 4 ASSESSMENTS marks from Canvas grades pages']
   }
 ];
 
@@ -4512,12 +4527,12 @@ const COMPLIANCE_LOG = [
 // Tracks the last run of each automated validation suite.
 // Updated by sync automation and manual runs.
 const VALIDATION_STATUS = {
-  lastFullRun: '2026-03-21',
+  lastFullRun: '2026-03-22',
   nextScheduledRun: '2026-03-28',
   consistency: {
     script: 'consistency-check.py',
-    lastRun: '2026-03-21',
-    result: '10/10 PASS',
+    lastRun: '2026-03-22',
+    result: '11/11 PASS',
     checks: [
       { id:'CC1', name:'Model & Cost Refs', status:'pass', detail:'No stale model or cost references' },
       { id:'CC2', name:'Reference ↔ Visual Guide Alignment', status:'pass', detail:'All reference guides have matching visual guides' },
@@ -4533,12 +4548,12 @@ const VALIDATION_STATUS = {
   },
   materials: {
     script: 'validate-materials.py',
-    lastRun: '2026-03-21',
+    lastRun: '2026-03-22',
     result: '0 gaps across all courses',
     perCourse: { INFO1113: 0, LNGS1001: 0, ANHS2609: 0, OLES1603: 0 }
   },
   updateChecklist: {
-    lastRun: '2026-03-21',
+    lastRun: '2026-03-22',
     tracks: [
       { name:'Content Track', checks:'C1–C10', passed:10, total:10, detail:'Files, naming, Materials links, STUDY_GUIDES, GUIDE_SOURCES, NBML_VALIDATED, VISUAL_GUIDE_WEEKS, SYNC_TRACKER, NotebookLM uploads, CHANGELOG' },
       { name:'Infrastructure Track', checks:'I1–I10', passed:10, total:10, detail:'Console errors, course pages, sync-prompt.md, Weekly Sync Guide, CLAUDE.md, doc agreement, regressions, SA hooks, AI Integration Guide, factual consistency' },
@@ -4549,7 +4564,7 @@ const VALIDATION_STATUS = {
 };
 
 const SECURITY_AUDIT = {
-  lastRun: '2026-03-21',
+  lastRun: '2026-03-22',
   summary: { pass: 5, warn: 6, fail: 0 },
   checks: [
     { id:'S1', name:'Secrets & Credentials', status:'pass', detail:'No hardcoded secrets in dashboard or 16 visual guides' },
