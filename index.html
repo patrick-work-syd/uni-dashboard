@@ -1130,6 +1130,7 @@ document.getElementById('pin-input').focus();
       <details><summary style="font-weight:600;cursor:pointer;margin-bottom:6px">Assessments</summary>
         <ul style="font-size:13px;padding-left:20px;margin-bottom:10px">
           <li><a href="https://github.com/patrick-work-syd/Uni-2026/blob/main/LNGS1001%20Structure%20of%20Language/Assessments/LNGS1001%20Assignment%201%202026.pdf" target="_blank">Assignment 1 2026 (PDF)</a></li>
+          <li><a href="https://github.com/patrick-work-syd/Uni-2026/blob/main/LNGS1001%20Structure%20of%20Language/Assessments/LNGS1001%20Assignment%202%202026.pdf" target="_blank">Assignment 2 2026 (PDF)</a></li>
           <li><a href="https://github.com/patrick-work-syd/Uni-2026/blob/main/LNGS1001%20Structure%20of%20Language/Assessments/HCE%20Reference.pdf" target="_blank">HCE Reference (PDF)</a></li>
         </ul>
       </details>
@@ -1744,7 +1745,45 @@ const ASSESSMENTS = [
     }
   },
   { date:'2026-03-20', course:'OLES1603', name:'Continuous: Big Bang', weight:'1%', type:'continuous', mark:'1/1', desc:'Weekly Canvas task related to the Big Bang topic. Engage with material on the origins of the universe, cosmic expansion, and evidence for the Big Bang theory. Submit via Canvas. Marked 21 Mar: 1/1.' },
-  { date:'2026-03-27', course:'LNGS1001', name:'Short Assignment 2', weight:'15%', type:'assignment', desc:'Covers Weeks 4-5 content: phonology (phonemic analysis, distinctive features, Sundanese exercises). Likely involves identifying phonemes, allophones, and applying phonological rules. AI allowed. NOTE from A1 feedback: velarisation of word-final [l] was missed — pay attention to allophonic variation rules in A2.' },
+  { date:'2026-03-27', course:'LNGS1001', name:'Short Assignment 2 - Phonemic analysis and allophony', weight:'15%', type:'assignment', url:'https://canvas.sydney.edu.au/courses/72232/assignments/670996', desc:'Three phonological problem sets: Part 1 Swahili (\u0254 vs o, 4 marks), Part 2 Korean (s/\u0283/z, 8 marks), Part 3 Slovak (v/f/u\u032F, 8 marks). Each: identify contrastive vs complementary distribution, determine phoneme/allophone status, write formal allophony rules using distinctive features, discuss rule ordering. Total 20 marks. Korean provides vowel feature chart (\u00B1FRONT, \u00B1ROUND, \u00B1HIGH). Slovak [u\u032F] = non-syllabic u (labial-velar approximant). Submit one file (.doc/.pdf). AI allowed. Late penalty: -5%/day.',
+    prep: {
+      rubric: [
+        { q:'Part 1a: Swahili distribution type', pts:1, topic:'Is [\u0254] vs [o] contrastive or complementary?' },
+        { q:'Part 1b: Swahili phoneme status', pts:1, topic:'Are [\u0254] and [o] separate phonemes or allophones?' },
+        { q:'Part 1c: Swahili evidence + rule', pts:2, topic:'Minimal pairs (if contrastive) OR distribution in plain English + formal rule with distinctive features (if allophones)' },
+        { q:'Part 2a: Korean phoneme status', pts:1, topic:'Are [s], [\u0283], [z] separate phonemes or allophones? Explain reasoning.' },
+        { q:'Part 2b: Korean allophony rules', pts:6, topic:'Distribution in plain English AND formal allophony rules using distinctive features. Vowel feature chart provided.' },
+        { q:'Part 2c: Korean rule ordering', pts:1, topic:'State rule ordering or explain why ordering is not relevant.' },
+        { q:'Part 3a: Slovak phoneme status', pts:2, topic:'Are [v], [f], [u\u032F] separate phonemes or allophones? Explain reasoning.' },
+        { q:'Part 3b: Slovak allophony rules + ordering', pts:4, topic:'Distribution in plain English AND formal allophony rules using distinctive features. State rule ordering.' },
+        { q:'Part 3c: Slovak contrast evidence', pts:2, topic:'Which words from the data give evidence for any phonemic contrasts?' }
+      ],
+      rules: [
+        'Use / / for phonemes and [ ] for allophones \u2014 notation errors cost marks (A1 pattern)',
+        'Formal rules MUST use distinctive features \u2014 explicitly required (e.g. [+nasal], [+voice], [\u00B1high])',
+        'Include an \u201Celsewhere\u201D clause for default realisations in every allophony rule',
+        'Rule ordering is assessed in Parts 2c AND 3b \u2014 state whether rules must apply in a specific order and why',
+        'Show reasoning for each dataset: list environments \u2192 check minimal pairs \u2192 check complementary distribution \u2192 state rule',
+        'Korean Part 2 provides a vowel feature chart \u2014 use its features (\u00B1FRONT, \u00B1ROUND, \u00B1HIGH) when writing rules',
+        'Slovak [u\u032F] is a non-syllabic [u] (labial-velar approximant like [w]) \u2014 think about voicing and syllabicity',
+        'AI tools allowed but must be acknowledged. Use IPA fonts (ipa.typeit.org, Charis SIL, Doulos SIL) for typed answers',
+        'Submit as ONE file only (.doc or .pdf) \u2014 do NOT submit each page separately. Include your SID.'
+      ],
+      files: [
+        { name:'Assignment 2 Spec (PDF)', path:'LNGS1001 Structure of Language/Assessments/LNGS1001 Assignment 2 2026.pdf' },
+        { name:'Week 4 Practice Problems', path:'LNGS1001 Structure of Language/Tutorials and Practice/Week 04/Week 4 Practice problems.pdf' },
+        { name:'Sundanese Data (Week 5 practice)', path:'LNGS1001 Structure of Language/Tutorials and Practice/Week 05/Sundanese.pdf' },
+        { name:'Distinctive Feature Exercises', path:'LNGS1001 Structure of Language/Tutorials and Practice/Week 05/Week 5 Distinctive Feature Exercises for upload.pdf' }
+      ],
+      tips: [
+        'Start with Part 1 (Swahili, 4 marks) \u2014 it\u2019s the simplest (two sounds). Get it right, build confidence, then tackle Korean.',
+        'Part 2 (Korean) carries the most weight: 6 of 8 marks are for the formal rules. Carefully list ALL environments for [s], [\u0283], [z] and use the provided vowel chart features in your rules.',
+        'Part 3 (Slovak) has a twist: [u\u032F] is a non-syllabic [u] acting as an approximant. Consider when the labio-dental /v/ might surface as voiceless [f] or approximant [u\u032F] based on surrounding voicing/syllable structure.',
+        'A1 WEAK SPOT: Velarisation of word-final [l] was missed \u2014 same analytical skill applies here. Apply the 4-step method rigorously to each dataset. Don\u2019t skip the environment-listing step.',
+        'Practice first with the Week 4 tutorial problems (Cree, Even, Japanese) and Week 5 Sundanese \u2014 same analysis type as this assignment. Use the IPA Practice Lab \u2192 Phonology panel (Week 4 filter).'
+      ]
+    }
+  },
   { date:'2026-03-27', course:'OLES1603', name:'Continuous: Project ideas', weight:'1%', type:'continuous', desc:'Weekly Canvas task. Refine and share your project ideas with the group. Provide feedback on peers\' project concepts. Submit via Canvas.' },
   { date:'2026-04-03', course:'OLES1603', name:'Continuous: Galaxy Zoo', weight:'1%', type:'continuous', desc:'Weekly Canvas task. Participate in the Galaxy Zoo citizen science project — classify galaxies from real telescope images. Submit via Canvas.' },
   { date:'2026-04-10', course:'INFO1113', name:'Quiz 1 (approx)', weight:'3%', type:'quiz', desc:'Online quiz on Ed covering Weeks 1-5 content. Tests theoretical understanding of Java fundamentals, OOP concepts, and code reading. Date approximate — check Ed for exact schedule.' },
@@ -4364,8 +4403,8 @@ const WORKFLOW_TRACKER = {
       detail:'Rubric (3 criteria), rules (8 incl. location study priorities by tier), tips (5 with Map Trainer reference). Practice Lab link to Map Quiz. Added 8 Mar.' },
     { course:'OLES1603', name:'Astronomy Idea Exploration', date:'2026-03-20', weight:'10%', status:'complete',
       detail:'Rubric (5 criteria, 10pts), rules (6 incl. AI policy + topic selection advice), files (Assessment Overview + PDF), tips (5). Practice Lab link to Concept Lab. Added 8 Mar.' },
-    { course:'LNGS1001', name:'Short Assignment 2', date:'2026-03-27', weight:'15%', status:'pending',
-      detail:'Phonology (phonemic analysis, distinctive features). Prep guide needed when Week 4-5 content available. A1 feedback: velarisation of word-final [l] was a weak area — ensure prep covers allophonic rules.' },
+    { course:'LNGS1001', name:'Short Assignment 2', date:'2026-03-27', weight:'15%', status:'complete',
+      detail:'Rubric (9 criteria, 20pts: Swahili 4 + Korean 8 + Slovak 8), rules (9 incl. distinctive features requirement, rule ordering, IPA fonts, submission format), files (4: A2 spec PDF + W4 practice + Sundanese + distinctive features), tips (5 with part-by-part strategy). Built 22 Mar from Canvas spec (file 48724903).' },
     { course:'ANHS2609', name:'Short Essay - Opis', date:'2026-04-17', weight:'17%', status:'pending',
       detail:'1000-word essay on mutiny at Opis. Prep guide needed when essay prompt released.' },
     { course:'LNGS1001', name:'Mid-term Quiz', date:'2026-04-17', weight:'20%', status:'pending',
@@ -4378,7 +4417,13 @@ const WORKFLOW_TRACKER = {
     { id:'ipa-phonology', course:'LNGS1001', desc:'Phonology analysis questions', status:'done', priority:'high', note:'33 exercises: 15 minimal pairs, 10 natural classes, 8 phonological rules — deployed 11 Mar' },
     { id:'astro-project', course:'OLES1603', desc:'Astronomy project planner tool', status:'planned', priority:'medium', note:'Due 22 May \u2014 start planning Week 5' },
     { id:'anhs-timeline', course:'ANHS2609', desc:'Interactive historical timeline', status:'done', priority:'low', note:'35 events, 5 eras, type filters, expandable details — deployed 11 Mar' },
-    { id:'cal-toggle', course:'ALL', desc:'Calendar timetable show/hide toggle', status:'done', priority:'low', note:'Classes: ON/OFF button in calendar nav — deployed 11 Mar' }
+    { id:'cal-toggle', course:'ALL', desc:'Calendar timetable show/hide toggle', status:'done', priority:'low', note:'Classes: ON/OFF button in calendar nav — deployed 11 Mar' },
+    { id:'jpl-arrays', course:'INFO1113', desc:'Array manipulation & sorting traces', status:'planned', priority:'high', note:'Week 4 arrays/sorting content. Quiz 1 (~Week 7) will test this. Trace exercises for selection sort, array iteration, 2D arrays.' },
+    { id:'ipa-features', course:'LNGS1001', desc:'Distinctive feature matrix exercises', status:'planned', priority:'high', note:'Week 5 content. A2 (due 27 Mar) tests distinctive features. Interactive feature matrix with natural class identification.' },
+    { id:'anhs-sources', course:'ANHS2609', desc:'Primary source analysis practice', status:'planned', priority:'medium', note:'Week 4 Issus/Gaugamela content. Compare Arrian vs Plutarch accounts. Short Essay (due 17 Apr) requires source analysis.' },
+    { id:'astro-calcs', course:'OLES1603', desc:'Cosmology calculation practice', status:'idea', priority:'low', note:'Week 4 Big Bang content. Hubble constant, redshift, distance calculations. Pass/fail course so lower priority.' },
+    { id:'ipa-sundanese', course:'LNGS1001', desc:'Sundanese phonology drill', status:'planned', priority:'high', note:'Week 5 tutorial Sundanese data. A2 explicitly mentions Sundanese. Interactive allophone identification exercise.' },
+    { id:'jpl-collections', course:'INFO1113', desc:'Collections framework practice', status:'idea', priority:'medium', note:'Week 4 tutorial covered ArrayList/HashMap. Build exercises for common collection operations and iteration patterns.' }
   ],
   dashboardChecks: [
     { id:'links', desc:'Material links verified', status:'done', date:'2026-03-04' },
@@ -4532,7 +4577,7 @@ const VALIDATION_STATUS = {
   consistency: {
     script: 'consistency-check.py',
     lastRun: '2026-03-22',
-    result: '11/11 PASS',
+    result: '15/15 PASS',
     checks: [
       { id:'CC1', name:'Model & Cost Refs', status:'pass', detail:'No stale model or cost references' },
       { id:'CC2', name:'Reference ↔ Visual Guide Alignment', status:'pass', detail:'All reference guides have matching visual guides' },
@@ -4543,7 +4588,12 @@ const VALIDATION_STATUS = {
       { id:'CC7', name:'Doc Cross-References', status:'pass', detail:'Model names, capabilities consistent across .md files' },
       { id:'CC8', name:'Week Filter Constants', status:'pass', detail:'Filter ranges match available data' },
       { id:'CC9', name:'Course Folder Structure', status:'pass', detail:'All required subdirectories present' },
-      { id:'CC10', name:'CHANGELOG Currency', status:'pass', detail:'Recent changes logged' }
+      { id:'CC10', name:'CHANGELOG Currency', status:'pass', detail:'Recent changes logged' },
+      { id:'CC11', name:'VG Practice Links', status:'pass', detail:'All visual guide practice links reference valid tools' },
+      { id:'CC12', name:'Uncommitted Staleness', status:'pass', detail:'Working tree clean — no uncommitted changes' },
+      { id:'CC13', name:'Git Divergence', status:'pass', detail:'Local branch in sync with origin/main' },
+      { id:'CC14', name:'Deploy Drift', status:'pass', detail:'Dashboard deploy is current' },
+      { id:'CC15', name:'Sync Verification', status:'pass', detail:'Last sync SUCCESS verified with git commit' }
     ]
   },
   materials: {
@@ -7131,8 +7181,8 @@ function wftRenderCompliance() {
     html += '</div>';
   }
 
-  // Consistency checks (CC1-CC10)
-  html += '<div style="font-size:12px;font-weight:600;margin:12px 0 8px">Consistency Checks (CC1–CC10)</div>';
+  // Consistency checks (CC1-CC15)
+  html += '<div style="font-size:12px;font-weight:600;margin:12px 0 8px">Consistency Checks (CC1–CC15)</div>';
   html += '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:6px">';
   for (var i = 0; i < VALIDATION_STATUS.consistency.checks.length; i++) {
     var cc = VALIDATION_STATUS.consistency.checks[i];
@@ -7224,7 +7274,7 @@ function wftRenderCompliance() {
   html += '<div style="font-size:12px;color:var(--muted)">';
   html += '<div>&#128269; <code>validate-materials.py</code> — Materials tab gap detection (run every sync)</div>';
   html += '<div>&#128274; <code>security-audit.py</code> — 11-check security scan (run every deploy)</div>';
-  html += '<div>&#128270; <code>consistency-check.py</code> — 10-check cross-system consistency (CC1–CC10, run every sync + weekly)</div>';
+  html += '<div>&#128270; <code>consistency-check.py</code> — 15-check cross-system consistency (CC1–CC15, run every sync + weekly)</div>';
   html += '<div>&#128203; <code>compliance-log.md</code> — Full audit trail (append every session)</div>';
   html += '</div></div>';
 
